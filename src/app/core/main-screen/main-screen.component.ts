@@ -15,6 +15,13 @@ export class MainScreenComponent {
 
   tabsWithIcon: RouteItem[];
 
+  registrationButtonOptions: DxButtonTypes.Properties = {
+    text: 'Registration',
+    onClick: () => {
+      this.topNavService.navigate({ id: 0, name:'Registrations', route:'registration', icon: 'home', level: 0})
+    },
+  };
+
   eventButtonOptions: DxButtonTypes.Properties = {
     text: 'Events',
     onClick: () => {

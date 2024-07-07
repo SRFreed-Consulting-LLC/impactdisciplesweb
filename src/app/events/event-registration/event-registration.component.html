@@ -1,0 +1,17 @@
+<dx-form
+  id="form"
+  [formData]="eventRegistration"
+  [colCount]="2"
+  width="50%">
+  <dxi-item
+    dataField="event"
+    editorType="dxSelectBox"
+    [editorOptions]="{ dataSource: eventsList, displayExpr: 'eventName', valueExpr: 'id' }">
+  </dxi-item>
+  <dxi-item dataField="registrant.email" [editorOptions]="emailEditorOptions">
+    <dxi-validation-rule type="required" message="Email is required">
+    </dxi-validation-rule>
+    <dxi-validation-rule type="email" message="Email is invalid">
+    </dxi-validation-rule>
+  </dxi-item>
+</dx-form>

@@ -8,7 +8,7 @@ import { ScreenService } from 'impactdisciplescommon/src/services/utils/screen.s
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'impactdisciplesadmin';
+  title = 'impactdisciplesweb';
 
   @HostBinding('class') get getClass() {
     return Object.keys(this.screen.sizes).filter(cl => this.screen.sizes[cl]).join(' ');

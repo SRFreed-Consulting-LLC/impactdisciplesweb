@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "impactdisciplesadmin": {
+    "impactdisciplesweb": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/impactdisciplesadmin",
+            "outputPath": "dist/impactdisciplesweb",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -26,6 +26,7 @@
             ],
             "styles": [
               "node_modules/devextreme/dist/css/dx.light.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
             "scripts": [],
@@ -62,10 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "impactdisciplesadmin:build:production"
+              "browserTarget": "impactdisciplesweb:build:production"
             },
             "development": {
-              "browserTarget": "impactdisciplesadmin:build:development"
+              "browserTarget": "impactdisciplesweb:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +74,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "impactdisciplesadmin:build"
+            "browserTarget": "impactdisciplesweb:build"
           }
         },
         "test": {

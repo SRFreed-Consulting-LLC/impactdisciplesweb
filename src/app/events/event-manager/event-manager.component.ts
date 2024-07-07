@@ -54,9 +54,27 @@ export class EventManagerComponent implements OnInit {
   }
 
   isEditVisible: boolean = false;
+  isAgendaVisible: boolean = false;
+  isAttendeesListVisible: boolean = false;
+  isSessionsVisible: boolean = false;
 
   editEvent(e){
     this.selectedEvent = e.row.data;
     this.isEditVisible = true;
+  }
+
+  editAgenda(e){
+    this.selectedEvent = e.row.data;
+    this.isAgendaVisible = true;
+  }
+
+  editSessions(e){
+    this.selectedEvent = e.row.data;
+    this.isSessionsVisible = true;
+  }
+
+  viewAttendees(e){
+    this.selectedEvent = e.row.data;
+    this.isAttendeesListVisible = true;
   }
 }

@@ -14,6 +14,7 @@ import { CoachManagerComponent } from './events/coach-manager/coach-manager.comp
 import { CourseManagerComponent } from './events/course-manager/course-manager.component';
 import { OrganizationManagerComponent } from './events/organization-manager/organization-manager.component';
 import { LocationManagerComponent } from './events/location-manager/location-manager.component';
+import { EventRegistrationComponent } from './events/event-registration/event-registration.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,11 @@ const routes: Routes = [
     component: MainScreenComponent,
     canActivate: [ AuthGuardService ],
     children: [
+      {
+        path: 'registration',
+        component: EventRegistrationComponent,
+        canActivate: [ AuthGuardService ]
+      },
       {
         path: 'events',
         component: EventManagerComponent,

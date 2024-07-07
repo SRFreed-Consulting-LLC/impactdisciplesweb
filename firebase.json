@@ -5,7 +5,7 @@
   },
   "hosting": {
     "site": "impactdisciples-web-app",
-    "public": "dist/impactdisciplesadmin",
+    "public": "dist/impactdisciplesweb",
     "ignore": [
       "firebase.json",
       "**/.*",

@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="row">
+    <div class="col-2">
+      <div style="font-size: larger; font-weight: 400;">Training Sessions</div>
+      <dx-scroll-view id="scroll">
+        <dx-draggable
+          id="list"
+          data="dropArea"
+          [group]="draggingGroupName"
+          (onDragStart)="onListDragStart($event)">
+          <dx-draggable
+            class="item dx-card"
+            [clone]="true"
+            [group]="draggingGroupName"
+            [data]="session"
+            (onDragStart)="onItemDragStart($event)"
+            (onDragEnd)="onItemDragEnd($event)"
+            *ngFor="let session of availableTrainingSessions">
+            {{ session.name }}
+          </dx-draggable>
+        </dx-draggable>
+      </dx-scroll-view>
+    </div>
+    <div class="col-10">
+      <dx-scheduler
+        timeZone="America/Los_Angeles"
+        id="scheduler"
+        [dataSource]="event.agendaItems"
+        [currentDate]="currentDate"
+        [startDayHour]="9"
+        [height]="600"
+        [editing]="true"
+        (onAppointmentDeleted)="removeAgendaItem($event)"
+        [textExpr]="'name'">
+        <dxi-view type="day" [intervalCount]="3"> </dxi-view>
+
+        <dxo-appointment-dragging
+          [group]="draggingGroupName"
+          [onRemove]="onAppointmentRemove"
+          [onAdd]="onAppointmentAdd">
+        </dxo-appointment-dragging>
+      </dx-scheduler>
+    </div>
+  </div>
+  <div class="row" style="width: 100%; position: absolute; bottom: 15px;">
+    <div class="col-9"></div>
+    <div class="col-3"><dx-button text="Save" (onClick)="saveAgenda()"></dx-button></div>
+  </div>
+</div>
