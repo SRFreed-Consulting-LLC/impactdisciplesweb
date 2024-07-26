@@ -25,7 +25,7 @@
                   <div class="event-date">{{ data.startDate | date: 'M/d' }} </div>
                   <div *ngIf="data.endDate" class="event-date"> - {{ data.endDate | date: 'M/d' }} </div>
                   <!--TODO: Need items from database: Location State-->
-                  <div *ngIf="data.location" class="event-location"> | {{ getLocation(data.location).name }}</div>
+                  <div *ngIf="data.location" class="event-location"> | {{ getLocation(data.location) }}</div>
                 </div>
               </div>
             </div>

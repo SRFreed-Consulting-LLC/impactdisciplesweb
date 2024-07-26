@@ -6,7 +6,9 @@ import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { LocationModel } from 'impactdisciplescommon/src/models/domain/location.model';
+import { OrganizationModel } from 'impactdisciplescommon/src/models/domain/organization.model';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
+import { OrganizationService } from 'impactdisciplescommon/src/services/organization.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -17,6 +19,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class EventRegistrationComponent implements OnInit, OnDestroy {
   eventsList: EventModel[] = [];
   locationsList: LocationModel[] = [];
+  organizationsList: OrganizationModel[] = [];
   eventRegistration: EventRegistrationModel = new EventRegistrationModel();
   eventRegistrant: AppUser;
   isShowSidePanel: boolean = false;
@@ -25,7 +28,7 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
 
   constructor(private router: Router, private eventService: EventService, private authService: AuthService, private cd: ChangeDetectorRef,
-    private locationService: LocationService
+    private locationService: LocationService, private organizationService: OrganizationService
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +43,10 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
 
     this.locationService.getAll().then((locations) => {
       this.locationsList = locations;
+    });
+
+    this.organizationService.getAll().then((organizations) => {
+      this.organizationsList = organizations;
     });
   }
 
@@ -61,8 +68,17 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
     })
   }
 
-  getLocation(id): LocationModel{
-    return this.locationsList.find(location => location.id == id);
+  getLocation(id): string{
+    let location = this.locationsList.find(location => location.id == id);
+
+    if(location?.organization){
+      let organization = this.organizationsList.find(org => org.id == location.organization);
+
+      return organization.name + ' (' + location.name + ')'
+    }
+
+    return location.name;
+
   }
 
   ngOnDestroy(): void {
