@@ -8,7 +8,7 @@
         </div>
         <span class="registration__left-box--header">Event Registration</span>
         <span class="registration__left-box--sub-header">Thank you for your interest in our events through Impact Discipleship Ministries! Select an event from the list below and complete the form to register for an event.</span>
-        
+
         <dx-form
           id="form"
           class="registration__left-box--form"
@@ -23,9 +23,9 @@
                 <div class="event-name">{{ data.eventName }}</div>
                 <div class="event-info">
                   <div class="event-date">{{ data.startDate | date: 'M/d' }} </div>
-                  <div *ngIf="data.endDate" class="event-date"> - {{ data.endDate | date: 'M/d' }} </div> 
+                  <div *ngIf="data.endDate" class="event-date"> - {{ data.endDate | date: 'M/d' }} </div>
                   <!--TODO: Need items from database: Location State-->
-                  <div *ngIf="data.location" class="event-location"> | {{ data.location }}</div>
+                  <div *ngIf="data.location" class="event-location"> | {{ getLocation(data.location).name }}</div>
                 </div>
               </div>
             </div>
@@ -33,9 +33,9 @@
           <dxi-item
             dataField="event"
             editorType="dxSelectBox"
-            [editorOptions]="{ 
+            [editorOptions]="{
               dataSource: eventsList,
-              displayExpr: 'eventName', 
+              displayExpr: 'eventName',
               valueExpr: 'id',
               placeholder: 'Select Event',
               onSelectionChanged: onEventSelected,

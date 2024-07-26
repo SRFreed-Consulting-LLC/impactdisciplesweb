@@ -1,9 +1,11 @@
+import { LocationService } from './../../../../impactdisciplescommon/src/services/location.service';
 import { AuthService } from './../../../../impactdisciplescommon/src/services/utils/auth.service';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
+import { LocationModel } from 'impactdisciplescommon/src/models/domain/location.model';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -14,6 +16,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class EventRegistrationComponent implements OnInit, OnDestroy {
   eventsList: EventModel[] = [];
+  locationsList: LocationModel[] = [];
   eventRegistration: EventRegistrationModel = new EventRegistrationModel();
   eventRegistrant: AppUser;
   isShowSidePanel: boolean = false;
@@ -21,7 +24,9 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private router: Router, private eventService: EventService, private authService: AuthService, private cd: ChangeDetectorRef) {}
+  constructor(private router: Router, private eventService: EventService, private authService: AuthService, private cd: ChangeDetectorRef,
+    private locationService: LocationService
+  ) {}
 
   ngOnInit(): void {
     this.eventService.getAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
@@ -31,6 +36,10 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
 
     this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
       this.eventRegistration.registrant = user;
+    });
+
+    this.locationService.getAll().then((locations) => {
+      this.locationsList = locations;
     });
   }
 
@@ -50,6 +59,10 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
         this.router.navigate(['capture-password-form']);
       }
     })
+  }
+
+  getLocation(id): LocationModel{
+    return this.locationsList.find(location => location.id == id);
   }
 
   ngOnDestroy(): void {
