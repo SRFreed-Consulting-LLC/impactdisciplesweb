@@ -5,7 +5,7 @@ import { ScreenService } from 'impactdisciplescommon/src/services/utils/screen.s
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   title = 'impactdisciplesweb';

@@ -1,5 +1,11 @@
 @import 'ngx-toastr/toastr';
 
+html, body {
+  margin: 0;
+  min-height: 100%;
+  height: 100%;
+}
+
 .toolbar-label,
 .toolbar-label > b {
   padding-left: 10px;
@@ -8,4 +14,8 @@
 
 .toolbar {
   padding-top: 10px;
+}
+
+.dx-popup-wrapper>.dx-overlay-content {
+  border-radius: 0;
 }

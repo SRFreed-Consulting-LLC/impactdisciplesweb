@@ -1,0 +1,61 @@
+<nav class="navbar" [ngClass]="{'scrolled': isScrolled}">
+  <div class="navbar__logo">
+    <a class="navbar__logo--container" routerLink="/">
+      <img src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Logos%2FImpact-Logo_Light.png?alt=media&token=5894a7f1-171c-46c6-963a-ae7e55d77cb4">
+      <span [ngClass]="{'show-text': isScrolled}">Impact Discipleship Ministries</span>
+    </a>
+  </div>
+  <ul class="navbar-links">
+    <li class="nav-item">
+      <a routerLink="/about" routerLinkActive="active">About Us</a>
+      <!--<a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">About</a>-->
+    </li>
+    <li class="nav-item">
+      <a routerLink="/registration" routerLinkActive="active">Events</a>
+    </li>
+    <li class="nav-item dropdown">
+      <a href="javascript:void(0)" class="dropbtn">Training</a>
+      <!-- <div class="dropdown-content">
+        <a routerLink="/services/web" routerLinkActive="active">Web Development</a>
+        <a routerLink="/services/mobile" routerLinkActive="active">Mobile Development</a>
+      </div> -->
+    </li>
+    <li class="nav-item">
+      <a routerLink="/resources" routerLinkActive="active">Resources</a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/store" routerLinkActive="active">Store</a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+    </li>
+  </ul>
+  <div class="mobile-menu">
+    <input type="checkbox" id="menu-toggle" />
+    <label for="menu-toggle" class="menu-icon">&#9776;</label>
+    <ul class="navbar-links">
+      <li class="nav-item">
+        <a routerLink="/" routerLinkActive="active" >About Us</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/about" routerLinkActive="active">Events</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Training</a>
+        <!-- <div class="dropdown-content">
+          <a routerLink="/services/web" routerLinkActive="active">Web Development</a>
+          <a routerLink="/services/mobile" routerLinkActive="active">Mobile Development</a>
+        </div> -->
+      </li>
+      <li class="nav-item">
+        <a routerLink="/contact" routerLinkActive="active">Resources</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/contact" routerLinkActive="active">Store</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/contact" routerLinkActive="active">Login</a>
+      </li>
+    </ul>
+  </div>
+</nav>

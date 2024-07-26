@@ -1,0 +1,157 @@
+.home-header {
+  width: 100%;
+  font-family: 'Lato';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+
+  .right-section, .left-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 45%;
+    padding: 0 10px;
+  }
+
+  .left-section {
+    color: #fff;
+    &__title {
+      font-size: 110px;
+      font-weight: 600;
+    }
+    &__subtitle {
+      font-size: 30px;
+      font-weight: 300;
+    }
+  }
+
+  .right-section {
+    &__button-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      gap: 55px;
+      &--button {
+        width: 100%;
+        max-width: 450px;
+        font-size: 20px;
+        border: 2px solid #524A00;
+        border-radius: 30px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+
+        ::ng-deep .dx-button-content {
+          justify-content: space-between;
+          padding: 10px;
+          span {
+            width: 100%;
+          }
+          i {
+            font-size: 25px;
+            align-items: center;
+            display: flex;
+          }
+        }
+  
+        strong {
+          padding-left: 3px;
+        }
+      }
+      .button-primary {
+        color: #524A00;
+      }
+      .button-secondary {
+        background-color: #343905;
+        color: #fff;
+      }
+    }
+  }
+}
+
+@media (max-width: 1340px) {
+  .home-header {
+    .left-section {
+      &__title {
+        font-size: 90px;
+      }
+      &__subtitle {
+        font-size: 25px;
+      }
+    }
+
+  }
+}
+
+@media (max-width: 992px) {
+  .home-header {
+    flex-direction: column;
+    .right-section, .left-section {
+      width: 100%;
+    }
+  
+    .left-section {
+      padding: 0 50px;
+      &__title {
+        font-size: 80px;
+      }
+      &__subtitle {
+        font-size: 30px;
+      }
+    }
+  }
+}
+
+@media (max-width: 769px) {
+  .home-header {
+    .left-section {
+      &__title {
+        font-size: 80px;
+      }
+      &__subtitle {
+        font-size: 30px;
+      }
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .home-header {
+    .left-section {
+      &__title {
+        font-size: 70px;
+      }
+      &__subtitle {
+        font-size: 25px;
+      }
+    }
+    .right-section {
+      &__button-container {
+        gap: 25px;
+      }
+    }
+  }
+}
+
+@media (max-width: 400px) {
+  .home-header {
+    .left-section {
+      &__title {
+        font-size: 60px;
+      }
+      &__subtitle {
+        font-size: 20px;
+      }
+    }
+    .right-section {
+      &__button-container {
+        gap: 25px;
+        &--button {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+}

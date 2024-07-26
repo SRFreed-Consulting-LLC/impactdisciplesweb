@@ -1,0 +1,17 @@
+.events-page {
+  height: 100%;
+  width: 100%;
+  padding-top: 250px;
+}
+
+@media (max-width: 768px) {
+  .events-page {
+    padding-top: 120px;
+  }
+}
+
+@media (max-width: 1340px) {
+  .events-page {
+    padding-top: 150px;
+  }
+}

@@ -1,0 +1,21 @@
+.home {
+  background-image: url('https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fstudying_yellow-opacity.PNG?alt=media&token=576ed9a1-2f0a-4104-8377-2971db62a8f2');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 100%;
+  padding-top: 250px;
+}
+
+@media (max-width: 768px) {
+  .home {
+    padding-top: 120px;
+  }
+}
+
+@media (max-width: 1340px) {
+  .home {
+    padding-top: 150px;
+  }
+}

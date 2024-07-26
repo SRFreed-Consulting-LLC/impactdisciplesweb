@@ -10,6 +10,7 @@ import { ImpactDisciplesModule } from 'impactdisciplescommon/src/impactdisciples
 import { EventsModule } from './events/events.module';
 import { CoreModule } from './core/core.module';
 import { CookieService } from 'ngx-cookie-service';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { CookieService } from 'ngx-cookie-service';
     provideFirestore(() => getFirestore()),
     ToastrModule.forRoot(),
     CoreModule,
+    SharedModule,
     EventsModule,
     ImpactDisciplesModule
 
