@@ -3,7 +3,7 @@ import { ProductService } from '../../shared/services/product.service';
 import { IProduct } from '../../shared/types/product-d-t';
 
 @Component({
-  selector: 'app-product-banner',
+  selector: 'theme-product-banner',
   templateUrl: './product-banner.component.html',
   styleUrls: ['./product-banner.component.scss']
 })

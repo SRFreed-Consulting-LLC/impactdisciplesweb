@@ -1,5 +1,5 @@
 <!-- header start -->
-<app-header-three></app-header-three>
+<theme-header-three></theme-header-three>
 <!-- header end -->
 
 <main>
@@ -27,7 +27,7 @@
     <!-- slider area end -->
 
     <!-- category area start -->
-    <app-shop-category [style_4]="true"></app-shop-category>
+    <theme-shop-category [style_4]="true"></theme-shop-category>
     <!-- category area end -->
 
      <!-- product area start -->
@@ -52,7 +52,7 @@
             <div class="product__slider-3">
               <div class="row">
                 <div *ngFor="let item of trending_products.slice(0,2); let i = index" class="col-lg-6 col-md-6 product__item">
-                  <app-product-item [product]="item"></app-product-item>
+                  <theme-product-item [product]="item"></theme-product-item>
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@
             <div class="product__slider-3">
               <div class="row">
                 <div *ngFor="let item of trending_products.slice(2,4); let i = index" class="col-lg-6 col-md-6 product__item">
-                  <app-product-item [product]="item"></app-product-item>
+                  <theme-product-item [product]="item"></theme-product-item>
                 </div>
               </div>
             </div>
@@ -93,11 +93,11 @@
   <!-- product area end -->
 
   <!-- shop banner start -->
-  <app-product-banner></app-product-banner>
+  <theme-product-banner></theme-product-banner>
   <!-- shop banner end -->
 
   <!-- sale of products start -->
-  <app-sale-of-products></app-sale-of-products>
+  <theme-sale-of-products></theme-sale-of-products>
   <!-- sale of products end -->
 
   <!-- blog area start -->
@@ -117,7 +117,7 @@
           </div>
           <div class="row">
               <div class="col-xl-12">
-                 <app-blog-slider></app-blog-slider>
+                 <theme-blog-slider></theme-blog-slider>
               </div>
           </div>
       </div>
@@ -125,11 +125,11 @@
   <!-- blog area end -->
 
   <!-- subscribe area start -->
-  <app-subscribe-area></app-subscribe-area>
+  <theme-subscribe-area></theme-subscribe-area>
   <!-- subscribe area end -->
 </main>
 
 
 <!-- footer start -->
-<app-footer-one></app-footer-one>
+<theme-footer-one></theme-footer-one>
 <!-- footer end -->

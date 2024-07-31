@@ -3,7 +3,7 @@ import { CartService } from 'src/app/theme/shared/services/cart.service';
 import { CompareService } from 'src/app/theme/shared/services/compare.service';
 
 @Component({
-  selector: 'app-compare',
+  selector: 'theme-compare',
   templateUrl: './compare.component.html',
   styleUrls: ['./compare.component.scss']
 })

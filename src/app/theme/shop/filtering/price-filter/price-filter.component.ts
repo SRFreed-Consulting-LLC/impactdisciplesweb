@@ -7,7 +7,7 @@ import { ProductService } from 'src/app/theme/shared/services/product.service';
 
 
 @Component({
-  selector: 'app-price-filter',
+  selector: 'theme-price-filter',
   templateUrl: './price-filter.component.html',
   styleUrls: ['./price-filter.component.scss']
 })

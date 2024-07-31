@@ -3,7 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup,Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-register',
+  selector: 'theme-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })

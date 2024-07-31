@@ -5,7 +5,7 @@ import { UtilsService } from '../../shared/services/utils.service';
 import IBlogType from '../../shared/types/blog-d-t';
 
 @Component({
-  selector: 'app-blog-dynamic-details',
+  selector: 'theme-blog-dynamic-details',
   templateUrl: './blog-dynamic-details.component.html',
   styleUrls: ['./blog-dynamic-details.component.scss']
 })

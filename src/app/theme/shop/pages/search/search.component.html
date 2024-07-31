@@ -1,11 +1,11 @@
 <!-- header start -->
-<app-header-one [transparent]="true" [white_bg]="true"></app-header-one>
+<theme-header-one [transparent]="true" [white_bg]="true"></theme-header-one>
 <!-- header end -->
 
 <main>
 
   <!-- breadcrumb start -->
-  <app-breadcrumb-one title="Shop" subtitle="Shop"></app-breadcrumb-one>
+  <theme-breadcrumb-one title="Shop" subtitle="Shop"></theme-breadcrumb-one>
   <!-- breadcrumb end -->
 
   <!-- search area start -->
@@ -52,13 +52,13 @@
                     <div class="tab-pane fade show active" id="pills-grid" role="tabpanel" aria-labelledby="pills-grid-tab">
                         <div class="row custom-row-10">
                             <div *ngFor="let item of products.slice(0,perView)" class="col-xl-3 col-lg-3 col-md-6 col-sm-6 custom-col-10">
-                                <app-product-item [product]="item"></app-product-item>
+                                <theme-product-item [product]="item"></theme-product-item>
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="pills-list" role="tabpanel" aria-labelledby="pills-list-tab">
                         <ng-container *ngFor="let item of products.slice(0,perView)">
-                          <app-product-list-item [product]="item"></app-product-list-item>
+                          <theme-product-list-item [product]="item"></theme-product-list-item>
                         </ng-container>
                     </div>
                 </div>
@@ -80,5 +80,5 @@
 </main>
 
 <!-- footer start -->
-<app-footer-one></app-footer-one>
+<theme-footer-one></theme-footer-one>
 <!-- footer end -->

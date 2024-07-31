@@ -6,7 +6,7 @@ import { UtilsService } from '../../shared/services/utils.service';
 import { IProduct } from '../../shared/types/product-d-t';
 
 @Component({
-  selector: 'app-shop-area',
+  selector: 'theme-shop-area',
   templateUrl: './shop-area.component.html',
   styleUrls: ['./shop-area.component.scss']
 })

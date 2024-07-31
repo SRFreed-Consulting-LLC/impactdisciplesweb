@@ -6,7 +6,7 @@ import { ICategoryType } from 'src/app/theme/shared/types/category-d-t';
 
 
 @Component({
-  selector: 'app-category-filter',
+  selector: 'theme-category-filter',
   templateUrl: './category-filter.component.html',
   styleUrls: ['./category-filter.component.scss'],
 })

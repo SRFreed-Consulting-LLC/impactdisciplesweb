@@ -3,7 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup,Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-contact-form',
+  selector: 'theme-contact-form',
   templateUrl: './contact-form.component.html',
   styleUrls: ['./contact-form.component.scss']
 })

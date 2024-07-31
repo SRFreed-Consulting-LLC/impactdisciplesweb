@@ -4,23 +4,23 @@
           <div *ngIf="!shop_right && !shop_4_col && !shop_3_col" class="col-xl-3 col-lg-3 col-md-4">
               <div class="shop__sidebar">
                 <!-- category filter start -->
-                <app-category-filter></app-category-filter>
+                <theme-category-filter></theme-category-filter>
                 <!-- category filter end -->
 
                 <!-- price filter start -->
-                <app-price-filter [min]="minPrice" [max]="maxPrice" (priceFilter)="updateFilter($event)"></app-price-filter>
+                <theme-price-filter [min]="minPrice" [max]="maxPrice" (priceFilter)="updateFilter($event)"></theme-price-filter>
                 <!-- price filter end -->
 
                 <!-- size filter start -->
-                <app-size-filtering></app-size-filtering>
+                <theme-size-filtering></theme-size-filtering>
                 <!-- size filter end -->
 
                 <!-- color filter start -->
-                <app-color-filtering></app-color-filtering>
+                <theme-color-filtering></theme-color-filtering>
                 <!-- color filter end -->
 
                 <!-- brand filter start -->
-                <app-brand-filtering></app-brand-filtering>
+                <theme-brand-filtering></theme-brand-filtering>
                 <!-- brand filter end -->
 
                 <!-- reset button start -->
@@ -37,7 +37,7 @@
                         <h3>Featured Products</h3>
                     </div>
                     <div class="sidebar__widget-content">
-                        <app-feature-products></app-feature-products>
+                        <theme-feature-products></theme-feature-products>
                     </div>
                 </div>
                 <!-- feature product end -->
@@ -84,21 +84,21 @@
                       <div class="tab-pane fade show active" id="pills-grid" role="tabpanel" aria-labelledby="pills-grid-tab">
                           <div class="row custom-row-10">
                               <div *ngFor="let item of products" [ngClass]="{'col-xl-3 col-lg-3 col-md-6 col-sm-6 custom-col-10':shop_4_col, 'col-xl-4 col-lg-4 col-md-6 col-sm-6 custom-col-10': !shop_4_col}">
-                                  <app-product-item [product]="item"></app-product-item>
+                                  <theme-product-item [product]="item"></theme-product-item>
                               </div>
                           </div>
                       </div>
                       <div class="tab-pane fade" id="pills-list" role="tabpanel" aria-labelledby="pills-list-tab">
                           <ng-container *ngFor="let item of products">
-                            <app-product-list-item [product]="item"></app-product-list-item>
+                            <theme-product-list-item [product]="item"></theme-product-list-item>
                           </ng-container>
                       </div>
                   </div>
                   <div class="row mt-40">
                       <div class="col-xl-12">
                           <div class="shop-pagination-wrapper d-md-flex justify-content-between align-items-center">
-                            <app-pagination [data]="products" [paginate]="paginate" (setPage)="setPage($event)">
-                            </app-pagination>
+                            <theme-pagination [data]="products" [paginate]="paginate" (setPage)="setPage($event)">
+                            </theme-pagination>
                           </div>
                       </div>
                   </div>
@@ -108,23 +108,23 @@
           <div *ngIf="shop_right" class="col-xl-3 col-lg-3 col-md-4">
             <div class="shop__sidebar">
               <!-- category filter start -->
-              <app-category-filter></app-category-filter>
+              <theme-category-filter></theme-category-filter>
               <!-- category filter end -->
 
               <!-- price filter start -->
-              <app-price-filter [min]="minPrice" [max]="maxPrice" (priceFilter)="updateFilter($event)"></app-price-filter>
+              <theme-price-filter [min]="minPrice" [max]="maxPrice" (priceFilter)="updateFilter($event)"></theme-price-filter>
               <!-- price filter end -->
 
               <!-- size filter start -->
-              <app-size-filtering></app-size-filtering>
+              <theme-size-filtering></theme-size-filtering>
               <!-- size filter end -->
 
               <!-- color filter start -->
-              <app-color-filtering></app-color-filtering>
+              <theme-color-filtering></theme-color-filtering>
               <!-- color filter end -->
 
               <!-- brand filter start -->
-              <app-brand-filtering></app-brand-filtering>
+              <theme-brand-filtering></theme-brand-filtering>
               <!-- brand filter end -->
 
               <!-- reset button start -->
@@ -141,7 +141,7 @@
                       <h3>Featured Products</h3>
                   </div>
                   <div class="sidebar__widget-content">
-                      <app-feature-products></app-feature-products>
+                      <theme-feature-products></theme-feature-products>
                   </div>
               </div>
               <!-- feature product end -->

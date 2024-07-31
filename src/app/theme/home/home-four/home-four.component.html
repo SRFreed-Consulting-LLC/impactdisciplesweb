@@ -1,5 +1,5 @@
 <!-- header start -->
-<app-header-one></app-header-one>
+<theme-header-one></theme-header-one>
 <!-- header end -->
 
 <main class="box-white grey-bg pt-50">
@@ -32,7 +32,7 @@
             <!-- slider area end -->
 
             <!-- category area start -->
-            <app-shop-category [style_3]="true"></app-shop-category>
+            <theme-shop-category [style_3]="true"></theme-shop-category>
             <!-- category area end -->
 
             <!-- product area start -->
@@ -55,7 +55,7 @@
                             <div class="product__slider-4">
                               <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
                                 <div *ngFor="let item of trendingProducts.slice(0,perView)" class="col">
-                                  <app-product-item [product]="item"></app-product-item>
+                                  <theme-product-item [product]="item"></theme-product-item>
                                 </div>
                               </div>
                             </div>
@@ -73,13 +73,13 @@
             <!-- product area end -->
 
             <!-- shop category banner start -->
-            <app-product-banner [style_2]="true" [style_3]="true"></app-product-banner>
+            <theme-product-banner [style_2]="true" [style_3]="true"></theme-product-banner>
             <!-- shop category banner end -->
 
             <!-- product sm product slider start -->
             <section class="product__offer pb-45">
               <div class="container custom-container">
-                <app-offer-sm-product-slider></app-offer-sm-product-slider>
+                <theme-offer-sm-product-slider></theme-offer-sm-product-slider>
               </div>
             </section>
             <!-- product sm product slider end -->
@@ -101,7 +101,7 @@
                   </div>
                   <div class="row">
                       <div class="col-xl-12">
-                          <app-blog-slider></app-blog-slider>
+                          <theme-blog-slider></theme-blog-slider>
                       </div>
                   </div>
               </div>
@@ -109,7 +109,7 @@
             <!-- blog area end -->
 
             <!-- subscribe area start -->
-            <app-subscribe-area [style_3]="true"></app-subscribe-area>
+            <theme-subscribe-area [style_3]="true"></theme-subscribe-area>
             <!-- subscribe area end -->
 
         </div>
@@ -119,6 +119,6 @@
 </main>
 
 <!-- footer start -->
-<app-footer-two></app-footer-two>
+<theme-footer-two></theme-footer-two>
 <!-- footer end -->
 

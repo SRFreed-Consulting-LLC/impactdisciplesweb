@@ -5,7 +5,7 @@ import { ICategoryType } from '../../shared/types/category-d-t';
 
 
 @Component({
-  selector: 'app-shop-category',
+  selector: 'theme-shop-category',
   templateUrl: './shop-category.component.html',
   styleUrls: ['./shop-category.component.scss']
 })

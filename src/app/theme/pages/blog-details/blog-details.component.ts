@@ -3,7 +3,7 @@ import { UtilsService } from '../../shared/services/utils.service';
 import IBlogType from '../../shared/types/blog-d-t';
 
 @Component({
-  selector: 'app-blog-details',
+  selector: 'theme-blog-details',
   templateUrl: './blog-details.component.html',
   styleUrls: ['./blog-details.component.scss']
 })

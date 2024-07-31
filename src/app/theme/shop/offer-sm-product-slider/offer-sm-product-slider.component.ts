@@ -5,7 +5,7 @@ import { IProduct } from '../../shared/types/product-d-t';
 
 
 @Component({
-  selector: 'app-offer-sm-product-slider',
+  selector: 'theme-offer-sm-product-slider',
   templateUrl: './offer-sm-product-slider.component.html',
   styleUrls: ['./offer-sm-product-slider.component.scss']
 })

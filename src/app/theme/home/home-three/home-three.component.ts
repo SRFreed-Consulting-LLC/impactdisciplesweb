@@ -3,7 +3,7 @@ import { ProductService } from '../../shared/services/product.service';
 import { IProduct } from '../../shared/types/product-d-t';
 
 @Component({
-  selector: 'app-home-three',
+  selector: 'theme-home-three',
   templateUrl: './home-three.component.html',
   styleUrls: ['./home-three.component.scss']
 })

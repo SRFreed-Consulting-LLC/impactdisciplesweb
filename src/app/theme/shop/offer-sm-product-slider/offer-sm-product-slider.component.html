@@ -10,7 +10,7 @@
                 <div *ngFor="let products of trending_slider_products" class="product__offer-wrapper swiper-slide">
                     <div class="sidebar__widget-content">
                        <ng-container *ngFor="let item of products.products">
-                        <app-product-sm-item [product]="item"></app-product-sm-item>
+                        <theme-product-sm-item [product]="item"></theme-product-sm-item>
                        </ng-container>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                 <div *ngFor="let products of discount_slider_products" class="product__offer-wrapper swiper-slide">
                     <div class="sidebar__widget-content">
                        <ng-container *ngFor="let item of products.products">
-                        <app-product-sm-item [product]="item"></app-product-sm-item>
+                        <theme-product-sm-item [product]="item"></theme-product-sm-item>
                        </ng-container>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                 <div *ngFor="let products of top_rated_slider_products" class="product__offer-wrapper swiper-slide">
                     <div class="sidebar__widget-content">
                        <ng-container *ngFor="let item of products.products">
-                        <app-product-sm-item [product]="item"></app-product-sm-item>
+                        <theme-product-sm-item [product]="item"></theme-product-sm-item>
                        </ng-container>
                     </div>
                 </div>

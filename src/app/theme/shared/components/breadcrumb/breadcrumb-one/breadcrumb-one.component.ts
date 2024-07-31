@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-breadcrumb-one',
+  selector: 'theme-breadcrumb-one',
   templateUrl: './breadcrumb-one.component.html',
   styleUrls: ['./breadcrumb-one.component.scss']
 })

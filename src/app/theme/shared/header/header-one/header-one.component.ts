@@ -3,7 +3,7 @@ import { CartService } from '../../services/cart.service';
 import { UtilsService } from '../../services/utils.service';
 
 @Component({
-  selector: 'app-header-one',
+  selector: 'theme-header-one',
   templateUrl: './header-one.component.html',
   styleUrls: ['./header-one.component.scss']
 })

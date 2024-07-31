@@ -4,7 +4,7 @@ import { IMenuType } from '../../../types/menu-d-t';
 
 
 @Component({
-  selector: 'app-nav-manus',
+  selector: 'theme-nav-manus',
   templateUrl: './nav-manus.component.html',
   styleUrls: ['./nav-manus.component.scss']
 })

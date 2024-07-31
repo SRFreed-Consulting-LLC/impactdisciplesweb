@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 
 @Component({
-  selector: 'app-back-to-top',
+  selector: 'theme-back-to-top',
   templateUrl: './back-to-top.component.html',
   styleUrls: ['./back-to-top.component.scss']
 })

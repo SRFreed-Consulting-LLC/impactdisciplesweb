@@ -5,7 +5,7 @@ import { ProductService } from 'src/app/theme/shared/services/product.service';
 
 
 @Component({
-  selector: 'app-size-filtering',
+  selector: 'theme-size-filtering',
   templateUrl: './size-filtering.component.html',
   styleUrls: ['./size-filtering.component.scss'],
 })

@@ -7,7 +7,7 @@ import { IHeroSlider } from '../../shared/types/hero-slider-t';
 import { IProduct } from '../../shared/types/product-d-t';
 
 @Component({
-  selector: 'app-home-one',
+  selector: 'theme-home-one',
   templateUrl: './home-one.component.html',
   styleUrls: ['./home-one.component.scss']
 })

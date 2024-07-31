@@ -7,7 +7,7 @@ import { IHeroSlider } from '../../shared/types/hero-slider-t';
 import { IProduct } from '../../shared/types/product-d-t';
 
 @Component({
-  selector: 'app-home-five',
+  selector: 'theme-home-five',
   templateUrl: './home-five.component.html',
   styleUrls: ['./home-five.component.scss']
 })

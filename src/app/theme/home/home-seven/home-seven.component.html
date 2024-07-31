@@ -1,5 +1,5 @@
 <!-- header start -->
-<app-header-four></app-header-four>
+<theme-header-four></theme-header-four>
 <!-- header end -->
 
 <main>
@@ -37,7 +37,7 @@
   <!-- hero slider area end -->
 
   <!-- shop category start -->
-  <app-shop-category [shop_category_2]="true"></app-shop-category>
+  <theme-shop-category [shop_category_2]="true"></theme-shop-category>
   <!-- shop category end -->
 
   <!-- product__view-area start -->
@@ -57,7 +57,7 @@
             <div class="col-lg-12">
               <div class="row">
                 <div *ngFor="let item of sm_best_prd.slice(0,2); let i = index" class="col-xl-6 col-lg-12 col-md-6">
-                  <app-product-item-two [product]="item"></app-product-item-two>
+                  <theme-product-item-two [product]="item"></theme-product-item-two>
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@
             <div class="col-lg-12">
               <div class="row">
                 <div *ngFor="let item of sm_best_prd.slice(2,4); let i = index" class="col-xl-6 col-lg-12 col-md-6">
-                  <app-product-item-two [product]="item"></app-product-item-two>
+                  <theme-product-item-two [product]="item"></theme-product-item-two>
                 </div>
               </div>
             </div>
@@ -126,7 +126,7 @@
             <div class="product__slider-active swiper-container">
               <div class="swiper-wrapper product__slider-item">
                 <div *ngFor="let item of sm_best_prd;let i = index" class="swiper-slide">
-                  <app-product-item-two [product]="item"></app-product-item-two>
+                  <theme-product-item-two [product]="item"></theme-product-item-two>
                 </div>
               </div>
             </div>
@@ -150,7 +150,7 @@
   <!-- product__slider-area end -->
 
   <!-- testimonial start -->
-  <app-home-seven-testimonial></app-home-seven-testimonial>
+  <theme-home-seven-testimonial></theme-home-seven-testimonial>
   <!-- testimonial end -->
 
   <!-- blog__slider-area start -->
@@ -245,10 +245,10 @@
 
 
 <!-- footer start -->
-<app-footer-three></app-footer-three>
+<theme-footer-three></theme-footer-three>
 <!-- footer end -->
 
 
 <!-- video popup start -->
-<app-video-popup></app-video-popup>
+<theme-video-popup></theme-video-popup>
 <!-- video popup end -->

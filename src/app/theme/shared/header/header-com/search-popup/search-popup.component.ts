@@ -5,7 +5,7 @@ import category_data from '../../../data/category-data';
 import { ICategoryType } from '../../../types/category-d-t';
 
 @Component({
-  selector: 'app-search-popup',
+  selector: 'theme-search-popup',
   templateUrl: './search-popup.component.html',
   styleUrls: ['./search-popup.component.scss']
 })

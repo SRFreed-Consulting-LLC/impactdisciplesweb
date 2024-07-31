@@ -3,7 +3,7 @@ import { ProductService } from 'src/app/theme/shared/services/product.service';
 import { IProduct } from 'src/app/theme/shared/types/product-d-t';
 
 @Component({
-  selector: 'app-shop-details',
+  selector: 'theme-shop-details',
   templateUrl: './shop-details.component.html',
   styleUrls: ['./shop-details.component.scss']
 })

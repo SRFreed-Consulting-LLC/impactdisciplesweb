@@ -4,7 +4,7 @@ import { IProduct } from '../../shared/types/product-d-t';
 
 
 @Component({
-  selector: 'app-product-sm-item',
+  selector: 'theme-product-sm-item',
   templateUrl: './product-sm-item.component.html',
   styleUrls: ['./product-sm-item.component.scss']
 })

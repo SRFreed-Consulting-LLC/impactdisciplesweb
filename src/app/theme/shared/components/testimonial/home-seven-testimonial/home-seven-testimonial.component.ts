@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import Swiper from 'swiper';
 
 @Component({
-  selector: 'app-home-seven-testimonial',
+  selector: 'theme-home-seven-testimonial',
   templateUrl: './home-seven-testimonial.component.html',
   styleUrls: ['./home-seven-testimonial.component.scss']
 })

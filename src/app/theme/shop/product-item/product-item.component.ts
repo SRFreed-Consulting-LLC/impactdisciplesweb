@@ -7,7 +7,7 @@ import { IProduct } from '../../shared/types/product-d-t';
 
 
 @Component({
-  selector: 'app-product-item',
+  selector: 'theme-product-item',
   templateUrl: './product-item.component.html',
   styleUrls: ['./product-item.component.scss']
 })

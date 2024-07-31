@@ -5,7 +5,7 @@ import { UtilsService } from '../../shared/services/utils.service';
 
 
 @Component({
-  selector: 'app-product-item-two',
+  selector: 'theme-product-item-two',
   templateUrl: './product-item-two.component.html',
   styleUrls: ['./product-item-two.component.scss']
 })

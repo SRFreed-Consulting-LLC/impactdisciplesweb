@@ -8,7 +8,7 @@ import { IProduct } from '../../shared/types/product-d-t';
 
 
 @Component({
-  selector: 'app-home-four',
+  selector: 'theme-home-four',
   templateUrl: './home-four.component.html',
   styleUrls: ['./home-four.component.scss'],
 })

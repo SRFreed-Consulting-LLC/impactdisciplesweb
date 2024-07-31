@@ -3,19 +3,19 @@
       <div class="row" *ngIf="!blog_2_col && !blog_3_col">
         <div *ngIf="left_side && !no_side" class="col-xl-3 col-lg-4">
           <!-- blog sidebar start -->
-          <app-blog-sidebar></app-blog-sidebar>
+          <theme-blog-sidebar></theme-blog-sidebar>
           <!-- blog sidebar end -->
         </div>
           <div [ngClass]="getClass()">
               <div class="blog__wrapper">
                 <ng-container *ngFor="let blog of blogs">
-                  <app-blog-postbox-item [blog]="blog"></app-blog-postbox-item>
+                  <theme-blog-postbox-item [blog]="blog"></theme-blog-postbox-item>
                 </ng-container>
                   <div class="row">
                       <div class="col-xl-12">
                           <div class="shop-pagination-wrapper">
-                            <app-pagination [data]="blogs" [paginate]="paginate" (setPage)="setPage($event)">
-                            </app-pagination>
+                            <theme-pagination [data]="blogs" [paginate]="paginate" (setPage)="setPage($event)">
+                            </theme-pagination>
                           </div>
                       </div>
                   </div>
@@ -23,7 +23,7 @@
           </div>
           <div *ngIf="!left_side && !no_side" class="col-xl-3 col-lg-4 offset-xl-1">
               <!-- blog sidebar start -->
-              <app-blog-sidebar></app-blog-sidebar>
+              <theme-blog-sidebar></theme-blog-sidebar>
               <!-- blog sidebar end -->
           </div>
       </div>
@@ -31,15 +31,15 @@
       <div class="blog__wrapper" *ngIf="blog_2_col">
         <div class="row">
             <div *ngFor="let blog of blogs" [ngClass]="[blog_3_col ? 'col-xl-4 col-lg-4 col-md-6' : 'col-xl-6 col-lg-6 col-md-6']">
-              <app-blog-postbox-item [blog]="blog"
+              <theme-blog-postbox-item [blog]="blog"
                 [cls]="blog_3_col ? 'blog__border-bottom mb-60 pb-60' :'mb-60'" [title_cls]="blog_3_col ? false : true">
-              </app-blog-postbox-item>
+              </theme-blog-postbox-item>
             </div>
             <div class="row">
               <div class="col-xl-12">
                   <div class="shop-pagination-wrapper">
-                    <app-pagination [data]="blogs" [paginate]="paginate" (setPage)="setPage($event)">
-                    </app-pagination>
+                    <theme-pagination [data]="blogs" [paginate]="paginate" (setPage)="setPage($event)">
+                    </theme-pagination>
                   </div>
               </div>
           </div>

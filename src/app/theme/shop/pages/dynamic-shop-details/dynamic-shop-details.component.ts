@@ -6,7 +6,7 @@ import { ProductService } from 'src/app/theme/shared/services/product.service';
 import { IProduct } from 'src/app/theme/shared/types/product-d-t';
 
 @Component({
-  selector: 'app-dynamic-shop-details',
+  selector: 'theme-dynamic-shop-details',
   templateUrl: './dynamic-shop-details.component.html',
   styleUrls: ['./dynamic-shop-details.component.scss'],
 })

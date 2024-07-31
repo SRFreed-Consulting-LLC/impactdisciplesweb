@@ -5,7 +5,7 @@ import { ProductService } from 'src/app/theme/shared/services/product.service';
 
 
 @Component({
-  selector: 'app-color-filtering',
+  selector: 'theme-color-filtering',
   templateUrl: './color-filtering.component.html',
   styleUrls: ['./color-filtering.component.scss'],
 })

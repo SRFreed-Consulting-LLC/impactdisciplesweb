@@ -3,7 +3,7 @@ import IBlogType from '../../../types/blog-d-t';
 import { UtilsService } from '../../../services/utils.service';
 
 @Component({
-  selector: 'app-blog-sidebar',
+  selector: 'theme-blog-sidebar',
   templateUrl: './blog-sidebar.component.html',
   styleUrls: ['./blog-sidebar.component.scss']
 })

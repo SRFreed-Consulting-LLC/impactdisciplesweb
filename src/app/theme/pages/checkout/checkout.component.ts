@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../shared/services/cart.service';
 
 @Component({
-  selector: 'app-checkout',
+  selector: 'theme-checkout',
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss']
 })

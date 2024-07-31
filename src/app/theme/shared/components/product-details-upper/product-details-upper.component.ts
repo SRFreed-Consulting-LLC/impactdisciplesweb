@@ -4,7 +4,7 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 
 @Component({
-  selector: 'app-product-details-upper',
+  selector: 'theme-product-details-upper',
   templateUrl: './product-details-upper.component.html',
   styleUrls: ['./product-details-upper.component.scss'],
 })

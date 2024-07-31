@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import social_links, { ISocial } from '../../data/social-data';
 
 @Component({
-  selector: 'app-footer-two',
+  selector: 'theme-footer-two',
   templateUrl: './footer-two.component.html',
   styleUrls: ['./footer-two.component.scss']
 })

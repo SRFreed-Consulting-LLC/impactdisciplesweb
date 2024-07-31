@@ -5,7 +5,7 @@ import { ProductService } from 'src/app/theme/shared/services/product.service';
 import { IProduct } from 'src/app/theme/shared/types/product-d-t';
 
 @Component({
-  selector: 'app-search',
+  selector: 'theme-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })

@@ -1,16 +1,16 @@
 <!-- header start -->
-<app-header-one [header_big]="true"></app-header-one>
+<theme-header-one [header_big]="true"></theme-header-one>
 <!-- header end -->
 
 <main>
   <div class="box-25">
 
     <!--hero slider area start -->
-    <app-hero-slider-two></app-hero-slider-two>
+    <theme-hero-slider-two></theme-hero-slider-two>
     <!--hero slider area end -->
 
     <!-- shop category start -->
-    <app-shop-category [style_2]="true"></app-shop-category>
+    <theme-shop-category [style_2]="true"></theme-shop-category>
     <!-- shop category end -->
 
     <!-- product area start -->
@@ -53,7 +53,7 @@
               <div class="product__slider-2">
                 <div class="row">
                   <div *ngFor="let item of trending_products; let i = index" class="col-lg-4 col-md-6 product__item">
-                    <app-product-item [product]="item"></app-product-item>
+                    <theme-product-item [product]="item"></theme-product-item>
                   </div>
                 </div>
               </div>
@@ -84,7 +84,7 @@
             <div class="sale__area-slider-2">
               <div class="row">
                 <div *ngFor="let item of discount_products" class="col-xl-2 col-lg-3 col-md-4 col-6 sale__item">
-                    <app-product-item [product]="item"></app-product-item>
+                    <theme-product-item [product]="item"></theme-product-item>
                 </div>
               </div>
             </div>
@@ -109,7 +109,7 @@
             </div>
             <div class="row">
                 <div class="col-xl-12">
-                    <app-blog-slider></app-blog-slider>
+                    <theme-blog-slider></theme-blog-slider>
                 </div>
             </div>
         </div>
@@ -122,7 +122,7 @@
             <div class="row">
                 <div class="col-xl-12">
                   <div class="pt-80 pb-80 border-top-1">
-                    <app-client-slider></app-client-slider>
+                    <theme-client-slider></theme-client-slider>
                   </div>
                 </div>
             </div>
@@ -131,13 +131,13 @@
     <!-- client slider area end -->
 
     <!-- subscribe area start -->
-    <app-subscribe-area [style_2]="true"></app-subscribe-area>
+    <theme-subscribe-area [style_2]="true"></theme-subscribe-area>
     <!-- subscribe area end -->
   </div>
 </main>
 
 <!-- footer start -->
 <div class="box-25 box-pb-40">
-  <app-footer-one [box_style]="true" />
+  <theme-footer-one [box_style]="true" />
 </div>
 <!-- footer end -->

@@ -1,5 +1,5 @@
 <!-- header start -->
-<app-header-two></app-header-two>
+<theme-header-two></theme-header-two>
 <!-- header end -->
 
 <main>
@@ -50,7 +50,7 @@
                 <div class="product__slider-4">
                   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
                     <div *ngFor="let item of trendingProducts.slice(0,perView)" class="col">
-                      <app-product-item [product]="item"></app-product-item>
+                      <theme-product-item [product]="item"></theme-product-item>
                     </div>
                   </div>
                 </div>
@@ -68,11 +68,11 @@
   <!-- product area end -->
 
   <!-- product banner start -->
-  <app-product-banner></app-product-banner>
+  <theme-product-banner></theme-product-banner>
   <!-- product banner end -->
 
   <!-- subscribe area start -->
-  <app-subscribe-area></app-subscribe-area>
+  <theme-subscribe-area></theme-subscribe-area>
   <!-- subscribe area end -->
 
   </div>
@@ -81,5 +81,5 @@
 </main>
 
 <!-- footer start -->
-<app-footer-one></app-footer-one>
+<theme-footer-one></theme-footer-one>
 <!-- footer end -->

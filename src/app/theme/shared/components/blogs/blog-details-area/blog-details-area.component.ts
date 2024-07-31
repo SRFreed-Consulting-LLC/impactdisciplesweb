@@ -4,7 +4,7 @@ import { UtilsService } from '../../../services/utils.service';
 
 
 @Component({
-  selector: 'app-blog-details-area',
+  selector: 'theme-blog-details-area',
   templateUrl: './blog-details-area.component.html',
   styleUrls: ['./blog-details-area.component.scss']
 })

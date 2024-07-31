@@ -5,7 +5,7 @@ import blog_data from '../../../data/blog-data';
 
 
 @Component({
-  selector: 'app-blog-slider',
+  selector: 'theme-blog-slider',
   templateUrl: './blog-slider.component.html',
   styleUrls: ['./blog-slider.component.scss']
 })

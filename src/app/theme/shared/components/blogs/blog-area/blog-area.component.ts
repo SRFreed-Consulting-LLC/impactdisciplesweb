@@ -6,7 +6,7 @@ import { ProductService } from '../../../services/product.service';
 import { UtilsService } from '../../../services/utils.service';
 
 @Component({
-  selector: 'app-blog-area',
+  selector: 'theme-blog-area',
   templateUrl: './blog-area.component.html',
   styleUrls: ['./blog-area.component.scss']
 })

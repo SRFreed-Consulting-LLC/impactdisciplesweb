@@ -3,7 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup,Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-blog-reply-form',
+  selector: 'theme-blog-reply-form',
   templateUrl: './blog-reply-form.component.html',
   styleUrls: ['./blog-reply-form.component.scss']
 })

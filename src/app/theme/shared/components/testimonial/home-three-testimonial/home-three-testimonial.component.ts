@@ -4,7 +4,7 @@ import { register } from 'swiper/element/bundle';
 register();
 
 @Component({
-  selector: 'app-home-three-testimonial',
+  selector: 'theme-home-three-testimonial',
   templateUrl: './home-three-testimonial.component.html',
   styleUrls: ['./home-three-testimonial.component.scss']
 })
