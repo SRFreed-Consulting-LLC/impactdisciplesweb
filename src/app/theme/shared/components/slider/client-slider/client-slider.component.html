@@ -1,0 +1,7 @@
+<div class="client__slider swiper-container text-center">
+  <div class="swiper-wrapper">
+    <div *ngFor="let logo of client_logos" class="client__thumb swiper-slide">
+        <a class="cursor-pointer"><img [src]="logo" alt="client"></a>
+    </div>
+  </div>
+</div>

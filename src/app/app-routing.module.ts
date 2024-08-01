@@ -49,6 +49,18 @@ const routes: Routes = [
     component: ChangePasswordFormComponent,
     canActivate: [ AuthGuardService ]
   },
+  {
+    path: 'theme-home',
+    loadChildren: () => import('./theme/home/home.module').then(m => m.HomeModule)
+  },
+  {
+    path: 'theme-shop',
+    loadChildren: () => import('./theme/shop/shop.module').then(m => m.ShopModule)
+  },
+  {
+    path: 'theme-pages',
+    loadChildren: () => import('./theme/pages/pages.module').then(m => m.PagesModule)
+  }
 ];
 
 @NgModule({

@@ -1,0 +1,22 @@
+<!-- header start -->
+<theme-header-one [transparent]="true" [white_bg]="true"></theme-header-one>
+<!-- header end -->
+
+<main>
+
+  <!-- breadcrumb start -->
+  <theme-breadcrumb-one title="Product Details" subtitle="Product Details"></theme-breadcrumb-one>
+  <!-- breadcrumb end -->
+
+  <!-- shop details area start -->
+  <theme-product-details-area [product]="product"></theme-product-details-area>
+  <!-- shop details area end -->
+
+  <!-- related products start -->
+  <theme-related-products [brand]="product?.brand" [productId]="product?.id"></theme-related-products>
+  <!-- related products end -->
+</main>
+
+<!-- footer start -->
+<theme-footer-one></theme-footer-one>
+<!-- footer end -->

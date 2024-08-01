@@ -1,0 +1,146 @@
+<!-- header start -->
+<theme-header-one [header_big]="true"></theme-header-one>
+<!-- header end -->
+
+<main>
+  <div class="box-25">
+
+    <!--hero slider area start -->
+    <theme-hero-slider-two></theme-hero-slider-two>
+    <!--hero slider area end -->
+
+    <!-- shop category start -->
+    <theme-shop-category [style_2]="true"></theme-shop-category>
+    <!-- shop category end -->
+
+    <!-- product area start -->
+    <section class="product__area pt-60 pb-65">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="section__title-wrapper text-center mb-55">
+              <div class="section__title mb-10">
+                <h2>Trending Products</h2>
+              </div>
+              <div class="section__sub-title">
+                <p>Mirum est notare quam littera gothica quam nunc putamus parum claram!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6">
+            <div class="product__slider-3">
+              <div class="row">
+                <div *ngFor="let item of trending_products.slice(0,2); let i = index" class="col-lg-6 col-md-6 product__item">
+                  <theme-product-item [product]="item"></theme-product-item>
+                </div>
+              </div>
+            </div>
+            <div class="product__banner mb-30">
+              <a [routerLink]="['/shop/shop-details', big_item_2?.id]" class="w-img">
+                <img [src]="big_item_2?.big_img" alt="product_img">
+              </a>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6">
+            <div class="product__banner w-img pb-25 mb-30 p-relative">
+              <a [routerLink]="['/shop/shop-details', big_item_1?.id]" class="w-img">
+                <img [src]="big_item_1?.big_img" alt="product_img">
+              </a>
+              <div class="product__banner-content p-absolute">
+                <h4>
+                  <a [routerLink]="['/shop/shop-details', big_item_1?.id]">
+                    <span [innerHTML]="big_item_1?.title"></span>
+                  </a>
+                </h4>
+                <a [routerLink]="['/shop/shop-details', big_item_1?.id]" class="link-btn">
+                  discover now
+                </a>
+              </div>
+            </div>
+            <div class="product__slider-3">
+              <div class="row">
+                <div *ngFor="let item of trending_products.slice(2,4); let i = index" class="col-lg-6 col-md-6 product__item">
+                  <theme-product-item [product]="item"></theme-product-item>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- product area end -->
+
+    <!-- shop banner area start -->
+    <theme-product-banner [style_2]="true"></theme-product-banner>
+    <!-- shop banner area end -->
+
+    <!-- sale of products start -->
+    <theme-sale-of-products></theme-sale-of-products>
+    <!-- sale of products end -->
+
+    <!-- testimonial start -->
+    <theme-home-three-testimonial></theme-home-three-testimonial>
+    <!-- testimonial end -->
+
+    <!-- product offer area start -->
+    <section class="product__offer pt-115 pb-50">
+        <div class="container">
+            <theme-offer-sm-product-slider></theme-offer-sm-product-slider>
+        </div>
+    </section>
+    <!-- product offer area end -->
+
+
+    <!-- client slider area start -->
+    <section class="client__area">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                  <div class="pt-80 pb-80 border-top-1">
+                    <theme-client-slider></theme-client-slider>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- client slider area end -->
+
+    <!-- subscribe area start -->
+    <theme-subscribe-area [style_2]="true"></theme-subscribe-area>
+    <!-- subscribe area end -->
+
+    <!-- blog slider start -->
+    <section class="blog__area pt-90 pb-70">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="section__title-wrapper text-center mb-55">
+                        <div class="section__title mb-10">
+                            <h2>Our Blog Posts</h2>
+                        </div>
+                        <div class="section__sub-title">
+                            <p>Mirum est notare quam littera gothica quam nunc putamus parum claram!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    <theme-blog-slider></theme-blog-slider>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- blog slider end -->
+  </div>
+</main>
+
+<!-- footer start -->
+<div class="box-25 box-m-15 box-pb-40">
+  <theme-footer-one></theme-footer-one>
+</div>
+<!-- footer end -->

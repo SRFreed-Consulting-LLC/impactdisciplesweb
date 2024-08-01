@@ -1,0 +1,24 @@
+<nav>
+  <ul>
+    <li *ngFor="let item of menu_data; let index = index" [ngClass]="getMenuClasses(item)">
+      <a [routerLink]="item.link">{{ item.title }}</a>
+
+      <ul *ngIf="item.hasDropdown && !item.megamenu" class="submenu transition-3">
+        <li *ngFor="let menu of item.dropdownItems; let index = index">
+          <a [routerLink]="menu.link">{{ menu.title }}</a>
+        </li>
+      </ul>
+
+      <ul *ngIf="item.hasDropdown && item.megamenu" class="submenu transition-3" [style.backgroundImage]="'url(' + bg + ')'">
+        <li *ngFor="let m_mnu of item.dropdownItems; let index = index" class="has-dropdown">
+          <a [routerLink]="m_mnu.link">{{ m_mnu.title }}</a>
+          <ul>
+            <li *ngFor="let m of m_mnu.dropdownMenu; let index = index">
+              <a [routerLink]="m.link">{{ m.title }}</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>

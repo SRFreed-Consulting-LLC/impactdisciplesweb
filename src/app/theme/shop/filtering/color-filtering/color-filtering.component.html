@@ -1,0 +1,22 @@
+<div class="sidebar__widget mb-60">
+  <div class="sidebar__widget-title mb-20">
+      <h3>Choose Color</h3>
+  </div>
+  <div class="sidebar__widget-content">
+      <div class="color__pick">
+          <form action="#">
+              <ul>
+                <li *ngFor="let c of all_colors?.slice(0, 8); let i = index">
+                  <button
+                    (click)="handleColor(c)"
+                    type="button"
+                    [ngClass]="['color', 'color-' + (i + 1)]"
+                    [class.active]="c.split(' ').join('-').toLowerCase() === color"
+                  >
+                  </button>
+                </li>
+              </ul>
+          </form>
+      </div>
+  </div>
+</div>
