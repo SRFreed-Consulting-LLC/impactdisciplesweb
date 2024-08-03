@@ -34,8 +34,13 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.eventService.getAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
       this.eventsList = events;
-    });
 
+      events.forEach(event => {
+        event.agendaItems.sort((a,b) => {
+          return a.startDate.getTime() - b.startDate.getTime();
+        })
+      })
+    });
 
     this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
       this.eventRegistration.registrant = user;
