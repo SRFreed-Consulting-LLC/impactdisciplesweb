@@ -11,6 +11,7 @@ import { EventsModule } from './events/events.module';
 import { CoreModule } from './core/core.module';
 import { CookieService } from 'ngx-cookie-service';
 import { SharedModule } from './shared/shared.module';
+import { ThemeSharedModule } from './theme/shared/theme-shared.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { SharedModule } from './shared/shared.module';
     ToastrModule.forRoot(),
     CoreModule,
     SharedModule,
+    ThemeSharedModule,
     EventsModule,
     ImpactDisciplesModule
 

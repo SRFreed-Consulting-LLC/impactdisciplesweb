@@ -1,0 +1,7 @@
+<div class="blog__slider swiper-container">
+  <div class="swiper-wrapper">
+    <div *ngFor="let blog of blogData" class="swiper-slide">
+      <theme-blog-item [blog]="blog"></theme-blog-item>
+    </div>
+  </div>
+</div>
