@@ -8,7 +8,6 @@ import { ResetPasswordFormComponent } from 'impactdisciplescommon/src/forms/rese
 import { AuthGuardService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { EventRegistrationComponent } from './events/event-registration/event-registration.component';
 import { HomeComponent } from './core/home/home.component';
-import { EventFormComponent } from './events/event-form/event-form.component';
 
 const routes: Routes = [
   {
@@ -22,10 +21,6 @@ const routes: Routes = [
   {
     path: 'registration',
     component: EventRegistrationComponent
-  },
-  {
-    path: 'event-form',
-    component: EventFormComponent
   },
   {
     path: 'capture-username-form',
