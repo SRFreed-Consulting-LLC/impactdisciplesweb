@@ -1,31 +1,31 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MainScreenComponent } from './main-screen/main-screen.component';
-import { DxButtonModule, DxTabsModule, DxToolbarModule } from 'devextreme-angular';
-import { RouterModule } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { SharedModule } from '../shared/shared.module';
-import { ServicesComponent } from './services/services.component';
-import { HomeHeaderComponent } from './home/home-header/home-header.component';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { HomeComponent } from "./home/home.component";
+import { SharedModule } from "../shared/shared.module";
+import { ThemeSharedModule } from "../theme/shared/theme-shared.module";
+import { HomeHeaderComponent } from "./home/home-header/home-header.component";
+import { HomeHeaderSliderComponent } from "./home/home-header-slider/home-header-slider.component";
+import { HomeServicesComponent } from "./home/home-services/home-services.component";
 
 @NgModule({
   declarations: [
-    MainScreenComponent,
     HomeComponent,
-    ServicesComponent,
-    HomeHeaderComponent
+    HomeHeaderComponent,
+    HomeHeaderSliderComponent,
+    HomeServicesComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     SharedModule,
-    DxButtonModule,
-    DxToolbarModule,
-    DxTabsModule
+    ThemeSharedModule
   ],
   exports: [
-    ServicesComponent,
-    HomeHeaderComponent
+    HomeComponent,
+    HomeHeaderComponent,
+    HomeHeaderSliderComponent,
+    HomeServicesComponent
   ]
 })
 export class CoreModule { }
