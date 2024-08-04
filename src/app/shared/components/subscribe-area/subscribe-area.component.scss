@@ -1,0 +1,35 @@
+@import '../../../../assets/theme/scss/variables';
+
+.subscribe {
+  &__area {
+    .container-img {
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+    }
+  }
+
+  &__title {
+    color: $white;
+    font-size: 120px;
+    font-weight: 600;
+  }
+
+  &__description {
+    color: $grey-2;
+    font-size: 18px;
+  }
+
+  &__form {
+    input {
+      background: #201f1f;
+      color: #ffffff;
+    }
+  }
+
+  &__button {
+    border: 1px solid $grey-2;
+    color: $grey-2;
+    background-color: #201f1f;
+  }
+}
