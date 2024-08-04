@@ -7,12 +7,14 @@ import { CreateAuthFormComponent } from 'impactdisciplescommon/src/forms/create-
 import { ResetPasswordFormComponent } from 'impactdisciplescommon/src/forms/reset-password-form/reset-password-form.component';
 import { AuthGuardService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { EventRegistrationComponent } from './events/event-registration/event-registration.component';
+import { EventsPageComponent } from './events/events-page/events-page.component';
 import { HomeComponent } from './core/home/home.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: EventRegistrationComponent
+    // component: HomeComponent  --- Change after Home is ready
   },
   {
     path: 'events-page',
@@ -46,6 +48,18 @@ const routes: Routes = [
     path: 'change-password/:recoveryCode',
     component: ChangePasswordFormComponent,
     canActivate: [ AuthGuardService ]
+  },
+  {
+    path: 'theme-home',
+    loadChildren: () => import('./theme/home/home.module').then(m => m.HomeModule)
+  },
+  {
+    path: 'theme-shop',
+    loadChildren: () => import('./theme/shop/shop.module').then(m => m.ShopModule)
+  },
+  {
+    path: 'theme-pages',
+    loadChildren: () => import('./theme/pages/pages.module').then(m => m.PagesModule)
   }
 ];
 
