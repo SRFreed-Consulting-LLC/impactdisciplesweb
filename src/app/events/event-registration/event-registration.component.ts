@@ -9,7 +9,6 @@ import { LocationModel } from 'impactdisciplescommon/src/models/domain/location.
 import { OrganizationModel } from 'impactdisciplescommon/src/models/domain/organization.model';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
 import { OrganizationService } from 'impactdisciplescommon/src/services/organization.service';
-import { SessionService } from 'impactdisciplescommon/src/services/utils/session.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -29,7 +28,7 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
 
   constructor(private router: Router, private eventService: EventService, private authService: AuthService, private cd: ChangeDetectorRef,
-    private locationService: LocationService, private organizationService: OrganizationService, private sessionService: SessionService
+    private locationService: LocationService, private organizationService: OrganizationService
   ) {}
 
   ngOnInit(): void {
@@ -64,13 +63,11 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
 
   onRegister = (e) => {
     console.log(e)
-    console.log(this.eventRegistration);
-    this.authService.lastAuthenticatedPath = 'event-form'; 
+    console.log(this.eventRegistration)
     this.authService.findUser(this.eventRegistration.registrant.email).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
       if(!result) {
         this.router.navigate(['create-auth-form']);
       } else {
-        this.sessionService.currentUser = result;
         this.router.navigate(['capture-password-form']);
       }
     })

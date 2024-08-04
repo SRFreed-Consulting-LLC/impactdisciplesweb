@@ -12,7 +12,6 @@ import { BackToTopComponent } from "./components/back-to-top/back-to-top.compone
 import { SubscribeAreaComponent } from "./components/subscribe-area/subscribe-area.component";
 import { FooterComponent } from "./footer/footer.component";
 import { TestimonialsComponent } from "./components/testimonials/testimonials.component";
-import { DxButtonModule } from "devextreme-angular";
 
 @NgModule({
   declarations: [
@@ -29,8 +28,7 @@ import { DxButtonModule } from "devextreme-angular";
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
-    DxButtonModule
+    FormsModule
   ],
   exports: [
     NavMenuComponent,
