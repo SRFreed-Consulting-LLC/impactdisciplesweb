@@ -6,15 +6,14 @@ import { ChangePasswordFormComponent } from 'impactdisciplescommon/src/forms/cha
 import { CreateAuthFormComponent } from 'impactdisciplescommon/src/forms/create-auth-form/create-auth-form.component';
 import { ResetPasswordFormComponent } from 'impactdisciplescommon/src/forms/reset-password-form/reset-password-form.component';
 import { AuthGuardService } from 'impactdisciplescommon/src/services/utils/auth.service';
-import { EventRegistrationComponent } from './events/event-registration/event-registration.component';
-import { EventsPageComponent } from './events/events-page/events-page.component';
 import { HomeComponent } from './core/home/home.component';
+import { EventRegistrationComponent } from './core/events/event-registration/event-registration.component';
+import { EventFormComponent } from './core/events/event-form/event-form.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: EventRegistrationComponent
-    // component: HomeComponent  --- Change after Home is ready
+    component: HomeComponent
   },
   {
     path: 'events-page',
@@ -23,6 +22,10 @@ const routes: Routes = [
   {
     path: 'registration',
     component: EventRegistrationComponent
+  },
+  {
+    path: 'event-form',
+    component: EventFormComponent
   },
   {
     path: 'capture-username-form',
@@ -48,18 +51,6 @@ const routes: Routes = [
     path: 'change-password/:recoveryCode',
     component: ChangePasswordFormComponent,
     canActivate: [ AuthGuardService ]
-  },
-  {
-    path: 'theme-home',
-    loadChildren: () => import('./theme/home/home.module').then(m => m.HomeModule)
-  },
-  {
-    path: 'theme-shop',
-    loadChildren: () => import('./theme/shop/shop.module').then(m => m.ShopModule)
-  },
-  {
-    path: 'theme-pages',
-    loadChildren: () => import('./theme/pages/pages.module').then(m => m.PagesModule)
   }
 ];
 

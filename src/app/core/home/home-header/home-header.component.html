@@ -1,12 +1,94 @@
-<div class="home-header">
-  <div class="left-section">
-    <div class="left-section__title">Impact Discipleship Minitries</div>
-    <div class="left-section__subtitle">We exist to inspire people and churches to be and build disciples of Jesus Christ.</div>
-  </div>
-  <div class="right-section">
-    <div class="right-section__button-container">
-      <dx-button class="right-section__button-container--button button-primary"><span>CHECK OUT OUR <strong> FREE RESOURCES!</strong></span><i class="dx-icon-chevronright"></i></dx-button>
-      <dx-button class="right-section__button-container--button button-secondary"><span>REGISTER FOR AN EVENT</span><i class="dx-icon-chevronright"></i></dx-button>
+<header>
+  <div id="header-sticky"
+    [ngClass]="['header__area', transparent ? 'header__transparent' : '', header_big ? 'box-25' : !white_bg ? 'grey-bg' : '', sticky ? 'sticky' : '']" id="header-sticky">
+    <div [ngClass]="header_big ? 'container-fluid' : 'container'">
+      <div class="row align-items-center">
+        <div
+          [ngClass]="header_big ? 'col-xl-2 col-lg-2 col-md-4 col-sm-4 col-12' : 'col-xl-3 col-lg-3 col-md-4 col-sm-4'">
+          <div class="logo">
+            <a routerLink="/home/home-style-1">
+              <img 
+                src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Logos%2FImpact-Logo_Black.png?alt=media&token=2a2452b7-a337-476f-b268-d0a4b0fa5d42" 
+                alt="logo" 
+                height="60px" 
+                width="65px"
+                >
+            </a>
+          </div>
+        </div>
+
+        <div
+          [ngClass]="header_big ? 'col-xl-7 col-lg-6 col-md-2 col-sm-1 col-2' : 'col-xl-9 col-lg-9 col-md-8 col-sm-8'">
+          <div class="header__right p-relative"
+            [ngClass]="{'d-flex justify-content-between align-items-center': !header_big}">
+            <div [ngClass]="{'main-menu': true, 'main-menu-2': header_big, 'text-center': header_big, 'd-none d-lg-block': true}">
+              <!-- nav menu start -->
+              <app-nav-menu></app-nav-menu>
+              <!-- nav menu end -->
+            </div>
+            <div class="mobile-menu-btn d-lg-none">
+              <a (click)="utilsService.handleOpenMobileMenu()" class="mobile-menu-toggle cursor-pointer">
+                <i class="fas fa-bars"></i>
+              </a>
+            </div>
+            <div *ngIf="!header_big" class="header__action">
+              <ul>
+                <li>
+                  <a (click)="utilsService.handleSearchOpen()" class="search-toggle cursor-pointer">
+                    <i class="ion-ios-search-strong"></i> Search
+                  </a>
+                </li>
+                <li>
+                  <a class="cart cursor-pointer">
+                    <i class="ion-bag"></i> Cart <span>({{cartService.totalPriceQuantity().quantity}})</span>
+                  </a>
+                  <!-- mini cart start -->
+                  <app-mini-cart></app-mini-cart>
+                  <!-- mini cart end -->
+                </li>
+                <li> <a class="cursor-pointer"><i class="far fa-bars"></i></a>
+                  <!-- extra info start -->
+                  <app-extra-info></app-extra-info>
+                  <!-- extra info end -->
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="header_big" class="col-xl-3 col-lg-4 col-md-6 col-sm-7 col-10">
+          <div class="header__action header__action-2 f-right">
+            <ul>
+              <li>
+                <a (click)="utilsService.handleSearchOpen()" class="search-toggle cursor-pointer">
+                  <i class="ion-ios-search-strong"></i> Search
+                </a>
+              </li>
+              <li>
+                <a class="cart cursor-pointer"><i class="ion-bag"></i> Cart
+                  <span>({{cartService.totalPriceQuantity().quantity}})</span>
+                </a>
+                <!-- mini cart start -->
+                <app-mini-cart></app-mini-cart>
+                <!-- mini cart end -->
+              </li>
+              <li> <a class="cursor-pointer"><i class="far fa-bars"></i></a>
+                <!-- extra info start -->
+                <app-extra-info></app-extra-info>
+                <!-- extra info end -->
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</header>
+
+<!-- search popup start -->
+<app-search-popup></app-search-popup>
+<!-- search popup end -->
+
+<!-- mobile offcanvas start -->
+<app-offcanvas></app-offcanvas>
+<!-- mobile offcanvas end -->
