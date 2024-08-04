@@ -1,0 +1,32 @@
+<div class="header-container">
+  <dx-toolbar>
+    <dxi-item location="center" widget="dxButton" locateInMenu="never">
+      <div *dxTemplate>
+        <div class="titlebar">
+          <span id="Impact-Logo"><img src="../../../assets/Impact-Logo_Black.png" width="48.23px" height="43.19px"></span>
+          <span id="Impact-Title">Impact Discipleship Ministries</span>
+        </div>
+      </div>
+    </dxi-item>
+    <dxi-item
+      location="after"
+      widget="dxButton"
+      locateInMenu="auto"
+      [options]="registrationButtonOptions">
+    </dxi-item>
+    <dxi-item
+      location="after"
+      widget="dxButton"
+      locateInMenu="always"
+      [options]="logOffButtonOptions">
+    </dxi-item>
+  </dx-toolbar>
+</div>
+<div class="app-container">
+  <router-outlet>
+  </router-outlet>
+</div>
+
+<div class="footer-container">
+
+</div>

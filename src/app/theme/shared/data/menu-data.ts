@@ -1,6 +1,6 @@
 import { IMenuType, IMobileMenu } from "../types/menu-d-t";
 
-const menu_data:IMenuType[] = [
+const menuData:IMenuType[] = [
   {
     link: '/',
     title: 'Home',
@@ -97,7 +97,7 @@ const menu_data:IMenuType[] = [
   },
 ]
 
-export default menu_data;
+export default menuData;
 
 // mobile menus
 export const mobile_menus:IMobileMenu[] = [
