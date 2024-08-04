@@ -1,0 +1,16 @@
+.footer {
+  &__top {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  &__widget-title {
+    font-size: 45px;
+    line-height: 1;
+  }
+  &__title-links {
+    span {
+      margin: 0 5px;
+    }
+  }
+}

@@ -1,0 +1,89 @@
+<div class="registration">
+  <div class="registration__container">
+    <div class="registration__left-box" [ngClass]="{ 'left-box-no-border-radius': isShowSidePanel }">
+      <div class="registration__left-box--container">
+        <div class="registration__left-box--logo-container">
+          <img src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Logos%2FImpact-Logo_Light.png?alt=media&token=5894a7f1-171c-46c6-963a-ae7e55d77cb4">
+          <span class="logo-image-header">Impact Discipleship Ministries</span>
+        </div>
+        <span class="registration__left-box--header">Event Registration</span>
+        <span class="registration__left-box--sub-header">Thank you for your interest in our events through Impact Discipleship Ministries! Select an event from the list below and complete the form to register for an event.</span>
+
+        <dx-form
+          id="form"
+          class="registration__left-box--form"
+          [formData]="eventRegistration"
+          [colCount]="1"
+          [labelMode]="'hidden'"
+        >
+          <div *dxTemplate="let data of 'eventItemTemplate'">
+            <div class="registration-custom-list-item">
+              <img src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2FSimple-DMC-Cover-2024.webp?alt=media&token=9e794ef1-2c19-4647-9c8d-3f07c948e6ef" />
+              <div class="event-container">
+                <div class="event-name">{{ data.eventName }}</div>
+                <div class="event-info">
+                  <div class="event-date">{{ data.startDate | date: 'M/d' }} </div>
+                  <div *ngIf="data.endDate" class="event-date"> - {{ data.endDate | date: 'M/d' }} </div>
+                  <!--TODO: Need items from database: Location State-->
+                  <div *ngIf="data.location" class="event-location"> | {{ getLocation(data.location) }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <dxi-item
+            dataField="event"
+            editorType="dxSelectBox"
+            [editorOptions]="{
+              dataSource: eventsList,
+              displayExpr: 'eventName',
+              valueExpr: 'id',
+              placeholder: 'Select Event',
+              onSelectionChanged: onEventSelected,
+              itemTemplate: 'eventItemTemplate',
+              dropDownOptions: {
+                height: 80
+              }
+            }"
+          ></dxi-item>
+          <dxi-item dataField="registrant.email" [editorOptions]="{valueChangeEvent: 'keyup', placeholder: 'Registrant Email'}">
+            <dxi-validation-rule type="required" message="Email is required">
+            </dxi-validation-rule>
+            <dxi-validation-rule type="email" message="Email is invalid">
+            </dxi-validation-rule>
+          </dxi-item>
+        </dx-form>
+        <dx-button [text]="'REGISTER'" class="registration__left-box--button" (onClick)="onRegister($event)"></dx-button>
+      </div>
+    </div>
+    <!--TODO: Need items from database: Location Name, Price, Full Address-->
+    <div *ngIf="isShowSidePanel" class="registration__right-box"  [ngClass]="{ 'right-box-no-border-radius': isShowSidePanel }">
+      <div class="registration__right-box--container">
+        <div class="event-info">
+          <!--TODO: Link 'Location Name' to google maps location in seperate tab-->
+          <div class="event-info__title"><strong>{{ selectedEvent.eventName }}</strong> | {{ getLocation(selectedEvent.location) }}</div>
+          <div class="event-info__price">$10.00</div>
+          <div class="event-info__description">
+            Is your current discipleship plan working? Are your small groups producing results? Are disciples being reproduced? Are leaders trained and equipped to multiply more disciples?
+            <br>
+            You want to see your church actively growing. We can help you accomplish all of these things and more. Let’s get started together!
+          </div>
+        </div>
+        <div class="event-details">
+          <div class="event-details__location">
+            <strong>Seminar Location:</strong>
+            <div class="event-details__address"><a class="location-name">Location Name</a>, 123 Apple St, Newnan GA 30263</div>
+          </div>
+          <div class="event-details__schedule">
+            <strong>Seminar Schedule:</strong>
+            <dx-scroll-view>
+              <div class="agenda-container">
+                <!--TODO: Items need to be ordered by date correctly-->
+                <div *ngFor="let item of selectedEvent.agendaItems" class="agenda-item">{{ item.startDate | date:'EEEE, M/d – h a' }}: {{ item.name }}</div>
+              </div>
+            </dx-scroll-view>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

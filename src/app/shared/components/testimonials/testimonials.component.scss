@@ -1,0 +1,11 @@
+@import '../../../../assets/theme/scss/variables';
+
+.testimonials {
+  &__area {
+    .container-img {
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+    }
+  }
+}

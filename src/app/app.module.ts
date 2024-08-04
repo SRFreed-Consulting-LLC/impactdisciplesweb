@@ -7,11 +7,11 @@ import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { ImpactDisciplesModule } from 'impactdisciplescommon/src/impactdisciples.common.module';
-import { EventsModule } from './events/events.module';
 import { CoreModule } from './core/core.module';
 import { CookieService } from 'ngx-cookie-service';
 import { SharedModule } from './shared/shared.module';
 import { ThemeSharedModule } from './theme/shared/theme-shared.module';
+import { EventsModule } from './core/events/events.module';
 
 @NgModule({
   declarations: [
