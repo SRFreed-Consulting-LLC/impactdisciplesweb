@@ -3,12 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "start": "ng serve",
-    "build": "ng build",
+    "build-dev": "ng build --configuration development",
+    "build-prod": "ng build --configuration production",
+    "build-deploy": "ng build --configuration production && firebase deploy --only hosting:impactdisciples-public",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "deploy": "firebase deploy --only hosting:impactdisciples-public",
     "add-git-submodule": "git submodule add -b development https://github.com/SRFreed-Consulting-LLC/impactdisciplescommon.git",
-    "init-git-submodules": "git submodule update --init && git submodule update --init --recursive && git submodule status --recursive"
+    "init-git-submodules": "git submodule update --init --recursive && git submodule status --recursive"
   },
   "private": true,
   "dependencies": {
