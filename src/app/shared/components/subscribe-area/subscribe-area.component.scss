@@ -11,7 +11,7 @@
 
   &__title {
     color: $white;
-    font-size: 120px;
+    font-size: 70px;
     font-weight: 600;
   }
 
@@ -21,9 +21,15 @@
   }
 
   &__form {
+    display: flex;
+    justify-content: center;
+    form {
+      width: 50%;
+    }
     input {
       background: #201f1f;
       color: #ffffff;
+      height: 35px;
     }
   }
 

@@ -8,6 +8,7 @@ import { HomeComponent } from "./home/home.component";
 import { ThemeSharedModule } from "../theme/shared/theme-shared.module";
 import { HomeHeaderSliderComponent } from "./home/home-header-slider/home-header-slider.component";
 import { HomeServicesComponent } from "./home/home-services/home-services.component";
+import { EventsComponent } from "./pages/events/events.component";
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { HomeServicesComponent } from "./home/home-services/home-services.compon
     HomeComponent,
     HomeHeaderComponent,
     HomeHeaderSliderComponent,
-    HomeServicesComponent
+    HomeServicesComponent,
+    EventsComponent
   ],
   imports: [
     CommonModule,

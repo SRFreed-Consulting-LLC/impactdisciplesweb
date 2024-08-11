@@ -1,0 +1,10 @@
+@import '../../../../assets/theme/scss/variables';
+
+.os-btn-white:hover::after {
+  background-color: $theme-color;
+}
+
+.os-btn-white:hover {
+  color: #fff;
+  border-color: $theme-color;
+}

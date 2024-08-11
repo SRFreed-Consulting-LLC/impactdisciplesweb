@@ -1,0 +1,37 @@
+<section class="blog__area pb-70">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="section__title-wrapper text-center mb-55">
+          <div class="section__title mb-10">
+            <h2>Our Blog Posts</h2>
+          </div>
+          <div class="section__sub-title">
+            <p>Mirum est notare quam littera gothica quam nunc putamus parum claram!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="blog__item mb-30">
+          <div class="blog__thumb fix">
+              <a [routerLink]="['/pages/blog-details', blog.id]" class="w-img">
+                <img [src]="blog.img" alt="blog">
+             </a>
+          </div>
+          <div class="blog__content">
+              <h4><a [routerLink]="['/pages/blog-details', blog.id]">{{blog.title}}</a></h4>
+              <div class="blog__meta">
+                  <span>By <a href="#">{{blog.author}}</a></span>
+                  <span>/ {{blog.date}}</span>
+              </div>
+              <p>Mirum est notare quam littera gothica, quam nunc putamus parum claram.</p>
+              <a [routerLink]="['/pages/blog-details', blog.id]" class="os-btn">read more</a>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</section>

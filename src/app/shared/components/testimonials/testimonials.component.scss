@@ -1,11 +1,30 @@
 @import '../../../../assets/theme/scss/variables';
 
-.testimonials {
-  &__area {
-    .container-img {
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
+.testimonial {
+  &__wrapper {
+    display: flex;
+    justify-content: center;
+    .swiper-pagination-bullets {
+      position: relative;
+    }
+  }
+  &__left-column {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #c9c9c9;
+    padding: 20px;
+  }
+  &__title {
+    font-size: 90px;
+    strong {
+      color: $theme-color;
+      font-size: 95px;
+    }
+  }
+  &__image {
+    img {
+      border-radius: 0;
     }
   }
 }

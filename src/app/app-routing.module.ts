@@ -9,6 +9,7 @@ import { AuthGuardService } from 'impactdisciplescommon/src/services/utils/auth.
 import { HomeComponent } from './core/home/home.component';
 import { EventRegistrationComponent } from './core/events/event-registration/event-registration.component';
 import { EventFormComponent } from './core/events/event-form/event-form.component';
+import { EventsComponent } from './core/pages/events/events.component';
 
 const routes: Routes = [
   {
@@ -16,8 +17,8 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'events-page',
-    component: EventRegistrationComponent
+    path: 'events',
+    component: EventsComponent
   },
   {
     path: 'registration',

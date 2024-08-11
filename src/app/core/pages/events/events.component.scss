@@ -1,0 +1,171 @@
+@import '../../../../assets/theme/scss/variables';
+
+.events {
+  &__container {
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  &__slider {
+    padding: 0 50px;
+  }
+  &__header {
+    &-title {
+      font-size: 50px;
+      color: #ffffff;
+    }
+    &-subtitle {
+      font-size: 25px;
+      color: #ffffff;
+    }
+    &-button {
+      border: 2px solid #ffffff;
+      color: #ffffff;
+      background-color: #00000080;
+    }
+  }
+  .events-list {
+    &__event {
+      margin-bottom: 50px;
+      padding: 20px;
+    }
+    &__content {
+      h4 {
+        margin-top: 15px;
+      }
+    }
+  }
+}
+
+.countdown-timer {
+  display: flex;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+
+  .time-part {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+
+    .number {
+      font-size: 4rem; /* Large size for the numbers */
+      font-weight: bold;
+    }
+
+    .label {
+      font-size: 1rem; /* Smaller size for the labels */
+      margin-top: 25px;
+    }
+  }
+
+  .colon {
+    font-size: 4rem;
+    font-weight: bold;
+  }
+}
+
+
+
+.slider-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px; /* Adjust this to control the overall size */
+  margin: auto;
+  overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  flex: 0 0 calc(100% / 4); /* Show 4 images at a time */
+  box-sizing: border-box;
+  padding: 0 5px; /* Adjust spacing between images */
+}
+
+img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+button.prev, button.next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+button.prev {
+  left: 10px;
+}
+
+button.next {
+  right: 10px;
+}
+
+button.prev:hover, button.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 768px) {
+  .slide {
+    flex: 0 0 calc(100% / 2); /* Show 2 images at a time on smaller screens */
+  }
+  button.prev, button.next {
+    font-size: 18px;
+    padding: 8px;
+  }
+}
+
+// .events {
+//   &__container {
+//     padding: 25px;
+//   }
+//  &__header {
+//   &-title {
+//     font-size: 50px;
+//     color: #ffffff;
+//   }
+//   &-subtitle {
+//     font-size: 25px;
+//     color: #ffffff;
+//   }
+//   &-button {
+//     border: 2px solid #ffffff;
+//     color: #ffffff;
+//     background-color: #00000080;
+//   }
+//  }
+//  .events-list {
+//   display: flex;
+//   justify-content: space-between;
+//   &__event {
+//     margin-bottom: 50px;
+//     padding: 20px;
+//     &-box {
+//       display: flex;
+//       flex-direction: column;
+//       margin: 10px;
+//     }
+//   }
+//   &__content {
+//     padding: 15px;
+//   }
+
+//  }
+
+//  .subscribe-area {
+//   margin: 0 45px;
+//  }
+//   .transform {
+//     transform: scale(1.1);
+//   }
+// }
