@@ -1,7 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { ThemeSharedModule } from "../theme/shared/theme-shared.module";
 import { NavMenuComponent } from "./nav-menu/nav-menu.component";
 import { MiniCartComponent } from "./components/mini-cart/mini-cart.component";
 import { ExtraInfoComponent } from "./components/extra-info/extra-info.component";
