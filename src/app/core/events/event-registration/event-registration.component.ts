@@ -1,6 +1,6 @@
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
@@ -26,19 +26,15 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
   eventRegistrant: AppUser;
   isShowSidePanel: boolean = false;
   selectedEvent: EventModel;
+  incomingEventId: string;
 
   private ngUnsubscribe = new Subject<void>();
 
   constructor(private router: Router, private eventService: EventService, private authService: AuthService, private cd: ChangeDetectorRef,
-    private locationService: LocationService, private organizationService: OrganizationService, private sessionService: SessionService
+    private locationService: LocationService, private organizationService: OrganizationService, private sessionService: SessionService, private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.eventService.getAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
-      this.eventsList = events;
-    });
-
-
     this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
       this.eventRegistration.registrant = user;
     });
@@ -50,18 +46,32 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
     this.organizationService.getAll().then((organizations) => {
       this.organizationsList = organizations;
     });
+
+    this.incomingEventId = this.route.snapshot.queryParamMap.get('id');
+
+    if(this.incomingEventId){
+      this.eventService.getById(this.incomingEventId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((event) => {
+        this.onEventSelected({selectedItem: {...event}});
+      });
+    } else {
+      this.eventService.getAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
+        this.eventsList = events;
+      });
+    }
   }
 
   onEventSelected = ({ selectedItem }) => {
     this.isShowSidePanel = true;
     this.selectedEvent = selectedItem;
+
+    this.selectedEvent.agendaItems.sort((a,b) => a.startDate.getTime() - b.startDate.getTime())
     this.cd.markForCheck();
   }
 
   onRegister = (e) => {
     console.log(e)
     console.log(this.eventRegistration);
-    this.authService.lastAuthenticatedPath = 'event-form'; 
+    this.authService.lastAuthenticatedPath = 'event-form';
     this.authService.findUser(this.eventRegistration.registrant.email).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
       if(!result) {
         this.router.navigate(['create-auth-form']);
@@ -72,7 +82,7 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
     })
   }
 
-  getLocation(id): string{
+  getLocationName(id): string{
     let location = this.locationsList.find(location => location.id == id);
 
     if(location?.organization){
@@ -83,6 +93,10 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
 
     return location.name;
 
+  }
+
+  getSelectedLocation(id): LocationModel{
+    return this.locationsList.find(location => location.id == id);
   }
 
   ngOnDestroy(): void {

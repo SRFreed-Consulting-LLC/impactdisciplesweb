@@ -7,7 +7,8 @@
           <span class="logo-image-header">Impact Discipleship Ministries</span>
         </div>
         <span class="registration__left-box--header">Event Registration</span>
-        <span class="registration__left-box--sub-header">Thank you for your interest in our events through Impact Discipleship Ministries! Select an event from the list below and complete the form to register for an event.</span>
+        <span class="registration__left-box--sub-header">Thank you for your interest in our events through Impact Discipleship Ministries!</span>
+        <span *ngIf="!incomingEventId">Select an event from the list below and complete the form to register for an event.</span>
 
         <dx-form
           id="form"
@@ -25,12 +26,13 @@
                   <div class="event-date">{{ data.startDate | date: 'M/d' }} </div>
                   <div *ngIf="data.endDate" class="event-date"> - {{ data.endDate | date: 'M/d' }} </div>
                   <!--TODO: Need items from database: Location State-->
-                  <div *ngIf="data.location" class="event-location"> | {{ getLocation(data.location) }}</div>
+                  <div *ngIf="data.location" class="event-location"> | {{ getLocationName(data.location) }}</div>
                 </div>
               </div>
             </div>
           </div>
           <dxi-item
+            *ngIf="!incomingEventId"
             dataField="event"
             editorType="dxSelectBox"
             [editorOptions]="{
@@ -60,8 +62,9 @@
       <div class="registration__right-box--container">
         <div class="event-info">
           <!--TODO: Link 'Location Name' to google maps location in seperate tab-->
-          <div class="event-info__title"><strong>{{ selectedEvent.eventName }}</strong> | {{ getLocation(selectedEvent.location) }}</div>
-          <div class="event-info__price">$10.00</div>
+          <div class="event-info__title"><strong>{{ selectedEvent.eventName }}</strong></div>
+          <div class="event-info__title">{{ getLocationName(selectedEvent.location) }}</div>
+          <div class="event-info__price">{{selectedEvent.costInDollars | currency}}</div>
           <div class="event-info__description">
             Is your current discipleship plan working? Are your small groups producing results? Are disciples being reproduced? Are leaders trained and equipped to multiply more disciples?
             <br>
@@ -71,7 +74,11 @@
         <div class="event-details">
           <div class="event-details__location">
             <strong>Seminar Location:</strong>
-            <div class="event-details__address"><a class="location-name">Location Name</a>, 123 Apple St, Newnan GA 30263</div>
+            <div class="event-details__address">
+              <div>{{ getLocationName(selectedEvent.location) }}</div>
+              <div>{{ getSelectedLocation(selectedEvent.location).address.address1 }}</div>
+              <div>{{ getSelectedLocation(selectedEvent.location).address.city }}, {{ getSelectedLocation(selectedEvent.location).address.state }} {{ getSelectedLocation(selectedEvent.location).address.zip }}</div>
+            </div>
           </div>
           <div class="event-details__schedule">
             <strong>Seminar Schedule:</strong>
