@@ -1,3 +1,4 @@
+import { CheckoutSuccessComponent } from './pages/checkout-success/checkout-success.component';
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
@@ -9,6 +10,7 @@ import { ThemeSharedModule } from "../theme/shared/theme-shared.module";
 import { HomeHeaderSliderComponent } from "./home/home-header-slider/home-header-slider.component";
 import { HomeServicesComponent } from "./home/home-services/home-services.component";
 import { EventsComponent } from "./pages/events/events.component";
+import { CheckoutComponent } from "./pages/checkout/checkout.component";
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { EventsComponent } from "./pages/events/events.component";
     HomeHeaderComponent,
     HomeHeaderSliderComponent,
     HomeServicesComponent,
-    EventsComponent
+    EventsComponent,
+    CheckoutComponent,
+    CheckoutSuccessComponent
   ],
   imports: [
     CommonModule,

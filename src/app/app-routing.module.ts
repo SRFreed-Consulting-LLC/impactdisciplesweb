@@ -10,6 +10,8 @@ import { HomeComponent } from './core/home/home.component';
 import { EventRegistrationComponent } from './core/events/event-registration/event-registration.component';
 import { EventFormComponent } from './core/events/event-form/event-form.component';
 import { EventsComponent } from './core/pages/events/events.component';
+import { CheckoutComponent } from './core/pages/checkout/checkout.component';
+import { CheckoutSuccessComponent } from './core/pages/checkout-success/checkout-success.component';
 
 const routes: Routes = [
   {
@@ -27,6 +29,16 @@ const routes: Routes = [
   {
     path: 'event-form',
     component: EventFormComponent
+  },
+  {
+    path: 'checkout',
+    component: CheckoutComponent,
+    canActivate: [ AuthGuardService ]
+  },
+  {
+    path: 'checkoutsuccess',
+    component: CheckoutSuccessComponent,
+    canActivate: [ AuthGuardService ]
   },
   {
     path: 'capture-username-form',

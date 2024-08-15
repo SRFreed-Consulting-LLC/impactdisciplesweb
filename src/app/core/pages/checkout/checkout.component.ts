@@ -1,6 +1,7 @@
 import { AfterContentInit, Component, OnInit } from '@angular/core';
-import { StripeService } from './stripe.service';
+import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-checkout',
@@ -34,7 +35,7 @@ export class CheckoutComponent implements OnInit, AfterContentInit {
     } else {
       document.querySelector("#payment-form").addEventListener("submit", this.handleSubmit.bind(this));
 
-      const response = await fetch("https://us-central1-impactdisciples-a82a8.cloudfunctions.net/checkout/create-payment-intent", {
+      const response = await fetch(environment.stripeURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(this.items),
@@ -63,7 +64,7 @@ export class CheckoutComponent implements OnInit, AfterContentInit {
         elements: this.elements,
         confirmParams: {
           // Make sure to change this to your payment completion page
-          return_url: "http://localhost:4200/checkout",
+          return_url: environment.domain + "/checkout",
         },
     });
     })

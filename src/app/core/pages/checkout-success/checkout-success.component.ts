@@ -1,5 +1,5 @@
 import { AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
-import { StripeService } from '../checkout/stripe.service';
+import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 
 @Component({
   selector: 'app-checkout-success',
