@@ -34,27 +34,23 @@ export class EventRegistrationComponent implements OnInit, OnDestroy {
     private locationService: LocationService, private organizationService: OrganizationService, private sessionService: SessionService, private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
       this.eventRegistration.registrant = user;
     });
 
-    this.locationService.getAll().then((locations) => {
-      this.locationsList = locations;
-    });
+    this.locationsList = await this.locationService.getAll()
 
-    this.organizationService.getAll().then((organizations) => {
-      this.organizationsList = organizations;
-    });
+    this.organizationsList = await this.organizationService.getAll()
 
     this.incomingEventId = this.route.snapshot.queryParamMap.get('id');
 
     if(this.incomingEventId){
-      this.eventService.getById(this.incomingEventId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((event) => {
+      this.eventService.streamById(this.incomingEventId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((event) => {
         this.onEventSelected({selectedItem: {...event}});
       });
     } else {
-      this.eventService.getAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
+      this.eventService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
         this.eventsList = events;
       });
     }
