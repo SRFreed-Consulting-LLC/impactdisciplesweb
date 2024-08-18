@@ -8,10 +8,10 @@ import { ResetPasswordFormComponent } from 'impactdisciplescommon/src/forms/rese
 import { AuthGuardService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { HomeComponent } from './core/home/home.component';
 import { EventRegistrationComponent } from './core/events/event-registration/event-registration.component';
-import { EventFormComponent } from './core/events/event-form/event-form.component';
 import { EventsComponent } from './core/pages/events/events.component';
+import { TeamComponent } from './core/pages/team/team.component';
+import { EventDetailsComponent } from './core/pages/events/event-details/event-details.component';
 import { CheckoutComponent } from './core/pages/checkout/checkout.component';
-import { CheckoutSuccessComponent } from './core/pages/checkout-success/checkout-success.component';
 
 const routes: Routes = [
   {
@@ -23,22 +23,20 @@ const routes: Routes = [
     component: EventsComponent
   },
   {
+    path: 'event-details/:id',
+    component: EventDetailsComponent
+  },
+  {
     path: 'registration',
     component: EventRegistrationComponent
   },
   {
-    path: 'event-form',
-    component: EventFormComponent
+    path: 'team',
+    component: TeamComponent
   },
   {
     path: 'checkout',
-    component: CheckoutComponent,
-    canActivate: [ AuthGuardService ]
-  },
-  {
-    path: 'checkoutsuccess',
-    component: CheckoutSuccessComponent,
-    canActivate: [ AuthGuardService ]
+    component: CheckoutComponent
   },
   {
     path: 'capture-username-form',

@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, DatePipe } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { NavMenuComponent } from "./nav-menu/nav-menu.component";
@@ -12,6 +12,7 @@ import { SubscribeAreaComponent } from "./components/subscribe-area/subscribe-ar
 import { FooterComponent } from "./footer/footer.component";
 import { TestimonialsComponent } from "./components/testimonials/testimonials.component";
 import { DxButtonModule } from "devextreme-angular";
+import { LocationPipe } from "./utils/pipes/location.pipe";
 
 @NgModule({
   declarations: [
@@ -23,13 +24,15 @@ import { DxButtonModule } from "devextreme-angular";
     BackToTopComponent,
     SubscribeAreaComponent,
     FooterComponent,
-    TestimonialsComponent
+    TestimonialsComponent,
+    LocationPipe
   ],
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
-    DxButtonModule
+    DxButtonModule,
+    DatePipe
   ],
   exports: [
     NavMenuComponent,
@@ -40,7 +43,8 @@ import { DxButtonModule } from "devextreme-angular";
     BackToTopComponent,
     SubscribeAreaComponent,
     FooterComponent,
-    TestimonialsComponent
+    TestimonialsComponent,
+    LocationPipe
   ]
 })
 export class SharedModule { }

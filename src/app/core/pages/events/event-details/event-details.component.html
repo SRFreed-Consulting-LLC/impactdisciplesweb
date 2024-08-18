@@ -1,0 +1,43 @@
+<app-home-header [header_big]="true"></app-home-header>
+
+
+<main>
+  <section class="event-details pb-70 mt-60">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="event-details__info">
+            <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Events%2FSimple-DMC-Cover-2024.webp?alt=media&token=dd328a1f-44bc-49ea-bb3e-c5f410065291'" alt="blog">
+            <h2>{{ event.eventName }}</h2>
+            <span *ngIf="event.startDate">{{ event.startDate.toString()| date: 'M/d' }} </span>
+            <span *ngIf="event.endDate">- {{ event.endDate.toString() | date: 'M/d' }} </span>
+            <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
+            <p *ngIf="event.description" class="events-list__content-description">{{ event.description }}</p>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="row">
+         
+              <div class="event-details__ticket-number">
+                <button class="os-btn"><i class="dx-icon-minus"></i></button>
+                <input type="number">
+                <button class="os-btn"><i class="dx-icon-plus"></i></button>
+              </div>
+              <div class="cart-page-total">
+                <h2>Cart totals</h2>
+                <ul class="mb-20">
+                  <!-- <li>Subtotal <span>${{(cartService.totalPriceQuantity().total).toFixed(2)}}</span> -->
+                  <li>Subtotal <span>$100</span>
+                  </li>
+                  <!-- <li>Total <span>${{(cartService.totalPriceQuantity().total).toFixed(2)}}</span></li> -->
+                  <li>Total <span>$150</span></li>
+                </ul>
+                <a class="os-btn" routerLink="/checkout">Proceed to checkout</a>
+              </div>
+         
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

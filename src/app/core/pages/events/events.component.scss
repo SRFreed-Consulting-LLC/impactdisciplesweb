@@ -27,11 +27,25 @@
     &__event {
       margin-bottom: 50px;
       padding: 20px;
+      a:hover {
+        cursor: pointer;
+      }
     }
     &__content {
       h4 {
         margin-top: 15px;
+        font-size: 18px;
       }
+      &-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 3em; 
+        line-height: 1.5em;
+      }
+
     }
   }
 }
@@ -48,12 +62,12 @@
     margin: 0 10px;
 
     .number {
-      font-size: 4rem; /* Large size for the numbers */
+      font-size: 4rem; 
       font-weight: bold;
     }
 
     .label {
-      font-size: 1rem; /* Smaller size for the labels */
+      font-size: 1rem;
       margin-top: 25px;
     }
   }
@@ -69,8 +83,7 @@
 .slider-container {
   position: relative;
   width: 100%;
-  max-width: 1200px; /* Adjust this to control the overall size */
-  margin: auto;
+  max-width: 1200px;
   overflow: hidden;
 }
 
@@ -80,9 +93,9 @@
 }
 
 .slide {
-  flex: 0 0 calc(100% / 4); /* Show 4 images at a time */
+  flex: 0 0 calc(100% / 4);
   box-sizing: border-box;
-  padding: 0 5px; /* Adjust spacing between images */
+  padding: 0 5px; 
 }
 
 img {
@@ -117,55 +130,10 @@ button.prev:hover, button.next:hover {
 
 @media (max-width: 768px) {
   .slide {
-    flex: 0 0 calc(100% / 2); /* Show 2 images at a time on smaller screens */
+    flex: 0 0 calc(100% / 2); 
   }
   button.prev, button.next {
     font-size: 18px;
     padding: 8px;
   }
 }
-
-// .events {
-//   &__container {
-//     padding: 25px;
-//   }
-//  &__header {
-//   &-title {
-//     font-size: 50px;
-//     color: #ffffff;
-//   }
-//   &-subtitle {
-//     font-size: 25px;
-//     color: #ffffff;
-//   }
-//   &-button {
-//     border: 2px solid #ffffff;
-//     color: #ffffff;
-//     background-color: #00000080;
-//   }
-//  }
-//  .events-list {
-//   display: flex;
-//   justify-content: space-between;
-//   &__event {
-//     margin-bottom: 50px;
-//     padding: 20px;
-//     &-box {
-//       display: flex;
-//       flex-direction: column;
-//       margin: 10px;
-//     }
-//   }
-//   &__content {
-//     padding: 15px;
-//   }
-
-//  }
-
-//  .subscribe-area {
-//   margin: 0 45px;
-//  }
-//   .transform {
-//     transform: scale(1.1);
-//   }
-// }

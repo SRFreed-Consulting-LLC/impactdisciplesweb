@@ -1,4 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
+import { EventService } from 'impactdisciplescommon/src/services/event.service';
+import { Subject, takeUntil } from 'rxjs';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
@@ -18,6 +22,9 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
     'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fworship-2.jpg?alt=media&token=f8ce6120-3b42-43ff-a335-10edfc535788',
     'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fwoprship-3.jpg?alt=media&token=8e55af9d-6d00-4e58-bb4e-1ef174efc997'
   ];
+
+  eventsList: EventModel[] = [];
+
   currentIndex: number = 0;
   visibleSlides: number = 4;
 
@@ -25,16 +32,25 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   public hours: number = 0;
   public minutes: number = 0;
   public seconds: number = 0;
+
   private intervalId: any;
+  private ngUnsubscribe = new Subject<void>();
+
+  constructor(private eventService: EventService, private router: Router){}
 
   ngOnInit(): void {
     this.startCountdown();
+    this.eventService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
+      this.eventsList = events;
+    });
   }
 
   ngOnDestroy(): void {
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   ngAfterViewInit() {
@@ -51,6 +67,10 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
         },
       });
     }
+  }
+
+  goToEventDetails(event: EventModel): void {
+    this.router.navigate(['/event-details'], { state: { event } });
   }
 
   prevSlide() {

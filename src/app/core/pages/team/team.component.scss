@@ -1,0 +1,45 @@
+@import '../../../../assets/theme/scss/variables';
+
+.teams {
+  &__container {
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  &__slider-container {
+    height: 300px;
+  }
+  &__slider {
+    padding: 0 50px;
+  }
+  &__header {
+    height: inherit;
+    border: 10px solid $theme-color;
+    &-button {
+      border: 2px solid $theme-color;
+    }
+   .slide-right {
+    justify-content: end;
+    text-align: center;
+   }
+  }
+  .teams-list {
+    padding: 0 100px;
+    &__team {
+      margin-bottom: 75px;
+      padding: 0 25px;
+      &-image {
+        border-radius: 50%;
+        border: 2px solid $theme-color;
+        img {
+          position: relative;
+          bottom: -10px;
+        }
+      }
+    }
+    &__content {
+      h4 {
+        margin-top: 15px;
+      }
+    }
+  }
+}

@@ -1,4 +1,3 @@
-import { CheckoutSuccessComponent } from './pages/checkout-success/checkout-success.component';
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
@@ -10,6 +9,8 @@ import { ThemeSharedModule } from "../theme/shared/theme-shared.module";
 import { HomeHeaderSliderComponent } from "./home/home-header-slider/home-header-slider.component";
 import { HomeServicesComponent } from "./home/home-services/home-services.component";
 import { EventsComponent } from "./pages/events/events.component";
+import { TeamComponent } from "./pages/team/team.component";
+import { EventDetailsComponent } from "./pages/events/event-details/event-details.component";
 import { CheckoutComponent } from "./pages/checkout/checkout.component";
 
 
@@ -20,8 +21,9 @@ import { CheckoutComponent } from "./pages/checkout/checkout.component";
     HomeHeaderSliderComponent,
     HomeServicesComponent,
     EventsComponent,
-    CheckoutComponent,
-    CheckoutSuccessComponent
+    EventDetailsComponent,
+    TeamComponent,
+    CheckoutComponent
   ],
   imports: [
     CommonModule,
@@ -33,7 +35,10 @@ import { CheckoutComponent } from "./pages/checkout/checkout.component";
     HomeComponent,
     HomeHeaderComponent,
     HomeHeaderSliderComponent,
-    HomeServicesComponent
+    HomeServicesComponent,
+    EventDetailsComponent,
+    TeamComponent,
+    CheckoutComponent
   ]
 })
 export class CoreModule { }

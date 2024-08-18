@@ -6,14 +6,15 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
-  styleUrls: ['./checkout.component.css']
+  styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit, AfterContentInit {
   elements;
-
   items = [{ id: "xl-tshirt", amount: 1000 }];
-
   status: string = "REQUEST";
+
+  public isOpenLogin = false;
+  public isOpenCoupon = false;
 
   constructor(private stripeService: StripeService, private toastrService: ToastrService){}
 
@@ -141,5 +142,13 @@ export class CheckoutComponent implements OnInit, AfterContentInit {
       document.querySelector("#button-text").classList.remove("hidden");
     }
   }
+
+  handleOpenLogin() {
+    this.isOpenLogin = !this.isOpenLogin;
+  }
+  handleOpenCoupon() {
+    this.isOpenCoupon = !this.isOpenCoupon;
+  }
+
 
 }
