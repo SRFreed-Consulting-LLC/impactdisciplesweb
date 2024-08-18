@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { DxButtonModule, DxToolbarModule, DxTabsModule } from "devextreme-angular";
+import { DxButtonModule, DxToolbarModule, DxTabsModule, DxNumberBoxModule } from "devextreme-angular";
 import { SharedModule } from "../shared/shared.module";
 import { HomeHeaderComponent } from "./home/home-header/home-header.component";
 import { HomeComponent } from "./home/home.component";
@@ -29,7 +29,8 @@ import { CheckoutComponent } from "./pages/checkout/checkout.component";
     CommonModule,
     RouterModule,
     SharedModule,
-    ThemeSharedModule
+    ThemeSharedModule,
+    DxNumberBoxModule
   ],
   exports: [
     HomeComponent,
