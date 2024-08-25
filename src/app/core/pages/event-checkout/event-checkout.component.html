@@ -1,0 +1,194 @@
+<app-home-header [header_big]="true"></app-home-header>
+
+<main class="event-checkout">
+  <!-- breadcrumb -->
+  <section class="page__title p-relative d-flex align-items-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="page__title-inner text-center">
+                    <h1>Checkout</h1>
+                    <div class="page__title-breadcrumb">
+                        <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center">
+                            <li class="breadcrumb-item"><a [routerLink]="['/event-details', checkoutForm.eventId]">Event Details</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                        </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- login / coupon area -->
+  <section class="coupon-area pt-50 pb-30">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="coupon-accordion">
+            <!-- login accordion -->
+            <h3>Returning customer? <span id="showlogin" (click)="handleOpenLogin()">Click here to login</span></h3>
+            <div *ngIf="isOpenLogin" id="checkout-login" class="coupon-content">
+              <div class="coupon-info">
+                <p class="coupon-text">Quisque gravida turpis sit amet nulla posuere lacinia. Cras sed est
+                  sit amet ipsum luctus.</p>
+                <form action="#">
+                  <p class="form-row-first">
+                    <label>Username or email <span class="required">*</span></label>
+                    <input type="text" />
+                  </p>
+                  <p class="form-row-last">
+                    <label>Password <span class="required">*</span></label>
+                    <input type="text" />
+                  </p>
+                  <p class="form-row">
+                    <button class="os-btn os-btn-black" type="submit">Login</button>
+                    <label>
+                      <input type="checkbox" />
+                      Remember me
+                    </label>
+                  </p>
+                  <p class="lost-password">
+                    <a href="#">Lost your password?</a>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="coupon-accordion">
+            <!-- coupon accordion -->
+            <h3>Have a coupon? <span id="showcoupon" (click)="handleOpenCoupon()">Click here to enter your code</span></h3>
+            <div *ngIf="isOpenCoupon" id="checkout_coupon" class="coupon-checkout-content">
+              <div class="coupon-info">
+                <form action="#">
+                  <p class="checkout-coupon">
+                    <input type="text" placeholder="Coupon Code" />
+                    <button class="os-btn os-btn-black" type="submit">Apply Coupon</button>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- checkout-area -->
+    <section class="checkout-area pb-70">
+      <div class="container">
+        <div *ngIf="!checkoutForm?.cartItem;else checkoutBlock" class="text-center pt-80 pb-30">
+          <h3 class="py-2">No items found in cart to checkout</h3>
+          <a routerLink="/shop" class="os-btn os-btn-black">
+            Return to shop
+          </a>
+        </div>
+  
+        <ng-template #checkoutBlock>
+          <div class="row">
+            <div class="col-lg-6">
+              <dx-form
+                #billingForm
+                [formData]="checkoutForm"
+                [colCount]="2"
+                labelLocation="top"
+                [showColonAfterLabel]="false"
+              >
+                <dxi-item dataField="firstName" [isRequired]="true" [label]="{ text: 'First Name' }"></dxi-item>
+                <dxi-item dataField="lastName" [isRequired]="true" [label]="{ text: 'Last Name' }"></dxi-item>
+                <dxi-item dataField="email" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
+                <dxi-item dataField="phone" [isRequired]="true" [label]="{ text: 'Phone Number' }"></dxi-item>
+                <dxi-item 
+                  cssClass="newsletter"
+                  dataField="isNewsletter" 
+                  editorType="dxCheckBox" 
+                  [colSpan]="2" 
+                  [label]="{ text: 'Sign up for our Newsletter to receive emails about our next Events!', location: 'right' }"
+                ></dxi-item>
+                <dxi-item
+                  dataField="location.country"
+                  editorType="dxSelectBox"
+                  [isRequired]="true"
+                  [colSpan]="2"
+                  [editorOptions]="{
+                    dataSource: countries,
+                    placeholder: 'Select Country',
+                    searchEnabled: true
+                  }"
+                ></dxi-item>
+                <dxi-item dataField="location.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
+                <dxi-item dataField="location.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
+                <dxi-item dataField="location.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
+                <dxi-item dataField="state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
+                <dxi-item dataField="zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
+              </dx-form>
+              
+              <div class="payment-method">
+                <form id="payment-form">
+                  <div id="payment-element">
+                    <!--Stripe.js injects the Payment Element-->
+                  </div>
+                  <div id="payment-message" class="hidden"></div>
+                </form>
+              </div>
+            </div>
+            
+            <div class="col-lg-6">
+              <div class="your-order mb-30 ">
+                <h3>Tickets</h3>
+                <dx-accordion class="mb-30" [collapsible]="true">
+                  <dxi-item *ngFor="let attendee of checkoutForm?.attendees; let i = index" title="Attendee {{ i + 1 }} *">
+                    <dx-form #attendeeForms [formData]="attendee">
+                      <dxi-item dataField="firstName" [isRequired]="true"></dxi-item>
+                      <dxi-item dataField="lastName" [isRequired]="true"></dxi-item>
+                      <dxi-item dataField="email"></dxi-item>
+                    </dx-form>
+                  </dxi-item>
+                </dx-accordion>
+                
+                <h3>Your order</h3>
+                <div class="your-order-table table-responsive">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th class="product-name"><strong>Event</strong></th>
+                        <th class="product-total"><strong>Total</strong></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="cart_item">
+                        <td class="product-name">
+                          {{ checkoutForm?.cartItem?.eventName }} <strong class="product-quantity"> × {{ checkoutForm?.cartItem?.quantity }}</strong>
+                        </td>
+                        <td class="product-total">
+                          <span class="amount">${{ checkoutForm?.cartItem?.price }}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr class="order-total">
+                        <th>Order Total</th>
+                        <td><strong><span class="amount">
+                          ${{ checkoutForm?.total }}
+                          </span></strong>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <button id="submit" class="os-btn os-btn-black pay-button" (click)="handleSubmit($event)">
+                  <div class="spinner hidden" id="spinner"></div>
+                  <span id="button-text">Pay now</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </section>
+
+</main>

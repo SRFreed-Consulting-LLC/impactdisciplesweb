@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { DxButtonModule, DxToolbarModule, DxTabsModule, DxNumberBoxModule } from "devextreme-angular";
+import { DxButtonModule, DxToolbarModule, DxTabsModule, DxNumberBoxModule, DxAccordionModule, DxFormModule } from "devextreme-angular";
 import { SharedModule } from "../shared/shared.module";
 import { HomeHeaderComponent } from "./home/home-header/home-header.component";
 import { HomeComponent } from "./home/home.component";
@@ -11,7 +11,14 @@ import { HomeServicesComponent } from "./home/home-services/home-services.compon
 import { EventsComponent } from "./pages/events/events.component";
 import { TeamComponent } from "./pages/team/team.component";
 import { EventDetailsComponent } from "./pages/events/event-details/event-details.component";
-import { CheckoutComponent } from "./pages/checkout/checkout.component";
+import { EventCheckoutComponent } from "./pages/event-checkout/event-checkout.component";
+import { CheckoutSuccessComponent } from "./pages/checkout-success/checkout-success.component";
+import { HistoryComponent } from "./pages/history/history.component";
+import { ContactComponent } from "./pages/contact/contact.component";
+import { NewsletterComponent } from "./pages/newsletter/newsletter.component";
+import { PrivatePolicyComponent } from "./pages/private-policy/private-policy.component";
+import { TermsOfServiceComponent } from "./pages/terms-of-service/terms-of-service.component";
+import { GiveComponent } from "./pages/give/give.component";
 
 
 @NgModule({
@@ -23,23 +30,30 @@ import { CheckoutComponent } from "./pages/checkout/checkout.component";
     EventsComponent,
     EventDetailsComponent,
     TeamComponent,
-    CheckoutComponent
+    EventCheckoutComponent,
+    CheckoutSuccessComponent,
+    HistoryComponent,
+    ContactComponent,
+    NewsletterComponent,
+    PrivatePolicyComponent,
+    TermsOfServiceComponent,
+    GiveComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     SharedModule,
     ThemeSharedModule,
-    DxNumberBoxModule
+    DxNumberBoxModule,
+    DxAccordionModule,
+    DxButtonModule,
+    DxFormModule
   ],
   exports: [
     HomeComponent,
     HomeHeaderComponent,
     HomeHeaderSliderComponent,
-    HomeServicesComponent,
-    EventDetailsComponent,
-    TeamComponent,
-    CheckoutComponent
+    HomeServicesComponent
   ]
 })
 export class CoreModule { }

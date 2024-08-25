@@ -11,8 +11,16 @@ import { EventRegistrationComponent } from './core/events/event-registration/eve
 import { EventsComponent } from './core/pages/events/events.component';
 import { TeamComponent } from './core/pages/team/team.component';
 import { EventDetailsComponent } from './core/pages/events/event-details/event-details.component';
-import { CheckoutComponent } from './core/pages/checkout/checkout.component';
+import { EventCheckoutComponent } from './core/pages/event-checkout/event-checkout.component';
+import { CheckoutSuccessComponent } from './core/pages/checkout-success/checkout-success.component';
+import { HistoryComponent } from './core/pages/history/history.component';
+import { ContactComponent } from './core/pages/contact/contact.component';
+import { NewsletterComponent } from './core/pages/newsletter/newsletter.component';
+import { PrivatePolicyComponent } from './core/pages/private-policy/private-policy.component';
+import { TermsOfServiceComponent } from './core/pages/terms-of-service/terms-of-service.component';
+import { GiveComponent } from './core/pages/give/give.component';
 
+//TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
   {
     path: '',
@@ -35,8 +43,36 @@ const routes: Routes = [
     component: TeamComponent
   },
   {
-    path: 'checkout',
-    component: CheckoutComponent
+    path: 'history',
+    component: HistoryComponent
+  },
+  {
+    path: 'contact',
+    component: ContactComponent
+  },
+  {
+    path: 'newsletter',
+    component: NewsletterComponent
+  },
+  {
+    path: 'give',
+    component: GiveComponent
+  },
+  {
+    path: 'private-policy',
+    component: PrivatePolicyComponent
+  },
+  {
+    path: 'terms',
+    component: TermsOfServiceComponent
+  },
+  {
+    path: 'event-checkout',
+    component: EventCheckoutComponent
+  },
+  {
+    path: 'checkout-success',
+    component: CheckoutSuccessComponent
   },
   {
     path: 'capture-username-form',

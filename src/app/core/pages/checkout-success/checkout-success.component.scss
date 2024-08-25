@@ -1,0 +1,23 @@
+::ng-deep .checkout-success {
+  &__header {
+    height: 250px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  &__email-text {
+    display: flex;
+    align-items: center;
+  }
+
+  &__success-text {
+    h1 {
+      font-size: 80px;
+    }
+    p {
+      font-size: 20px;
+      margin-bottom: 0px;
+    }
+  }
+}

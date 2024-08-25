@@ -13,6 +13,7 @@ import { FooterComponent } from "./footer/footer.component";
 import { TestimonialsComponent } from "./components/testimonials/testimonials.component";
 import { DxButtonModule } from "devextreme-angular";
 import { LocationPipe } from "./utils/pipes/location.pipe";
+import { CourseNamePipe } from "./utils/pipes/course-name.pipe";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { LocationPipe } from "./utils/pipes/location.pipe";
     SubscribeAreaComponent,
     FooterComponent,
     TestimonialsComponent,
-    LocationPipe
+    LocationPipe,
+    CourseNamePipe
   ],
   imports: [
     CommonModule,
@@ -44,7 +46,8 @@ import { LocationPipe } from "./utils/pipes/location.pipe";
     SubscribeAreaComponent,
     FooterComponent,
     TestimonialsComponent,
-    LocationPipe
+    LocationPipe,
+    CourseNamePipe
   ]
 })
 export class SharedModule { }

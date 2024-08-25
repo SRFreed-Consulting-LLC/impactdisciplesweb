@@ -6,21 +6,56 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6">
-          <div class="event-details__info">
+          <div class="event-details__left">
             <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Events%2FSimple-DMC-Cover-2024.webp?alt=media&token=dd328a1f-44bc-49ea-bb3e-c5f410065291'" alt="blog">
-            <h2>{{ event?.eventName }}</h2>
-            <span *ngIf="event?.startDate">{{ event.startDate.toString()| date: 'M/d' }} </span>
-            <span *ngIf="event?.endDate">- {{ event.endDate.toString() | date: 'M/d' }} </span>
-            <span *ngIf="event?.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
-            <p *ngIf="event?.description" class="events-list__content-description">{{ event.description }}</p>
+            <div *ngIf="event?.agendaItems else noAgenda" class="your-order-table table-responsive">
+              <ng-container *ngFor="let monthGroup of groupedAgendaItems">
+                <h3 class="mt-30">Agenda -<strong> {{ monthGroup.monthYear }}</strong></h3>
+                <table class="agenda">
+                  <tbody>
+                    <ng-container *ngFor="let dayGroup of monthGroup.days">
+                      <tr>
+                        <div class="agenda__date">
+                          <div>{{ dayGroup.date | date: 'EEE' }}</div>
+                          <div class="agenda__date-number">{{ dayGroup.date | date: 'd' }}</div>
+                        </div>
+                        <td>
+                          <tr *ngFor="let item of dayGroup.items" class="agenda__group">
+                            <td *ngIf="item.isCourse">{{ item.course | courseName | async }}</td>
+                            <td *ngIf="!item.isCourse">{{ item.text }}</td>
+                            <td class="agenda__group-time">{{ item.startDate | date: 'shortTime' }} - {{ item.endDate | date: 'shortTime' }}</td>
+                          </tr>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </ng-container>
+            </div>
+            <ng-template #noAgenda class="your-order-table table-responsive">
+              <h3>Agenda</h3>
+              <div class="no-agenda mt-30">
+                Check back for more updates!
+              </div>
+            </ng-template>
           </div>
         </div>
         <div class="col-lg-6">
-          <div class="row">
-            <div class="event-details__ticket-number">
-              <button class="os-btn" (click)="decrement()"> <i class="dx-icon-minus"></i></button>
-               <dx-number-box [value]="quantity"></dx-number-box>
-              <button class="os-btn" (click)="increment()"><i class="dx-icon-plus"></i></button>
+          <div class="row event-details__right">
+            <h2>{{ event?.eventName }}</h2>
+            <span class="event-details__right-subtitle">
+              <span *ngIf="event?.startDate" class="date">{{ event.startDate.toString()| date: 'M/d' }} </span>
+              <span *ngIf="event?.endDate" class="date">- {{ event.endDate.toString() | date: 'M/d' }} </span>
+              <span *ngIf="event?.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
+            </span>
+            <p *ngIf="event?.description" class="events-list__content-description">{{ event.description }}</p>
+            <div class="mt-20">
+              <h4>ADD TICKETS:</h4>
+              <div class="event-details__right-ticket-number">
+                <button class="os-btn" (click)="decrement()"> <i class="dx-icon-minus"></i></button>
+                 <dx-number-box [value]="quantity"></dx-number-box>
+                <button class="os-btn" (click)="increment()"><i class="dx-icon-plus"></i></button>
+              </div>
             </div>
             <div class="cart-page-total">
               <h2>Cart totals</h2>
@@ -28,7 +63,7 @@
                 <li>Subtotal <span>${{ event?.costInDollars }}</span></li>
                 <li>Total <span>${{ total }}</span></li>
               </ul>
-              <a class="os-btn" routerLink="/checkout">Proceed to checkout</a>
+              <a class="os-btn"(click)="proceedToCheckout()">Proceed to checkout</a>
             </div>
           </div>
         </div>

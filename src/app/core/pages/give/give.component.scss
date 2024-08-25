@@ -1,0 +1,22 @@
+.give {
+  &__container {
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  &__gift-option {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    height: 200px;
+    align-items: center;
+    margin: 0 30px;
+    border: 1px solid black;
+    padding: 20px;
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+}

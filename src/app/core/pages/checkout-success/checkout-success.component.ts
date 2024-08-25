@@ -4,7 +4,7 @@ import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.s
 @Component({
   selector: 'app-checkout-success',
   templateUrl: './checkout-success.component.html',
-  styleUrls: ['./checkout-success.component.css']
+  styleUrls: ['./checkout-success.component.scss']
 })
 export class CheckoutSuccessComponent implements AfterViewInit{
   constructor(private stripeService: StripeService){}
@@ -40,13 +40,6 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
   showMessage(messageText) {
     const messageContainer = document.querySelector("#payment-message");
-
-    messageContainer.classList.remove("hidden");
     messageContainer.textContent = messageText;
-
-    setTimeout(function () {
-      messageContainer.classList.add("hidden");
-      messageContainer.textContent = "";
-    }, 4000);
   }
 }
