@@ -1,4 +1,4 @@
-::ng-deep .event-checkout {
+.event-checkout {
   .pay-button {
     display: flex;
     justify-content: center;
@@ -7,9 +7,6 @@
   }
   .product-name {
     padding: 15px 20px 15px 0px;
-  }
-  .page__title {
-    height: 200px;
   }
   .newsletter > .dx-field-item-content.dx-field-item-content-location-bottom {
     max-width: 30px;

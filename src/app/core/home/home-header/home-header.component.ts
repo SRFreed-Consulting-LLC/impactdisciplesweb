@@ -1,4 +1,5 @@
 import { Component, HostListener, Input } from '@angular/core';
+import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import { CartService } from 'src/app/theme/shared/services/cart.service';
 import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 
@@ -8,16 +9,10 @@ import { UtilsService } from 'src/app/theme/shared/services/utils.service';
   styleUrls: ['./home-header.component.scss']
 })
 export class HomeHeaderComponent {
-  @Input () header_big = false;
-  @Input () white_bg = false;
-  @Input () transparent = false;
-
   public sticky: boolean = false;
+  public impactDisciplesInfo = impactDisciplesInfo;
 
-  constructor(
-    public cartService: CartService,
-    public utilsService: UtilsService,
-  ) { }
+  constructor(public cartService: CartService, public utilsService: UtilsService,) { }
 
   // sticky nav
   @HostListener('window:scroll', ['$event']) onscroll() {

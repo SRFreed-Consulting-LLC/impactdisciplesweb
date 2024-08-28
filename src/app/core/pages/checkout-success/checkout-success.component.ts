@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 
 @Component({
@@ -7,6 +7,7 @@ import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.s
   styleUrls: ['./checkout-success.component.scss']
 })
 export class CheckoutSuccessComponent implements AfterViewInit{
+  
   constructor(private stripeService: StripeService){}
 
   async ngAfterViewInit() {

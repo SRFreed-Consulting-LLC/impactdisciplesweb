@@ -24,12 +24,9 @@
         </ng-container>
       </ul>
     </nav>
-    <!-- side-mobile-menu end -->
+
   </div>
 </section>
 
 <!--  body overlay  -->
-<div
-(click)="utilsService.handleOpenMobileMenu()"
-  [ngClass]="'body-overlay transition-3 ' + (utilsService.openMobileMenus ? 'opened' : '')"
-></div>
+<div (click)="utilsService.handleOpenMobileMenu()" [ngClass]="'body-overlay transition-3 ' + (utilsService.openMobileMenus ? 'opened' : '')"></div>

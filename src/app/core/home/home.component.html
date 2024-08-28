@@ -1,8 +1,11 @@
-<app-home-header [header_big]="true"></app-home-header>
+<app-home-header></app-home-header>
 
-<main>
+<main class="home">
   <div class="box-25">
+    <!-- home header -->
     <app-home-header-slider></app-home-header-slider>
+
+    <!-- homer services banner -->
     <app-home-services></app-home-services>
 
     <!-- video -->
@@ -20,27 +23,10 @@
       </div>
     </div>
     
-    <div class="book">
-      <div class="banner__area-2 pb-60">
-        <div class="container-fluid p-0">
-          <div class="row g-0 justify-content-center align-items-center">
-            <div class="col-xl-4 col-lg-4 d-flex story__text-area">
-              <h4 class="story__title mb-10">DISCOVER <strong> POWERFUL</strong> DISCIPLE-MAKING RESOURCES</h4>
-              <p>Explore our store for impactful resources crafted to guide your disciple-making efforts. Our collection of books is designed to provide practical tools and biblical insights that will deepen your faith and extend your impact. Start your journey today with the perfect resource.</p>
-              <a [routerLink]="['/about']" class="os-btn os-btn-2 story__button-custom">
-                <span class="banner__area-2 pb-30">VISIT OUR STORE</span>
-              </a>
-            </div>
-            <div class="col-xl-6 col-lg-6">
-              <div class="w-img">                  
-                <img src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Store%2FDMC-Series_Five-Images-1.png?alt=media&token=97f755c0-3c73-4545-979c-6428c3f2ab98" alt="banner">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- book banner -->
+    <app-book-banner></app-book-banner>
 
+    <!-- subscribe area -->
     <app-subscribe-area></app-subscribe-area>
 
     <!-- our story -->
@@ -48,10 +34,10 @@
       <div class="banner__area-2 pb-60">
         <div class="container-fluid p-0">
           <div class="row g-0 justify-content-center align-items-center">
-            <div class="col-xl-4 col-lg-4 d-flex story__text-area">
+            <div class="story__text-area col-xl-4 col-lg-4 d-flex">
               <h4 class="story__title mb-10">OUR STORY BEGAN WITH A <strong>NEED</strong></h4>
               <p>When Ken Adams began pastoring Crossroads Church in 1989, he envisioned that church becoming a part of the mission and movement of Jesus by making and multiplying disciples. The church needed a curriculum that would drive the goals and strategy its leadership had established, but there was a problem…</p>
-              <a [routerLink]="['/about']" class="os-btn os-btn-2 story__button-custom">
+              <a [routerLink]="['/about']" class="story__button-custom os-btn os-btn-2">
                 <span class="banner__area-2 pb-30">READ MORE</span>
               </a>
             </div>
@@ -72,10 +58,10 @@
                 <img src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/International%2FCambodia%2Finternational-notebook.jpg?alt=media&token=f8225879-b9a0-4353-9f1f-b84abbb72ea1" alt="banner">
               </div>
             </div>
-            <div class="col-xl-4 col-lg-4 d-flex story__text-area">
+            <div class="story__text-area col-xl-4 col-lg-4 d-flex">
               <h4 class="story__title mb-10">MORE ABOUT <strong>OUR MINISTRY</strong></h4>
               <p >Did you know that we have Disciple-Making Churches and pastors all over the world in our disciple making network? We’d love to connect you to other ministry partners pursuing the same goals with the same passion and dedication as you.</p>
-              <a [routerLink]="['/about']" class="os-btn os-btn-2 story__button-custom">
+              <a [routerLink]="['/about']" class="story__button-custom os-btn os-btn-2">
                 <span class="banner__area-2 pb-30">READ MORE</span>
               </a>
             </div>
@@ -87,10 +73,10 @@
     <div class="banner__area-2 pb-60">
       <div class="container-fluid p-0">
         <div class="row g-0 justify-content-center align-items-center">
-          <div class="col-xl-4 col-lg-4 d-flex story__text-area">
+          <div class="story__text-area col-xl-4 col-lg-4 d-flex">
             <h4 class="story__title mb-10">WHY CHOOSE <strong>US</strong></h4>
             <p>Jesus spent time one-on-one with His disciples, but then He took them out into the wide world to apply what they had learned with Him in a small group setting. Our director began his ministry based on Jesus’ strategy using Jesus’ methods in the early 1990s and has continued refining those efforts to the present day.</p>
-            <a [routerLink]="['/about']" class="os-btn os-btn-2 story__button-custom">
+            <a [routerLink]="['/about']" class="story__button-custom os-btn os-btn-2">
               <span class="banner__area-2 pb-30">READ MORE</span>
             </a>
           </div>
@@ -103,6 +89,7 @@
       </div>
     </div>
 
+    <!-- testimonials -->
     <app-testimonials></app-testimonials>
     
   </div>
