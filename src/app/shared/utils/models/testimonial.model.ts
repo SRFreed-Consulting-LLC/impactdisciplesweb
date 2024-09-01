@@ -1,6 +1,7 @@
 export interface TestimonialModel {
   id: string;
   name: string;
-  quote: string; 
+  title?: string | null;
+  quote?: string | null; 
   description: string;
 }

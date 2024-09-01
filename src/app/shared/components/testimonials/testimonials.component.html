@@ -24,9 +24,10 @@
                   <img src="../../../../assets/icons/stars.png" alt="user">
                 </div>
                 <div class="testimonial__content">
-                  <h4>"{{ item.quote }}"</h4>
+                  <h4 *ngIf="item.quote">"{{ item.quote }}"</h4>
                   <p>{{item.description}}</p>
-                  <p><strong>{{ item.name }}</strong></p>
+                  <p [ngClass]="item.title ? 'mb-0' : ''"><strong>{{ item.name }}</strong></p>
+                  <p *ngIf="item.title">{{ item.title }}</p>
                 </div>
               </div>
             </div>

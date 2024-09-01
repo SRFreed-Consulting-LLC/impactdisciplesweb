@@ -1,6 +1,7 @@
 import { Component,Input } from '@angular/core';
 import Swiper from 'swiper';
-import testimonials from '../../utils/data/testimonials-data';
+import testimonials from '../../utils/data/home-testimonials-data';
+import { TestimonialModel } from '../../utils/models/testimonial.model';
 
 @Component({
   selector: 'app-testimonials',
@@ -9,7 +10,7 @@ import testimonials from '../../utils/data/testimonials-data';
 })
 export class TestimonialsComponent {
 
-  public testimonials = testimonials;
+  @Input() testimonials: TestimonialModel[];
 
   ngOnInit (){
     new Swiper(".testimonial__slider-active", {

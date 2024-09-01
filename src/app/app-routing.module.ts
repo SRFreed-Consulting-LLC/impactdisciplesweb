@@ -19,6 +19,10 @@ import { NewsletterComponent } from './core/pages/newsletter/newsletter.componen
 import { PrivatePolicyComponent } from './core/pages/private-policy/private-policy.component';
 import { TermsOfServiceComponent } from './core/pages/terms-of-service/terms-of-service.component';
 import { GiveComponent } from './core/pages/give/give.component';
+import { SeminarsComponent } from './core/pages/seminars/seminars.component';
+import { EquippingGroupsComponent } from './core/pages/equipping-groups/equipping-groups.component';
+import { CoachingWithImpactComponent } from './core/pages/coaching-with-impact/coaching-with-impact.component';
+import { LunchAndLearnComponent } from './core/pages/lunch-and-learn/lunch-and-learn.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -57,6 +61,22 @@ const routes: Routes = [
   {
     path: 'give',
     component: GiveComponent
+  },
+  {
+    path: 'seminars',
+    component: SeminarsComponent
+  },
+  {
+    path: 'equipping-groups',
+    component: EquippingGroupsComponent
+  },
+  {
+    path: 'coaching-with-impact',
+    component: CoachingWithImpactComponent
+  },
+  {
+    path:'lunch-and-learns',
+    component: LunchAndLearnComponent
   },
   {
     path: 'private-policy',

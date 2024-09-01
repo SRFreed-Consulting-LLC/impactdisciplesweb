@@ -1,0 +1,203 @@
+@import '../../../../assets/theme/scss/variables';
+
+.seminars {
+  .slider__area {
+    border-top: 20px solid #ffcc00;
+    border-bottom: 20px solid #ffcc00;
+  }
+  &__container {
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  &__header {
+    height: 480px;
+    &__pretitle {
+      color: #ffcc00;
+      font-size: 25px;
+    }
+    &__title {
+      font-size: 80px;
+      font-weight: 600;
+    }
+    .custom-hr {
+      width: 200px; 
+      border: 0;    
+      border-top: 6px solid $theme-color;  
+      opacity: 1;
+    }
+  }
+  &__overview {
+    a{
+      font-weight: 600;
+      color: $theme-color;
+    }
+  }
+  &__description {
+    &__text-area {
+      margin: 25px;
+      padding: 20px;
+      flex-direction: column;
+    }
+    &__title {
+      text-align: center;
+      .custom-hr {
+        width: 200px; 
+        border: 0;    
+        border-top: 6px solid $theme-color;  
+        margin: 20px auto;
+        opacity: 1;
+      }
+      h4 {
+        color: $black;
+        font-size: 36px;
+    
+        strong {
+          color: $theme-color;
+        }
+      }
+    }
+    .video__area-df {
+      min-height: 250px;
+    }
+  }
+  &__prices-row {
+    position: relative;
+    z-index: 1;
+    justify-content: center;
+    background-color: $theme-color;
+    padding: 100px 0;
+
+    &__box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      height: 450px;
+      justify-content: space-between;
+      background-color: #fff;
+      margin: 0 25px;
+      .title {
+        font-size: 30px;
+        color: $theme-color;
+        text-align: center;
+      }
+      .price {
+        font-size: 80px;
+        font-weight: 600;
+        color: #353535;
+      }
+    }
+  }
+
+  &__large-title {
+    border-top: 10px solid $theme-color;
+    h1 {
+      font-size: 100px;
+      font-weight: 300;
+      width: 100%;
+      text-align: center;
+      line-height: 1.4;
+      strong {
+        background-color: $theme-color;
+        font-weight: 900;
+        color: #fff;
+        padding: 0 30px 15px 30px;
+      }
+    }
+  }
+
+  .custom-bullets li {
+    position: relative;
+    padding-left: 30px;
+  }
+  
+  .custom-bullets li::before {
+    content: "•";
+    color: #ffcc00; 
+    font-size: 3em; 
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+.services {
+  &__title {
+    margin-bottom: 17px;
+    line-height: 22px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 45px;
+    line-height: 1.1;
+    &:hover{
+      color: #fff;
+    }
+  }
+  &__text {
+    font-size: 14px;
+    color: #fff;
+    text-transform: capitalize;
+  }
+  .banner {
+    &__column {
+      margin: 0 20px;
+    }
+    &__item, &__column {
+      width: 350px;
+    }
+    &__content {
+      left: 0;
+      z-index: 2; 
+      color: inherit; 
+      padding: 0 30px;
+    }
+  }
+  .banner__item {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .banner__item::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $theme-color;
+    transition: top 0.3s ease;
+    z-index: 1;
+  }
+  
+  .banner__item:hover::before {
+    top: 0;
+  }
+  
+}
+
+.countries-banner {
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    h1 {
+      text-align: center;
+      font-size: 100px;
+      font-weight: 900;
+      letter-spacing: 20px;  
+    }
+  }
+  &__left {
+    text-align: center;
+    color: #414141;
+    font-size: 18px;
+    font-weight: 100;
+  }
+  &__right {
+    text-align: right;
+    .os-btn::after {
+      background-color: #414141;
+    }
+  }
+}
