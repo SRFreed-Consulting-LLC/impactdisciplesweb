@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
 import { Subject, takeUntil } from 'rxjs';
+import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
@@ -14,7 +15,7 @@ import { EffectFade, Pagination } from 'swiper/modules';
 export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
-  @Input() endDate: string = '2024-12-31T00:00:00'; // End date as an input, e.g., "2024-12-31T00:00:00"
+  public impactDisciplesInfo = impactDisciplesInfo;
   @Input() images: string[] = [
     'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fgroup-session-2.jpg?alt=media&token=9f6c7dad-e31b-4c9e-9eb9-7220cb122c5c',
     'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fgroup-session-3.png?alt=media&token=831cceb8-4c12-44ec-bada-40035dfec4d3',
@@ -87,7 +88,7 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   }
 
   private startCountdown(): void {
-    const endDate = new Date(this.endDate).getTime();
+    const endDate = new Date(this.impactDisciplesInfo.yearEventCountdown).getTime();
 
     this.intervalId = setInterval(() => {
       const now = new Date().getTime();

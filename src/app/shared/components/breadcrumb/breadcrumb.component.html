@@ -1,0 +1,19 @@
+<section class="breadcrumb page__title p-relative d-flex align-items-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="page__title-inner text-center">
+          <h1>Checkout</h1>
+          <div class="page__title-breadcrumb">
+            <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center">
+              <li class="breadcrumb-item"><a [routerLink]="[previousLink, previousLinkId]">Event Details</a></li>
+              <li class="breadcrumb-item active" aria-current="page">{{ currentPageName }}</li>
+            </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

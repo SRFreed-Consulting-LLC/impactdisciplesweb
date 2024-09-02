@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 
 @Component({
   selector: 'app-give',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./give.component.scss']
 })
 export class GiveComponent  {
-
+  public impactDisciplesInfo = impactDisciplesInfo;
 }

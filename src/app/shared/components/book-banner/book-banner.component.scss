@@ -1,0 +1,22 @@
+@import '../../../../assets/theme/scss/variables';
+
+.book {
+  &__title {
+    color: $black;
+    font-size: 36px;
+
+    strong {
+      color: $theme-color;
+    }
+  }
+
+  &__text-area {
+    margin: 25px;
+    padding: 20px;
+    flex-direction: column;
+  }
+
+  &__button-custom {
+    width: 50%;
+  }
+}

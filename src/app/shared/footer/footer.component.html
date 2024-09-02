@@ -13,7 +13,7 @@
               <a href="#">Give </a><span>|</span><a href="#"> Join the Prayer Team</a>
             </div>
             <div class="footer__widget-content">
-              <p>@2024 Ken Adams All Right reserved.</p>
+              <p>&#64;2024 Ken Adams All Right reserved.</p>
                 <div class="footer__contact">
                   <ul>
                     <li>
@@ -21,7 +21,7 @@
                         <i class="fal fa-map-marker-alt"></i>
                       </div>
                       <div class="text">
-                        <span>Address: 2564 HWY 154, Newnan, GA, 30265</span>
+                        <span>Address: {{ impactDisciplesInfo.address }}</span>
                       </div>
                     </li>
                     <li>
@@ -29,7 +29,7 @@
                         <i class="fal fa-envelope-open-text"></i>
                       </div>
                       <div class="text">
-                        <span>Email: info@impactdisciples.com</span>
+                        <span>Email: {{ impactDisciplesInfo.email }}</span>
                       </div>
                     </li>
                     <li>
@@ -37,7 +37,7 @@
                         <i class="fal fa-phone-alt"></i>
                       </div>
                       <div class="text">
-                        <span>Phone Number: +678 854 9322</span>
+                        <span>Phone Number: {{ impactDisciplesInfo.phone }}</span>
                       </div>
                     </li>
                   </ul>
@@ -53,11 +53,11 @@
             <div class="footer__widget-content">
               <div class="footer__links">
                 <ul>
-                  <li><a href="#">About Us</a></li>
-                  <li><a href="#">Events</a></li>
-                  <li><a href="#">Shop</a></li>
-                  <li><a href="#">Privacy Policy</a></li>
-                  <li><a href="#">Terms & Condition</a></li>
+                  <li><a href="/about">About Us</a></li>
+                  <li><a href="/events">Events</a></li>
+                  <li><a href="/shop">Shop</a></li>
+                  <li><a href="/private-policy">Privacy Policy</a></li>
+                  <li><a href="/terms">Terms & Condition</a></li>
                 </ul>
               </div>
             </div>
@@ -71,11 +71,11 @@
             <div class="footer__widget-content">
               <div class="footer__links">
                 <ul>
-                  <li><a href="#">Seminars</a></li>
-                  <li><a href="#">Equipping Groups</a></li>
-                  <li><a href="#">Coaching with Impact</a></li>
-                  <li><a href="#">Lunch and Learns</a></li>
-                  <li><a href="#">Terms & Conditions</a></li>
+                  <li><a href="/seminars">Seminars</a></li>
+                  <li><a href="/equipping-groups">Equipping Groups</a></li>
+                  <li><a href="/coaching-with-impact">Coaching with Impact</a></li>
+                  <li><a href="/lunch-and-learns">Lunch and Learns</a></li>
+                  <li><a href="/terms">Terms & Conditions</a></li>
                 </ul>
               </div>
             </div>
@@ -89,9 +89,9 @@
             <div class="footer__widget-content">
               <div class="footer__links">
                 <ul>
-                  <li><a href="#">E-Books</a></li>
-                  <li><a href="#">Podcasts</a></li>
-                  <li><a href="#">Blog</a></li>
+                  <li><a href="/e-books">E-Books</a></li>
+                  <li><a href="/podcasts">Podcasts</a></li>
+                  <li><a href="/blog">Blog</a></li>
                 </ul>
               </div>
             </div>
@@ -104,6 +104,7 @@
             </div>
             <div class="footer__widget-content">
               <p>Join over 1,000 people who get free and fresh content delivered automatically each time we publish.</p>
+              <!-- TODO: Set up subscription form -->
               <div class="form-group">
                 <input class="form-control" id="newsletter-input" type="name" name="name" placeholder="Name">
                 <input class="form-control" id="newsletter-input" type="email" name="email" placeholder="Email">
@@ -126,14 +127,20 @@
         <div class="col-xl-6 col-lg-5">
           <div class="footer__social f-right">
             <ul>
-              <li>
-                <a [href]="'https://www.facebook.com/ImpactDiscipleship/'" target="_blank"><i class="fab fa-facebook-f"></i></a>
+              <li *ngIf="impactDisciplesInfo.facebook">
+                <a [href]="impactDisciplesInfo.facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
               </li>
-              <li>
-                <a [href]="'https://x.com/ImpactDisciples'" target="_blank"><i class="fab fa-twitter"></i></a>
+              <li *ngIf="impactDisciplesInfo.twitter">
+                <a [href]="impactDisciplesInfo.twitter" target="_blank"><i class="fab fa-twitter"></i></a>
               </li>
-              <li>
-                <a [href]="'https://www.youtube.com/@impactdisciples'" target="_blank"><i class="fab fa-youtube"></i></a>
+              <li *ngIf="impactDisciplesInfo.youtube">
+                <a [href]="impactDisciplesInfo.youtube" target="_blank"><i class="fab fa-youtube"></i></a>
+              </li>
+              <li *ngIf="impactDisciplesInfo.linkedin">
+                <a [href]="impactDisciplesInfo.linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+              </li>
+              <li *ngIf="impactDisciplesInfo.instagram">
+                <a [href]="impactDisciplesInfo.instagram" target="_blank"><i class="fab fa-instagram"></i></a>
               </li>
             </ul>
           </div>

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import impactDisciplesInfo from '../utils/data/impact-disciples.data';
 
 @Component({
   selector: 'app-footer',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent {
-
+  public impactDisciplesInfo = impactDisciplesInfo;
 }

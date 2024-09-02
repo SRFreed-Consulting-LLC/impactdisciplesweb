@@ -26,8 +26,8 @@ const menuData: MenuModel[] = [
         dropdownMenu: [
           { link: '/seminars', title: 'Seminars' },
           { link: '/equipping-groups', title: 'Equipping Groups' },
-          { link: '/coaching', title: 'Coaching with Impact' },
-          { link: '/lunch-learn', title: 'Lunch and Learns' }
+          { link: '/coaching-with-impact', title: 'Coaching with Impact' },
+          { link: '/lunch-and-learns', title: 'Lunch and Learns' }
         ] 
       },
       { 
@@ -80,7 +80,7 @@ export const mobileMenuData: MobileMenuModel[] = [
       { link: '/seminars', title: 'Seminars' },
       { link: '/equipping-groups', title: 'Equipping Groups' },
       { link: '/coaching', title: 'Coaching with Impact' },
-      { link: '/lunch-learn', title: 'Lunch and Learns' }
+      { link: '/lunch-and-learns', title: 'Lunch and Learns' }
     ] 
   },
   { link: '/shop', title: 'Shop' }

@@ -1,13 +1,22 @@
-<app-home-header [header_big]="true"></app-home-header>
+<app-home-header></app-home-header>
 
-
-<main>
-  <section class="event-details pb-70 mt-60">
+<!-- EVENT DETAILS -->
+<main class="event-details">
+  <section class="pb-70 mt-60">
     <div class="container">
       <div class="row">
+        <!-- event details - agenda -->
         <div class="col-lg-6">
           <div class="event-details__left">
             <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Events%2FSimple-DMC-Cover-2024.webp?alt=media&token=dd328a1f-44bc-49ea-bb3e-c5f410065291'" alt="blog">
+
+            <ng-template #noAgenda class="your-order-table table-responsive">
+              <h3>Agenda</h3>
+              <div class="no-agenda mt-30">
+                Check back for more updates!
+              </div>
+            </ng-template>
+
             <div *ngIf="event?.agendaItems else noAgenda" class="your-order-table table-responsive">
               <ng-container *ngFor="let monthGroup of groupedAgendaItems">
                 <h3 class="mt-30">Agenda -<strong> {{ monthGroup.monthYear }}</strong></h3>
@@ -32,14 +41,9 @@
                 </table>
               </ng-container>
             </div>
-            <ng-template #noAgenda class="your-order-table table-responsive">
-              <h3>Agenda</h3>
-              <div class="no-agenda mt-30">
-                Check back for more updates!
-              </div>
-            </ng-template>
           </div>
         </div>
+        <!-- event details - details -->
         <div class="col-lg-6">
           <div class="row event-details__right">
             <h2>{{ event?.eventName }}</h2>

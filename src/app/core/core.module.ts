@@ -19,6 +19,10 @@ import { NewsletterComponent } from "./pages/newsletter/newsletter.component";
 import { PrivatePolicyComponent } from "./pages/private-policy/private-policy.component";
 import { TermsOfServiceComponent } from "./pages/terms-of-service/terms-of-service.component";
 import { GiveComponent } from "./pages/give/give.component";
+import { SeminarsComponent } from "./pages/seminars/seminars.component";
+import { EquippingGroupsComponent } from "./pages/equipping-groups/equipping-groups.component";
+import { CoachingWithImpactComponent } from "./pages/coaching-with-impact/coaching-with-impact.component";
+import { LunchAndLearnComponent } from "./pages/lunch-and-learn/lunch-and-learn.component";
 
 
 @NgModule({
@@ -37,7 +41,11 @@ import { GiveComponent } from "./pages/give/give.component";
     NewsletterComponent,
     PrivatePolicyComponent,
     TermsOfServiceComponent,
-    GiveComponent
+    GiveComponent,
+    SeminarsComponent,
+    EquippingGroupsComponent,
+    CoachingWithImpactComponent,
+    LunchAndLearnComponent
   ],
   imports: [
     CommonModule,

@@ -1,12 +1,14 @@
-<app-home-header [header_big]="true"></app-home-header>
+<app-home-header></app-home-header>
+
+<!-- GIVE -->
 <div class="page-wrapper give">
   <main class="grey-bg">
-    <div class="container give__container">
-      <!--HEADER - SWIPER-->
-      <section class="slider__area slider__area-4 p-relative give__slider">
-        <div class="slider-active swiper-container give__slider-container" #heroSliderContainer >
+    <div class="give__container container">
+      <!--GIVE HEADER - SWIPER-->
+      <section class="give__slider slider__area slider__area-4 p-relative">
+        <div class="give__slider-container slider-active swiper-container" #heroSliderContainer >
           <div class="swiper-wrapper">
-            <div class="single-slider single-slider-2 slider__height-3 mt-50 d-flex align-items-center swiper-slide give__header" [style.backgroundImage]="'url()'">
+            <div class="give__header single-slider single-slider-2 slider__height-3 mt-50 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url()'">
               <div class="container">
                 <div class="row">
                   <div class="col-xl-8 col-lg-7 col-md-9 col-sm-11 col-12">
@@ -19,17 +21,17 @@
                 </div>
               </div>
             </div>
-            <div class="single-slider single-slider-2 slider__height-3 d-flex align-items-center swiper-slide give__header" [style.backgroundImage]="'url()'">
+            <div class="give__header single-slider single-slider-2 slider__height-3 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url()'">
               <div class="container">
-                  <div class="row slide-right">
-                      <div class="col-xl-8 col-lg-7 col-md-9 col-sm-11 col-12">
-                          <div class="slider__content slider__content-4">
-                              <h2 class="give__header-title">TEAM MEMBERS YOU SUPPORT</h2>
-                              <p class="give__header-subtitle">Meet the Impact Disciple-Making Team and learn more about who you are supporting</p>
-                              <a href="#" class="os-btn give__header-button">Read More</a>
-                          </div>
-                      </div>
+                <div class="row slide-right">
+                  <div class="col-xl-8 col-lg-7 col-md-9 col-sm-11 col-12">
+                    <div class="slider__content slider__content-4">
+                      <h2 class="give__header-title">TEAM MEMBERS YOU SUPPORT</h2>
+                      <p class="give__header-subtitle">Meet the Impact Disciple-Making Team and learn more about who you are supporting</p>
+                      <a href="#" class="os-btn give__header-button">Read More</a>
+                    </div>
                   </div>
+                </div>
               </div>
             </div>
           </div>
@@ -37,6 +39,7 @@
         </div>
       </section>
 
+      <!--GIVE - BUTTONS-->
       <section class="blog__area pb-70">
         <div class="container">
           <div class="row">
@@ -75,7 +78,7 @@
           <div class="col-xl-12 text-center bg-white pt-60 pb-60 pr-80 pl-80">
             <h1 class="mb-30"><strong>Mail Donations by Check To:</strong></h1>
             <h3><strong>Impact Discipleship Ministries</strong></h3>
-            <h4>2564 HWY 154 Newnan, GA 30265</h4>
+            <h4>{{ impactDisciplesInfo.address }}</h4>
           </div>
         </div>
       </section>

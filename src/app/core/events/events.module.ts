@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DxButtonModule, DxDataGridModule, DxDraggableModule, DxFormModule, DxListModule, DxPopupModule, DxSchedulerModule, DxScrollViewModule, DxSelectBoxModule, DxTabsModule, DxTextAreaModule, DxTextBoxModule } from 'devextreme-angular';
-import { EventFormComponent } from './event-form/event-form.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ImpactDisciplesModule } from 'impactdisciplescommon/src/impactdisciples.common.module';
 import { EventRegistrationComponent } from './event-registration/event-registration.component';
 
 @NgModule({
   declarations: [
-    EventRegistrationComponent,
-    EventFormComponent
+    EventRegistrationComponent
   ],
   imports: [
   CommonModule,
