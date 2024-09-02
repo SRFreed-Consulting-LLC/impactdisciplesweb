@@ -57,10 +57,10 @@
                 <div *ngFor="let coach of coaches$ | async" class="col-xl-4 col-lg-6 col-md-9 col-sm-12 teams-list__team">
                   <div class="teams-list__team-image fix">
                     <a [routerLink]="'#'" class="w-img">
-                      <img class="transform" [src]="coach.photoUrl" [alt]="coach.firstName">
+                      <img class="transform" [src]="coach.photoUrl.url" [alt]="coach.firstName">
                     </a>
                   </div>
-              
+
                   <div class="teams-list__content">
                     <h4><a [routerLink]="'#'">{{ coach.firstName }} {{ coach.lastName }}</a></h4>
                     <div class="teams-list__meta">
