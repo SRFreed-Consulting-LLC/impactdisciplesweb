@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import home_testimonials from 'src/app/shared/utils/data/home-testimonials-data';
-import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +8,13 @@ import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 })
 export class HomeComponent {
 
+  isPlaying: boolean = false;
+
   public homeTestimonials = home_testimonials;
 
-  constructor(public utilsService: UtilsService) { }
+  constructor() { }
+
+  playVideo(){
+    this.isPlaying = true;
+  }
 }

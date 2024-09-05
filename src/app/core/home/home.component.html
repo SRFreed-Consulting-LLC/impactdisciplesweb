@@ -9,20 +9,30 @@
     <app-home-services></app-home-services>
 
     <!-- video -->
-    <div class="video__area-df mb-60" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fmap.jpg?alt=media&token=69c71f2a-3c1b-4745-a1bc-362e4cbf29aa)">
-      <div class="container">
-        <div class="video__content text-center">
-          <div class="video__button mb-60">
-            <a (click)="utilsService.playVideo('HxKSa24hF60')" class="cursor-pointer">
-              <i class="fas fa-play"></i>
-            </a>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+          <div *ngIf="!isPlaying" class="video__area-df mb-60" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fmap.jpg?alt=media&token=69c71f2a-3c1b-4745-a1bc-362e4cbf29aa)">
+            <div class="container">
+              <div class="video__content text-center">
+                <div class="video__button mb-60">
+                  <a (click)="playVideo()" class="cursor-pointer">
+                    <i class="fas fa-play"></i>
+                  </a>
+                </div>
+                <h5 class="video__title">OUR VISION </h5>
+                <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples of Jesus Christ. </p>
+              </div>
+            </div>
           </div>
-          <h5 class="video__title">OUR VISION </h5>
-          <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples of Jesus Christ. </p>
+          <div *ngIf="isPlaying" id="video-overlay"  class="video__area-df mb-60">
+          <youtube-player [videoId]="'HxKSa24hF60'" [width]="1211.33" [height]="565" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player></div>
         </div>
+        <div class="col-2"></div>
       </div>
     </div>
-    
+
     <!-- book banner -->
     <app-book-banner></app-book-banner>
 
@@ -42,19 +52,19 @@
               </a>
             </div>
             <div class="col-xl-4 col-lg-4">
-              <div class="w-img">                  
+              <div class="w-img">
                 <img src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fbreaking-ground.PNG?alt=media&token=920095ef-4dff-4605-9851-4bee7729ebb0" alt="banner">
               </div>
             </div>
           </div>
         </div>
       </div>
-  
+
       <div class="banner__area-2 pb-60">
         <div class="container-fluid p-0">
           <div class="row g-0 justify-content-center align-items-center">
             <div class="col-xl-4 col-lg-4">
-              <div class="w-img">                  
+              <div class="w-img">
                 <img src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/International%2FCambodia%2Finternational-notebook.jpg?alt=media&token=f8225879-b9a0-4353-9f1f-b84abbb72ea1" alt="banner">
               </div>
             </div>
@@ -81,7 +91,7 @@
             </a>
           </div>
           <div class="col-xl-4 col-lg-4">
-            <div class="w-img">                  
+            <div class="w-img">
               <img src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fgroup-session-1.jpg?alt=media&token=61ec686d-1a7d-4779-8b89-bd393b479174" alt="banner">
             </div>
           </div>
@@ -91,7 +101,7 @@
 
     <!-- testimonials -->
     <app-testimonials [testimonials]="homeTestimonials"></app-testimonials>
-    
+
   </div>
 </main>
 

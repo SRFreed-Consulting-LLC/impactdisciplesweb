@@ -23,7 +23,8 @@ import { SeminarsComponent } from "./pages/seminars/seminars.component";
 import { EquippingGroupsComponent } from "./pages/equipping-groups/equipping-groups.component";
 import { CoachingWithImpactComponent } from "./pages/coaching-with-impact/coaching-with-impact.component";
 import { LunchAndLearnComponent } from "./pages/lunch-and-learn/lunch-and-learn.component";
-
+import { ImpactDisciplesModule } from "../../../impactdisciplescommon/src/impactdisciples.common.module";
+import {YouTubePlayerModule} from '@angular/youtube-player';
 
 @NgModule({
   declarations: [
@@ -55,8 +56,10 @@ import { LunchAndLearnComponent } from "./pages/lunch-and-learn/lunch-and-learn.
     DxNumberBoxModule,
     DxAccordionModule,
     DxButtonModule,
-    DxFormModule
-  ],
+    DxFormModule,
+    ImpactDisciplesModule,
+    YouTubePlayerModule
+],
   exports: [
     HomeComponent,
     HomeHeaderComponent,
