@@ -19,6 +19,11 @@
       font-size: 80px;
       font-weight: 600;
     }
+    &-button {
+      background-color: $theme-color;
+      color: #ffffff;
+      font-size: 18px;
+    }
     .custom-hr {
       width: 200px; 
       border: 0;    

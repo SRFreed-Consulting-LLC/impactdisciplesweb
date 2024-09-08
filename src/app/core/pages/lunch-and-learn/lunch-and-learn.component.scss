@@ -1,6 +1,6 @@
 @import '../../../../assets/theme/scss/variables';
 
-.seminars {
+.lunch {
   .slider__area {
     border-top: 20px solid #ffcc00;
     border-bottom: 20px solid #ffcc00;
@@ -23,6 +23,11 @@
     &__title {
       font-size: 80px;
       font-weight: 600;
+    }
+    &-button {
+      background-color: $theme-color;
+      color: #ffffff;
+      font-size: 18px;
     }
     .custom-hr {
       width: 200px; 

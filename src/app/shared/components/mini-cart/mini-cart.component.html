@@ -1,4 +1,3 @@
-<!-- TODO: connect to cart data -->
 <div class="mini-cart">
   <div *ngIf="cartService.getCartProducts().length === 0">
     <h5>Your cart is empty</h5>
@@ -13,7 +12,7 @@
         </div>
         <div class="cart-content f-left text-left">
           <h5>
-            <a [routerLink]="['/shop/shop-details', item.id]">{{item.title}}</a>
+            <a [routerLink]="['/shop/shop-details', item.id]">{{item.itemName}}</a>
           </h5>
           <div class="cart-price">
             <span class="ammount">{{item.orderQuantity}} <i class="fal fa-times"></i></span>

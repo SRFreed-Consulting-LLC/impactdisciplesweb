@@ -1,15 +1,15 @@
-.event-checkout {
-  .pay-button {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: 20px;
+.checkout {
+  .text-right {
+    text-align: end;
   }
-  .product-name {
-    padding: 15px 20px 15px 0px;
+  .attendees {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-style: italic;
+    color: #a4a4a4;
   }
   .newsletter > .dx-field-item-content.dx-field-item-content-location-bottom {
     max-width: 30px;
   }
 }
-

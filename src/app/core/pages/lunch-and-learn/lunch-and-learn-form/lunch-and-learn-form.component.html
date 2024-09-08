@@ -1,0 +1,89 @@
+<app-home-header></app-home-header>
+
+<main class="lunch-form">
+  <app-breadcrumb [currentPageName]="'Lunch and Learn Request Form'" [previousLinkName]="'Lunch and Learn'" [previousLink]="'/lunch-and-learns'"></app-breadcrumb>
+
+  <section class="lunch-form__area pb-100 mt-30">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-6">
+          <div class="lunch-form__info">
+            <dx-form
+              #lunchRequestFormComponent
+              [formData]="lunchRequestForm"
+              [colCount]="2"
+              labelLocation="top"
+              [showColonAfterLabel]="false"
+            >
+              <dxi-item dataField="firstName" [isRequired]="true" [label]="{ text: 'First Name' }"></dxi-item>
+              <dxi-item dataField="lastName" [isRequired]="true" [label]="{ text: 'Last Name' }"></dxi-item>
+              <dxi-item dataField="email" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
+              <dxi-item
+                dataField="requestedDate"
+                editorType="dxDateBox"
+                [label]="{ text: 'Requested Date' }"
+                [editorOptions]="{
+                  displayFormat: 'M/d/yyyy',
+                  type: 'date',
+                  useMaskBehavior: true
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="requestedStartDateTime"
+                editorType="dxDateBox"
+                [label]="{ text: 'Requested Start Time' }"
+                [editorOptions]="{
+                  displayFormat: 'HH:mm',
+                  type: 'time',
+                  useMaskBehavior: true
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="requestedEndDateTime"
+                editorType="dxDateBox"
+                [label]="{ text: 'Requested End Time' }"
+                [editorOptions]="{
+                  displayFormat: 'HH:mm',
+                  type: 'time',
+                  useMaskBehavior: true
+                }"
+              ></dxi-item>
+              <!-- TODO: A location id might help here to be able to prefill the address information on location selection-->
+              <dxi-item
+                dataField="locationName"
+                editorType="dxAutocomplete"
+                [colSpan]="2"
+                [label]="{ text: 'Location Name' }"
+                [editorOptions]="{
+                  items: locations$ | async,
+                  valueExpr: 'name',
+                  displayExpr: 'name',
+                  showClearButton: true,
+                  searchExpr: ['name']
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="locationAddress"
+                editorType="dxAutocomplete"
+                [colSpan]="2"
+                [label]="{ text: 'Location Address' }"
+                [editorOptions]="{
+                  items: locations$ | async,
+                  valueExpr: 'address.address1',
+                  displayExpr: displayAddress,  
+                  showClearButton: true,
+                  searchExpr: ['address.address1', 'address.city', 'address.state', 'address.zip'] 
+                }"
+              ></dxi-item>
+              <dxi-item dataField="coordinator" [isRequired]="true" [label]="{ text: 'Event Coordinator' }"></dxi-item>
+              <dxi-item dataField="coordinatorPhone" [isRequired]="true" [label]="{ text: 'Coordinator Phone' }"></dxi-item>
+            </dx-form>
+            <a (click)="onSubmitForm()" class="os-btn lunch-form__button mt-30">Request to Book a Lunch and Learn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

@@ -1,10 +1,10 @@
 <app-home-header></app-home-header>
 
-<!-- EVENT DETAILS -->
 <main class="event-details">
   <section class="pb-70 mt-60">
     <div class="container">
       <div class="row">
+
         <!-- event details - agenda -->
         <div class="col-lg-6">
           <div class="event-details__left">
@@ -43,9 +43,11 @@
             </div>
           </div>
         </div>
+
         <!-- event details - details -->
         <div class="col-lg-6">
           <div class="row event-details__right">
+
             <h2>{{ event?.eventName }}</h2>
             <span class="event-details__right-subtitle">
               <span *ngIf="event?.startDate" class="date">{{ event.startDate.toString()| date: 'M/d' }} </span>
@@ -53,22 +55,36 @@
               <span *ngIf="event?.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
             </span>
             <p *ngIf="event?.description" class="events-list__content-description">{{ event.description }}</p>
-            <div class="mt-20">
+
+            <div class="mt-20 mb-30">
               <h4>ADD TICKETS:</h4>
               <div class="event-details__right-ticket-number">
                 <button class="os-btn" (click)="decrement()"> <i class="dx-icon-minus"></i></button>
-                 <dx-number-box [value]="quantity"></dx-number-box>
+                 <dx-number-box [value]="cartItem?.attendees?.length"></dx-number-box>
                 <button class="os-btn" (click)="increment()"><i class="dx-icon-plus"></i></button>
               </div>
             </div>
+
+            <h3>Tickets</h3>
+            <dx-accordion *ngFor="let attendee of cartItem?.attendees; let i = index" [collapsible]="true" [multiple]="true" [selectedIndex]="0">
+              <dxi-item  title="Attendee {{ i + 1 }} *">
+                <dx-form #attendeeForms [formData]="attendee">
+                  <dxi-item dataField="firstName" [isRequired]="true"></dxi-item>
+                  <dxi-item dataField="lastName" [isRequired]="true"></dxi-item>
+                  <dxi-item dataField="email"></dxi-item>
+                </dx-form>
+              </dxi-item>
+            </dx-accordion>
+
             <div class="cart-page-total">
               <h2>Cart totals</h2>
               <ul class="mb-20">
-                <li>Subtotal <span>${{ event?.costInDollars }}</span></li>
+                <li>Ticket Price <span>${{ event?.costInDollars }}</span></li>
                 <li>Total <span>${{ total }}</span></li>
               </ul>
-              <a class="os-btn"(click)="proceedToCheckout()">Proceed to checkout</a>
+              <a class="os-btn"(click)="proceedToCheckout()">Add To Cart</a>
             </div>
+
           </div>
         </div>
       </div>

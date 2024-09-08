@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CartService } from 'src/app/theme/shared/services/cart.service';
+import { CartService } from '../../utils/services/cart.service';
 
 @Component({
   selector: 'app-mini-cart',
