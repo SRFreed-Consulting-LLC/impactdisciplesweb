@@ -1,3 +1,12 @@
+.breadcrumb {
+  .page__title-inner {
+    h1 {
+      font-size: 50px;
+      text-transform: none;
+    }
+  }
+}
+
 .breadcrumb.page__title {
-  height: 200px;
+  height: 250px;
 }

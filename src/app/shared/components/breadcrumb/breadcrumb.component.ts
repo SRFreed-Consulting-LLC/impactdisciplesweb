@@ -10,4 +10,6 @@ export class BreadcrumbComponent {
   @Input() previousLink: string = '';
   @Input() previousLinkId: string = '';
   @Input() currentPageName: string = '';
+  @Input() bgImg: string = '';
+  @Input() isDark: boolean = false;
 }

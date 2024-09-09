@@ -28,7 +28,6 @@ import { ShoppingCartComponent } from "./store/shopping-cart/shopping-cart.compo
 import { CheckoutComponent } from "./store/checkout/checkout.component";
 import { LunchAndLearnFormComponent } from "./pages/lunch-and-learn/lunch-and-learn-form/lunch-and-learn-form.component";
 import { SeminarFormComponent } from "./pages/seminars/seminar-form/seminar-form.component";
-t
 
 @NgModule({
   declarations: [
