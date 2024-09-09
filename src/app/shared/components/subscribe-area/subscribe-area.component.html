@@ -7,9 +7,28 @@
         <div class="subscribe__content text-center pt-30">
           <div class="subscribe__form">
             <form (ngSubmit)="handleFormSubmit()">
-              <input required type="name" name="name" [(ngModel)]="name" placeholder="Name">
-              <input required type="email" name="email" [(ngModel)]="email" placeholder="Email">
-              <button class="subscribe__button os-btn os-btn-2 os-btn-3" type="submit">subscribe</button>
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-3">
+                  <input required type="name" name="name" [(ngModel)]="subscription.firstName" placeholder="First Name">
+                </div>
+                <div class="col-3">
+                  <input required type="name" name="name" [(ngModel)]="subscription.lastName" placeholder="Last Name">
+                </div>
+                <div class="col-3"></div>
+              </div>
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                  <input required type="email" name="email" [(ngModel)]="subscription.email" placeholder="Email">
+                </div>
+                <div class="col-3"></div>
+              </div>
+              <div class="row">
+                <div class="col-12 text-center">
+                  <button class="subscribe__button os-btn os-btn-2 os-btn-3" type="submit">subscribe</button>
+                </div>
+              </div>
             </form>
           </div>
         </div>

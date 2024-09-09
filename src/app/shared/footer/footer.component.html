@@ -106,9 +106,12 @@
               <p>Join over 1,000 people who get free and fresh content delivered automatically each time we publish.</p>
               <!-- TODO: Set up subscription form -->
               <div class="form-group">
-                <input class="form-control" id="newsletter-input" type="name" name="name" placeholder="Name">
-                <input class="form-control" id="newsletter-input" type="email" name="email" placeholder="Email">
-                <button class="ss-btn btnNewsletter" type="submit">Subscribe</button>
+                <form (ngSubmit)="handleFormSubmit()">
+                  <input required type="name" name="firstName" class="form-control" [(ngModel)]="subscription.firstName" placeholder="First Name">
+                  <input required type="name" name="lastName" class="form-control" [(ngModel)]="subscription.lastName" placeholder="Last Name">
+                  <input required type="email" name="email" class="form-control" [(ngModel)]="subscription.email" placeholder="Email">
+                  <button class="ss-btn btnNewsletter" type="submit">Subscribe</button>
+                </form>
               </div>
             </div>
           </div>
