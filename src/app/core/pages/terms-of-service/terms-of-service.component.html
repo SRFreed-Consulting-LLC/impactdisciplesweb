@@ -2,39 +2,16 @@
 
 <!-- TODO: Update to display from htmlEditor -->
 <main class="terms mb-80">
-  <app-breadcrumb 
-    [currentPageName]="'Terms of Service'" 
-    [previousLinkName]="'Home'" 
+  <app-breadcrumb
+    [currentPageName]="'Terms of Service'"
+    [previousLinkName]="'Home'"
     [previousLink]="'/home'"
     [isDark]="true"
     [bgImg]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Ftos-header.PNG?alt=media&token=a5468125-b479-4119-9ef5-3b805b8d0f44'"
   ></app-breadcrumb>
 
-  <div class="container mt-50">
-    <p>
-      <strong>Impact Discipleship Ministries Inc. </strong>(“Impact Ministries”) offers this web site as a service to disciple makers and multipliers. The terms and conditions contained in this Terms of Use and the Privacy Policy govern your use of this web site. As your use of this site indicates that you agree and consent to the terms and conditions set forth below and those included in the Privacy Policy please review them carefully before you use the site. IF YOU DO NOT AGREE WITH THE TERMS OF USE OR PRIVACY POLICY, PLEASE DO NOT USE IMPACT MINISTRIES’ WEB SITE.
-    </p>
-    <p>
-      <strong>Services Provided. </strong>Impact Ministries offers a wide variety of services on this web site, including forums on topics pertinent to our registered members. Access to certain areas of the web site is limited to registered users.
-    </p>
-    <p>
-      <strong>All Rights Reserved. </strong>Except as expressly provided in this Terms of Use, Impact Ministries does not grant any express or implied rights to you under any patent, copyright, trademark or trade secret laws.
-    </p>
-    <p>
-      <strong>Copyright Ownership. </strong>All of the materials on Impact Ministries’ web site are copyrighted and protected under domestic and worldwide copyright laws, including treaty provisions. They may not be copied, reproduced, modified, published, uploaded, posted, transmitted or distributed in any way without prior written consent of Impact Ministries.
-    </p>
-    <p>
-      <strong>Privacy Policy. </strong>Information about you obtained during the registration process and at other times is subject to Impact Ministries’ Privacy Policy. The entire Privacy Policy is located at our <a href="/private-policy">Privacy Policy page</a>.
-    </p>
-    <p>
-      <strong>Disclaimer of Warranties. </strong>THE MATERIALS ACCESSIBLE FROM OR ON THIS WEB SITE ARE PROVIDED “AS IS,” AND IMPACT MINISTRIES EXPRESSLY DISCLAIMS ANY IMPLIED OR EXPRESS WARRANTIES OR CONDITIONS OF ANY KIND, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT OF INTELLECTUAL PROPERTY RELATING TO SUCH MATERIAL.
-    </p>
-    <p>
-      <strong>Limitation of Liability. </strong>IMPACT MINISTRIES SHALL NOT BE LIABLE, WHETHER BASED IN TORT OR CONTRACT ON ANY LEGAL THEORY, FOR ANY INCIDENTAL, CONSEQUENTIAL, INDIRECT, SPECIAL OR PUNITIVE DAMAGES OF ANY KIND ARISING OUT OF THE USE, INABILITY TO USE OR THE RESULTS OF USE OF THIS WEB SITE, ANY WEB SITES LINKED TO THIS SITE, OR THE MATERIALS OR INFORMATION OR SERVICES CONTAINED ON THE WEB SITE.
-    </p>
-    <p>
-      <strong>Governing Law. </strong>The laws of GEORGIA shall govern this Terms of Use. The parties hereby consent to the exclusive jurisdiction of and venue in the federal and/or state courts located in Coweta County, Georgia, and further waive any right to a trial by jury for all claims arising out of or relating the use of Impact Ministries’ web site.
-    </p>
+  <div class="container mt-50" [innerHTML]="webConfig.tos">
+
   </div>
 </main>
 
