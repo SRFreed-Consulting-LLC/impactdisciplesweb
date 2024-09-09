@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-config.model';
+import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 
@@ -7,8 +9,16 @@ import { UtilsService } from 'src/app/theme/shared/services/utils.service';
   templateUrl: './seminars.component.html',
   styleUrls: ['./seminars.component.scss']
 })
-export class SeminarsComponent  {
+export class SeminarsComponent implements OnInit {
   public impactDisciplesInfo = impactDisciplesInfo;
 
-  constructor(public utilsService: UtilsService) { }
+  public webConfig: WebConfigModel;
+
+  constructor(public utilsService: UtilsService, private webConfigService: WebConfigService) { }
+
+  async ngOnInit(): Promise<void> {
+    this.webConfig = await this.webConfigService.getAll().then(configs => {
+      return configs[0];
+    });
+  }
 }
