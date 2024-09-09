@@ -28,6 +28,7 @@ import { ShoppingCartComponent } from "./store/shopping-cart/shopping-cart.compo
 import { CheckoutComponent } from "./store/checkout/checkout.component";
 import { LunchAndLearnFormComponent } from "./pages/lunch-and-learn/lunch-and-learn-form/lunch-and-learn-form.component";
 import { SeminarFormComponent } from "./pages/seminars/seminar-form/seminar-form.component";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { SeminarFormComponent } from "./pages/seminars/seminar-form/seminar-form
   ],
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule,
     SharedModule,
     ThemeSharedModule,
