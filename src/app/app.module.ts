@@ -11,7 +11,6 @@ import { CoreModule } from './core/core.module';
 import { CookieService } from 'ngx-cookie-service';
 import { SharedModule } from './shared/shared.module';
 import { ThemeSharedModule } from './theme/shared/theme-shared.module';
-import { EventsModule } from './core/events/events.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +25,6 @@ import { EventsModule } from './core/events/events.module';
     CoreModule,
     SharedModule,
     ThemeSharedModule,
-    EventsModule,
     ImpactDisciplesModule
 
   ],

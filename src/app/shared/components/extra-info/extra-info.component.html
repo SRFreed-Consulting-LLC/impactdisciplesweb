@@ -1,16 +1,16 @@
 <ul class="extra-info">
   <li>
     <div class="my-account">
-      <div class="extra-title">
+      <div *ngIf="isLoggedIn" class="extra-title">
         <h5>My Account</h5>
       </div>
       <ul>
-        <li><a routerLink="/shop/cart">Cart</a></li>
-        <li><a routerLink="/shop/checkout">Checkout</a></li>
-        <li><a routerLink="/shop/register">Create Account</a></li>
-        <li><a routerLink="/shop/account">Account</a></li>
-        <li><a (click)="authService.logOut()">Logout</a></li>
-        <!-- TODO: Add login button -->
+        <li><a routerLink="/cart">Cart</a></li>
+        <li><a routerLink="/checkout">Checkout</a></li>
+        <li *ngIf="isLoggedIn"><a routerLink="/account">Account</a></li>
+        <li *ngIf="isLoggedIn"><a (click)="authService.logOut()">Logout</a></li>
+        <li *ngIf="!isLoggedIn"><a [routerLink]="['/create-auth-form']">Create Account</a></li>
+        <li *ngIf="!isLoggedIn"><a [routerLink]="['/capture-username-form']">Login</a></li>
       </ul>
     </div>
 </ul>

@@ -1,36 +1,35 @@
-import { AfterContentInit, AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
-import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/environments/environment';
-import { ShoppingCartService } from './event-checkout.service';
-import { CartItem, CheckoutForm } from './cart.model';
-import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
-import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
-import { Subject, takeUntil } from 'rxjs';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
+import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
+import { CheckoutForm } from 'src/app/shared/models/cart.model';
+import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
+import { CartService } from 'src/app/shared/utils/services/cart.service';
+import { environment } from 'src/environments/environment';
+import { StripeService } from './stripe.service';
+
 
 @Component({
-  selector: 'app-event-checkout',
-  templateUrl: './event-checkout.component.html',
-  styleUrls: ['./event-checkout.component.scss']
+  selector: 'app-checkout',
+  templateUrl: './checkout.component.html',
+  styleUrls: ['./checkout.component.scss']
 })
-export class EventCheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('billingForm', { static: false }) billingForm: DxFormComponent;
-  @ViewChildren('attendeeForms') attendeeForms: QueryList<DxFormComponent>;
+export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('checkoutFormComponent', { static: false }) checkoutFormComponent: DxFormComponent;
 
+  checkoutForm: CheckoutForm = {};
+  status: string = "REQUEST";
   elements;
   items = [{ id: "xl-tshirt", amount: 1000 }];
-  status: string = "REQUEST";
   countries = COUNTRIES;
-  checkoutForm: CheckoutForm = {};
-
-  public isOpenLogin = false;
-  public isOpenCoupon = false;
+  isOpenLogin = false;
+  isOpenCoupon = false;
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private stripeService: StripeService, private toastrService: ToastrService, private shoppingCartService: ShoppingCartService, private authService: AuthService){}
+  constructor (private stripeService: StripeService, private toastrService: ToastrService, private authService: AuthService, public cartService: CartService) {}
 
   async ngOnInit(): Promise<void> {
     const clientSecret = new URLSearchParams(window.location.search).get(
@@ -42,38 +41,28 @@ export class EventCheckoutComponent implements OnInit, AfterViewInit, OnDestroy 
     } else {
       this.status = "RESPONSE"
     }
+    this.checkoutForm = {
+      cartItems: this.cartService.getCartProducts(),
+      total: this.cartService.totalPriceQuantity().total,
+      isShippingSameAsBilling: true,
+      isNewsletter: true
+    }
 
     this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
-      const cartItem = this.shoppingCartService.getCartItem();
-      const total = this.shoppingCartService.getTotal();
-      this.checkoutForm.attendees = Array.from({ length: cartItem.quantity }, () => ({
-        firstName: '',
-        lastName: '',
-        email: ''
-      }));
       if(user) {
-        Object.assign(this.checkoutForm, {
-          eventId: cartItem.eventId,
+        this.checkoutForm = {
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
-          location: user.address,
           phone: user.phone,
-          attendees: [
-            user, 
-            ...(this.checkoutForm.attendees?.slice(1).map(() => ({})) || [])
-          ],
-          cartItem: cartItem,
-          total: total
-        })
-      } else {
-        Object.assign(this.checkoutForm, {
-          eventId: cartItem.eventId,
-          cartItem: cartItem,
-          total: total
-        })
+          // TODO: Need to change to use saved addresses in user account
+          billingAddress: user.address || null,
+          shippingAddress: this.checkoutForm.isShippingSameAsBilling ? user.address : null,
+          ...this.checkoutForm
+        }
       }
     });
+    console.log(this.checkoutForm)
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -103,16 +92,8 @@ export class EventCheckoutComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   async handleSubmit(e) {
-    const isBillingValid = this.billingForm.instance.validate();
-    let attendeeFormsValid = true;
 
-    this.attendeeForms.forEach(form => {
-      const result = form.instance.validate();
-      if (!result.isValid) {
-        attendeeFormsValid = false;
-      }
-    });
-    if(isBillingValid && attendeeFormsValid) {
+    if(this.checkoutFormComponent.instance.validate()) {
       e.preventDefault();
       this.setLoading(true);
   
@@ -140,17 +121,6 @@ export class EventCheckoutComponent implements OnInit, AfterViewInit, OnDestroy 
       }
   
       this.setLoading(false);
-    } else if(!attendeeFormsValid) {
-      notify({
-        type: 'error',
-        message: 'Please fill in information for all Attendees',
-        width: '400',
-        position: {
-          my: 'top center', 
-          at: 'top center', 
-          of: window        
-        }
-      })
     }
   }
 
@@ -208,10 +178,9 @@ export class EventCheckoutComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  
   completePurchase() {
     // Add Logic to handle purchase completion
-    this.shoppingCartService.clearCart();
+    this.cartService.clearCart();
   }
 
   handleOpenLogin() {
@@ -224,7 +193,6 @@ export class EventCheckoutComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-    this.shoppingCartService.clearCart();
   }
 
 }

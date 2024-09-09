@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { DxButtonModule, DxToolbarModule, DxTabsModule, DxNumberBoxModule, DxAccordionModule, DxFormModule } from "devextreme-angular";
+import { DxButtonModule, DxToolbarModule, DxTabsModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule } from "devextreme-angular";
 import { SharedModule } from "../shared/shared.module";
 import { HomeHeaderComponent } from "./home/home-header/home-header.component";
 import { HomeComponent } from "./home/home.component";
@@ -11,8 +11,7 @@ import { HomeServicesComponent } from "./home/home-services/home-services.compon
 import { EventsComponent } from "./pages/events/events.component";
 import { TeamComponent } from "./pages/team/team.component";
 import { EventDetailsComponent } from "./pages/events/event-details/event-details.component";
-import { EventCheckoutComponent } from "./pages/event-checkout/event-checkout.component";
-import { CheckoutSuccessComponent } from "./pages/checkout-success/checkout-success.component";
+import { CheckoutSuccessComponent } from "./store/checkout-success/checkout-success.component";
 import { HistoryComponent } from "./pages/history/history.component";
 import { ContactComponent } from "./pages/contact/contact.component";
 import { NewsletterComponent } from "./pages/newsletter/newsletter.component";
@@ -24,7 +23,12 @@ import { EquippingGroupsComponent } from "./pages/equipping-groups/equipping-gro
 import { CoachingWithImpactComponent } from "./pages/coaching-with-impact/coaching-with-impact.component";
 import { LunchAndLearnComponent } from "./pages/lunch-and-learn/lunch-and-learn.component";
 import { ImpactDisciplesModule } from "../../../impactdisciplescommon/src/impactdisciples.common.module";
-import {YouTubePlayerModule} from '@angular/youtube-player';
+import { YouTubePlayerModule } from '@angular/youtube-player';
+import { ShoppingCartComponent } from "./store/shopping-cart/shopping-cart.component";
+import { CheckoutComponent } from "./store/checkout/checkout.component";
+import { LunchAndLearnFormComponent } from "./pages/lunch-and-learn/lunch-and-learn-form/lunch-and-learn-form.component";
+import { SeminarFormComponent } from "./pages/seminars/seminar-form/seminar-form.component";
+t
 
 @NgModule({
   declarations: [
@@ -35,7 +39,8 @@ import {YouTubePlayerModule} from '@angular/youtube-player';
     EventsComponent,
     EventDetailsComponent,
     TeamComponent,
-    EventCheckoutComponent,
+    ShoppingCartComponent,
+    CheckoutComponent,
     CheckoutSuccessComponent,
     HistoryComponent,
     ContactComponent,
@@ -44,9 +49,11 @@ import {YouTubePlayerModule} from '@angular/youtube-player';
     TermsOfServiceComponent,
     GiveComponent,
     SeminarsComponent,
+    SeminarFormComponent,
     EquippingGroupsComponent,
     CoachingWithImpactComponent,
-    LunchAndLearnComponent
+    LunchAndLearnComponent,
+    LunchAndLearnFormComponent
   ],
   imports: [
     CommonModule,
@@ -58,8 +65,12 @@ import {YouTubePlayerModule} from '@angular/youtube-player';
     DxButtonModule,
     DxFormModule,
     ImpactDisciplesModule,
-    YouTubePlayerModule
-],
+    YouTubePlayerModule,
+    DxDateBoxModule,
+    DxAutocompleteModule,
+    DxRadioGroupModule,
+    DxTextAreaModule
+  ],
   exports: [
     HomeComponent,
     HomeHeaderComponent,

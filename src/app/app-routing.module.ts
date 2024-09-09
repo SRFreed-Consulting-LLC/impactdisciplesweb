@@ -7,12 +7,10 @@ import { CreateAuthFormComponent } from 'impactdisciplescommon/src/forms/create-
 import { ResetPasswordFormComponent } from 'impactdisciplescommon/src/forms/reset-password-form/reset-password-form.component';
 import { AuthGuardService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { HomeComponent } from './core/home/home.component';
-import { EventRegistrationComponent } from './core/events/event-registration/event-registration.component';
 import { EventsComponent } from './core/pages/events/events.component';
 import { TeamComponent } from './core/pages/team/team.component';
 import { EventDetailsComponent } from './core/pages/events/event-details/event-details.component';
-import { EventCheckoutComponent } from './core/pages/event-checkout/event-checkout.component';
-import { CheckoutSuccessComponent } from './core/pages/checkout-success/checkout-success.component';
+import { CheckoutSuccessComponent } from './core/store/checkout-success/checkout-success.component';
 import { HistoryComponent } from './core/pages/history/history.component';
 import { ContactComponent } from './core/pages/contact/contact.component';
 import { NewsletterComponent } from './core/pages/newsletter/newsletter.component';
@@ -23,6 +21,10 @@ import { SeminarsComponent } from './core/pages/seminars/seminars.component';
 import { EquippingGroupsComponent } from './core/pages/equipping-groups/equipping-groups.component';
 import { CoachingWithImpactComponent } from './core/pages/coaching-with-impact/coaching-with-impact.component';
 import { LunchAndLearnComponent } from './core/pages/lunch-and-learn/lunch-and-learn.component';
+import { ShoppingCartComponent } from './core/store/shopping-cart/shopping-cart.component';
+import { CheckoutComponent } from './core/store/checkout/checkout.component';
+import { LunchAndLearnFormComponent } from './core/pages/lunch-and-learn/lunch-and-learn-form/lunch-and-learn-form.component';
+import { SeminarFormComponent } from './core/pages/seminars/seminar-form/seminar-form.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -37,10 +39,6 @@ const routes: Routes = [
   {
     path: 'event-details/:id',
     component: EventDetailsComponent
-  },
-  {
-    path: 'registration',
-    component: EventRegistrationComponent
   },
   {
     path: 'team',
@@ -67,6 +65,10 @@ const routes: Routes = [
     component: SeminarsComponent
   },
   {
+    path: 'seminar-form',
+    component: SeminarFormComponent
+  },
+  {
     path: 'equipping-groups',
     component: EquippingGroupsComponent
   },
@@ -79,6 +81,10 @@ const routes: Routes = [
     component: LunchAndLearnComponent
   },
   {
+    path:'lunch-and-learn-form',
+    component: LunchAndLearnFormComponent
+  },
+  {
     path: 'private-policy',
     component: PrivatePolicyComponent
   },
@@ -87,12 +93,16 @@ const routes: Routes = [
     component: TermsOfServiceComponent
   },
   {
-    path: 'event-checkout',
-    component: EventCheckoutComponent
+    path: 'checkout',
+    component: CheckoutComponent
   },
   {
     path: 'checkout-success',
     component: CheckoutSuccessComponent
+  },
+  {
+    path: 'shopping-cart',
+    component: ShoppingCartComponent
   },
   {
     path: 'capture-username-form',

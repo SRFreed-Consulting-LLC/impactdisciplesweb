@@ -6,6 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./breadcrumb.component.scss']
 })
 export class BreadcrumbComponent {
+  @Input() previousLinkName: string = '';
   @Input() previousLink: string = '';
   @Input() previousLinkId: string = '';
   @Input() currentPageName: string = '';

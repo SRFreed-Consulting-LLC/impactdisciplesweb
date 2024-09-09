@@ -1,0 +1,183 @@
+<app-home-header></app-home-header>
+
+<main class="seminar-form">
+  <app-breadcrumb [currentPageName]="'Seminar Request Form'" [previousLinkName]="'Seminars'" [previousLink]="'/seminars'"></app-breadcrumb>
+
+  <section class="seminar-form__area pb-100 mt-30">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-8">
+          <div class="seminar-form__info">
+            <dx-form
+              #seminarFormComponent
+              [formData]="seminarForm"
+              [colCount]="6"
+              labelLocation="top"
+              [showColonAfterLabel]="false"
+            >
+              <dxi-item
+                dataField="requestedSeminarDate"
+                editorType="dxDateBox"
+                [colSpan]="2"
+                [label]="{ text: 'Requested Date' }"
+                [editorOptions]="{
+                  displayFormat: 'M/d/yyyy',
+                  type: 'date',
+                  useMaskBehavior: true
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="requestedStartDateTime"
+                editorType="dxDateBox"
+                [colSpan]="2"
+                [label]="{ text: 'Requested Start Time' }"
+                [editorOptions]="{
+                  displayFormat: 'HH:mm',
+                  type: 'time',
+                  useMaskBehavior: true
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="requestedEndDateTime"
+                editorType="dxDateBox"
+                [colSpan]="2"
+                [label]="{ text: 'Requested End Time' }"
+                [editorOptions]="{
+                  displayFormat: 'HH:mm',
+                  type: 'time',
+                  useMaskBehavior: true
+                }"
+              ></dxi-item>
+              <dxi-item dataField="preferredTrainer" [colSpan]="6" [label]="{ text: 'Is there a trainer from our team who you would prefer to lead your seminar?' }"></dxi-item>
+              <!-- TODO: A location id might help here to be able to prefill the address information on location selection-->
+              <dxi-item
+                dataField="locationName"
+                editorType="dxAutocomplete"
+                [colSpan]="6"
+                [label]="{ text: 'Name of church, event center, or other location where event will take place' }"
+                [editorOptions]="{
+                  items: locations$ | async,
+                  valueExpr: 'name',
+                  displayExpr: 'name',
+                  showClearButton: true,
+                  searchExpr: ['name']
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="locationAddress"
+                editorType="dxAutocomplete"
+                [colSpan]="6"
+                [label]="{ text: 'Location Address' }"
+                [editorOptions]="{
+                  items: locations$ | async,
+                  valueExpr: 'address.address1',
+                  displayExpr: displayAddress,  
+                  showClearButton: true,
+                  searchExpr: ['address.address1', 'address.city', 'address.state', 'address.zip'] 
+                }"
+              ></dxi-item>
+              <dxi-item dataField="eventCoordinator"[colSpan]="2" [isRequired]="true" [label]="{ text: 'Event Coordinator' }"></dxi-item>
+              <dxi-item dataField="email"[colSpan]="2" [isRequired]="true" [label]="{ text: 'Email' }"></dxi-item>
+              <dxi-item dataField="phone" [colSpan]="2"[isRequired]="true" [label]="{ text: 'Phone' }"></dxi-item>
+              <dxi-item 
+                dataField="hasProjectingDevice"
+                editorType="dxRadioGroup"
+                [colSpan]="3"
+                [label]="{ text: 'Does location have a screen projector or TV for seminar presentation?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Yes' },
+                    { value: false, label: 'No' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item 
+                dataField="volunteersAvailable"
+                editorType="dxRadioGroup"
+                [colSpan]="3"
+                [label]="{ text: 'Will a volunteer be available to assist in running presentation during seminar?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Yes' },
+                    { value: false, label: 'No' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item 
+                dataField="isPrivateEvent"
+                editorType="dxRadioGroup"
+                [colSpan]="6"
+                [label]="{ text: 'Is this a private seminar, or is it open to the public? (We will advertise this event if it is open to the public)' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Private Seminar' },
+                    { value: false, label: 'Open to Public' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item 
+                dataField="isPersonalRegistration"
+                editorType="dxRadioGroup"
+                [colSpan]="6"
+                [label]="{ text: 'Will guests register for this seminar on your website, or do you need us to create a registration page?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Guest will register on my website and I will provide the link' },
+                    { value: false, label: 'I would like Impact to create a registration page for my event' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item dataField="requestedTicketPrice"[colSpan]="6" [isRequired]="true" [label]="{ text: 'How much would you like your tickets to cost? (Typically ranges from $10-$40)' }"></dxi-item>
+              <dxi-item 
+                dataField="isLunchProvided"
+                editorType="dxRadioGroup"
+                [colSpan]="3"
+                [label]="{ text: 'Do you plan to provide lunch for your participants?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Yes' },
+                    { value: false, label: 'No' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item 
+                dataField="isLunchIncluded"
+                editorType="dxRadioGroup"
+                [colSpan]="3"
+                [label]="{ text: 'If yes, is lunch included in their ticket cost?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Yes' },
+                    { value: false, label: 'No' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item dataField="comments" [colSpan]="6" editorType="dxTextArea" [label]="{ text: 'Any questions, concers, or comments?' }" [editorOptions]="{ height: 125 }"></dxi-item>
+            </dx-form>
+            <a (click)="onSubmitForm()" class="os-btn seminar-form__button mt-30">Request to Book a Lunch and Learn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>
