@@ -22,10 +22,13 @@ import { SeminarsComponent } from "./pages/seminars/seminars.component";
 import { EquippingGroupsComponent } from "./pages/equipping-groups/equipping-groups.component";
 import { CoachingWithImpactComponent } from "./pages/coaching-with-impact/coaching-with-impact.component";
 import { LunchAndLearnComponent } from "./pages/lunch-and-learn/lunch-and-learn.component";
+import { ImpactDisciplesModule } from "../../../impactdisciplescommon/src/impactdisciples.common.module";
+import { YouTubePlayerModule } from '@angular/youtube-player';
 import { ShoppingCartComponent } from "./store/shopping-cart/shopping-cart.component";
 import { CheckoutComponent } from "./store/checkout/checkout.component";
 import { LunchAndLearnFormComponent } from "./pages/lunch-and-learn/lunch-and-learn-form/lunch-and-learn-form.component";
 import { SeminarFormComponent } from "./pages/seminars/seminar-form/seminar-form.component";
+t
 
 @NgModule({
   declarations: [
@@ -61,6 +64,8 @@ import { SeminarFormComponent } from "./pages/seminars/seminar-form/seminar-form
     DxAccordionModule,
     DxButtonModule,
     DxFormModule,
+    ImpactDisciplesModule,
+    YouTubePlayerModule,
     DxDateBoxModule,
     DxAutocompleteModule,
     DxRadioGroupModule,
