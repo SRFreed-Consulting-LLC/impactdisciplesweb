@@ -5,6 +5,7 @@ import { SeminarModel } from 'impactdisciplescommon/src/models/domain/seminar.mo
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { LocationService } from 'impactdisciplescommon/src/services/location.service';
 import { SeminarService } from 'impactdisciplescommon/src/services/seminar.service';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -17,15 +18,21 @@ export class SeminarFormComponent implements OnInit {
   seminarForm: SeminarModel;
   locations$: Observable<LocationModel[]>;
 
-  constructor(public locationService: LocationService, private seminarService: SeminarService){}
+  constructor(public locationService: LocationService, private seminarService: SeminarService, private toastrService: ToastrService){}
 
   ngOnInit(): void {
+    this.seminarForm = {...new SeminarModel()};
+
     this.locations$ = this.locationService.streamAll()
   }
 
   onSubmitForm() {
+    console.log(this.seminarForm);
+
     if(this.seminarFormComponent.instance.validate()) {
-      this.seminarService.add(this.seminarForm)
+      this.seminarService.add(this.seminarForm).then(() => {
+        this.toastrService.success("Seminar Request Form submitted Successfully!");
+      })
     }
   }
 

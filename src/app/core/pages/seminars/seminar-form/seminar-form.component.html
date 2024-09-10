@@ -71,15 +71,15 @@
                 [editorOptions]="{
                   items: locations$ | async,
                   valueExpr: 'address.address1',
-                  displayExpr: displayAddress,  
+                  displayExpr: displayAddress,
                   showClearButton: true,
-                  searchExpr: ['address.address1', 'address.city', 'address.state', 'address.zip'] 
+                  searchExpr: ['address.address1', 'address.city', 'address.state', 'address.zip']
                 }"
               ></dxi-item>
               <dxi-item dataField="eventCoordinator"[colSpan]="2" [isRequired]="true" [label]="{ text: 'Event Coordinator' }"></dxi-item>
               <dxi-item dataField="email"[colSpan]="2" [isRequired]="true" [label]="{ text: 'Email' }"></dxi-item>
               <dxi-item dataField="phone" [colSpan]="2"[isRequired]="true" [label]="{ text: 'Phone' }"></dxi-item>
-              <dxi-item 
+              <dxi-item
                 dataField="hasProjectingDevice"
                 editorType="dxRadioGroup"
                 [colSpan]="3"
@@ -94,7 +94,7 @@
                   layout: 'horizontal'
                 }"
               ></dxi-item>
-              <dxi-item 
+              <dxi-item
                 dataField="volunteersAvailable"
                 editorType="dxRadioGroup"
                 [colSpan]="3"
@@ -109,7 +109,7 @@
                   layout: 'horizontal'
                 }"
               ></dxi-item>
-              <dxi-item 
+              <dxi-item
                 dataField="isPrivateEvent"
                 editorType="dxRadioGroup"
                 [colSpan]="6"
@@ -124,7 +124,7 @@
                   layout: 'horizontal'
                 }"
               ></dxi-item>
-              <dxi-item 
+              <dxi-item
                 dataField="isPersonalRegistration"
                 editorType="dxRadioGroup"
                 [colSpan]="6"
@@ -140,7 +140,7 @@
                 }"
               ></dxi-item>
               <dxi-item dataField="requestedTicketPrice"[colSpan]="6" [isRequired]="true" [label]="{ text: 'How much would you like your tickets to cost? (Typically ranges from $10-$40)' }"></dxi-item>
-              <dxi-item 
+              <dxi-item
                 dataField="isLunchProvided"
                 editorType="dxRadioGroup"
                 [colSpan]="3"
@@ -155,7 +155,7 @@
                   layout: 'horizontal'
                 }"
               ></dxi-item>
-              <dxi-item 
+              <dxi-item
                 dataField="isLunchIncluded"
                 editorType="dxRadioGroup"
                 [colSpan]="3"
@@ -170,9 +170,9 @@
                   layout: 'horizontal'
                 }"
               ></dxi-item>
-              <dxi-item dataField="comments" [colSpan]="6" editorType="dxTextArea" [label]="{ text: 'Any questions, concers, or comments?' }" [editorOptions]="{ height: 125 }"></dxi-item>
+              <dxi-item dataField="comments" [colSpan]="6" editorType="dxTextArea" [label]="{ text: 'Any questions, concerns, or comments?' }" [editorOptions]="{ height: 125 }"></dxi-item>
             </dx-form>
-            <a (click)="onSubmitForm()" class="os-btn seminar-form__button mt-30">Request to Book a Lunch and Learn</a>
+            <a (click)="onSubmitForm()" class="os-btn seminar-form__button mt-30">Request to Book a Seminar</a>
           </div>
         </div>
       </div>
