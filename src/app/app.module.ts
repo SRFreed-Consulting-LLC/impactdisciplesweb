@@ -11,6 +11,7 @@ import { CoreModule } from './core/core.module';
 import { CookieService } from 'ngx-cookie-service';
 import { SharedModule } from './shared/shared.module';
 import { ThemeSharedModule } from './theme/shared/theme-shared.module';
+import { NgxsModule } from '@ngxs/store';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ThemeSharedModule } from './theme/shared/theme-shared.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    NgxsModule.forRoot([], { developmentMode: !environment.production }),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideFirestore(() => getFirestore()),
     ToastrModule.forRoot(),
