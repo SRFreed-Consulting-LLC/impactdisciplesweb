@@ -29,6 +29,7 @@ import { CheckoutComponent } from "./store/checkout/checkout.component";
 import { LunchAndLearnFormComponent } from "./pages/lunch-and-learn/lunch-and-learn-form/lunch-and-learn-form.component";
 import { SeminarFormComponent } from "./pages/seminars/seminar-form/seminar-form.component";
 import { FormsModule } from "@angular/forms";
+import { ConsultationSurveyComponent } from "./pages/consultation-survey/consultation-survey.component";
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { FormsModule } from "@angular/forms";
     EquippingGroupsComponent,
     CoachingWithImpactComponent,
     LunchAndLearnComponent,
-    LunchAndLearnFormComponent
+    LunchAndLearnFormComponent,
+    ConsultationSurveyComponent
   ],
   imports: [
     CommonModule,

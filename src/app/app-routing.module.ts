@@ -25,6 +25,7 @@ import { ShoppingCartComponent } from './core/store/shopping-cart/shopping-cart.
 import { CheckoutComponent } from './core/store/checkout/checkout.component';
 import { LunchAndLearnFormComponent } from './core/pages/lunch-and-learn/lunch-and-learn-form/lunch-and-learn-form.component';
 import { SeminarFormComponent } from './core/pages/seminars/seminar-form/seminar-form.component';
+import { ConsultationSurveyComponent } from './core/pages/consultation-survey/consultation-survey.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -103,6 +104,10 @@ const routes: Routes = [
   {
     path: 'shopping-cart',
     component: ShoppingCartComponent
+  },
+  {
+    path: 'consultation-survey',
+    component: ConsultationSurveyComponent
   },
   {
     path: 'capture-username-form',
