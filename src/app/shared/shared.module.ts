@@ -15,6 +15,7 @@ import { LocationPipe } from "./utils/pipes/location.pipe";
 import { CourseNamePipe } from "./utils/pipes/course-name.pipe";
 import { BookBannerComponent } from "./components/book-banner/book-banner.component";
 import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.component";
+import { ComingSoonComponent } from "./components/coming-soon/coming-soon.component";
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.componen
     TestimonialsComponent,
     BookBannerComponent,
     BreadcrumbComponent,
+    ComingSoonComponent,
     LocationPipe,
     CourseNamePipe
   ],
@@ -49,6 +51,7 @@ import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.componen
     TestimonialsComponent,
     BookBannerComponent,
     BreadcrumbComponent,
+    ComingSoonComponent,
     LocationPipe,
     CourseNamePipe
   ]

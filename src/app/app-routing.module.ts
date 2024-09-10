@@ -26,6 +26,12 @@ import { CheckoutComponent } from './core/store/checkout/checkout.component';
 import { LunchAndLearnFormComponent } from './core/pages/lunch-and-learn/lunch-and-learn-form/lunch-and-learn-form.component';
 import { SeminarFormComponent } from './core/pages/seminars/seminar-form/seminar-form.component';
 import { ConsultationSurveyComponent } from './core/pages/consultation-survey/consultation-survey.component';
+import { AccountComponent } from './core/pages/account/account.component';
+import { BlogComponent } from './core/pages/blog/blog.component';
+import { EBooksComponent } from './core/pages/e-books/e-books.component';
+import { PodcastsComponent } from './core/pages/podcasts/podcasts.component';
+import { PrayerTeamComponent } from './core/pages/prayer-team/prayer-team.component';
+import { StoreComponent } from './core/pages/store/store.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -94,6 +100,14 @@ const routes: Routes = [
     component: TermsOfServiceComponent
   },
   {
+    path: 'store',
+    component: StoreComponent
+  },
+  {
+    path: 'shopping-cart',
+    component: ShoppingCartComponent
+  },
+  {
     path: 'checkout',
     component: CheckoutComponent
   },
@@ -102,12 +116,28 @@ const routes: Routes = [
     component: CheckoutSuccessComponent
   },
   {
-    path: 'shopping-cart',
-    component: ShoppingCartComponent
-  },
-  {
     path: 'consultation-survey',
     component: ConsultationSurveyComponent
+  },
+  {
+    path: 'account',
+    component: AccountComponent
+  },
+  {
+    path: 'blog',
+    component: BlogComponent
+  },
+  {
+    path: 'e-books',
+    component: EBooksComponent
+  },
+  {
+    path: 'podcasts',
+    component: PodcastsComponent
+  },
+  {
+    path: 'prayer-team',
+    component: PrayerTeamComponent
   },
   {
     path: 'capture-username-form',

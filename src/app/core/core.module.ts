@@ -30,6 +30,12 @@ import { LunchAndLearnFormComponent } from "./pages/lunch-and-learn/lunch-and-le
 import { SeminarFormComponent } from "./pages/seminars/seminar-form/seminar-form.component";
 import { FormsModule } from "@angular/forms";
 import { ConsultationSurveyComponent } from "./pages/consultation-survey/consultation-survey.component";
+import { StoreComponent } from './pages/store/store.component';
+import { BlogComponent } from './pages/blog/blog.component';
+import { PodcastsComponent } from './pages/podcasts/podcasts.component';
+import { EBooksComponent } from './pages/e-books/e-books.component';
+import { PrayerTeamComponent } from './pages/prayer-team/prayer-team.component';
+import { AccountComponent } from './pages/account/account.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +61,13 @@ import { ConsultationSurveyComponent } from "./pages/consultation-survey/consult
     CoachingWithImpactComponent,
     LunchAndLearnComponent,
     LunchAndLearnFormComponent,
-    ConsultationSurveyComponent
+    ConsultationSurveyComponent,
+    StoreComponent,
+    BlogComponent,
+    PodcastsComponent,
+    EBooksComponent,
+    PrayerTeamComponent,
+    AccountComponent
   ],
   imports: [
     CommonModule,
