@@ -4,11 +4,14 @@ import notify from 'devextreme/ui/notify';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
-import { CheckoutForm } from 'src/app/shared/models/cart.model';
+import { CartItem, CheckoutForm } from 'src/app/shared/models/cart.model';
 import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 import { StripeService } from './stripe.service';
+import { Actions, ofActionDispatched } from '@ngxs/store';
+import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
+import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.service';
 
 
 @Component({
@@ -26,10 +29,25 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
   countries = COUNTRIES;
   isOpenLogin = false;
   isOpenCoupon = false;
+  isLoggedIn = false;
+  loggedInUser: string = '';
+  logInForm: { email: string, password: string } = { email: '', password: '' };
+  couponCode: string = '';
+  discountAmount: number = 0;
+  orignalTotal: number = 0;
+  isPercent: boolean = false;
+
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor (private stripeService: StripeService, private toastrService: ToastrService, private authService: AuthService, public cartService: CartService) {}
+  constructor (
+    private actions$: Actions,
+    private stripeService: StripeService, 
+    private toastrService: ToastrService, 
+    private authService: AuthService, 
+    public cartService: CartService,
+    private couponService: CouponService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     const clientSecret = new URLSearchParams(window.location.search).get(
@@ -47,9 +65,21 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
       isShippingSameAsBilling: true,
       isNewsletter: true
     }
+    this.orignalTotal = this.checkoutForm.total;
+
+    this.actions$.pipe(
+      ofActionDispatched(UserAuthenticated), 
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe(({ user }: UserAuthenticated) => {
+      console.log(user)
+      this.loggedInUser = `${user.firstName} ${user.lastName}`
+      this.isLoggedIn = true
+    })
 
     this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
       if(user) {
+        this.isLoggedIn = true;
+        this.loggedInUser = `${user.firstName} ${user.lastName}`
         this.checkoutForm = {
           firstName: user.firstName,
           lastName: user.lastName,
@@ -188,6 +218,59 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   handleOpenCoupon() {
     this.isOpenCoupon = !this.isOpenCoupon;
+  }
+  handleLogout() {
+    this.authService.logOut();
+    this.isLoggedIn = false;
+  }
+
+  handleLogin() {
+    this.authService.logIn(this.logInForm.email, this.logInForm.password)
+  }
+
+  handleCountryInput = (e: any) => {
+    const inputValue = e.component.option("text");
+    const country = this.countries.find(
+      (c) => c.name.toLowerCase() === inputValue.toLowerCase()
+    );
+  
+    if (country) {
+      e.component.option("value", country.name);
+    }
+  };
+
+  calculateTotal(cartItems: CartItem[]): number {
+    return cartItems.reduce((acc, item) => acc + (item.price ?? 0) * (item.orderQuantity ?? 1), 0);
+  }
+
+  // Method to handle coupon application
+  applyCoupon() {
+    if (this.couponCode) {
+      this.couponService.getAllByValue('code', this.couponCode).then(coupons => {
+        if (coupons.length > 0 && coupons[0].isActive) {
+          let validCoupon = coupons[0];
+          let total = this.calculateTotal(this.checkoutForm.cartItems);
+
+          if (validCoupon.percentOff) {
+            this.discountAmount = validCoupon.percentOff;
+            this.checkoutForm.total = total - ((total * validCoupon.percentOff) / 100);
+            this.isPercent = true;
+          } else if (validCoupon.dollarsOff) {
+            this.discountAmount = validCoupon.dollarsOff;
+            this.discountAmount = Math.min(this.discountAmount, total);
+            this.checkoutForm.total = total - this.discountAmount;
+          }
+
+
+          this.showMessage("Coupon applied successfully.", 'SUCCESS');
+        } else {
+          this.showMessage("Invalid or inactive coupon.", 'ERROR');
+        }
+      }).catch(error => {
+        console.error("Error fetching coupon:", error);
+        this.showMessage("Failed to apply coupon.", 'ERROR');
+      });
+    }
   }
 
   ngOnDestroy(): void {

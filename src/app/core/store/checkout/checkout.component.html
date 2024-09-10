@@ -7,35 +7,37 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <div class="coupon-accordion">
-            <!-- login accordion -->
+          <!-- login accordion -->
+          <div *ngIf="!isLoggedIn" class="coupon-accordion">
             <h3>Returning customer? <span id="showlogin" (click)="handleOpenLogin()">Click here to login</span></h3>
             <div *ngIf="isOpenLogin" id="checkout-login" class="coupon-content">
               <div class="coupon-info">
-                <p class="coupon-text">Quisque gravida turpis sit amet nulla posuere lacinia. Cras sed est
-                  sit amet ipsum luctus.</p>
-                <form action="#">
-                  <p class="form-row-first">
-                    <label>Username or email <span class="required">*</span></label>
-                    <input type="text" />
-                  </p>
-                  <p class="form-row-last">
-                    <label>Password <span class="required">*</span></label>
-                    <input type="text" />
-                  </p>
-                  <p class="form-row">
-                    <button class="os-btn os-btn-black" type="submit">Login</button>
-                    <label>
-                      <input type="checkbox" />
+                <dx-form
+                  #loginFormComponent
+                  [formData]="logInForm"
+                  labelLocation="top"
+                  [showColonAfterLabel]="false"
+                >
+                  <dxi-item dataField="email" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
+                  <dxi-item dataField="password" [isRequired]="true" [label]="{ text: 'Password' }"></dxi-item>
+                </dx-form>
+                <button class="os-btn os-btn-black" type="submit" (click)="handleLogin()">Login</button>
+                <!-- TODO: Set up 'Remember Me' for logging in -->
+                <!-- <label>
+                  <input type="checkbox" />
+                    Remember me
+                  </label> -->
+                <!-- TODO: Set up 'Remember Me' for logging in -->
+                  <!-- <label>
+                    <input type="checkbox" />
                       Remember me
-                    </label>
-                  </p>
-                  <p class="lost-password">
-                    <a href="#">Lost your password?</a>
-                  </p>
-                </form>
+                    </label> -->
               </div>
             </div>
+          </div>
+          <!-- logged on accordion -->
+          <div *ngIf="isLoggedIn" class="coupon-accordion">
+            <h3>Logged in as {{ loggedInUser }} <span id="showlogin" (click)="handleLogout()">Click here to logout</span></h3>
           </div>
         </div>
         <div class="col-md-6">
@@ -46,8 +48,8 @@
               <div class="coupon-info">
                 <form action="#">
                   <p class="checkout-coupon">
-                    <input type="text" placeholder="Coupon Code" />
-                    <button class="os-btn os-btn-black" type="submit">Apply Coupon</button>
+                    <input type="text" [(ngModel)]="couponCode" name="couponCode" placeholder="Coupon Code" />
+                    <button class="os-btn os-btn-black" (click)="applyCoupon()">Apply Coupon</button>
                   </p>
                 </form>
               </div>
@@ -97,20 +99,24 @@
               <dxi-item [colSpan]="2">
                 <div *dxTemplate><h4>Billing Address</h4></div>
               </dxi-item>
-              <dxi-item dataField="location.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
-              <dxi-item dataField="location.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
-              <dxi-item dataField="location.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
-              <dxi-item dataField="state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
-              <dxi-item dataField="zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
+              <dxi-item dataField="billingAddress.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
+              <dxi-item dataField="billingAddress.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
+              <dxi-item dataField="billingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
+              <dxi-item dataField="billingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
+              <dxi-item dataField="billingAddress.zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
               <dxi-item
-                dataField="location.country"
+                dataField="billingAddress.country"
                 editorType="dxSelectBox"
+                [label]="{ text: 'Country' }"
                 [isRequired]="true"
                 [colSpan]="2"
                 [editorOptions]="{
                   dataSource: countries,
                   placeholder: 'Select Country',
-                  searchEnabled: true
+                  displayExpr: 'name', 
+                  valueExpr: 'name',
+                  searchEnabled: true,
+                  onInput: handleCountryInput
                 }"
               ></dxi-item>
               <dxi-item dataField="isShippingSameAsBilling" editorType="dxCheckBox" [label]="{ text: 'Is Shipping Same As Billing?', location: 'right' }"></dxi-item>
@@ -118,21 +124,25 @@
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" [colSpan]="2">
                 <div *dxTemplate><h4>Shipping Address</h4></div>
               </dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="location.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="location.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="location.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
               <dxi-item
                 *ngIf="!checkoutForm?.isShippingSameAsBilling"
-                dataField="location.country"
+                dataField="shippingAddress.country"
                 editorType="dxSelectBox"
+                [label]="{ text: 'Country' }"
                 [isRequired]="true"
                 [colSpan]="2"
                 [editorOptions]="{
                   dataSource: countries,
                   placeholder: 'Select Country',
-                  searchEnabled: true
+                  searchEnabled: true,
+                  displayExpr: 'name', 
+                  valueExpr: 'name',
+                  onInput: handleCountryInput
                 }"
               ></dxi-item>
             </dx-form>
@@ -169,6 +179,24 @@
                     </tr>
                   </tbody>
                   <tfoot>
+                    <tr>
+                      <th>Subtotal</th>
+                      <td></td>
+                      <td class="text-right"><strong><span class="amount">
+                        ${{ this.orignalTotal }}
+                        </span></strong>
+                      </td>
+                    </tr>
+                    <tr *ngIf="discountAmount">
+                      <th>Discount</th>
+                      <td></td>
+                      <td class="text-right">
+                        <strong>
+                          <span *ngIf="!isPercent" class="amount">- ${{ this.discountAmount }}</span>
+                          <span *ngIf="isPercent" class="amount">- {{ this.discountAmount }}%</span>
+                        </strong>
+                      </td>
+                    </tr>
                     <tr class="order-total">
                       <th>Order Total</th>
                       <td></td>
