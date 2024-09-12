@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { DxButtonModule, DxToolbarModule, DxTabsModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule } from "devextreme-angular";
+import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule } from "devextreme-angular";
 import { SharedModule } from "../shared/shared.module";
 import { HomeHeaderComponent } from "./home/home-header/home-header.component";
 import { HomeComponent } from "./home/home.component";
@@ -36,6 +36,8 @@ import { PodcastsComponent } from './pages/podcasts/podcasts.component';
 import { EBooksComponent } from './pages/e-books/e-books.component';
 import { PrayerTeamComponent } from './pages/prayer-team/prayer-team.component';
 import { AccountComponent } from './pages/account/account.component';
+import { TeamDetailsComponent } from './pages/team/team-details/team-details.component';
+import { BlogDetailsComponent } from './pages/blog-details/blog-details.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,9 @@ import { AccountComponent } from './pages/account/account.component';
     PodcastsComponent,
     EBooksComponent,
     PrayerTeamComponent,
-    AccountComponent
+    AccountComponent,
+    TeamDetailsComponent,
+    BlogDetailsComponent
   ],
   imports: [
     CommonModule,

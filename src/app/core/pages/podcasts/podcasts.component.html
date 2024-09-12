@@ -1,7 +1,51 @@
 <app-home-header></app-home-header>
 
-<main class="podcasts">
-  <app-coming-soon></app-coming-soon>
+<main class="grey-bg podcasts">
+  <div class="podcasts__container container">
+    <!--PODCASTS HEADER - SWIPER-->
+    <section class="slider__area slider__area-4 p-relative">
+      <div class="slider-active swiper-container" #heroSliderContainer >
+        <div class="swiper-wrapper">
+          <div class="podcasts__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fpodcasts-header.PNG?alt=media&token=b5b74314-cf05-4709-8fa9-25089d456bb1)'">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="slider__content slider__content-4 pr-50">
+                  <h5 class="podcasts__header__pretitle">FREE ONLINE RESOURCES</h5>
+                  <h1 class="podcasts__header__title w-50">The Disciple-Making Church Podcast</h1>
+                  <hr class="custom-hr mb-30">
+                  <a [href]="impactDisciplesInfo.youtube" target="_blank" class="os-btn os-btn-white"><i class="fab fa-youtube mr-10"></i>YOUTUBE</a>
+                  <a [href]="impactDisciplesInfo.youtube" target="_blank" class="os-btn os-btn-white"><i class="fab fa-apple mr-10"></i>APPLE PODCASTS</a>
+                  <a [href]="impactDisciplesInfo.youtube" target="_blank" class="os-btn os-btn-white"><i class="fab fa-facebook-f mr-10"></i>FACEBOOK LIVE</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="podcasts__latest mt-80">
+      <h1 class="text-center">{{ selectedPodcast?.title }}</h1>
+      <hr class="custom-hr">
+      <youtube-player class="mt-50" [videoId]="selectedPodcast?.subject" [width]="800" suggestedQuality="highres"></youtube-player>
+    </section>
+
+    <hr>
+
+    <div class="slider-container mt-50">
+      <div class="slider" [style.transform]="getTransform()">
+        <div *ngFor="let podcast of podcasts" class="slide">
+          <img (click)="selectPodcast(podcast)" [src]="podcast?.thumbnail.url" alt="Slide image">
+          <div class="truncate">{{ podcast?.title }}</div>
+        </div>
+      </div>
+      <button class="prev" (click)="prevSlide()">&#10094;</button>
+      <button class="next" (click)="nextSlide()">&#10095;</button>
+    </div>
+
+  </div>
+
+
 </main>
 
 <app-footer></app-footer>

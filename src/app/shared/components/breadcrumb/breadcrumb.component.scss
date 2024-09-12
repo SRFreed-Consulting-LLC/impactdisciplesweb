@@ -5,6 +5,13 @@
       text-transform: none;
     }
   }
+  &__container-wrapper {
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .breadcrumb.page__title {

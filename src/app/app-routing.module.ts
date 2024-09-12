@@ -32,6 +32,8 @@ import { EBooksComponent } from './core/pages/e-books/e-books.component';
 import { PodcastsComponent } from './core/pages/podcasts/podcasts.component';
 import { PrayerTeamComponent } from './core/pages/prayer-team/prayer-team.component';
 import { StoreComponent } from './core/pages/store/store.component';
+import { TeamDetailsComponent } from './core/pages/team/team-details/team-details.component';
+import { BlogDetailsComponent } from './core/pages/blog-details/blog-details.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -50,6 +52,10 @@ const routes: Routes = [
   {
     path: 'team',
     component: TeamComponent
+  },
+  {
+    path: 'team-details/:id',
+    component: TeamDetailsComponent
   },
   {
     path: 'history',
@@ -128,6 +134,10 @@ const routes: Routes = [
     component: BlogComponent
   },
   {
+    path: 'blog-details/:id',
+    component: BlogDetailsComponent
+  },
+  {
     path: 'e-books',
     component: EBooksComponent
   },
@@ -167,7 +177,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

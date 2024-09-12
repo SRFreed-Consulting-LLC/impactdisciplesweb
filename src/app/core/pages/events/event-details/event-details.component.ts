@@ -13,7 +13,7 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
   templateUrl: './event-details.component.html',
   styleUrls: ['./event-details.component.scss']
 })
-export class EventDetailsComponent implements OnInit {
+export class EventDetailsComponent implements OnInit, OnDestroy {
   @ViewChildren('attendeeForms') attendeeForms: QueryList<DxFormComponent>;
   event: EventModel;
   total: number = 0;
@@ -103,6 +103,11 @@ export class EventDetailsComponent implements OnInit {
           items: groupedByMonthYear[monthYear][date],
         })),
     }));
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
 }

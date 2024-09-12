@@ -16,6 +16,7 @@ import { CourseNamePipe } from "./utils/pipes/course-name.pipe";
 import { BookBannerComponent } from "./components/book-banner/book-banner.component";
 import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.component";
 import { ComingSoonComponent } from "./components/coming-soon/coming-soon.component";
+import { PaginationComponent } from "./components/pagination/pagination.component";
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ComingSoonComponent } from "./components/coming-soon/coming-soon.compon
     BookBannerComponent,
     BreadcrumbComponent,
     ComingSoonComponent,
+    PaginationComponent,
     LocationPipe,
     CourseNamePipe
   ],
@@ -52,6 +54,7 @@ import { ComingSoonComponent } from "./components/coming-soon/coming-soon.compon
     BookBannerComponent,
     BreadcrumbComponent,
     ComingSoonComponent,
+    PaginationComponent,
     LocationPipe,
     CourseNamePipe
   ]
