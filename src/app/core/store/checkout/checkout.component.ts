@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
-import notify from 'devextreme/ui/notify';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
@@ -42,9 +41,9 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor (
     private actions$: Actions,
-    private stripeService: StripeService, 
-    private toastrService: ToastrService, 
-    private authService: AuthService, 
+    private stripeService: StripeService,
+    private toastrService: ToastrService,
+    private authService: AuthService,
     public cartService: CartService,
     private couponService: CouponService
   ) {}
@@ -68,7 +67,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.orignalTotal = this.checkoutForm.total;
 
     this.actions$.pipe(
-      ofActionDispatched(UserAuthenticated), 
+      ofActionDispatched(UserAuthenticated),
       takeUntil(this.ngUnsubscribe)
     ).subscribe(({ user }: UserAuthenticated) => {
       console.log(user)
@@ -126,7 +125,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
     if(this.checkoutFormComponent.instance.validate()) {
       e.preventDefault();
       this.setLoading(true);
-  
+
       let response = await this.stripeService.getStripe().then(async stripe => {
         return await stripe.confirmPayment({
           elements: this.elements,
@@ -136,9 +135,9 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         });
       })
-  
+
       console.log(response.error);
-  
+
       // This point will only be reached if there is an immediate error when
       // confirming the payment. Otherwise, your customer will be redirected to
       // your `return_url`. For some payment methods like iDEAL, your customer will
@@ -149,7 +148,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.showMessage("An unexpected error occurred.", 'ERROR');
       }
-  
+
       this.setLoading(false);
     }
   }
@@ -233,7 +232,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
     const country = this.countries.find(
       (c) => c.name.toLowerCase() === inputValue.toLowerCase()
     );
-  
+
     if (country) {
       e.component.option("value", country.name);
     }
