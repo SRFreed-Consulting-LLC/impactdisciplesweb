@@ -11,6 +11,7 @@ import { StripeService } from './stripe.service';
 import { Actions, ofActionDispatched } from '@ngxs/store';
 import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
 import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -45,7 +46,8 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
     private toastrService: ToastrService,
     private authService: AuthService,
     public cartService: CartService,
-    private couponService: CouponService
+    private couponService: CouponService,
+    private router: Router
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -213,7 +215,8 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleOpenLogin() {
-    this.isOpenLogin = !this.isOpenLogin;
+    this.router.navigate(['/checkout-user']);
+    //this.isOpenLogin = !this.isOpenLogin;
   }
   handleOpenCoupon() {
     this.isOpenCoupon = !this.isOpenCoupon;
@@ -224,7 +227,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleLogin() {
-    this.authService.logIn(this.logInForm.email, this.logInForm.password)
+    this.authService.logIn(this.logInForm.email, this.logInForm.password).subscribe(val => console.log(val))
   }
 
   handleCountryInput = (e: any) => {

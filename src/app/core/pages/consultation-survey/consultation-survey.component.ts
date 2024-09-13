@@ -18,8 +18,6 @@ export class ConsultationSurveyComponent implements OnInit {
     elementAttr: { class: 'os-btn lunch-form__button mt-30' }
   };
 
-  phonePattern = /^[02-9]\d{9}$/;
-
   phoneEditorOptions = {
     mask: '+1 (X00) 000-0000',
     maskRules: {

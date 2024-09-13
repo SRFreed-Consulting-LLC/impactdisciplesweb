@@ -2,12 +2,11 @@
 
 <main class="checkout">
 
-  <!-- login / coupon area -->
+  <!-- login / coupon area
   <section class="coupon-area pt-50 pb-30">
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <!-- login accordion -->
           <div *ngIf="!isLoggedIn" class="coupon-accordion">
             <h3>Returning customer? <span id="showlogin" (click)="handleOpenLogin()">Click here to login</span></h3>
             <div *ngIf="isOpenLogin" id="checkout-login" class="coupon-content">
@@ -22,27 +21,15 @@
                   <dxi-item dataField="password" [isRequired]="true" [label]="{ text: 'Password' }"></dxi-item>
                 </dx-form>
                 <button class="os-btn os-btn-black" type="submit" (click)="handleLogin()">Login</button>
-                <!-- TODO: Set up 'Remember Me' for logging in -->
-                <!-- <label>
-                  <input type="checkbox" />
-                    Remember me
-                  </label> -->
-                <!-- TODO: Set up 'Remember Me' for logging in -->
-                  <!-- <label>
-                    <input type="checkbox" />
-                      Remember me
-                    </label> -->
               </div>
             </div>
           </div>
-          <!-- logged on accordion -->
           <div *ngIf="isLoggedIn" class="coupon-accordion">
             <h3>Logged in as {{ loggedInUser }} <span id="showlogin" (click)="handleLogout()">Click here to logout</span></h3>
           </div>
         </div>
         <div class="col-md-6">
           <div class="coupon-accordion">
-            <!-- coupon accordion -->
             <h3>Have a coupon? <span id="showcoupon" (click)="handleOpenCoupon()">Click here to enter your code</span></h3>
             <div *ngIf="isOpenCoupon" id="checkout_coupon" class="coupon-checkout-content">
               <div class="coupon-info">
@@ -53,12 +40,11 @@
                   </p>
                 </form>
               </div>
-            </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </section>-->
 
   <!-- checkout-area -->
   <section class="checkout-area pb-70">
@@ -88,12 +74,12 @@
               <dxi-item dataField="firstName" [isRequired]="true" [label]="{ text: 'First Name' }"></dxi-item>
               <dxi-item dataField="lastName" [isRequired]="true" [label]="{ text: 'Last Name' }"></dxi-item>
               <dxi-item dataField="email" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
-              <dxi-item dataField="phone" [isRequired]="true" [label]="{ text: 'Phone Number' }"></dxi-item>
-              <dxi-item 
+              <dxi-item dataField="phone.number" [isRequired]="true" [label]="{ text: 'Phone Number' }"></dxi-item>
+              <dxi-item
                 cssClass="newsletter"
-                dataField="isNewsletter" 
-                editorType="dxCheckBox" 
-                [colSpan]="2" 
+                dataField="isNewsletter"
+                editorType="dxCheckBox"
+                [colSpan]="2"
                 [label]="{ text: 'Sign up for our Newsletter to receive emails about our next Events!', location: 'right' }"
               ></dxi-item>
               <dxi-item [colSpan]="2">
@@ -113,7 +99,7 @@
                 [editorOptions]="{
                   dataSource: countries,
                   placeholder: 'Select Country',
-                  displayExpr: 'name', 
+                  displayExpr: 'name',
                   valueExpr: 'name',
                   searchEnabled: true,
                   onInput: handleCountryInput
@@ -140,18 +126,18 @@
                   dataSource: countries,
                   placeholder: 'Select Country',
                   searchEnabled: true,
-                  displayExpr: 'name', 
+                  displayExpr: 'name',
                   valueExpr: 'name',
                   onInput: handleCountryInput
                 }"
               ></dxi-item>
             </dx-form>
-            
+
           </div>
-          
+
           <div class="col-lg-6">
             <div class="your-order mb-30 ">
-              
+
               <!-- checkout order details -->
               <h3>Your order</h3>
               <div class="your-order-table table-responsive">
@@ -207,6 +193,14 @@
                     </tr>
                   </tfoot>
                 </table>
+              </div>
+              <div class="coupon-info">
+                <form action="#">
+                  <p class="checkout-coupon d-flex align-items-center">
+                    <input type="text" [(ngModel)]="couponCode" name="couponCode" placeholder="Coupon Code" />
+                    <button class="os-btn os-btn-black ml-10" (click)="applyCoupon()">Apply Coupon</button>
+                  </p>
+                </form>
               </div>
               <!-- checkout payment -->
               <div class="payment-method mb-80">
