@@ -1,6 +1,6 @@
 <app-home-header></app-home-header>
 
-<main class="checkout">
+<main class="checkout mt-50">
 
   <!-- login / coupon area
   <section class="coupon-area pt-50 pb-30">
@@ -140,6 +140,14 @@
 
               <!-- checkout order details -->
               <h3>Your order</h3>
+              <div class="coupon-info">
+                <form action="#">
+                  <p class="checkout-coupon d-flex align-items-center">
+                    <input class="mb-0" type="text" [(ngModel)]="couponCode" name="couponCode" placeholder="Coupon Code" />
+                    <button class="os-btn os-btn-black ml-10" (click)="applyCoupon()">Apply Coupon</button>
+                  </p>
+                </form>
+              </div>
               <div class="your-order-table table-responsive">
                 <table>
                   <thead>
@@ -193,14 +201,6 @@
                     </tr>
                   </tfoot>
                 </table>
-              </div>
-              <div class="coupon-info">
-                <form action="#">
-                  <p class="checkout-coupon d-flex align-items-center">
-                    <input type="text" [(ngModel)]="couponCode" name="couponCode" placeholder="Coupon Code" />
-                    <button class="os-btn os-btn-black ml-10" (click)="applyCoupon()">Apply Coupon</button>
-                  </p>
-                </form>
               </div>
               <!-- checkout payment -->
               <div class="payment-method mb-80">
