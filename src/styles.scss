@@ -5,6 +5,10 @@
 @import './assets/theme/css/animate.min.css';
 @import "~bootstrap/dist/css/bootstrap.css";
 @import './assets/theme/scss/main.scss';
+@import './assets/theme/scss/variables';
+
+
+//GLOBAL STYLES
 
 html, body {
   margin: 0;
@@ -29,3 +33,92 @@ html, body {
 h1, h2, h3, h4, h5, h6, p {
   font-family: 'Lato', sans-serif !important;
 }
+
+
+//buttons
+.impact-btn {
+	position: relative;
+	display: inline-block;
+	text-transform: uppercase;
+	text-align: center;
+	font-weight: 600;
+	height: 50px;
+	line-height: 46px;
+	padding: 0 42px;
+	border: 2px solid $theme-color;
+	color: $black-2;
+	background: transparent;
+	z-index: 1;
+	font-size: 12px;
+	& span{
+		color: $theme-color;
+	}
+	&::after{
+		position: absolute;
+		content: '';
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 0;
+		background-color: $theme-color;
+		z-index: -1;
+	}
+	&:hover{
+		color: $white;
+		border-color: $theme-color;
+		&::after{
+			height: 100%;
+		}
+		& span{
+			color: $white;
+		}
+	}
+  &-primary{
+		color: $white;
+		background-color: $theme-color;
+		border-color: $theme-color;
+		&::after{
+			background-color: $black-2;
+		}
+		&:hover{
+			border-color: $black-2;
+		}
+    & span{
+      color: $white;
+    }
+	}
+	&-black-bg{
+		color: $white;
+		background-color: $black-2;
+		border-color: $black-2;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+	}
+	&-white{
+		color: $white;
+		border-color: $white;
+		&:hover{
+			color: $black-2;
+			border-color: $white;
+			&::after{
+				background: $white;
+			}
+		}
+	}
+  &-white-primary {
+    color: $white;
+		border-color: $white;
+    &:hover{
+			color: $white;
+			border-color: $theme-color;
+			&::after{
+				background: $theme-color;
+			}
+		}
+  }
+}
+

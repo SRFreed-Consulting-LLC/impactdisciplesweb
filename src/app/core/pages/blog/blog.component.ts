@@ -12,9 +12,10 @@ import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data
 })
 export class BlogComponent implements OnInit {
   public blogs: BlogPostModel[] = [];
+  public filteredBlogs: BlogPostModel[] = [];
   public pageSize: number = 6;
-  public paginate: any = {}; 
-  public sortBy: string = 'asc'; 
+  public paginate: any = {};
+  public sortBy: string = 'asc';
   public pageNo: number = 1;
   public impactDisciplesInfo = impactDisciplesInfo;
 
@@ -28,12 +29,35 @@ export class BlogComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.pageNo = params['page'] ? params['page'] : this.pageNo;
-      this.blogPostService.streamAll().subscribe((blogs) => {
-        this.blogs = blogs.sort((a, b) => new Date(b.date.toString()).getTime() - new Date(a.date.toString()).getTime());
-        this.paginate = this.getPager(this.blogs.length, Number(+this.pageNo), this.pageSize);
-        this.blogs = this.blogs.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
-      })
+      this.loadBlogs();
     });
+  }
+
+  loadBlogs(): void {
+    this.blogPostService.streamAll().subscribe((blogs) => {
+      this.blogs = blogs.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
+      this.paginate = this.getPager(this.blogs.length, Number(+this.pageNo), this.pageSize);
+      this.filteredBlogs = this.blogs.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+    });
+  }
+
+  searchBlogs(searchTerm: string): void {
+    const termLower = searchTerm.toLowerCase();
+    this.filteredBlogs = this.blogs.filter(
+      (blog) =>
+        blog.subject?.toLowerCase().includes(termLower) ||
+        blog.tags.some((tag) => tag.toLowerCase().includes(termLower)) ||
+        blog.date.toString().includes(termLower) ||
+        blog.title.toLocaleLowerCase().includes(termLower)
+    );
+  }
+
+  filterBlogsByTag(tag: string): void {
+    this.filteredBlogs = this.blogs.filter((blog) => blog.tags.includes(tag));
+  }
+
+  clearFilters(): void {
+    this.filteredBlogs = [...this.blogs];
   }
 
   setPage(page: number) {

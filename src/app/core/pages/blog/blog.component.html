@@ -1,64 +1,38 @@
 <app-home-header></app-home-header>
 
-<main class="blog grey-bg">
-  <div class="blog__container container">
-    <!--BLOG HEADER - SWIPER-->
-    <section class="slider__area slider__area-4 p-relative">
-      <div class="slider-active swiper-container" #heroSliderContainer >
-        <div class="swiper-wrapper">
-          <div class="blog__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Blogs%2Fblog-header.PNG?alt=media&token=b5899394-fb6e-4dc9-a6c9-7f5ffe415f52)'">
+<main>
+
+  <app-breadcrumb [currentPageName]="'Blogs'" [previousLinkName]="'Home'" [previousLinkId]="'/home'"></app-breadcrumb>
+
+  <section class="blog__area pt-10 pb-100">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-3 col-lg-4">
+          <app-blog-sidebar (searchEvent)="searchBlogs($event)" (tagFilterEvent)="filterBlogsByTag($event)" (clearFiltersEvent)="clearFilters()"></app-blog-sidebar>
+        </div>
+  
+        <div class="col-xl-9 col-lg-8">
+          <div class="blog__wrapper">
+            <div class="row">
+              <div *ngFor="let blog of filteredBlogs" class="col-xl-6 col-lg-6 col-md-6">
+                <app-blog-postbox-item [blog]="blog"></app-blog-postbox-item>
+              </div>
+            </div>
+  
             <div class="row">
               <div class="col-xl-12">
-                <div class="slider__content slider__content-4 pr-50">
-                  <h5 class="blog__header__pretitle">FREE ONLINE RESOURCES</h5>
-                  <h1 class="blog__header__title w-50">The Disciple-Making Church Blogs</h1>
-                  <hr class="custom-hr mb-30">
-                  <a href="/e-books" target="_blank" class="os-btn os-btn-white">FREE E-BOOKS<i class="fa fa-book ml-10"></i></a>
-                  <a href="/podcasts" target="_blank" class="os-btn os-btn-white">PODCASTS<i class="fa fa-microphone ml-10"></i></a>
+                <div class="shop-pagination-wrapper">
+                  <app-pagination [data]="filteredBlogs" [paginate]="paginate" (setPage)="setPage($event)">
+                  </app-pagination>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="blog__area pt-100 pb-100">
-      <div class="container">
-        <div class="row">
-            <div *ngFor="let blog of blogs" class="col-xl-4 col-lg-4 col-md-6">
-              <div class="blog__item">
-                <div class="blog__thumb fix">
-                    <a [routerLink]="['/blog-details', blog.id]">
-                      <img [src]="blog.mainImage.url" alt="blog" height="200">
-                    </a>
-                </div>
-                <div class="blog__content">
-                    <h4>
-                      <a [routerLink]="['/blog-details', blog.id]">{{blog.title}}</a>
-                    </h4>
-                    <div class="blog__meta">
-                        <span><a href="#">{{blog.subject}}</a></span>
-                        <span> / {{blog.date.toString() | date}}</span>
-                    </div>
-                    <div class="blog__intro-text" [innerHTML]="blog.blogText"></div>
-                    <a [routerLink]="['/blog-details', blog.id]" class="os-btn mt-20">read more</a>
-                </div>
-              </div>
-            </div>
-            <div class="row mt-80">
-              <div class="col-xl-12">
-                  <div class="shop-pagination-wrapper">
-                    <app-pagination [data]="blogs" [paginate]="paginate" (setPage)="setPage($event)">
-                    </app-pagination>
-                  </div>
-              </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
 </main>
 
 <app-footer></app-footer>
-

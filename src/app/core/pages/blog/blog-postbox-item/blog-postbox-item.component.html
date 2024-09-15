@@ -1,0 +1,18 @@
+<div class="blog__item blog__border-bottom mb-30 pb-60">
+  <div class="blog__thumb fix">
+      <a [routerLink]="['/blog-details', blog?.id]" class="w-img">
+        <img [src]="blog?.mainImage?.url" alt="blog" height="255px">
+      </a>
+  </div>
+  <div class="blog__content">
+      <h4>
+        <a [routerLink]="['/blog-details', blog?.id]">{{blog?.title}}</a>
+      </h4>
+      <div class="blog__meta">
+          <span>By <a href="#">{{blog?.subject}}</a></span>
+          <span>/ {{blog?.date.toString() | date }}</span>
+      </div>
+      <p class="truncate" [innerHTML]="blog?.blogText"></p>
+      <a [routerLink]="['/blog-details', blog?.id]" class="os-btn">read more</a>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule } from "devextreme-angular";
+import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule, DxSelectBoxModule } from "devextreme-angular";
 import { SharedModule } from "../shared/shared.module";
 import { HomeHeaderComponent } from "./home/home-header/home-header.component";
 import { HomeComponent } from "./home/home.component";
@@ -38,6 +38,8 @@ import { PrayerTeamComponent } from './pages/prayer-team/prayer-team.component';
 import { AccountComponent } from './pages/account/account.component';
 import { TeamDetailsComponent } from './pages/team/team-details/team-details.component';
 import { BlogDetailsComponent } from './pages/blog-details/blog-details.component';
+import { BlogSidebarComponent } from './pages/blog/blog-sidebar/blog-sidebar.component';
+import { BlogPostboxItemComponent } from './pages/blog/blog-postbox-item/blog-postbox-item.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,9 @@ import { BlogDetailsComponent } from './pages/blog-details/blog-details.componen
     PrayerTeamComponent,
     AccountComponent,
     TeamDetailsComponent,
-    BlogDetailsComponent
+    BlogDetailsComponent,
+    BlogSidebarComponent,
+    BlogPostboxItemComponent
   ],
   imports: [
     CommonModule,
@@ -88,7 +92,8 @@ import { BlogDetailsComponent } from './pages/blog-details/blog-details.componen
     DxDateBoxModule,
     DxAutocompleteModule,
     DxRadioGroupModule,
-    DxTextAreaModule
+    DxTextAreaModule,
+    DxSelectBoxModule
   ],
   exports: [
     HomeComponent,
