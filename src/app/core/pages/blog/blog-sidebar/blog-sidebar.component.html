@@ -65,7 +65,7 @@
             <div class="rc__post-content">
               <h6><a [routerLink]="['/pages/blog-details', b.id]">{{ b.title.slice(0, 20) }}</a></h6>
               <div class="rc__meta">
-                <span>{{ b.date }}</span>
+                <span>{{ b.date.toString() | date }}</span>
               </div>
             </div>
           </li>

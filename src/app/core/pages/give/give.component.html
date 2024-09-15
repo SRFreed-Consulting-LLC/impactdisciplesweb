@@ -5,65 +5,119 @@
   <main class="grey-bg">
     <div class="give__container container">
       <!--GIVE HEADER - SWIPER-->
-      <section class="give__slider slider__area slider__area-4 p-relative">
-        <div class="give__slider-container slider-active swiper-container" #heroSliderContainer >
+      <section class="slider__area slider__area-2 p-relative pl-15 pr-15">
+        <div class="slider-active swiper-container" #heroSliderContainer>
           <div class="swiper-wrapper">
-            <div class="give__header single-slider single-slider-2 slider__height-3 mt-50 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url()'">
-              <div class="container">
+            <div class="single-slider single-slider-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fgive-header.PNG?alt=media&token=c5dcc5db-a531-4c5b-8127-7fa4fc96f567)'">
+              <div class="container-fluid">
                 <div class="row">
-                  <div class="col-xl-8 col-lg-7 col-md-9 col-sm-11 col-12">
-                    <div class="slider__content slider__content-4">
-                      <h5 class="give__header-title">YOUR SUPPORT</h5>
-                      <h1>Makes the Difference</h1>
-                      <p class="give__header-subtitle">Your gift makes a difference in the lives of individual disciples, Disciple-Making Pastors, and Disciple-Making Churches all over the world. Consider partnering with us financially in one of the ways below.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="give__header single-slider single-slider-2 slider__height-3 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url()'">
-              <div class="container">
-                <div class="row slide-right">
-                  <div class="col-xl-8 col-lg-7 col-md-9 col-sm-11 col-12">
-                    <div class="slider__content slider__content-4">
-                      <h2 class="give__header-title">TEAM MEMBERS YOU SUPPORT</h2>
-                      <p class="give__header-subtitle">Meet the Impact Disciple-Making Team and learn more about who you are supporting</p>
-                      <a href="#" class="os-btn give__header-button">Read More</a>
+                  <div class="col-xl-8 col-lg-8 col-md-10 col-sm-10 col-12">
+                    <div class="slider__content slider__content-3 pl-50" [class.slider__content-black]="true">
+                      <h2>Your Support Makes the Difference</h2>
+                      <hr id="two">
+                      <p>Meet the Impact Disciple-Making Team and learn more about who you are supporting</p>
+                      <a href="/team" class="impact-btn impact-btn-white-primary">Meet the Team</a>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="tp-slider-dot tp-swiper-dot"></div>
         </div>
       </section>
 
       <!--GIVE - BUTTONS-->
       <section class="blog__area pb-70">
-        <div class="container">
-          <div class="row">
-            <div class="col-xl-12">
-              <div class="section__title-wrapper text-center mb-55">
-                <div class="section__title mb-80 mt-70">
-                  <h2>Give</h2>
-                </div>
-                <div class="row justify-content-center">
-                  <div class="col-lg-3 give__gift-option">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="section__title-wrapper text-center mb-55">
+              <div class="section__title mb-80 mt-70">
+                <h2>Give</h2>
+                <p>Your gift makes a difference in the lives of individual disciples, Disciple-Making Pastors, and Disciple-Making Churches all over the world. Consider partnering with us financially in one of the ways below.</p>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-lg-4 give__gift-option">
+                  <div class="box">
                     <h3>One-Time</h3>
-                    <div class="buttons">
-                      <dx-button class="mb-10">CREDIT CARD</dx-button>
-                      <dx-button>PAYPAL</dx-button>
+                    <i class="large-icon fas fa-dollar-sign"></i>
+                    <div class="buttons" [ngClass]="{'hidden': isFormVisible === 'oneTime'}">
+                      <button class="impact-btn impact-btn-primary mb-10" (click)="togglePaymentForm('oneTime')">SEND DONATION</button>
+                    </div>
+                    <div *ngIf="isFormVisible === 'oneTime'" class="payment-form" [ngClass]="{'active': isFormVisible === 'oneTime'}">
+                      <!-- Stripe payment form for One-Time -->
+                      <div class="stripe-form">
+                        <div class="field-container">
+                          <label class="field-label">One-Time Amount</label>
+                          <dx-number-box
+                            [value]="oneTimeAmount"
+                            [format]="{ type: 'currency', currency: 'USD', precision: 2 }"
+                            placeholder="Enter amount">
+                          </dx-number-box>
+                        </div>
+                        <form id="payment-form">
+                          <div id="payment-element">
+                            <!--Stripe.js injects the Payment Element-->
+                          </div>
+                          <div id="payment-message" class="hidden"></div>
+                        </form>
+                        <div *ngIf="loading">
+                          <dx-load-indicator [visible]="true"></dx-load-indicator>
+                        </div>
+                        <button *ngIf="!loading" id="submit" class="os-btn os-btn-black pay-button mt-20" (click)="handleSubmit($event)">
+                          <div class="spinner hidden" id="spinner"></div>
+                          <span id="button-text">Pay now</span>
+                        </button>
+                      </div>
+                      <button class="close-btn" (click)="togglePaymentForm('')">
+                        <i class="fas fa-chevron-up"></i>
+                      </button>
                     </div>
                   </div>
-                  <div class="col-lg-3 give__gift-option">
+                </div>
+              
+                <div class="col-lg-4 give__gift-option">
+                  <div class="box">
                     <h3>Monthly</h3>
-                    <div class="buttons">
-                      <dx-button>PAYPAL</dx-button>
+                    <i class="large-icon fas fa-calendar-days"></i>
+                    <div class="buttons" [ngClass]="{'hidden': isFormVisible === 'monthly'}">
+                      <button class="impact-btn impact-btn-primary mb-10" (click)="togglePaymentForm('monthly')">SEND DONATION</button>
+                    </div>
+                    <div *ngIf="isFormVisible === 'monthly'" class="payment-form" [ngClass]="{'active': isFormVisible === 'monthly'}">
+                      <!-- Stripe payment form for Monthly -->
+                      <div  class="stripe-form">
+                        <div class="field-container">
+                          <label class="field-label">Monthly Amount</label>
+                          <dx-number-box
+                            [value]="monthlyAmount"
+                            [format]="{ type: 'currency', currency: 'USD', precision: 2 }"
+                            placeholder="Enter amount">
+                          </dx-number-box>
+                        </div>
+                        <form id="payment-form">
+                          <div id="payment-element">
+                            <!--Stripe.js injects the Payment Element-->
+                          </div>
+                          <div id="payment-message" class="hidden"></div>
+                        </form>
+                        <div *ngIf="loading">
+                          <dx-load-indicator [visible]="true"></dx-load-indicator>
+                        </div>
+                        <button *ngIf="!loading" id="submit" class="os-btn os-btn-black pay-button mt-20" (click)="handleSubmit($event)">
+                          <div class="spinner hidden" id="spinner"></div>
+                          <span id="button-text">Pay now</span>
+                        </button>
+                      </div>
+                      <button class="close-btn" (click)="togglePaymentForm('')">
+                        <i class="fas fa-chevron-up"></i>
+                      </button>
                     </div>
                   </div>
-                  <div class="col-lg-3 give__gift-option">
+                </div>
+              
+                <div class="col-lg-4 give__gift-option">
+                  <div class="box">
                     <h3>Church Budget</h3>
+                    <i class="large-icon fas fa-church"></i>
                     <p>Add Impact to your church’s budget and support world-wide missions and discipleship.</p>
                   </div>
                 </div>

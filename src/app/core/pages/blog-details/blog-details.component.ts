@@ -15,26 +15,28 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private route: ActivatedRoute, private blogPostService: BlogPostService) {
-    this.blogPostService.streamAll().subscribe((blogs) => {
-      
-      const related_blogs = blogs.filter(blog => (blog?.subject === this.blog?.subject) && (blog?.id !== this.blog?.id));
-      const otherBlogs = blogs.filter(blog => blog?.id !== this.blog?.id);
-      console.log(related_blogs)
-      related_blogs.length > 0
-      ? this.relatedBlogs = related_blogs.slice(0, 2)
-      : this.relatedBlogs = otherBlogs.slice(0, 2)
-    
-    })
-  }
+  constructor(private route: ActivatedRoute, private blogPostService: BlogPostService) {}
 
   ngOnInit(): void {
-    const blogId = this.route.snapshot.paramMap.get('id');
-    if (blogId) {
-      this.blogPostService.streamById(blogId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((blog) => {
-        this.blog = blog;
-      })
-    }
+    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      const blogId = params['id'];
+      if (blogId) {
+        this.loadBlogDetails(blogId);
+      }
+    });
+  }
+
+  private loadBlogDetails(blogId: string): void {
+    this.blogPostService.streamById(blogId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((blog) => {
+      this.blog = blog;
+
+      this.blogPostService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((blogs) => {
+        const related_blogs = blogs.filter(b => (b?.subject === this.blog?.subject) && (b?.id !== this.blog?.id));
+        const otherBlogs = blogs.filter(b => b?.id !== this.blog?.id);
+
+        this.relatedBlogs = related_blogs.length > 0 ? related_blogs.slice(0, 2) : otherBlogs.slice(0, 2);
+      });
+    });
   }
 
   ngOnDestroy(): void {

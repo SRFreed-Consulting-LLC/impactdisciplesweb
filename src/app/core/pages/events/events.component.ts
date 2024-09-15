@@ -42,7 +42,11 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   ngOnInit(): void {
     this.startCountdown();
     this.eventService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
-      this.eventsList = events;
+      const currentDate = new Date();  
+      this.eventsList = events.filter(event => {
+        const eventStartDate = new Date(event.startDate.toString());  
+        return eventStartDate >= currentDate; 
+      });
     });
   }
 

@@ -53,15 +53,15 @@
                 <div *ngFor="let b of relatedBlogs" class="col-xl-6 col-lg-6 col-md-6">
                   <div class="blog__item mb-30">
                     <div class="blog__thumb fix">
-                      <a [routerLink]="['/pages/blog-details', b?.id]" class="w-img">
+                      <a [routerLink]="['/blog-details', b?.id]" class="w-img">
                         <img [src]="b?.mainImage?.url" alt="blog">
                       </a>
                     </div>
                     <div class="blog__content">
-                      <h4><a [routerLink]="['/pages/blog-details', b?.id]">{{b?.title}}</a></h4>
+                      <h4><a [routerLink]="['/blog-details', b?.id]">{{b?.title}}</a></h4>
                       <div class="blog__meta">
                         <span>By <a href="#">{{b?.subject}}</a></span>
-                        <span>/ {{b?.date}}</span>
+                        <span>/ {{b?.date.toString() | date}}</span>
                       </div>
                     </div>
                   </div>
