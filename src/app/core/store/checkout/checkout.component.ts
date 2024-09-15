@@ -19,13 +19,13 @@ import { Router } from '@angular/router';
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss']
 })
-export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CheckoutComponent implements OnInit, OnDestroy {
   @ViewChild('checkoutFormComponent', { static: false }) checkoutFormComponent: DxFormComponent;
 
   checkoutForm: CheckoutForm = {};
   status: string = "REQUEST";
   elements;
-  items = [{ id: "xl-tshirt", amount: 1000 }];
+  items = [];
   countries = COUNTRIES;
   isOpenLogin = false;
   isOpenCoupon = false;
@@ -60,6 +60,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.status = "RESPONSE"
     }
+    this.toggleForm()
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       total: this.cartService.totalPriceQuantity().total,
@@ -96,30 +97,55 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(this.checkoutForm)
   }
 
-  async ngAfterViewInit(): Promise<void> {
-    if(this.status === "RESPONSE"){
-      this.checkStatus();
-    } else {
-      document.querySelector("#payment-form").addEventListener("submit", this.handleSubmit.bind(this));
+  async toggleForm(): Promise<void> {
+    try {
+      setTimeout(async () => {
+        const paymentForm = document.querySelector("#payment-form");
+        if (paymentForm) {
+          paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
+          
+          this.items = [];
 
-      const response = await fetch(environment.stripeURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(this.items),
-      });
+          this.cartService.getCartProducts().forEach(product => {
+            if(product.isEvent){
+              this.items.push({id: product.id, amount: (this.checkoutForm.total * 100)})
+            }
+          })
 
-      const { clientSecret } = await response.json();
+          console.log(this.items)
 
-      this.elements = (await this.stripeService.getStripe()).elements({ clientSecret });
+          // Fetch client secret for Stripe payment
+          const response = await fetch(environment.stripeURL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(this.items),
+          });
 
-      const paymentElementOptions = {
-        layout: "tabs",
-      };
+          if (!response.ok) {
+            throw new Error('Failed to fetch client secret');
+          }
 
-      const paymentElement = this.elements.create("payment", paymentElementOptions);
+          const { clientSecret } = await response.json();
 
-      paymentElement.mount("#payment-element");
-      }
+          // Initialize Stripe Elements
+          this.elements = (await this.stripeService.getStripe()).elements({ clientSecret });
+
+          const paymentElementOptions = {
+            layout: "tabs",
+          };
+
+          const paymentElement = this.elements.create("payment", paymentElementOptions);
+          paymentElement.mount("#payment-element");
+
+
+
+        }
+      }, 0);  // Ensures form is rendered before Stripe is initialized
+    
+    } catch (error) {
+
+      this.showMessage('Failed to load payment form. Please try again.', 'ERROR');
+    }
   }
 
   async handleSubmit(e) {
@@ -127,7 +153,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
     if(this.checkoutFormComponent.instance.validate().isValid) {
       e.preventDefault();
       this.setLoading(true);
-
+      console.log('handleSubmit')
       let response = await this.stripeService.getStripe().then(async stripe => {
         return await stripe.confirmPayment({
           elements: this.elements,
@@ -268,6 +294,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           this.showMessage("Invalid or inactive coupon.", 'ERROR');
         }
+        this.toggleForm()
       }).catch(error => {
         console.error("Error fetching coupon:", error);
         this.showMessage("Failed to apply coupon.", 'ERROR');
