@@ -23,7 +23,7 @@ export class CartService {
     // if (payload.status === 'out-of-stock' || payload.quantity === 0) {
     //   this.toastrService.error(`Out of stock ${payload.title}`);
     // }
-    // else 
+    // else
     if (!isExist) {
       const newItem = {
         ...payload
@@ -111,6 +111,12 @@ export class CartService {
     if (confirmMsg) {
       state.cart = [];
     }
+    localStorage.setItem("cart", JSON.stringify(state.cart));
+  };
+
+  clearCartNoConfirmation() {
+    state.cart = [];
+
     localStorage.setItem("cart", JSON.stringify(state.cart));
   };
 
