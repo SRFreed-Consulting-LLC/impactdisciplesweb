@@ -124,7 +124,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async handleSubmit(e) {
 
-    if(this.checkoutFormComponent.instance.validate()) {
+    if(this.checkoutFormComponent.instance.validate().isValid) {
       e.preventDefault();
       this.setLoading(true);
 

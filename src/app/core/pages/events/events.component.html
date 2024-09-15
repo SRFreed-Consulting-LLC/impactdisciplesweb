@@ -9,6 +9,19 @@
       <section class="events__slider slider__area slider__area-4 p-relative">
         <div class="slider-active swiper-container" #heroSliderContainer>
           <div class="swiper-wrapper">
+            <div *ngIf="canRegisterForDMS" class="single-slider single-slider-2 slider__height-4 d-flex align-items-center swiper-slide events__header" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fevents-header-2.PNG?alt=media&token=6b469b21-7fe7-4b76-a3cd-4badf18a251a)'">
+              <div class="container">
+                <div class="row">
+                  <div class="col-xl-7 col-lg-7 col-md-9 col-sm-11 col-12">
+                    <div class="slider__content slider__content-4">
+                      <h2 class="events__header-title">DISCIPLE MAKING SUMMIT</h2>
+                      <p class="events__header-subtitle">Join us for our Annual Event! You won't want to miss it.</p>
+                      <a href="/contact" class="events__header-button impact-btn impact-btn-white-primary">Register Today</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="events__header single-slider single-slider-2 slider__height-4 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fgroup-session-2.jpg?alt=media&token=9f6c7dad-e31b-4c9e-9eb9-7220cb122c5c)'">
               <div class="container">
                 <div class="row">
@@ -22,19 +35,6 @@
                 </div>
               </div>
             </div>
-            <div class="single-slider single-slider-2 slider__height-4 d-flex align-items-center swiper-slide events__header" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fworship-2.jpg?alt=media&token=8acd5c19-0c7e-4b36-b612-3e592772cb0a)'">
-              <div class="container">
-                <div class="row">
-                  <div class="col-xl-7 col-lg-7 col-md-9 col-sm-11 col-12">
-                    <div class="slider__content slider__content-4">
-                      <h2 class="events__header-title">EVENTS</h2>
-                      <p class="events__header-subtitle">2024-2025 Calendar</p>
-                      <a href="/contact" class="events__header-button impact-btn impact-btn-white-primary">Questions?</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </div>
           </div>
           <div class="tp-slider-dot tp-swiper-dot"></div>
         </div>
@@ -83,67 +83,7 @@
       
 
       <!--DISCIPLE MAKING SUMMIT-->
-      <section class="pb-70">
-        <div class="row">
-          <div class="col-xl-12">
-            <div class="events__DMS" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fdisciple-making-banner-large.PNG?alt=media&token=5d5ba48b-90c1-4b85-97df-c72040acde2f)'">
-              <div class="row">
-                <div class="col-xl-10">
-                  <div>
-                    <h4>JOIN US FOR OUR ANNUAL EVENT</h4>
-                    <h1>Disciple-Making Summit</h1>
-                    <p>Join us at the Disciple-Making Summit and come together in community with hundreds of other disciple-makers to learn what it means to leave a legacy that lasts through multiplying disciples.</p>
-                  </div>
-                  <a class="impact-btn impact-btn-primary">Learn More</a>
-                </div>
-              </div>
-            </div>
-            <!-- <div class="section__title-wrapper text-center mb-55">
-              <div class="section__title mb-10 mt-50">
-                <h2>Disciple Making Summit</h2>
-              </div>
-              <div class="section__sub-title">
-                <p>Jesus started the Church two thousand years ago to become an expanding movement that would reach all nations. Somehow over the last two thousand years, we’ve let the concept of multiplying disciples become fuzzy.
-
-                  How can we get back to being a movement of multiplying disciples? It is time to return to the power of multiplication. It is time we return to Christ’s original plan.
-                  
-                  Join us at the Disciple-Making Summit and come together in community with hundreds of other disciple-makers to learn what it means to leave a legacy that lasts through multiplying disciples.
-                </p>
-              </div>
-              <div class="countdown-timer mt-50">
-                <div class="time-part">
-                  <span class="number">{{ days }}</span>
-                  <span class="label">day(s)</span>
-                </div>
-                <span class="colon">:</span>
-                <div class="time-part">
-                  <span class="number">{{ hours }}</span>
-                  <span class="label">hour(s)</span>
-                </div>
-                <span class="colon">:</span>
-                <div class="time-part">
-                  <span class="number">{{ minutes }}</span>
-                  <span class="label">minute(s)</span>
-                </div>
-                <span class="colon">:</span>
-                <div class="time-part">
-                  <span class="number">{{ seconds }}</span>
-                  <span class="label">second(s)</span>
-                </div>
-              </div>
-              <div class="slider-container mt-50">
-                <div class="slider" [style.transform]="getTransform()">
-                  <div *ngFor="let image of images" class="slide">
-                    <img [src]="image" alt="Slide image">
-                  </div>
-                </div>
-                <button class="prev" (click)="prevSlide()">&#10094;</button>
-                <button class="next" (click)="nextSlide()">&#10095;</button>
-              </div>
-            </div> -->
-          </div>
-        </div>
-      </section>
+      <app-disciple-making-summit-banner [showCountdown]="true"></app-disciple-making-summit-banner>
     </div>
     <app-subscribe-area></app-subscribe-area>
   </main>
