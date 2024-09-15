@@ -2,11 +2,28 @@
 
 <main>
 
-  <app-breadcrumb [currentPageName]="'Blogs'" [previousLinkName]="'Home'" [previousLinkId]="'/home'"></app-breadcrumb>
-
   <section class="blog__area pt-10 pb-100">
     <div class="container">
-      <div class="row">
+      <section class="slider__area slider__area-4 p-relative">
+        <div class="slider-active swiper-container" #heroSliderContainer >
+          <div class="swiper-wrapper">
+            <div class="blog__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Blogs%2Fblog-header.PNG?alt=media&token=b5899394-fb6e-4dc9-a6c9-7f5ffe415f52)'">
+              <div class="row">
+                <div class="col-xl-12">
+                  <div class="slider__content slider__content-4 pr-50">
+                    <h5 class="blog__header__pretitle">FREE ONLINE RESOURCES</h5>
+                    <h1 class="blog__header__title w-50">The Disciple-Making Church Blogs</h1>
+                    <hr class="slider-hr">
+                    <a href="/e-books" class="os-btn os-btn-white">FREE E-BOOKS<i class="fa fa-book ml-10"></i></a>
+                    <a href="/podcasts" class="os-btn os-btn-white">PODCASTS<i class="fa fa-microphone ml-10"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="row mt-50">
         <div class="col-xl-3 col-lg-4">
           <app-blog-sidebar (searchEvent)="searchBlogs($event)" (tagFilterEvent)="filterBlogsByTag($event)" (clearFiltersEvent)="clearFilters()"></app-blog-sidebar>
         </div>

@@ -1,0 +1,82 @@
+<section>
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="DMS" [ngStyle]="{ height: showCountdown ? '450px' : '300px' }" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fdisciple-making-banner-large.PNG?alt=media&token=0a36f863-3f01-494d-a4b4-13af96f017ee)'">
+        <div class="DMS__container row justify-content-center">
+          <div *ngIf="showCountdown" class="col-xl-12 countdown-timer mb-30">
+            <div class="time-part">
+              <span class="number">{{ days }}</span>
+              <span class="label">day(s)</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-part">
+              <span class="number">{{ hours }}</span>
+              <span class="label">hour(s)</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-part">
+              <span class="number">{{ minutes }}</span>
+              <span class="label">minute(s)</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-part">
+              <span class="number">{{ seconds }}</span>
+              <span class="label">second(s)</span>
+            </div>
+          </div>
+          <div class="DMS-text-container" [ngClass]="showCountdown ? 'col-xl-6 col-md-8' : 'col-xl-12'">
+            <div class="DMS-text">
+              <h4>JOIN US FOR OUR ANNUAL EVENT</h4>
+              <h1>Disciple-Making Summit</h1>
+              <p>Join us at the Disciple-Making Summit and come together in community with hundreds of other disciple-makers to learn what it means to leave a legacy that lasts through multiplying disciples.</p>
+            </div>
+            <a class="impact-btn impact-btn-white mt-10">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="section__title-wrapper text-center mb-55">
+        <div class="section__title mb-10 mt-50">
+          <h2>Disciple Making Summit</h2>
+        </div>
+        <div class="section__sub-title">
+          <p>Jesus started the Church two thousand years ago to become an expanding movement that would reach all nations. Somehow over the last two thousand years, we’ve let the concept of multiplying disciples become fuzzy.
+
+            How can we get back to being a movement of multiplying disciples? It is time to return to the power of multiplication. It is time we return to Christ’s original plan.
+            
+            Join us at the Disciple-Making Summit and come together in community with hundreds of other disciple-makers to learn what it means to leave a legacy that lasts through multiplying disciples.
+          </p>
+        </div>
+        <div class="countdown-timer mt-50">
+          <div class="time-part">
+            <span class="number">{{ days }}</span>
+            <span class="label">day(s)</span>
+          </div>
+          <span class="colon">:</span>
+          <div class="time-part">
+            <span class="number">{{ hours }}</span>
+            <span class="label">hour(s)</span>
+          </div>
+          <span class="colon">:</span>
+          <div class="time-part">
+            <span class="number">{{ minutes }}</span>
+            <span class="label">minute(s)</span>
+          </div>
+          <span class="colon">:</span>
+          <div class="time-part">
+            <span class="number">{{ seconds }}</span>
+            <span class="label">second(s)</span>
+          </div>
+        </div>
+        <div class="slider-container mt-50">
+          <div class="slider" [style.transform]="getTransform()">
+            <div *ngFor="let image of images" class="slide">
+              <img [src]="image" alt="Slide image">
+            </div>
+          </div>
+          <button class="prev" (click)="prevSlide()">&#10094;</button>
+          <button class="next" (click)="nextSlide()">&#10095;</button>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</section>

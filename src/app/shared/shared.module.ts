@@ -17,6 +17,7 @@ import { BookBannerComponent } from "./components/book-banner/book-banner.compon
 import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.component";
 import { ComingSoonComponent } from "./components/coming-soon/coming-soon.component";
 import { PaginationComponent } from "./components/pagination/pagination.component";
+import { DiscipleMakingSummitBannerComponent } from './components/disciple-making-summit-banner/disciple-making-summit-banner.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { PaginationComponent } from "./components/pagination/pagination.componen
     ComingSoonComponent,
     PaginationComponent,
     LocationPipe,
-    CourseNamePipe
+    CourseNamePipe,
+    DiscipleMakingSummitBannerComponent
   ],
   imports: [
     CommonModule,
@@ -56,7 +58,8 @@ import { PaginationComponent } from "./components/pagination/pagination.componen
     ComingSoonComponent,
     PaginationComponent,
     LocationPipe,
-    CourseNamePipe
+    CourseNamePipe,
+    DiscipleMakingSummitBannerComponent
   ]
 })
 export class SharedModule { }
