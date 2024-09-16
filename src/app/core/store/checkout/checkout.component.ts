@@ -272,18 +272,36 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           let validCoupon = coupons[0];
           let total = this.calculateTotal(this.checkoutForm.cartItems);
 
-          if (validCoupon.percentOff) {
-            this.discountAmount = validCoupon.percentOff;
-            this.checkoutForm.total = total - ((total * validCoupon.percentOff) / 100);
-            this.isPercent = true;
-          } else if (validCoupon.dollarsOff) {
-            this.discountAmount = validCoupon.dollarsOff;
-            this.discountAmount = Math.min(this.discountAmount, total);
-            this.checkoutForm.total = total - this.discountAmount;
+          let isvalid: boolean = false;
+
+          let itemIds: string[] = this.checkoutForm.cartItems.map(item => item.id)
+
+          if(!validCoupon.tags){
+            validCoupon.tags = [];
           }
 
+          validCoupon.tags.forEach(tag => {
+            if(itemIds.includes(tag)){
+              isvalid = true;
+            }
+          })
 
-          this.showMessage("Coupon applied successfully.", 'SUCCESS');
+          if(isvalid){
+            if (validCoupon.percentOff) {
+              this.discountAmount = validCoupon.percentOff;
+              this.checkoutForm.total = total - ((total * validCoupon.percentOff) / 100);
+              this.isPercent = true;
+            } else if (validCoupon.dollarsOff) {
+              this.discountAmount = validCoupon.dollarsOff;
+              this.discountAmount = Math.min(this.discountAmount, total);
+              this.checkoutForm.total = total - this.discountAmount;
+            }
+
+            this.showMessage("Coupon applied successfully.", 'SUCCESS');
+          } else {
+            this.showMessage("Coupon not Valid for these items.", 'ERROR');
+          }
+
         } else {
           this.showMessage("Invalid or inactive coupon.", 'ERROR');
         }
