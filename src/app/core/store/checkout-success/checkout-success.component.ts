@@ -61,6 +61,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       if(product.isEvent){
         product.attendees.forEach(async attendee => {
           let registration = {... new EventRegistrationModel()};
+          registration.eventId = product.id;
           registration.firstName = attendee.firstName;
           registration.lastName = attendee.lastName;
           registration.email = attendee.email;
