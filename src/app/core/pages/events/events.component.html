@@ -9,28 +9,26 @@
       <section class="events__slider slider__area slider__area-4 p-relative">
         <div class="slider-active swiper-container" #heroSliderContainer>
           <div class="swiper-wrapper">
-            <div *ngIf="canRegisterForDMS" class="single-slider single-slider-2 slider__height-4 d-flex align-items-center swiper-slide events__header" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fevents-header-2.PNG?alt=media&token=6b469b21-7fe7-4b76-a3cd-4badf18a251a)'">
-              <div class="container">
-                <div class="row">
-                  <div class="col-xl-7 col-lg-7 col-md-9 col-sm-11 col-12">
-                    <div class="slider__content slider__content-4">
-                      <h2 class="events__header-title">DISCIPLE MAKING SUMMIT</h2>
-                      <p class="events__header-subtitle">Join us for our Annual Event! You won't want to miss it.</p>
-                      <a href="/contact" class="events__header-button impact-btn impact-btn-white-primary">Register Today</a>
-                    </div>
+            <div class="events__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fevents-header-2.PNG?alt=media&token=2ce49636-0f6e-4ab9-9714-4f5638bd6d1d)'">
+              <div class="row">
+                <div class="col-xl-12">
+                  <div class="slider__content slider__content-4 pr-50">
+                    <h5 class="events__header__pretitle">JOIN US FOR OUR ANNUAL EVENT</h5>
+                    <h1 class="events__header__title w-100">Disciple-Making Summit</h1>
+                    <hr class="slider-hr">
+                    <a [href]="impactDisciplesInfo.youtube" target="_blank" class="os-btn os-btn-white"><i class="fas fa-right-to-bracket mr-10"></i>REGISTER NOW</a>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="events__header single-slider single-slider-2 slider__height-4 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fgroup-session-2.jpg?alt=media&token=9f6c7dad-e31b-4c9e-9eb9-7220cb122c5c)'">
-              <div class="container">
-                <div class="row">
-                  <div class="col-xl-7 col-lg-7 col-md-9 col-sm-11 col-12">
-                    <div class="slider__content slider__content-4">
-                      <h2 class="events__header-title">EVENTS</h2>
-                      <p class="events__header-subtitle">2024-2025 Calendar</p>
-                      <a href="/contact" class="events__header-button impact-btn impact-btn-white-primary">Questions?</a>
-                    </div>
+            <div class="events__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fevents-header-1.PNG?alt=media&token=2bccfb89-64ff-4025-9797-c5943994c317)'">
+              <div class="row">
+                <div class="col-xl-12">
+                  <div class="slider__content slider__content-4 pr-50">
+                    <h5 class="events__header__pretitle">BROUGHT TO YOU BY</h5>
+                    <h1 class="events__header__title w-100">Impact Disciples Events</h1>
+                    <hr class="slider-hr">
+                    <a href="/contact" target="_blank" class="os-btn os-btn-white"><i class="fas fa-circle-question mr-10"></i>QUESTIONS?</a>
                   </div>
                 </div>
               </div>
@@ -47,7 +45,7 @@
             <div class="col-xl-12">
               <div class="section__title-wrapper text-center mb-55">
                 <div class="section__title mb-10 mt-50">
-                  <h2>Coming Up</h2>
+                  <h2>Live Events</h2>
                 </div>
               </div>
             </div>
@@ -77,13 +75,28 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-xl-12">
+              <div class="section__title-wrapper text-center mb-55">
+                <div class="section__title mb-10 mt-50">
+                  <h2>Online Events</h2>
+                </div>
+                <div class="coming-soon-box">
+                  <h3>COMING SOON</h3>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       
 
       <!--DISCIPLE MAKING SUMMIT-->
-      <app-disciple-making-summit-banner [showCountdown]="true"></app-disciple-making-summit-banner>
+      <div id="DMS">
+        <app-disciple-making-summit-banner [large]="true"></app-disciple-making-summit-banner>
+      </div>
     </div>
     <app-subscribe-area></app-subscribe-area>
   </main>

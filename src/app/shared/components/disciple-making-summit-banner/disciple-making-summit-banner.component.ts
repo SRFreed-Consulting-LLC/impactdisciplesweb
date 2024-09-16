@@ -9,9 +9,9 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./disciple-making-summit-banner.component.scss']
 })
 export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
-  @Input() showCountdown: boolean = false;
+  @Input() large: boolean = false;
 
-  public DMS: EventModel;
+  public dms: EventModel;
   public days: number = 0;
   public hours: number = 0;
   public minutes: number = 0;
@@ -24,13 +24,13 @@ export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.eventService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
-      this.DMS = events.find((event) => event.isSummit)
+      this.dms = events.find((event) => event.isSummit)
       this.startCountdown();
     });
   }
 
   private startCountdown(): void {
-    const endDate = new Date(this.DMS?.startDate.toString()).getTime();
+    const endDate = new Date(this.dms?.startDate.toString()).getTime();
 
     this.intervalId = setInterval(() => {
       const now = new Date().getTime();
