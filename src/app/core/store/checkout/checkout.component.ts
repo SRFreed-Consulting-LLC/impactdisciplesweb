@@ -7,11 +7,11 @@ import { CartItem, CheckoutForm } from 'src/app/shared/models/cart.model';
 import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
-import { StripeService } from './stripe.service';
 import { Actions, ofActionDispatched } from '@ngxs/store';
 import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
 import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.service';
 import { Router } from '@angular/router';
+import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 
 
 @Component({
@@ -73,7 +73,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       ofActionDispatched(UserAuthenticated),
       takeUntil(this.ngUnsubscribe)
     ).subscribe(({ user }: UserAuthenticated) => {
-      console.log(user)
       this.loggedInUser = `${user.firstName} ${user.lastName}`
       this.isLoggedIn = true
     })
@@ -94,7 +93,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         }
       }
     });
-    console.log(this.checkoutForm)
   }
 
   async toggleForm(): Promise<void> {
@@ -103,7 +101,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         const paymentForm = document.querySelector("#payment-form");
         if (paymentForm) {
           paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
-          
+
           this.items = [];
 
           this.cartService.getCartProducts().forEach(product => {
@@ -111,8 +109,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               this.items.push({id: product.id, amount: (this.checkoutForm.total * 100)})
             }
           })
-
-          console.log(this.items)
 
           // Fetch client secret for Stripe payment
           const response = await fetch(environment.stripeURL, {
@@ -141,7 +137,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         }
       }, 0);  // Ensures form is rendered before Stripe is initialized
-    
+
     } catch (error) {
 
       this.showMessage('Failed to load payment form. Please try again.', 'ERROR');
@@ -153,7 +149,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     if(this.checkoutFormComponent.instance.validate().isValid) {
       e.preventDefault();
       this.setLoading(true);
-      console.log('handleSubmit')
       let response = await this.stripeService.getStripe().then(async stripe => {
         return await stripe.confirmPayment({
           elements: this.elements,
@@ -163,8 +158,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           },
         });
       })
-
-      console.log(response.error);
 
       // This point will only be reached if there is an immediate error when
       // confirming the payment. Otherwise, your customer will be redirected to
@@ -253,7 +246,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   handleLogin() {
-    this.authService.logIn(this.logInForm.email, this.logInForm.password).subscribe(val => console.log(val))
+    this.authService.logIn(this.logInForm.email, this.logInForm.password);
   }
 
   handleCountryInput = (e: any) => {

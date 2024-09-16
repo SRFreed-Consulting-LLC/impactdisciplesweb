@@ -33,7 +33,6 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       return await stripe.retrievePaymentIntent(clientSecret);
     })
 
-
     switch (paymentIntent.status) {
       case "succeeded":
         this.showMessage("Payment succeeded!");
