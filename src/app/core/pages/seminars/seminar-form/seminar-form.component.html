@@ -64,32 +64,15 @@
               ></dxi-item>
 
               <!-- TODO: A location id might help here to be able to prefill the address information on location selection-->
-              <dxi-item
-                dataField="preferredLocationName"
-                editorType="dxAutocomplete"
-                [colSpan]="6"
-                [label]="{ text: 'Name of church, event center, or other location where event will take place' }"
-                [editorOptions]="{
-                  items: locations$ | async,
-                  valueExpr: 'name',
-                  displayExpr: 'name',
-                  showClearButton: true,
-                  searchExpr: ['name']
-                }"
-              ></dxi-item>
-              <dxi-item
-                dataField="preferredLocation.address1"
-                editorType="dxAutocomplete"
-                [colSpan]="6"
-                [label]="{ text: 'Location Address' }"
-                [editorOptions]="{
-                  items: locations$ | async,
-                  valueExpr: 'address.address1',
-                  displayExpr: displayAddress,
-                  showClearButton: true,
-                  searchExpr: ['address.address1', 'address.city', 'address.state', 'address.zip']
-                }"
-              ></dxi-item>
+              <dxi-item dataField="preferredLocationName" [label]="{ text: 'Location Name' }" [colSpan]="6"></dxi-item>
+
+              <dxi-item itemType="group" caption="Contact Information" [colCount]="6" [colSpan]="6">
+                <dxi-item dataField="locationAddress.address1" [isRequired]="true" [label]="{ text: 'Address 1' }" [colSpan]="6"></dxi-item>
+                <dxi-item dataField="locationAddress.address2" [label]="{ text: 'Address 2' }" [colSpan]="6"></dxi-item>
+                <dxi-item dataField="locationAddress.city" [isRequired]="true" [label]="{ text: 'City' }" [colSpan]="3"></dxi-item>
+                <dxi-item dataField="locationAddress.state" [isRequired]="true" [label]="{ text: 'State' }"  [colSpan]="2"></dxi-item>
+                <dxi-item dataField="locationAddress.zip" [isRequired]="true" [label]="{ text: 'Zip' }"  [colSpan]="1"></dxi-item>
+              </dxi-item>
               <dxi-item dataField="eventCoordinator"[colSpan]="2" [isRequired]="true" [label]="{ text: 'Event Coordinator' }"></dxi-item>
               <dxi-item dataField="email"[colSpan]="2" [isRequired]="true" [label]="{ text: 'Email' }">
                 <dxi-validation-rule type="required" message="Email is required"></dxi-validation-rule>

@@ -29,7 +29,7 @@
                 }"
               ></dxi-item>
               <dxi-item
-                dataField="requestedStartDateTime"
+                dataField="requestedStartTime"
                 editorType="dxDateBox"
                 [label]="{ text: 'Requested Start Time' }"
                 [editorOptions]="{
@@ -39,7 +39,7 @@
                 }"
               ></dxi-item>
               <dxi-item
-                dataField="requestedEndDateTime"
+                dataField="requestedEndTime"
                 editorType="dxDateBox"
                 [label]="{ text: 'Requested End Time' }"
                 [editorOptions]="{
@@ -48,33 +48,14 @@
                   useMaskBehavior: true
                 }"
               ></dxi-item>
-              <!-- TODO: A location id might help here to be able to prefill the address information on location selection-->
-              <dxi-item
-                dataField="locationName"
-                editorType="dxAutocomplete"
-                [colSpan]="2"
-                [label]="{ text: 'Location Name' }"
-                [editorOptions]="{
-                  items: locations$ | async,
-                  valueExpr: 'name',
-                  displayExpr: 'name',
-                  showClearButton: true,
-                  searchExpr: ['name']
-                }"
-              ></dxi-item>
-              <dxi-item
-                dataField="locationAddress"
-                editorType="dxAutocomplete"
-                [colSpan]="2"
-                [label]="{ text: 'Location Address' }"
-                [editorOptions]="{
-                  items: locations$ | async,
-                  valueExpr: 'address.address1',
-                  displayExpr: displayAddress,
-                  showClearButton: true,
-                  searchExpr: ['address.address1', 'address.city', 'address.state', 'address.zip']
-                }"
-              ></dxi-item>
+              <dxi-item  dataField="locationName" [label]="{ text: 'Location Name' }" [colSpan]="2"></dxi-item>
+              <dxi-item itemType="group" caption="Contact Information" [colCount]="6" [colSpan]="2">
+                <dxi-item dataField="locationAddress.address1" [isRequired]="true" [label]="{ text: 'Address 1' }" [colSpan]="6"></dxi-item>
+                <dxi-item dataField="locationAddress.address2" [label]="{ text: 'Address 2' }" [colSpan]="6"></dxi-item>
+                <dxi-item dataField="locationAddress.city" [isRequired]="true" [label]="{ text: 'City' }" [colSpan]="3"></dxi-item>
+                <dxi-item dataField="locationAddress.state" [isRequired]="true" [label]="{ text: 'State' }"  [colSpan]="2"></dxi-item>
+                <dxi-item dataField="locationAddress.zip" [isRequired]="true" [label]="{ text: 'Zip' }"  [colSpan]="1"></dxi-item>
+              </dxi-item>
               <dxi-item dataField="coordinator" [isRequired]="true" [label]="{ text: 'Event Coordinator' }"></dxi-item>
               <dxi-item dataField="coordinatorPhone.number" [isRequired]="true" [label]="{ text: 'Coordinator Phone' }" [editorOptions]="phoneEditorOptions"></dxi-item>
             </dx-form>

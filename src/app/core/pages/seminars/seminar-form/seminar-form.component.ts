@@ -4,7 +4,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DxButtonTypes } from 'devextreme-angular/ui/button';
 import { Timestamp } from 'firebase/firestore';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
-import { LocationModel } from 'impactdisciplescommon/src/models/domain/location.model';
 import { SeminarModel } from 'impactdisciplescommon/src/models/domain/seminar.model';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
@@ -14,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 import { map, Observable } from 'rxjs';
 import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
 import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
+import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 
 @Component({
   selector: 'app-seminar-form',
@@ -24,7 +24,6 @@ export class SeminarFormComponent implements OnInit {
   @ViewChild('seminarRequestFormComponent', { static: false }) seminarRequestFormComponent: DxFormComponent;
 
   seminarForm: SeminarModel;
-  locations$: Observable<LocationModel[]>;
   coaches$: Observable<CoachModel[]>;
 
   constructor(public locationService: LocationService, private seminarService: SeminarService, private webConfigService: WebConfigService,
@@ -52,7 +51,6 @@ export class SeminarFormComponent implements OnInit {
     this.seminarForm = {...new SeminarModel()};
     this.seminarForm.phone = {... new Phone()};
 
-    this.locations$ = this.locationService.streamAll();
 
     this.coaches$ = this.coachService.streamAll().pipe(
       map(coaches => {
@@ -66,6 +64,10 @@ export class SeminarFormComponent implements OnInit {
   onSubmitForm() {
     if(this.seminarRequestFormComponent.instance.validate().isValid) {
       this.seminarForm.date = Timestamp.now();
+      this.seminarForm.dateString = new Date().toDateString();
+      this.seminarForm.requestedSeminarDateString = dateFromTimestamp(this.seminarForm.requestedSeminarDate as Timestamp).toDateString();
+      this.seminarForm.requestedStartDateTimeString = dateFromTimestamp(this.seminarForm.requestedStartDateTime as Timestamp).toTimeString();
+      this.seminarForm.requestedEndDateTimeString = dateFromTimestamp(this.seminarForm.requestedEndDateTime as Timestamp).toTimeString();
 
       this.webConfigService.getAll().then(config => {
         return config[0].adminEmailAddress;
