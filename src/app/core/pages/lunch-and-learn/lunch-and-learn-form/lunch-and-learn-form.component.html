@@ -76,7 +76,7 @@
                 }"
               ></dxi-item>
               <dxi-item dataField="coordinator" [isRequired]="true" [label]="{ text: 'Event Coordinator' }"></dxi-item>
-              <dxi-item dataField="coordinatorPhone.number" [isRequired]="true" [label]="{ text: 'Coordinator Phone' }"></dxi-item>
+              <dxi-item dataField="coordinatorPhone.number" [isRequired]="true" [label]="{ text: 'Coordinator Phone' }" [editorOptions]="phoneEditorOptions"></dxi-item>
             </dx-form>
             <a (click)="onSubmitForm()" class="os-btn lunch-form__button mt-30">Request to Book a Lunch and Learn</a>
           </div>

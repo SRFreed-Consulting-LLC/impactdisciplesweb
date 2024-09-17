@@ -22,6 +22,15 @@ export class LunchAndLearnFormComponent implements OnInit {
   lunchRequestForm: LunchAndLearnModel;
   locations$: Observable<LocationModel[]>;
 
+  phoneEditorOptions = {
+    mask: '+1 (X00) 000-0000',
+    maskRules: {
+      X: /[02-9]/,
+    },
+    maskInvalidMessage: 'The phone must have a correct USA phone format',
+    valueChangeEvent: 'keyup',
+  };
+
   constructor(public locationService: LocationService, private lunchAndLearnService: LunchAndLearnService, private webConfigService: WebConfigService,
     private emailService: EMailService, private toastrService: ToastrService
   ){}

@@ -70,8 +70,9 @@ export class SeminarFormComponent implements OnInit {
       this.webConfigService.getAll().then(config => {
         return config[0].adminEmailAddress;
       }).then (email => {
-        this.seminarService.add(this.seminarForm).then(() => {
+        this.seminarService.add(this.seminarForm).then((form) => {
           this.toastrService.success("Seminar Request Form submitted Successfully!");
+          return form;
         }).then(form => {
           this.emailService.sendTemplateEmail(email, 'Seminar Template', form);
         })
