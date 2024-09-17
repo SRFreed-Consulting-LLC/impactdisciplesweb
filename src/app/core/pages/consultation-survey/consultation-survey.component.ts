@@ -6,6 +6,7 @@ import { ConsultationSurveyService } from 'impactdisciplescommon/src/services/co
 import { DxButtonTypes } from 'devextreme-angular/ui/button';
 import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
 import { Timestamp } from 'firebase/firestore';
+import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
 
 @Component({
   selector: 'app-consultation-survey',
@@ -35,6 +36,7 @@ export class ConsultationSurveyComponent implements OnInit {
 
   ngOnInit(): void {
     this.consultationSurveyForm = {... new ConsultationSurveyModel()};
+    this.consultationSurveyForm.phone = {... new Phone()};
   }
 
   onSubmitForm() {
