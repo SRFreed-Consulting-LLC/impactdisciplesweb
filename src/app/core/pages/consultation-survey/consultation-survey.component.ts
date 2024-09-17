@@ -3,6 +3,8 @@ import { Component, OnInit,  } from '@angular/core';
 import { ConsultationSurveyModel } from 'impactdisciplescommon/src/models/domain/consultation-survey.model';
 import { ConsultationSurveyService } from 'impactdisciplescommon/src/services/consultation-survey.service';
 import { DxButtonTypes } from 'devextreme-angular/ui/button';
+import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-consultation-survey',
@@ -27,15 +29,20 @@ export class ConsultationSurveyComponent implements OnInit {
     valueChangeEvent: 'keyup',
   };
 
-  constructor(private consultationSurveyService: ConsultationSurveyService, private toastrService: ToastrService){}
+  constructor(private consultationSurveyService: ConsultationSurveyService, private emailService: EMailService, private toastrService: ToastrService){}
 
   ngOnInit(): void {
     this.consultationSurveyForm = {... new ConsultationSurveyModel()};
   }
 
   onSubmitForm() {
-    this.consultationSurveyService.add(this.consultationSurveyForm).then(() => {
+    this.consultationSurveyForm.date = Timestamp.now();
+    this.consultationSurveyForm.dateString = new Date().toDateString();
+
+    this.consultationSurveyService.add(this.consultationSurveyForm).then((form) => {
       this.toastrService.success("Consultation Survey submited Successfully!");
+
+      this.emailService.sendTemplateEmail("shane.freed@gmail.com", 'Consultation Survey Template', form);
     })
   }
 

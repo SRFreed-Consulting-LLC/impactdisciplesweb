@@ -1,10 +1,9 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
-import { MailMessageModel, MailModel } from 'impactdisciplescommon/src/models/domain/mail.model';
+import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
-import { EMailService } from 'impactdisciplescommon/src/services/utils/email.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { ToastrService } from 'ngx-toastr';
@@ -73,17 +72,11 @@ export class CheckoutSuccessComponent implements AfterViewInit{
                 ' starting on ' + dateFromTimestamp(event.startDate)
               );
 
-              let mailMessage: MailMessageModel = {... new MailMessageModel()};
+              let subject = 'You have been registered for an event!';
+              let text = 'You have been registered for ' + event.eventName + ' starting on ' + dateFromTimestamp(event.startDate) + ', Your confirmationId is ' + registration.receipt;
+              let to = registration.email;
 
-              mailMessage.subject = 'You have been registered for an event!';
-              mailMessage.text = 'You have been registered for ' + event.eventName + ' starting on ' + dateFromTimestamp(event.startDate) + ', Your confirmationId is ' + registration.receipt;
-
-              let mail = {... new MailModel()}
-              mail.to = registration.email;
-              mail.date = Timestamp.now();
-              mail.message = mailMessage;
-
-              this.emailService.add(mail);
+              this.emailService.sendTextEmail(to, subject, text);
             })
           })
 
