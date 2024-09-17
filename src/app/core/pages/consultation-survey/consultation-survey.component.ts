@@ -53,8 +53,5 @@ export class ConsultationSurveyComponent implements OnInit {
         this.emailService.sendTemplateEmail(email, 'Consultation Survey Template', form);
       })
     })
-
-
   }
-
 }

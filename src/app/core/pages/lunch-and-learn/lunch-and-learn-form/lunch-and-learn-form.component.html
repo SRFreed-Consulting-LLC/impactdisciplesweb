@@ -70,13 +70,13 @@
                 [editorOptions]="{
                   items: locations$ | async,
                   valueExpr: 'address.address1',
-                  displayExpr: displayAddress,  
+                  displayExpr: displayAddress,
                   showClearButton: true,
-                  searchExpr: ['address.address1', 'address.city', 'address.state', 'address.zip'] 
+                  searchExpr: ['address.address1', 'address.city', 'address.state', 'address.zip']
                 }"
               ></dxi-item>
               <dxi-item dataField="coordinator" [isRequired]="true" [label]="{ text: 'Event Coordinator' }"></dxi-item>
-              <dxi-item dataField="coordinatorPhone" [isRequired]="true" [label]="{ text: 'Coordinator Phone' }"></dxi-item>
+              <dxi-item dataField="coordinatorPhone.number" [isRequired]="true" [label]="{ text: 'Coordinator Phone' }"></dxi-item>
             </dx-form>
             <a (click)="onSubmitForm()" class="os-btn lunch-form__button mt-30">Request to Book a Lunch and Learn</a>
           </div>

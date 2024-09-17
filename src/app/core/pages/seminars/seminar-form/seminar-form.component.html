@@ -10,7 +10,7 @@
           <div class="seminar-form__info">
             <form action="your-action" (submit)="onSubmitForm()">
             <dx-form
-              #seminarFormComponent
+              #seminarRequestFormComponent
               [formData]="seminarForm"
               [colCount]="6"
               labelLocation="top"
@@ -95,7 +95,7 @@
                 <dxi-validation-rule type="required" message="Email is required"></dxi-validation-rule>
                 <dxi-validation-rule type="email" message="Email is invalid"></dxi-validation-rule>
               </dxi-item>
-              <dxi-item dataField="phone" [colSpan]="2"[isRequired]="true" [label]="{ text: 'Phone' }" [editorOptions]="phoneEditorOptions">
+              <dxi-item dataField="phone.number" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Phone' }" [editorOptions]="phoneEditorOptions">
                 <dxi-validation-rule type="required" message="Phone is required"></dxi-validation-rule>
                 <dxi-validation-rule
                   type="pattern"
