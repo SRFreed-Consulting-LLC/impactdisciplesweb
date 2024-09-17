@@ -1,3 +1,4 @@
+import { WebConfigService } from './../../../../../impactdisciplescommon/src/services/utils/web-config.service';
 import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit,  } from '@angular/core';
 import { ConsultationSurveyModel } from 'impactdisciplescommon/src/models/domain/consultation-survey.model';
@@ -29,7 +30,8 @@ export class ConsultationSurveyComponent implements OnInit {
     valueChangeEvent: 'keyup',
   };
 
-  constructor(private consultationSurveyService: ConsultationSurveyService, private emailService: EMailService, private toastrService: ToastrService){}
+  constructor(private consultationSurveyService: ConsultationSurveyService, private emailService: EMailService,
+    private webConfigService: WebConfigService, private toastrService: ToastrService){}
 
   ngOnInit(): void {
     this.consultationSurveyForm = {... new ConsultationSurveyModel()};
@@ -39,11 +41,18 @@ export class ConsultationSurveyComponent implements OnInit {
     this.consultationSurveyForm.date = Timestamp.now();
     this.consultationSurveyForm.dateString = new Date().toDateString();
 
-    this.consultationSurveyService.add(this.consultationSurveyForm).then((form) => {
-      this.toastrService.success("Consultation Survey submited Successfully!");
-
-      this.emailService.sendTemplateEmail("shane.freed@gmail.com", 'Consultation Survey Template', form);
+    this.webConfigService.getAll().then(config => {
+      return config[0].adminEmailAddress;
+    }).then (email => {
+      this.consultationSurveyService.add(this.consultationSurveyForm).then((form) => {
+        this.toastrService.success("Consultation Survey submited Successfully!");
+        return form;
+      }).then(form => {
+        this.emailService.sendTemplateEmail(email, 'Consultation Survey Template', form);
+      })
     })
+
+
   }
 
 }
