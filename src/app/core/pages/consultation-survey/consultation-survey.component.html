@@ -36,7 +36,7 @@
                 [showColonAfterLabel]="false">
                 <dxi-item dataField="firstName" [isRequired]="true" [label]="{ text: 'First Name' }"></dxi-item>
                 <dxi-item dataField="lastName" [isRequired]="true" [label]="{ text: 'Last Name' }"></dxi-item>
-                <dxi-item dataField="phone" [isRequired]="true" [label]="{ text: 'Phone Number' }" [editorOptions]="phoneEditorOptions">
+                <dxi-item dataField="phone.number" [isRequired]="true" [label]="{ text: 'Phone Number' }" [editorOptions]="phoneEditorOptions">
                   <dxi-validation-rule type="required" message="Phone is required"></dxi-validation-rule>
                 </dxi-item>
                 <dxi-item dataField="email" [isRequired]="true" [label]="{ text: 'Email Address' }">

@@ -1,14 +1,19 @@
+import { DxFormComponent } from 'devextreme-angular';
 import { CoachService } from './../../../../../../impactdisciplescommon/src/services/coach.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DxButtonTypes } from 'devextreme-angular/ui/button';
+import { Timestamp } from 'firebase/firestore';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
-import { LocationModel } from 'impactdisciplescommon/src/models/domain/location.model';
 import { SeminarModel } from 'impactdisciplescommon/src/models/domain/seminar.model';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
+import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
 import { LocationService } from 'impactdisciplescommon/src/services/location.service';
 import { SeminarService } from 'impactdisciplescommon/src/services/seminar.service';
 import { ToastrService } from 'ngx-toastr';
 import { map, Observable } from 'rxjs';
+import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
+import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
+import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 
 @Component({
   selector: 'app-seminar-form',
@@ -16,12 +21,13 @@ import { map, Observable } from 'rxjs';
   styleUrls: ['./seminar-form.component.scss']
 })
 export class SeminarFormComponent implements OnInit {
+  @ViewChild('seminarRequestFormComponent', { static: false }) seminarRequestFormComponent: DxFormComponent;
+
   seminarForm: SeminarModel;
-  locations$: Observable<LocationModel[]>;
   coaches$: Observable<CoachModel[]>;
 
-  constructor(public locationService: LocationService, private seminarService: SeminarService, private toastrService: ToastrService,
-    private coachService: CoachService
+  constructor(public locationService: LocationService, private seminarService: SeminarService, private webConfigService: WebConfigService,
+    private emailService: EMailService, private toastrService: ToastrService, private coachService: CoachService
   ){}
 
   registerButtonOptions: DxButtonTypes.Properties = {
@@ -43,8 +49,8 @@ export class SeminarFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.seminarForm = {...new SeminarModel()};
+    this.seminarForm.phone = {... new Phone()};
 
-    this.locations$ = this.locationService.streamAll();
 
     this.coaches$ = this.coachService.streamAll().pipe(
       map(coaches => {
@@ -56,9 +62,24 @@ export class SeminarFormComponent implements OnInit {
   }
 
   onSubmitForm() {
-    this.seminarService.add(this.seminarForm).then(() => {
-      this.toastrService.success("Seminar Request Form submitted Successfully!");
-    })
+    if(this.seminarRequestFormComponent.instance.validate().isValid) {
+      this.seminarForm.date = Timestamp.now();
+      this.seminarForm.dateString = new Date().toDateString();
+      this.seminarForm.requestedDateString = dateFromTimestamp(this.seminarForm.requestedDate as Timestamp).toDateString();
+      this.seminarForm.requestedStartTimeString = dateFromTimestamp(this.seminarForm.requestedStartTime as Timestamp).toTimeString();
+      this.seminarForm.requestedEndTimeString = dateFromTimestamp(this.seminarForm.requestedEndTime as Timestamp).toTimeString();
+
+      this.webConfigService.getAll().then(config => {
+        return config[0].adminEmailAddress;
+      }).then (email => {
+        this.seminarService.add(this.seminarForm).then((form) => {
+          this.toastrService.success("Seminar Request Form submitted Successfully!");
+          return form;
+        }).then(form => {
+          this.emailService.sendTemplateEmail(email, 'Seminar Template', form);
+        })
+      })
+    }
   }
 
   displayAddress(item: any): string {
