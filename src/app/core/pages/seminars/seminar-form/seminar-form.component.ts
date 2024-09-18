@@ -65,9 +65,9 @@ export class SeminarFormComponent implements OnInit {
     if(this.seminarRequestFormComponent.instance.validate().isValid) {
       this.seminarForm.date = Timestamp.now();
       this.seminarForm.dateString = new Date().toDateString();
-      this.seminarForm.requestedSeminarDateString = dateFromTimestamp(this.seminarForm.requestedSeminarDate as Timestamp).toDateString();
-      this.seminarForm.requestedStartDateTimeString = dateFromTimestamp(this.seminarForm.requestedStartDateTime as Timestamp).toTimeString();
-      this.seminarForm.requestedEndDateTimeString = dateFromTimestamp(this.seminarForm.requestedEndDateTime as Timestamp).toTimeString();
+      this.seminarForm.requestedDateString = dateFromTimestamp(this.seminarForm.requestedDate as Timestamp).toDateString();
+      this.seminarForm.requestedStartTimeString = dateFromTimestamp(this.seminarForm.requestedStartTime as Timestamp).toTimeString();
+      this.seminarForm.requestedEndTimeString = dateFromTimestamp(this.seminarForm.requestedEndTime as Timestamp).toTimeString();
 
       this.webConfigService.getAll().then(config => {
         return config[0].adminEmailAddress;

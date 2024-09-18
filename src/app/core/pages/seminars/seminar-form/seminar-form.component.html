@@ -17,10 +17,10 @@
               [showColonAfterLabel]="false"
             >
               <dxi-item
-                dataField="requestedSeminarDate"
+                dataField="requestedDate"
                 editorType="dxDateBox"
                 [colSpan]="2"
-                [label]="{ text: 'Requested Date' }"
+                [label]="{ text: 'Date' }"
                 [editorOptions]="{
                   displayFormat: 'M/d/yyyy',
                   type: 'date',
@@ -28,10 +28,10 @@
                 }"
               ></dxi-item>
               <dxi-item
-                dataField="requestedStartDateTime"
+                dataField="requestedStartTime"
                 editorType="dxDateBox"
                 [colSpan]="2"
-                [label]="{ text: 'Requested Start Time' }"
+                [label]="{ text: 'Start Time' }"
                 [editorOptions]="{
                   displayFormat: 'HH:mm',
                   type: 'time',
@@ -39,10 +39,10 @@
                 }"
               ></dxi-item>
               <dxi-item
-                dataField="requestedEndDateTime"
+                dataField="requestedEndTime"
                 editorType="dxDateBox"
                 [colSpan]="2"
-                [label]="{ text: 'Requested End Time' }"
+                [label]="{ text: 'End Time' }"
                 [editorOptions]="{
                   displayFormat: 'HH:mm',
                   type: 'time',
@@ -66,7 +66,7 @@
               <!-- TODO: A location id might help here to be able to prefill the address information on location selection-->
               <dxi-item dataField="preferredLocationName" [label]="{ text: 'Location Name' }" [colSpan]="6"></dxi-item>
 
-              <dxi-item itemType="group" caption="Contact Information" [colCount]="6" [colSpan]="6">
+              <dxi-item itemType="group" [colCount]="6" [colSpan]="6">
                 <dxi-item dataField="locationAddress.address1" [isRequired]="true" [label]="{ text: 'Address 1' }" [colSpan]="6"></dxi-item>
                 <dxi-item dataField="locationAddress.address2" [label]="{ text: 'Address 2' }" [colSpan]="6"></dxi-item>
                 <dxi-item dataField="locationAddress.city" [isRequired]="true" [label]="{ text: 'City' }" [colSpan]="3"></dxi-item>
