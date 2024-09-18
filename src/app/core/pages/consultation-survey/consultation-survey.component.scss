@@ -1,14 +1,14 @@
 .breadcrumb.page__title {
-  height: 250px;
+  height: 100px;
 }
 
-::ng-deep .lunch-form {
+::ng-deep .consultation {
   &__button {
     float: right;
   }
 
   .dx-item {
-    margin-top: 30px;
+    margin-top: 10px;
   }
 
   .dx-button-has-text .dx-button-content {

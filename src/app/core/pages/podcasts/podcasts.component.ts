@@ -22,7 +22,7 @@ export class PodcastsComponent implements OnInit {
 
   ngOnInit(): void {
     this.podcastService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((podcasts) => {
-      const sortedPodcasts = podcasts.sort((a, b) => new Date(b.date.toString()).getTime() - new Date(a.date.toString()).getTime());
+      const sortedPodcasts = podcasts.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
       this.selectedPodcast = sortedPodcasts[0];
       this.podcasts = sortedPodcasts.filter(podcast => podcast !== this.selectedPodcast);
     });
