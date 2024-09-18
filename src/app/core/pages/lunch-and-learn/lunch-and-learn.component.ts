@@ -7,5 +7,11 @@ import { UtilsService } from 'src/app/theme/shared/services/utils.service';
   styleUrls: ['./lunch-and-learn.component.scss']
 })
 export class LunchAndLearnComponent  {
+  isPlaying: boolean = false;
+
   constructor(public utilsService: UtilsService) { }
+
+  playVideo(){
+    this.isPlaying = true;
+  }
 }

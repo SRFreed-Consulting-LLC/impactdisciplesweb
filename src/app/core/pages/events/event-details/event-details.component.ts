@@ -62,6 +62,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   decrement() {
     if (this.cartItem.attendees.length > 1) {
       this.cartItem.attendees = this.cartItem.attendees.slice(0, -1);
+      this.cartItem.orderQuantity = this.cartItem.attendees.length;
       this.calculateTotal();
     }
   }

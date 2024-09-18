@@ -5,7 +5,6 @@
     <div class="events__container container">
 
       <!-- EVENTS HEADER - SWIPER -->
-      <!-- TODO:  Make text & buttons different-->
       <section class="events__slider slider__area slider__area-4 p-relative">
         <div class="slider-active swiper-container" #heroSliderContainer>
           <div class="swiper-wrapper">
@@ -16,7 +15,7 @@
                     <h5 class="events__header__pretitle">JOIN US FOR OUR ANNUAL EVENT</h5>
                     <h1 class="events__header__title w-100">Disciple-Making Summit</h1>
                     <hr class="slider-hr">
-                    <a [href]="impactDisciplesInfo.youtube" target="_blank" class="os-btn os-btn-white"><i class="fas fa-right-to-bracket mr-10"></i>REGISTER NOW</a>
+                    <a [routerLink]="['/event-details', dms?.id]" class="os-btn os-btn-white"><i class="fas fa-right-to-bracket mr-10"></i>REGISTER NOW</a>
                   </div>
                 </div>
               </div>
@@ -28,7 +27,7 @@
                     <h5 class="events__header__pretitle">BROUGHT TO YOU BY</h5>
                     <h1 class="events__header__title w-100">Impact Disciples Events</h1>
                     <hr class="slider-hr">
-                    <a href="/contact" target="_blank" class="os-btn os-btn-white"><i class="fas fa-circle-question mr-10"></i>QUESTIONS?</a>
+                    <a href="/contact" class="os-btn os-btn-white"><i class="fas fa-circle-question mr-10"></i>QUESTIONS?</a>
                   </div>
                 </div>
               </div>

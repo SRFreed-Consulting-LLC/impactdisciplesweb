@@ -16,6 +16,7 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
   public canRegisterForDMS: boolean = true;
+  public dms: EventModel;
   public impactDisciplesInfo = impactDisciplesInfo;
   @Input() images: string[] = [
     'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fgroup-session-2.jpg?alt=media&token=9f6c7dad-e31b-4c9e-9eb9-7220cb122c5c',
@@ -37,6 +38,7 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   ngOnInit(): void {
     this.eventService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
       const currentDate = new Date();  
+      this.dms = events.find(event => event.isSummit);
       this.eventsList = events.filter(event => {
         const eventStartDate = new Date(event.startDate.toString());  
         return eventStartDate >= currentDate; 

@@ -78,6 +78,10 @@
     }
   }
 }
+#video-overlay {
+  z-index: 1;
+  position: relative;
+}
 .text-overlay {
   position: relative;
   text-align: center;
