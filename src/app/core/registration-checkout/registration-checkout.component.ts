@@ -1,7 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions } from '@ngxs/store';
+import { add } from 'date-fns';
 import { DxFormComponent } from 'devextreme-angular';
+import { PHONE_TYPES } from 'impactdisciplescommon/src/lists/phone_types.enum';
+import { Role } from 'impactdisciplescommon/src/lists/roles.enum';
+import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
+import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
+import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
+import { AppUserService } from 'impactdisciplescommon/src/services/admin/user.service';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
@@ -36,7 +43,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     },
     maskInvalidMessage: 'The phone must have a correct USA phone format'
   };
-  password: string = ''; 
+  password: string = '';
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -45,7 +52,8 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     private toastrService: ToastrService,
     private authService: AuthService,
     public cartService: CartService,
-    private couponService: CouponService
+    private couponService: CouponService,
+    private userService: AppUserService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -123,17 +131,55 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     if(this.checkoutFormComponent.instance.validate().isValid) {
       e.preventDefault();
       this.setLoading(true);
+
+      if(this.checkoutForm.isCreateAccount){
+        await this.userService.getAllByValue('email', this.checkoutForm.email).then(async users => {
+          if(users && users.length == 0){
+            let newUser: AppUser = {... new AppUser()};
+            newUser.firstName = this.checkoutForm.firstName;
+            newUser.lastName = this.checkoutForm.lastName;
+            newUser.email = this.checkoutForm.email;
+
+            let address = {... new Address()};
+            address.address1 = this.checkoutForm.billingAddress.address1;
+            address.address2 = this.checkoutForm.billingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
+            address.city = this.checkoutForm.billingAddress.city;
+            address.state = this.checkoutForm.billingAddress.state;
+            address.zip = this.checkoutForm.billingAddress.zip;
+            address.country = this.checkoutForm.billingAddress.country;
+
+            newUser.address = address;
+
+            let phone = {... new Phone()}
+            phone.countryCode = '1';
+            phone.number = this.checkoutForm.phone.number;
+            phone.extension = PHONE_TYPES.CELL;
+
+            newUser.phone = phone;
+
+            newUser.role = Role.CUSTOMER;
+            await this.userService.add(newUser).then(async user => {
+              await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
+                if (result.isOk) {
+                  this.toastrService.success('Success', 'Your account has been created.', {
+                    timeOut: 10000,
+                  });
+                } else {
+                  this.toastrService.error('Error','There was an error creating your account: ' + result.message, {
+                    timeOut: 10000,
+                  });
+                }
+              })
+            });
+          } else  {
+            this.toastrService.success('Warning', 'An account with this email already exists.', {
+              timeOut: 10000,
+            })
+          }
+        })
+      }
+
       let response = await this.stripeService.getStripe().then(async stripe => {
-        if(this.checkoutForm.isCreateAccount) {
-          this.authService.createAccount(this.checkoutForm.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
-            if (result.isOk) {
-              this.toastrService.success('Your account has been created.');
-            } else {
-              this.toastrService.error('There was an error creating your account: ' + result.message);
-            }
-  
-          })
-        }
         return await stripe.confirmPayment({
           elements: this.elements,
           confirmParams: {

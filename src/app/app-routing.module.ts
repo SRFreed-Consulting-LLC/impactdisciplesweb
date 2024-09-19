@@ -40,12 +40,12 @@ import { RegistrationCheckoutSuccessComponent } from './core/registration-checko
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: HomeComponent
-  // },
   {
     path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'register',
     component: RegistrationComponent
   },
   {
