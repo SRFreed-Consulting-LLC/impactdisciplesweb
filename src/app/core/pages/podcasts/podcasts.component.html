@@ -27,7 +27,7 @@
     <section class="podcasts__latest mt-80">
       <h1 class="text-center">{{ selectedPodcast?.title }}</h1>
       <hr class="custom-hr">
-      <youtube-player class="mt-50" [videoId]="selectedPodcast?.subject" [width]="800" suggestedQuality="highres"></youtube-player>
+      <youtube-player *ngIf="selectedPodcast?.videoType == 'Youtube'" class="mt-50" [videoId]="selectedPodcast?.videoId" [width]="800" suggestedQuality="highres"></youtube-player>
     </section>
 
     <hr>
