@@ -1,3 +1,5 @@
+import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
+import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions } from '@ngxs/store';
@@ -18,6 +20,7 @@ import { CartItem, CheckoutForm } from 'src/app/shared/models/cart.model';
 import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-registration-checkout',
@@ -53,7 +56,8 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     public cartService: CartService,
     private couponService: CouponService,
-    private userService: AppUserService
+    private userService: AppUserService,
+    private newsletterSubscriptionService: NewsletterSubscriptionService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -114,9 +118,6 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
 
           const paymentElement = this.elements.create("payment", paymentElementOptions);
           paymentElement.mount("#payment-element");
-
-
-
         }
       }, 0);  // Ensures form is rendered before Stripe is initialized
 
@@ -127,10 +128,18 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
   }
 
   async handleSubmit(e) {
-
     if(this.checkoutFormComponent.instance.validate().isValid) {
       e.preventDefault();
       this.setLoading(true);
+
+      if(this.checkoutForm.isNewsletter){
+        let subscriber: NewsletterSubscriptionModel = {...new NewsletterSubscriptionModel()};
+        subscriber.firstName = this.checkoutForm.firstName;
+        subscriber.lastName = this.checkoutForm.lastName;
+        subscriber.email = this.checkoutForm.email;
+        subscriber.date = Timestamp.now();
+        this.newsletterSubscriptionService.add(subscriber);
+      }
 
       if(this.checkoutForm.isCreateAccount){
         await this.userService.getAllByValue('email', this.checkoutForm.email).then(async users => {
@@ -200,35 +209,6 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
         this.showMessage("An unexpected error occurred.", 'ERROR');
       }
       this.setLoading(false);
-    }
-  }
-
-  async checkStatus() {
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
-
-    if (!clientSecret) {
-      return;
-    }
-
-    const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
-      return await stripe.retrievePaymentIntent(clientSecret);
-    })
-
-    switch (paymentIntent.status) {
-      case "succeeded":
-        this.showMessage("Payment succeeded!", 'SUCCESS');
-        break;
-      case "processing":
-        this.showMessage("Your payment is processing.", 'INFO');
-        break;
-      case "requires_payment_method":
-        this.showMessage("Your payment was not successful, please try again.", 'ERROR');
-        break;
-      default:
-        this.showMessage("Something went wrong.", 'ERROR');
-        break;
     }
   }
 
