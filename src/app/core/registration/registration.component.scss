@@ -1,0 +1,81 @@
+@import '../../../assets/theme/scss/variables';
+
+.event-details {
+  &__left {
+    img {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+    .no-agenda {
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      font-size: 30px;
+      line-height: 1;
+      padding: 50px;
+      color: #727272;
+      border: 1px solid #eaedff;
+      background-color: #f5f6fb;
+    }
+    .agenda {
+      td {
+        border: none;
+      }
+      &__date {
+        display: flex;
+        flex-direction: column;
+        font-size: 20px;
+        margin-top: 30px;
+        width: 60px;
+        height: 80px;
+        justify-content: center;
+        border: 2px solid $theme-color;
+        text-align: center;
+        line-height: 1.2;
+        &-number {
+          font-weight: 700;
+          color: black;
+          font-size: 25px;
+        }
+      }
+      &__group {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        border-bottom: 1px solid $theme-color;
+        &-time {
+          margin-left: 15px;
+        }
+      }
+    }
+  }
+
+  &__right {
+    padding: 0 50px;
+    text-align: center;
+
+    &-subtitle {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 20px 0;
+      .date {
+        color: $theme-color;
+        font-weight: 700;
+      }
+    }
+
+    &-ticket-number {
+      display: flex;
+      justify-content: center;
+      ::ng-deep input {
+        text-align: center;
+      }
+    }
+
+    .cart-page-total {
+      text-align: left;
+    }
+  }
+}

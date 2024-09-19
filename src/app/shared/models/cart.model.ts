@@ -31,4 +31,5 @@ export interface CheckoutForm {
   total?: number;
   receipt?: string;
   isNewsletter?: boolean;
+  isCreateAccount?: boolean;
 }

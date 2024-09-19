@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule, DxSelectBoxModule, DxLoadIndicatorModule } from "devextreme-angular";
+import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule, DxSelectBoxModule, DxLoadIndicatorModule, DxCheckBoxModule, DxTextBoxModule } from "devextreme-angular";
 import { SharedModule } from "../shared/shared.module";
 import { HomeHeaderComponent } from "./home/home-header/home-header.component";
 import { HomeComponent } from "./home/home.component";
@@ -40,6 +40,9 @@ import { TeamDetailsComponent } from './pages/team/team-details/team-details.com
 import { BlogDetailsComponent } from './pages/blog-details/blog-details.component';
 import { BlogSidebarComponent } from './pages/blog/blog-sidebar/blog-sidebar.component';
 import { BlogPostboxItemComponent } from './pages/blog/blog-postbox-item/blog-postbox-item.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { RegistrationCheckoutComponent } from './registration-checkout/registration-checkout.component';
+import { RegistrationCheckoutSuccessComponent } from './registration-checkout-success/registration-checkout-success.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +78,10 @@ import { BlogPostboxItemComponent } from './pages/blog/blog-postbox-item/blog-po
     TeamDetailsComponent,
     BlogDetailsComponent,
     BlogSidebarComponent,
-    BlogPostboxItemComponent
+    BlogPostboxItemComponent,
+    RegistrationComponent,
+    RegistrationCheckoutComponent,
+    RegistrationCheckoutSuccessComponent
   ],
   imports: [
     CommonModule,
@@ -94,7 +100,9 @@ import { BlogPostboxItemComponent } from './pages/blog/blog-postbox-item/blog-po
     DxRadioGroupModule,
     DxTextAreaModule,
     DxSelectBoxModule,
-    DxLoadIndicatorModule
+    DxLoadIndicatorModule,
+    DxCheckBoxModule,
+    DxTextBoxModule
   ],
   exports: [
     HomeComponent,
