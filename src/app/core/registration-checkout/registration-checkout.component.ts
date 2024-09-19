@@ -21,6 +21,7 @@ import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 import { Timestamp } from 'firebase/firestore';
+import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 
 @Component({
   selector: 'app-registration-checkout',
@@ -47,6 +48,8 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     maskInvalidMessage: 'The phone must have a correct USA phone format'
   };
   password: string = '';
+
+  public states: string[];
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -79,6 +82,8 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
       isCreateAccount: false
     }
     this.orignalTotal = this.checkoutForm.total;
+
+    this.states = EnumHelper.getStateRoleTypesAsArray();
   }
 
   async toggleForm(): Promise<void> {

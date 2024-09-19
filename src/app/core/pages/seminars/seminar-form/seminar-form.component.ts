@@ -14,6 +14,7 @@ import { map, Observable } from 'rxjs';
 import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
 import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
+import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 
 @Component({
   selector: 'app-seminar-form',
@@ -47,9 +48,12 @@ export class SeminarFormComponent implements OnInit {
     valueChangeEvent: 'keyup',
   };
 
+  public states: string[];
+
   ngOnInit(): void {
     this.seminarForm = {...new SeminarModel()};
     this.seminarForm.phone = {... new Phone()};
+    this.seminarForm.preferredLocation = {... new Address()};
 
 
     this.coaches$ = this.coachService.streamAll().pipe(
@@ -59,6 +63,8 @@ export class SeminarFormComponent implements OnInit {
         return coaches;
       })
     );
+
+    this.states = EnumHelper.getStateRoleTypesAsArray();
   }
 
   onSubmitForm() {

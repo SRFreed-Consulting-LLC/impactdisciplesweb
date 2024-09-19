@@ -59,7 +59,14 @@
               <dxi-item dataField="billingAddress.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
               <dxi-item dataField="billingAddress.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
               <dxi-item dataField="billingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
-              <dxi-item dataField="billingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
+              <dxi-item dataField="billingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
+                <div *dxTemplate>
+                  <dx-select-box
+                    [items]="states"
+                    [(value)]="checkoutForm.billingAddress.state">
+                  </dx-select-box>
+                </div>
+              </dxi-item>
               <dxi-item dataField="billingAddress.zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
               <dxi-item
                 dataField="billingAddress.country"

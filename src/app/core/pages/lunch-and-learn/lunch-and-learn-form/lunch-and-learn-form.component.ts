@@ -8,6 +8,7 @@ import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model
 import { LunchAndLearnService } from 'impactdisciplescommon/src/services/lunch-and-learn.service';
 import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
+import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -28,6 +29,8 @@ export class LunchAndLearnFormComponent implements OnInit {
     valueChangeEvent: 'keyup',
   };
 
+  public states: string[];
+
   constructor(private lunchAndLearnService: LunchAndLearnService, private webConfigService: WebConfigService,
     private emailService: EMailService, private toastrService: ToastrService
   ){}
@@ -35,6 +38,9 @@ export class LunchAndLearnFormComponent implements OnInit {
   ngOnInit(): void {
     this.lunchRequestForm = {... new LunchAndLearnModel()};
     this.lunchRequestForm.coordinatorPhone = {... new Phone()};
+    this.lunchRequestForm.locationAddress = {... new Address()};
+
+    this.states = EnumHelper.getStateRoleTypesAsArray();
   }
 
   onSubmitForm() {

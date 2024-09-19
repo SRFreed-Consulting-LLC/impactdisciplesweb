@@ -53,7 +53,14 @@
                 <dxi-item dataField="locationAddress.address1" [isRequired]="true" [label]="{ text: 'Address 1' }" [colSpan]="6"></dxi-item>
                 <dxi-item dataField="locationAddress.address2" [label]="{ text: 'Address 2' }" [colSpan]="6"></dxi-item>
                 <dxi-item dataField="locationAddress.city" [isRequired]="true" [label]="{ text: 'City' }" [colSpan]="3"></dxi-item>
-                <dxi-item dataField="locationAddress.state" [isRequired]="true" [label]="{ text: 'State' }"  [colSpan]="2"></dxi-item>
+                <dxi-item dataField="locationAddress.state" [isRequired]="true" [label]="{ text: 'State' }"  [colSpan]="2">
+                  <div *dxTemplate>
+                    <dx-select-box
+                      [items]="states"
+                      [(value)]="lunchRequestForm.locationAddress.state">
+                    </dx-select-box>
+                  </div>
+                </dxi-item>
                 <dxi-item dataField="locationAddress.zip" [isRequired]="true" [label]="{ text: 'Zip' }"  [colSpan]="1"></dxi-item>
               </dxi-item>
               <dxi-item dataField="coordinator" [isRequired]="true" [label]="{ text: 'Event Coordinator' }"></dxi-item>
