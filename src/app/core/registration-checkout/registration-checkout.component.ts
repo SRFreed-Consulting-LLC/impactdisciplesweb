@@ -40,7 +40,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
   orignalTotal: number = 0;
   isPercent: boolean = false;
   phoneEditorOptions = {
-    mask: '+1 (X00) 000-0000',
+    mask: '(X00) 000-0000',
     maskRules: {
       X: /[02-9]/,
     },

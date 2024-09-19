@@ -20,7 +20,7 @@ export class LunchAndLearnFormComponent implements OnInit {
   lunchRequestForm: LunchAndLearnModel;
 
   phoneEditorOptions = {
-    mask: '+1 (X00) 000-0000',
+    mask: '(X00) 000-0000',
     maskRules: {
       X: /[02-9]/,
     },

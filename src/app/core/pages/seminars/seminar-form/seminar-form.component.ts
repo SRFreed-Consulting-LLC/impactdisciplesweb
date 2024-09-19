@@ -39,7 +39,7 @@ export class SeminarFormComponent implements OnInit {
   phonePattern = /^[02-9]\d{9}$/;
 
   phoneEditorOptions = {
-    mask: '+1 (X00) 000-0000',
+    mask: '(X00) 000-0000',
     maskRules: {
       X: /[02-9]/,
     },
