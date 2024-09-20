@@ -35,5 +35,5 @@ export interface CheckoutForm extends BaseModel {
   isNewsletter?: boolean;
   isCreateAccount?: boolean;
   couponCode?: string;
-  paymentIntent?: PaymentIntent;
+  paymentIntent?: PaymentIntent | string;
 }

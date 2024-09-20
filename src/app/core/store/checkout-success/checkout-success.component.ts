@@ -60,8 +60,8 @@ export class CheckoutSuccessComponent implements AfterViewInit{
         }
       })
     } else {
-      await this.handleSale(null).then(cart => {
-        this.showMessage("Yopu have been successfully Registered!");
+      await this.handleSale("COUPON").then(cart => {
+        this.showMessage("You have been successfully Registered!");
         this.registerUsers(cart.couponCode);
       });
     }
@@ -72,11 +72,10 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     messageContainer.textContent = messageText;
   }
 
-  async handleSale(paymentIntent: PaymentIntent){
+  async handleSale(paymentIntent: PaymentIntent | string){
     //send email
     return await this.salesService.getById(this.saleId).then(async cart => {
       cart.paymentIntent = paymentIntent;
-      console.log(cart);
       return await this.salesService.update(cart.id, cart);
     })
   }
