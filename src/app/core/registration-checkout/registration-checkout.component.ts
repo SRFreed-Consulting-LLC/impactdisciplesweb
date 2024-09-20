@@ -1,9 +1,6 @@
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
 import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { Actions } from '@ngxs/store';
-import { add } from 'date-fns';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
 import { PHONE_TYPES } from 'impactdisciplescommon/src/lists/phone_types.enum';
 import { Role } from 'impactdisciplescommon/src/lists/roles.enum';
@@ -16,12 +13,12 @@ import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.s
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
-import { CartItem, CheckoutForm } from 'src/app/shared/models/cart.model';
 import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 import { Timestamp } from 'firebase/firestore';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
+import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 
 @Component({
   selector: 'app-registration-checkout',

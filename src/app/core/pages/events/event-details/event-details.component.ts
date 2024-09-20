@@ -4,9 +4,9 @@ import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model'
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
 import { Subject, takeUntil } from 'rxjs';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
-import { CartItem } from 'src/app/shared/models/cart.model';
 import { DxFormComponent } from 'devextreme-angular';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
+import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 
 @Component({
   selector: 'app-event-details',
@@ -40,7 +40,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
         if(this.event.agendaItems) {
           this.groupAgendaItemsByMonthAndDate(this.event.agendaItems);
         }
-        this.calculateTotal(); 
+        this.calculateTotal();
       })
     } else {
       this.router.navigate(['/events']);
@@ -58,7 +58,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.cartItem.orderQuantity = this.cartItem.attendees.length;
     this.calculateTotal();
   }
-  
+
   decrement() {
     if (this.cartItem.attendees.length > 1) {
       this.cartItem.attendees = this.cartItem.attendees.slice(0, -1);
@@ -82,23 +82,23 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     const groupedByMonthYear = agendaItems.reduce((acc, item) => {
       const monthYearKey = new Date(item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' });
       const dateKey = new Date(item.startDate).toDateString();
-      
+
       if (!acc[monthYearKey]) {
         acc[monthYearKey] = {};
       }
-      
+
       if (!acc[monthYearKey][dateKey]) {
         acc[monthYearKey][dateKey] = [];
       }
-  
+
       acc[monthYearKey][dateKey].push(item);
       return acc;
     }, {} as { [monthYear: string]: { [date: string]: AgendaItem[] } });
-  
+
     this.groupedAgendaItems = Object.keys(groupedByMonthYear).map(monthYear => ({
       monthYear: monthYear,
       days: Object.keys(groupedByMonthYear[monthYear])
-        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime()) 
+        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
         .map(date => ({
           date: new Date(date),
           items: groupedByMonthYear[monthYear][date],

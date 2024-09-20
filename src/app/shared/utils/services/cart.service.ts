@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CartItem } from "../../models/cart.model";
+import { CartItem } from "../../../../../impactdisciplescommon/src/models/utils/cart.model";
 import { ToastrService } from "ngx-toastr";
 
 const state = {

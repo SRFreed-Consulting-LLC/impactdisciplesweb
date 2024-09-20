@@ -3,7 +3,6 @@ import { DxFormComponent } from 'devextreme-angular';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
-import { CartItem, CheckoutForm } from 'src/app/shared/models/cart.model';
 import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
@@ -13,7 +12,7 @@ import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.s
 import { Router } from '@angular/router';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
-
+import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 
 @Component({
   selector: 'app-checkout',

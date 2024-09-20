@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { DxFormComponent } from 'devextreme-angular';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
+import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
 import { Subject, takeUntil } from 'rxjs';
-import { CartItem } from 'src/app/shared/models/cart.model';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 @Component({
@@ -35,7 +35,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         isEvent: true,
         attendees: [{ firstName: '', lastName: '', email: '' }]
       }
-      this.calculateTotal(); 
+      this.calculateTotal();
     })
   }
 
@@ -50,7 +50,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.cartItem.orderQuantity = this.cartItem.attendees.length;
     this.calculateTotal();
   }
-  
+
   decrement() {
     if (this.cartItem.attendees.length > 1) {
       this.cartItem.attendees = this.cartItem.attendees.slice(0, -1);
