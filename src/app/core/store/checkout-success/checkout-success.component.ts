@@ -75,6 +75,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   async handleSale(paymentIntent: PaymentIntent | string){
     //send email
     return await this.salesService.getById(this.saleId).then(async cart => {
+      cart.dateProcessed = Timestamp.now();
       cart.paymentIntent = paymentIntent;
       return await this.salesService.update(cart.id, cart);
     })
