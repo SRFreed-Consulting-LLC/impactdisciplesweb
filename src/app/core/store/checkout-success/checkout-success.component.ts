@@ -1,9 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
+import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { ToastrService } from 'ngx-toastr';
@@ -16,42 +18,67 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 })
 export class CheckoutSuccessComponent implements AfterViewInit{
 
-  constructor(private stripeService: StripeService, public cartService: CartService, private eventRegistrationService: EventRegistrationService,
-    private emailService: EMailService, private eventService: EventService, private toastrService: ToastrService){}
+  saleId: string;
+
+  constructor(private stripeService: StripeService,
+    public cartService: CartService,
+    private eventRegistrationService: EventRegistrationService,
+    private emailService: EMailService,
+    private eventService: EventService,
+    private salesService: SalesService,
+    private toastrService: ToastrService){}
 
   async ngAfterViewInit() {
     const clientSecret = new URLSearchParams(window.location.search).get(
       "payment_intent_client_secret"
     );
 
-    if (!clientSecret) {
-      return;
-    }
+    this.saleId = new URLSearchParams(window.location.search).get(
+      "savedForm"
+    );
 
-    const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
-      return await stripe.retrievePaymentIntent(clientSecret);
-    })
+    if (clientSecret) {
+      const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
+        return await stripe.retrievePaymentIntent(clientSecret);
+      })
 
-    switch (paymentIntent.status) {
-      case "succeeded":
-        this.showMessage("Payment succeeded!");
-        this.registerUsers(paymentIntent.id);
-        break;
-      case "processing":
-        this.showMessage("Your payment is processing.");
-        break;
-      case "requires_payment_method":
-        this.showMessage("Your payment was not successful, please try again.");
-        break;
-      default:
-        this.showMessage("Something went wrong.");
-        break;
+      await this.handleSale(paymentIntent).then(cart => {
+        switch (paymentIntent.status) {
+          case "succeeded":
+            this.showMessage("Payment succeeded!");
+            this.registerUsers(paymentIntent.id);
+            break;
+          case "processing":
+            this.showMessage("Your payment is processing.");
+            break;
+          case "requires_payment_method":
+            this.showMessage("Your payment was not successful, please try again.");
+            break;
+          default:
+            this.showMessage("Something went wrong.");
+            break;
+        }
+      })
+    } else {
+      await this.handleSale(null).then(cart => {
+        this.showMessage("Yopu have been successfully Registered!");
+        this.registerUsers(cart.couponCode);
+      });
     }
   }
 
   showMessage(messageText) {
     const messageContainer = document.querySelector("#payment-message");
     messageContainer.textContent = messageText;
+  }
+
+  async handleSale(paymentIntent: PaymentIntent){
+    //send email
+    return await this.salesService.getById(this.saleId).then(async cart => {
+      cart.paymentIntent = paymentIntent;
+      console.log(cart);
+      return await this.salesService.update(cart.id, cart);
+    })
   }
 
   registerUsers(confirmationId){

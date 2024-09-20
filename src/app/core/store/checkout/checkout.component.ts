@@ -12,6 +12,7 @@ import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/au
 import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.service';
 import { Router } from '@angular/router';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
+import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   orignalTotal: number = 0;
   isPercent: boolean = false;
 
+  paymentIntent: string;
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -47,20 +49,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     public cartService: CartService,
     private couponService: CouponService,
+    private salesService: SalesService,
     private router: Router
   ) {}
 
   async ngOnInit(): Promise<void> {
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
 
-    if (!clientSecret) {
-      this.status = "REQUEST"
-    } else {
-      this.status = "RESPONSE"
-    }
-    this.toggleForm()
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       total: this.cartService.totalPriceQuantity().total,
@@ -68,6 +62,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       isNewsletter: true
     }
     this.orignalTotal = this.checkoutForm.total;
+
+    this.toggleForm()
 
     this.actions$.pipe(
       ofActionDispatched(UserAuthenticated),
@@ -96,111 +92,105 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async toggleForm(): Promise<void> {
-    try {
-      setTimeout(async () => {
-        const paymentForm = document.querySelector("#payment-form");
-        if (paymentForm) {
-          paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
+    if(this.checkoutForm.total && this.checkoutForm.total > 0){
+      try {
+        setTimeout(async () => {
+          const paymentForm = document.querySelector("#payment-form");
+          if (paymentForm) {
+            paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
 
-          this.items = [];
+            this.items = [];
 
-          this.cartService.getCartProducts().forEach(product => {
-            if(product.isEvent){
-              this.items.push({id: product.id, amount: (this.checkoutForm.total * 100)})
+            this.cartService.getCartProducts().forEach(product => {
+              if(product.isEvent){
+                this.items.push({id: product.id, amount: (this.checkoutForm.total * 100)})
+              }
+            })
+
+            // Fetch client secret for Stripe payment
+            const response = await fetch(environment.stripeURL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(this.items),
+            })
+
+            if (!response.ok) {
+              throw new Error('Failed to fetch client secret: ' + JSON.stringify(response));
             }
-          })
 
-          // Fetch client secret for Stripe payment
-          const response = await fetch(environment.stripeURL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(this.items),
-          });
+            const { clientSecret, paymentIntent } = await response.json();
 
-          if (!response.ok) {
-            throw new Error('Failed to fetch client secret');
+            this.paymentIntent = paymentIntent;
+
+            // Initialize Stripe Elements
+            this.elements = (await this.stripeService.getStripe()).elements({ clientSecret });
+
+            const paymentElementOptions = {
+              layout: "tabs",
+            };
+
+            const paymentElement = this.elements.create("payment", paymentElementOptions);
+            paymentElement.mount("#payment-element");
+
+
+
           }
+        }, 0);  // Ensures form is rendered before Stripe is initialized
 
-          const { clientSecret } = await response.json();
+      } catch (error) {
 
-          // Initialize Stripe Elements
-          this.elements = (await this.stripeService.getStripe()).elements({ clientSecret });
+        this.showMessage('Failed to load payment form. Please try again.', 'ERROR');
+      }
+    } else {
+      const paymentForm = document.querySelector("#payment-form");
+      if(paymentForm){
+        paymentForm.remove();
+      }
 
-          const paymentElementOptions = {
-            layout: "tabs",
-          };
-
-          const paymentElement = this.elements.create("payment", paymentElementOptions);
-          paymentElement.mount("#payment-element");
-
-
-
-        }
-      }, 0);  // Ensures form is rendered before Stripe is initialized
-
-    } catch (error) {
-
-      this.showMessage('Failed to load payment form. Please try again.', 'ERROR');
     }
   }
 
   async handleSubmit(e) {
+      let savedForm: CheckoutForm = await this.salesService.add(this.checkoutForm);
 
-    if(this.checkoutFormComponent.instance.validate().isValid) {
-      e.preventDefault();
-      this.setLoading(true);
-      let response = await this.stripeService.getStripe().then(async stripe => {
-        return await stripe.confirmPayment({
-          elements: this.elements,
-          confirmParams: {
-            // Make sure to change this to your payment completion page
-            return_url: environment.domain + "/checkout-success",
-          },
-        });
-      })
+      if(this.checkoutForm.total > 0){
+        if(this.checkoutFormComponent.instance.validate().isValid) {
+          e.preventDefault();
+          this.setLoading(true);
 
-      // This point will only be reached if there is an immediate error when
-      // confirming the payment. Otherwise, your customer will be redirected to
-      // your `return_url`. For some payment methods like iDEAL, your customer will
-      // be redirected to an intermediate site first to authorize the payment, then
-      // redirected to the `return_url`.
-      if (response.error.type === "card_error" || response.error.type === "validation_error") {
-        this.showMessage(response.error.message, 'ERROR');
+          let response = await this.stripeService.getStripe().then(async stripe => {
+            return await stripe.confirmPayment({
+              elements: this.elements,
+              confirmParams: {
+                // Make sure to change this to your payment completion page
+                return_url: environment.domain + "/checkout-success?savedForm=" + savedForm.id,
+              },
+            })
+          })
+
+          // This point will only be reached if there is an immediate error when
+          // confirming the payment. Otherwise, your customer will be redirected to
+          // your `return_url`. For some payment methods like iDEAL, your customer will
+          // be redirected to an intermediate site first to authorize the payment, then
+          // redirected to the `return_url`.
+          if (response.error.type === "card_error" || response.error.type === "validation_error") {
+            this.showMessage(response.error.message, 'ERROR');
+          } else {
+            this.showMessage("An unexpected error occurred.", 'ERROR');
+          }
+
+          this.setLoading(false);
+        }
       } else {
-        this.showMessage("An unexpected error occurred.", 'ERROR');
+        await fetch(environment.stripeCancelURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
+        });
+
+        this.router.navigate(['/', 'checkout-success'], {queryParams: {savedForm: savedForm.id}});
       }
 
-      this.setLoading(false);
-    }
-  }
-
-  async checkStatus() {
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
-
-    if (!clientSecret) {
-      return;
-    }
-
-    const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
-      return await stripe.retrievePaymentIntent(clientSecret);
-    })
-
-    switch (paymentIntent.status) {
-      case "succeeded":
-        this.showMessage("Payment succeeded!", 'SUCCESS');
-        break;
-      case "processing":
-        this.showMessage("Your payment is processing.", 'INFO');
-        break;
-      case "requires_payment_method":
-        this.showMessage("Your payment was not successful, please try again.", 'ERROR');
-        break;
-      default:
-        this.showMessage("Something went wrong.", 'ERROR');
-        break;
-    }
   }
 
   // ------- UI helpers -------
@@ -296,6 +286,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               this.discountAmount = Math.min(this.discountAmount, total);
               this.checkoutForm.total = total - this.discountAmount;
             }
+
+            this.checkoutForm.couponCode = validCoupon.code;
 
             this.showMessage("Coupon applied successfully.", 'SUCCESS');
           } else {

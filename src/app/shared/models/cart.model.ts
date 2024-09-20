@@ -1,3 +1,5 @@
+import { PaymentIntent } from "@stripe/stripe-js";
+import { BaseModel } from "impactdisciplescommon/src/models/base.model";
 import { Address } from "impactdisciplescommon/src/models/domain/utils/address.model";
 import { Phone } from "impactdisciplescommon/src/models/domain/utils/phone.model";
 
@@ -19,7 +21,7 @@ export interface Attendee {
   receipt?: string;
 }
 
-export interface CheckoutForm {
+export interface CheckoutForm extends BaseModel {
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -32,4 +34,6 @@ export interface CheckoutForm {
   receipt?: string;
   isNewsletter?: boolean;
   isCreateAccount?: boolean;
+  couponCode?: string;
+  paymentIntent?: PaymentIntent;
 }
