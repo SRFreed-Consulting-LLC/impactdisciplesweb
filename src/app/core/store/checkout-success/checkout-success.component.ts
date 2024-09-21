@@ -2,9 +2,11 @@ import { AfterViewInit, Component } from '@angular/core';
 import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
+import { AffilliateSalesModel } from 'impactdisciplescommon/src/models/utils/affilliate-sales.model';
 import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
+import { AffilliateSalesService } from 'impactdisciplescommon/src/services/utils/affiliate-sales.service';
 import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
@@ -26,6 +28,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private emailService: EMailService,
     private eventService: EventService,
     private salesService: SalesService,
+    private affiliateSaleService: AffilliateSalesService,
     private toastrService: ToastrService){}
 
   async ngAfterViewInit() {
@@ -77,6 +80,17 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     return await this.salesService.getById(this.saleId).then(async cart => {
       cart.dateProcessed = Timestamp.now();
       cart.paymentIntent = paymentIntent;
+
+      if(cart.couponCode){
+        let sale: AffilliateSalesModel = {... new AffilliateSalesModel()};
+        sale.code = cart.couponCode;
+        sale.date = Timestamp.now();
+        sale.email = cart.email;
+        sale.totalAfterDiscount = cart.total;
+        sale.totalBeforeDiscount = cart.totalBeforeDiscount;
+        await this.affiliateSaleService.add(sale);
+      }
+
       return await this.salesService.update(cart.id, cart);
     })
   }
