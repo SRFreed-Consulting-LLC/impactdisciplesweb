@@ -57,6 +57,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       total: this.cartService.totalPriceQuantity().total,
+      totalBeforeDiscount: this.cartService.totalPriceQuantity().total,
       isShippingSameAsBilling: true,
       isNewsletter: true
     }
