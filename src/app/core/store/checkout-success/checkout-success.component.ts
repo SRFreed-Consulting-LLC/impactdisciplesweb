@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
-import { AffilliateSalesModel } from 'impactdisciplescommon/src/models/utils/affilliate-sales.model';
+import { AffilliateSaleModel } from 'impactdisciplescommon/src/models/utils/affilliate-sale.model';
 import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
@@ -82,7 +82,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       cart.paymentIntent = paymentIntent;
 
       if(cart.couponCode){
-        let sale: AffilliateSalesModel = {... new AffilliateSalesModel()};
+        let sale: AffilliateSaleModel = {... new AffilliateSaleModel()};
         sale.code = cart.couponCode;
         sale.date = Timestamp.now();
         sale.email = cart.email;
