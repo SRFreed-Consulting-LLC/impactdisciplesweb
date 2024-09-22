@@ -43,6 +43,9 @@ import { BlogPostboxItemComponent } from './pages/blog/blog-postbox-item/blog-po
 import { RegistrationComponent } from './registration/registration.component';
 import { RegistrationCheckoutComponent } from './registration-checkout/registration-checkout.component';
 import { RegistrationCheckoutSuccessComponent } from './registration-checkout-success/registration-checkout-success.component';
+import { StoreSidebarComponent } from './pages/store/store-sidebar/store-sidebar.component';
+import { StorePostboxItemComponent } from './pages/store/store-postbox-item/store-postbox-item.component';
+import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +84,10 @@ import { RegistrationCheckoutSuccessComponent } from './registration-checkout-su
     BlogPostboxItemComponent,
     RegistrationComponent,
     RegistrationCheckoutComponent,
-    RegistrationCheckoutSuccessComponent
+    RegistrationCheckoutSuccessComponent,
+    StoreSidebarComponent,
+    StorePostboxItemComponent,
+    ProductDetailsComponent
   ],
   imports: [
     CommonModule,

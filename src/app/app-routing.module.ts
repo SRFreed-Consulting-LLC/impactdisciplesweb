@@ -37,6 +37,7 @@ import { BlogDetailsComponent } from './core/pages/blog-details/blog-details.com
 import { RegistrationComponent } from './core/registration/registration.component';
 import { RegistrationCheckoutComponent } from './core/registration-checkout/registration-checkout.component';
 import { RegistrationCheckoutSuccessComponent } from './core/registration-checkout-success/registration-checkout-success.component';
+import { ProductDetailsComponent } from './core/pages/product-details/product-details.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -123,6 +124,10 @@ const routes: Routes = [
   {
     path: 'store',
     component: StoreComponent
+  },
+  {
+    path: 'product-details/:id',
+    component: ProductDetailsComponent
   },
   {
     path: 'shopping-cart',

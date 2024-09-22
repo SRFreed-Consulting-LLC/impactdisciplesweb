@@ -167,6 +167,7 @@
                           {{ attendee.firstName }} {{ attendee.lastName }}
                         </div>
                       </td>
+                      <td *ngIf="!cartItem.isEvent"></td>
                       <td class="product-total text-right">
                         <span class="amount">${{ cartItem?.price }}</span>
                       </td>

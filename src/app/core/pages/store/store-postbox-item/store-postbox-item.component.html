@@ -1,0 +1,15 @@
+<div class="product__item product__border-bottom mb-30 pb-60">
+  <div class="product__thumb fix">
+      <a [routerLink]="['/product-details', product?.id]">
+        <img class="product__img" [src]="product?.imageUrl?.url" alt="product">
+      </a>
+  </div>
+  <div class="product__content">
+      <h4>
+        <strong><a [routerLink]="['/product-details', product?.id]">{{product?.title}}</a></strong>
+      </h4>
+      <h5><strong>$ {{ product.cost }}</strong></h5>
+      <p class="truncate" [innerHTML]="product?.description"></p>
+      <a [routerLink]="['/product-details', product?.id]" class="os-btn">view</a>
+  </div>
+</div>

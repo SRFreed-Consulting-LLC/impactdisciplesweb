@@ -1,0 +1,110 @@
+<app-home-header></app-home-header>
+
+<main>
+  <app-breadcrumb [currentPageName]="product?.title" [bgColor]="'#1F1F1F'" [previousLink]="'/store'" [previousLinkName]="'Store'" [isDark]="true"></app-breadcrumb>
+
+  <section class="shop__area pb-65">
+    <div class="shop__top grey-bg-6 pt-100 pb-90">
+      <div class="container">
+        <div class="row">
+          <div [ngClass]="'col-xl-5 col-lg-5 col-md-6 col-sm-12 col-12'">
+ 
+            <div class="product__modal-box">
+              <div class="mb-20">
+                <div class="product__modal-img w-img">
+                  <img [src]="product?.imageUrl?.url" alt="product-img">
+                </div>
+              </div>
+            </div>
+        
+          </div>
+        
+          <div [ngClass]="'col-xl-7 col-lg-7 col-md-6 col-sm-12 col-12'">
+            <div class="product__modal-content product__modal-content-2">
+              <h4><a [routerLink]="['/shop/shop-details', product?.id]">{{product?.title}}</a></h4>
+              <div class="product__price-2 mb-25">
+                <span>${{product?.cost.toFixed(2)}}</span>
+              </div>
+              <div class="product__modal-des mb-30">
+                <p [innerHTML]="product?.description"></p>
+              </div>
+              <div class="product__modal-form mb-30">
+                <form action="#">
+                  <div class="pro-quan-area d-sm-flex align-items-center">
+                    <div class="product-quantity-title">
+                      <label>Quantity</label>
+                    </div>
+                    <div class="product-quantity mr-20 mb-20">
+                      <div class="cart-plus-minus">
+                        <input type="text" [value]="cartItem?.orderQuantity" disabled readonly />
+                        <div (click)="decrement()" class="dec qtybutton">-</div>
+                        <div (click)="increment()" class="inc qtybutton">+</div>
+                      </div>
+                    </div>
+                    <div class="pro-cart-btn">
+                      <a (click)="addCartProduct()" class="add-cart-btn mb-20 cursor-pointer">
+                        + Add to Cart
+                      </a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+        
+              <div>
+                <div class="product__tag mb-25">
+                  <span>Tags:</span>
+                  <span><a class="cursor-pointer">{{ product?.tags }}</a></span>
+                </div>
+                <div class="product__share">
+                  <span>Share :</span>
+                  <ul>
+                    <li>
+                      <a [href]="'https://www.facebook.com/sharer/sharer.php?u=https://impactdisciples.com/blog/' + product?.id" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a [href]="'https://twitter.com/intent/tweet?url=https://impactdisciples.com/blog/' + product?.id" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                      </a>
+                    </li>
+                    <li>
+                      <a [href]="'mailto:?body=https://impactdisciples.com/blog/' + product?.id" target="_blank">
+                        <i class="fa fa-envelope"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="postbox__related-title mt-50">
+                <h3>You Might Also Like</h3>
+              </div>
+              <div class="postbox__related-item">
+                <div class="row">
+                  <div *ngFor="let p of relatedProducts" class="col-xl-6 col-lg-6 col-md-6">
+                    <div class="blog__item mb-30">
+                      <div class="blog__thumb fix">
+                        <a [routerLink]="['/blog-details', p?.id]">
+                          <img [src]="p?.imageUrl?.url" alt="blog" height="250px">
+                        </a>
+                      </div>
+                      <div class="blog__content">
+                        <h5><a [routerLink]="['/product-details', p?.id]">{{p?.title}}</a></h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="postbox__line mt-65"></div>
+        
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+</main>
+
+<app-footer></app-footer>
