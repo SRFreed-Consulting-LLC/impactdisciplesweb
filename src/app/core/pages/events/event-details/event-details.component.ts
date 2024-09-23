@@ -7,6 +7,7 @@ import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda
 import { DxFormComponent } from 'devextreme-angular';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 
 @Component({
   selector: 'app-event-details',
@@ -38,6 +39,14 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           attendees: [{ firstName: '', lastName: '', email: '' }]
         }
         if(this.event.agendaItems) {
+          this.event.agendaItems.forEach(item => {
+            item.startDate = dateFromTimestamp(item.startDate)
+
+            item.endDate = dateFromTimestamp(item.endDate);
+
+            console.log(item);
+          })
+
           this.groupAgendaItemsByMonthAndDate(this.event.agendaItems);
         }
         this.calculateTotal();
