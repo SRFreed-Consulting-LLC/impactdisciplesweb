@@ -32,7 +32,7 @@
                           <tr class="row" *ngFor="let item of dayGroup.items" class="agenda__group">
                             <td class="col-8" *ngIf="item.isCourse">{{ item.course | courseName | async }}</td>
                             <td class="col-8" *ngIf="!item.isCourse">{{ item.text }}</td>
-                            <td class="agenda__group-time col-4">{{ item.startDate | date: 'shortTime' : 'UTC -8' }} - {{ item.endDate | date: 'shortTime':'UTC -8' }}</td>
+                            <td class="agenda__group-time col-4">{{ item.startDate | date: 'shortTime'}} - {{ item.endDate | date: 'shortTime' }}</td>
                           </tr>
                         </td>
                       </tr>
