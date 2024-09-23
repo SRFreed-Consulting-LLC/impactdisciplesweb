@@ -31,7 +31,7 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
       this.blog = blog;
 
       this.blogPostService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((blogs) => {
-        const related_blogs = blogs.filter(b => (b?.subject === this.blog?.subject) && (b?.id !== this.blog?.id));
+        const related_blogs = blogs.filter(b => (b?.category === this.blog?.category) && (b?.id !== this.blog?.id));
         const otherBlogs = blogs.filter(b => b?.id !== this.blog?.id);
 
         this.relatedBlogs = related_blogs.length > 0 ? related_blogs.slice(0, 2) : otherBlogs.slice(0, 2);

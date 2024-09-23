@@ -1,4 +1,4 @@
-<div class="sidebar__wrapper">
+<div class="sidebar__wrapper blog-sidebar">
 
   <div class="sidebar__widget mb-55">
     <div class="widget__search p-relative">
@@ -24,22 +24,29 @@
         <div id="accordion">
           <dx-accordion
             #accordion
-            [dataSource]="subjectsWithTags"
+            [dataSource]="categoryWithBlogs"
             [collapsible]="true"
             [multiple]="false"
             [animationDuration]="300"
             id="accordion-container"
           >
-            <div *dxTemplate="let subject of 'title'">
-              <div class="header">{{ subject?.subject }}</div>
+            <div *dxTemplate="let product of 'title'">
+              <div class="header">{{ product?.category?.tag }}</div>
             </div>
-
-            <div *dxTemplate="let subject of 'item'">
+          
+            <div *dxTemplate="let item of 'item'">
               <div class="tags-container">
-                <dx-button
-                  *ngFor="let tag of subject?.tags"
-                  [text]="getTagNameById(tag)"
-                  (onClick)="onTagClick(tag)">
+                <dx-button 
+                  *ngFor="let product of item?.displayProducts" 
+                  [text]="product?.title" 
+                  (onClick)="onItemClick(product?.id)">
+                </dx-button>
+          
+                <span *ngIf="item?.products?.length > 10"  class="view-all__truncate">... and more!</span>
+                <dx-button  
+                  class="view-all" 
+                  [text]="'VIEW ALL '" 
+                  (onClick)="onCategoryClick(item?.category)">
                 </dx-button>
               </div>
             </div>

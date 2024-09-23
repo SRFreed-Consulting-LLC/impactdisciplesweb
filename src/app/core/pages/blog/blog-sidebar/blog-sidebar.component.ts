@@ -1,9 +1,11 @@
 import { BlogTagsService } from './../../../../../../impactdisciplescommon/src/services/blog-tags.service';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { BlogPostModel } from 'impactdisciplescommon/src/models/domain/blog-post.model';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { BlogPostService } from 'impactdisciplescommon/src/services/blog-post.service';
-import { Subject, takeUntil } from 'rxjs';
+import { BlogCategoriesService } from 'impactdisciplescommon/src/services/utils/blog-categories.service';
+import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-blog-sidebar',
@@ -11,27 +13,37 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./blog-sidebar.component.scss']
 })
 export class BlogSidebarComponent implements OnInit, OnDestroy {
-  @Output() tagFilterEvent = new EventEmitter<string>();
+  @Output() categoryFilterEvent = new EventEmitter<TagModel>();
   @Output() searchEvent = new EventEmitter<string>();
   @Output() clearFiltersEvent = new EventEmitter<void>();
   public recent_blogs: BlogPostModel[] = [];
-  public subjectsWithTags: { subject: string, tags: TagModel[] }[] = [];
-
-  blogTags: TagModel[]
+  public categoryWithBlogs: any;
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private blogPostService: BlogPostService, private blogTagsService: BlogTagsService) {}
+  constructor(private blogPostService: BlogPostService, private blogTagsService: BlogTagsService, private blogCategoriesService: BlogCategoriesService, private router: Router) {}
 
   ngOnInit(): void {
-    this.blogPostService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((blogs) => {
-      this.recent_blogs = blogs.slice(-3);
-      this.buildSubjectsWithTags(blogs);
+    combineLatest([
+      this.blogPostService.streamAll(),
+      this.blogCategoriesService.streamAll()
+    ]).pipe(
+      takeUntil(this.ngUnsubscribe),
+      map(([blogs, categories]) => {
+        this.recent_blogs = blogs.slice(-3);
+        return categories.map(category => {
+          const categoryBlogs = blogs.filter(blog => blog.category === category.id);
+          
+          return {
+            category: category,
+            blogs: categoryBlogs,
+            displayProducts: categoryBlogs.slice(0, 10)
+          };
+        })
+      })
+    ).subscribe(categoryWithBlogs => {
+      this.categoryWithBlogs = categoryWithBlogs;
     });
-
-    this.blogTagsService.streamAll().subscribe(tags => {
-      this.blogTags = tags;
-    })
   }
 
   ngOnDestroy(): void {
@@ -49,37 +61,15 @@ export class BlogSidebarComponent implements OnInit, OnDestroy {
     }
   }
 
-  onTagClick(tag: string): void {
-    this.tagFilterEvent.emit(tag);
+  onCategoryClick(category: TagModel): void {
+    this.categoryFilterEvent.emit(category);
   }
 
   onClearFilters(): void {
     this.clearFiltersEvent.emit();
   }
 
-  private buildSubjectsWithTags(blogs: BlogPostModel[]): void {
-    const subjectTagMap = new Map<string, Set<TagModel>>();
-    blogs.forEach((blog) => {
-      if (blog.subject) {
-        if (!subjectTagMap.has(blog.subject)) {
-          subjectTagMap.set(blog.subject, new Set<TagModel>());
-        }
-        blog.tags?.forEach((tag) => subjectTagMap.get(blog.subject)?.add(tag));
-      }
-    });
-
-    this.subjectsWithTags = Array.from(subjectTagMap.entries()).map(([subject, tags]) => ({
-      subject,
-      tags: Array.from(tags),
-    }));
-  }
-
-  getTagNameById(id: string){
-    let tag: TagModel = this.blogTags?.find(tag => tag.id === id);
-    if(tag){
-      return tag.tag
-    }
-
-    return '';
+  onItemClick(id: string): void {
+    this.router.navigate(['/blog-details', id]);
   }
 }

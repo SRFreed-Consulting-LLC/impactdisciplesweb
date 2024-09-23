@@ -31,16 +31,22 @@
             id="accordion-container"
           >
             <div *dxTemplate="let product of 'title'">
-              <div class="header">{{ product?.category }}</div>
+              <div class="header">{{ product?.category?.tag }}</div>
             </div>
           
             <div *dxTemplate="let item of 'item'">
               <div class="tags-container">
-                <dx-button class="view-all" [text]="'View All ' + item?.category" (onClick)="onCategoryClick(item?.category)"></dx-button>
                 <dx-button 
-                  *ngFor="let product of item?.products" 
+                  *ngFor="let product of item?.displayProducts" 
                   [text]="product?.title" 
                   (onClick)="onItemClick(product?.id)">
+                </dx-button>
+          
+                <span *ngIf="item?.products?.length > 10"  class="view-all__truncate">... and more!</span>
+                <dx-button  
+                  class="view-all" 
+                  [text]="'VIEW ALL '" 
+                  (onClick)="onCategoryClick(item?.category)">
                 </dx-button>
               </div>
             </div>

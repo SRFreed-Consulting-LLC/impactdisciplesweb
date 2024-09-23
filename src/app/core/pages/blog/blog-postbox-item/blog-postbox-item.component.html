@@ -9,10 +9,10 @@
         <a [routerLink]="['/blog-details', blog?.id]">{{blog?.title}}</a>
       </h4>
       <div class="blog__meta">
-          <span>By <a href="#">{{blog?.subject}}</a></span>
+          <span><a [routerLink]="['/blog-details', blog?.id]">{{ (blog?.category | categoryName: 'blog') | async }} </a></span>
           <span>/ {{blog?.date.toString() | date }}</span>
       </div>
       <p class="truncate" [innerHTML]="blog?.blogText"></p>
-      <a [routerLink]="['/blog-details', blog?.id]" class="os-btn">read more</a>
+      <a [routerLink]="['/blog-details', blog?.id]" class="impact-btn impact-btn-black-bg">read more</a>
   </div>
 </div>

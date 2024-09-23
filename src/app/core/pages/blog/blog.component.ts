@@ -54,19 +54,15 @@ export class BlogComponent implements OnInit {
     const termLower = searchTerm.toLowerCase();
     this.filteredBlogs = this.blogs.filter(
       (blog) =>
-        blog.subject?.toLowerCase().includes(termLower) ||
+        blog.category?.toLowerCase().includes(termLower) ||
         blog.tags.some((tag) => tag.tag.toLowerCase().includes(termLower)) ||
         blog.date.toString().includes(termLower) ||
         blog.title.toLocaleLowerCase().includes(termLower)
     );
   }
 
-  filterBlogsByTag(id: any): void {
-    console.log(id);
-    let tag = this.blogTags.find(tag => tag.id == id)
-
-    console.log(tag);
-    this.filteredBlogs = this.blogs.filter((blog) => blog.tags.includes(tag));
+  filterBlogsByCategory(category: TagModel): void {
+    this.filteredBlogs = this.blogs.filter((blog) => blog.category === category.id);
   }
 
   clearFilters(): void {

@@ -1,6 +1,7 @@
 import { ViewportScroller } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
 import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
 import { ProductService } from 'impactdisciplescommon/src/services/utils/product.service';
@@ -48,14 +49,14 @@ export class StoreComponent implements OnInit {
     const termLower = searchTerm.toLowerCase();
     this.filteredProductItems = this.products.filter(
       (product) =>
-        product.title?.toLowerCase().includes(termLower) ||
-        product.tags.some((tag) => tag.tag.toLowerCase().includes(termLower))
+        product?.title?.toLowerCase().includes(termLower) ||
+        product?.tags?.some((tag) => tag.tag.toLowerCase().includes(termLower))
     );
     this.showSeriesInMainView = false;
   }
 
-  filterProductsByCategory(category: string): void {
-    this.filteredProductItems = this.products.filter((storeItem) => storeItem.category.tag === category);
+  filterProductsByCategory(category: TagModel): void {
+    this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === category.id);
     this.showSeriesInMainView = false;
   }
 

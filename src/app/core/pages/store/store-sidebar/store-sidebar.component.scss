@@ -29,12 +29,19 @@
   }
   
   ::ng-deep .view-all {
-    .dx-button-text {
-      font-weight: 800;
-      text-transform: uppercase;
+    &__truncate {
+      margin-left: 13px;
       font-size: 10px;
       letter-spacing: 1.2px;
-      color: #3f3f3f;
+      color: #8a8a8a;
+    }
+    .dx-button-content {
+      justify-content: right;
+    }
+    .dx-button-text {
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      color: #8a8a8a;
     }
   }
 }
