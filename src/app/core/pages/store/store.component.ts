@@ -49,13 +49,13 @@ export class StoreComponent implements OnInit {
     this.filteredProductItems = this.products.filter(
       (product) =>
         product.title?.toLowerCase().includes(termLower) ||
-        product.tags.some((tag) => tag.toLowerCase().includes(termLower))
+        product.tags.some((tag) => tag.tag.toLowerCase().includes(termLower))
     );
     this.showSeriesInMainView = false;
   }
 
   filterProductsByCategory(category: string): void {
-    this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === category);
+    this.filteredProductItems = this.products.filter((storeItem) => storeItem.category.tag === category);
     this.showSeriesInMainView = false;
   }
 

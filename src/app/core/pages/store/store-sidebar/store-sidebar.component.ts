@@ -32,19 +32,19 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
 
   constructor(private productService: ProductService, private router: Router) {}
-  
+
   ngOnInit(): void {
-    this.productService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((products) => { 
+    this.productService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((products) => {
       //remove when categories feature works
       products.forEach((product, index) => {
         const categoryIndex = index % this.categories.length;
-        product.category = this.categories[categoryIndex].name;
+        product.category.tag = this.categories[categoryIndex].name;
       });
       this.categoryWithProducts = this.categories.map(category => ({
         category: category.name,
-        products: products.filter(product => product.category === category.name)
+        products: products.filter(product => product.category.tag === category.name)
       }));
-  
+
     });
   }
 

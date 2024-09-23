@@ -2,7 +2,9 @@ import { ViewportScroller } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlogPostModel } from 'impactdisciplescommon/src/models/domain/blog-post.model';
+import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { BlogPostService } from 'impactdisciplescommon/src/services/blog-post.service';
+import { BlogTagsService } from 'impactdisciplescommon/src/services/blog-tags.service';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 
 @Component({
@@ -19,8 +21,11 @@ export class BlogComponent implements OnInit {
   public pageNo: number = 1;
   public impactDisciplesInfo = impactDisciplesInfo;
 
+  blogTags: TagModel[];
+
   constructor(
     private blogPostService: BlogPostService,
+    private blogTagService: BlogTagsService,
     private route: ActivatedRoute,
     private router: Router,
     private viewScroller: ViewportScroller
@@ -31,6 +36,10 @@ export class BlogComponent implements OnInit {
       this.pageNo = params['page'] ? params['page'] : this.pageNo;
       this.loadBlogs();
     });
+
+    this.blogTagService.streamAll().subscribe(tags =>{
+      this.blogTags = tags;
+    })
   }
 
   loadBlogs(): void {
@@ -46,13 +55,17 @@ export class BlogComponent implements OnInit {
     this.filteredBlogs = this.blogs.filter(
       (blog) =>
         blog.subject?.toLowerCase().includes(termLower) ||
-        blog.tags.some((tag) => tag.toLowerCase().includes(termLower)) ||
+        blog.tags.some((tag) => tag.tag.toLowerCase().includes(termLower)) ||
         blog.date.toString().includes(termLower) ||
         blog.title.toLocaleLowerCase().includes(termLower)
     );
   }
 
-  filterBlogsByTag(tag: string): void {
+  filterBlogsByTag(id: any): void {
+    console.log(id);
+    let tag = this.blogTags.find(tag => tag.id == id)
+
+    console.log(tag);
     this.filteredBlogs = this.blogs.filter((blog) => blog.tags.includes(tag));
   }
 

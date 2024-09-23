@@ -3,10 +3,10 @@
   <div class="sidebar__widget mb-55">
     <div class="widget__search p-relative">
       <form (submit)="onSearch(searchInput.value)">
-        <input 
-          type="text" 
-          #searchInput 
-          placeholder="Search..." 
+        <input
+          type="text"
+          #searchInput
+          placeholder="Search..."
           (input)="onSearchInputChange(searchInput.value)"
         />
         <button type="submit"><i class="far fa-search"></i></button>
@@ -33,12 +33,12 @@
             <div *dxTemplate="let subject of 'title'">
               <div class="header">{{ subject?.subject }}</div>
             </div>
-          
+
             <div *dxTemplate="let subject of 'item'">
               <div class="tags-container">
-                <dx-button 
-                  *ngFor="let tag of subject?.tags" 
-                  [text]="tag" 
+                <dx-button
+                  *ngFor="let tag of subject?.tags"
+                  [text]="getTagNameById(tag)"
                   (onClick)="onTagClick(tag)">
                 </dx-button>
               </div>

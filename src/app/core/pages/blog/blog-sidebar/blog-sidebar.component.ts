@@ -1,5 +1,7 @@
+import { BlogTagsService } from './../../../../../../impactdisciplescommon/src/services/blog-tags.service';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { BlogPostModel } from 'impactdisciplescommon/src/models/domain/blog-post.model';
+import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { BlogPostService } from 'impactdisciplescommon/src/services/blog-post.service';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -13,17 +15,23 @@ export class BlogSidebarComponent implements OnInit, OnDestroy {
   @Output() searchEvent = new EventEmitter<string>();
   @Output() clearFiltersEvent = new EventEmitter<void>();
   public recent_blogs: BlogPostModel[] = [];
-  public subjectsWithTags: { subject: string, tags: string[] }[] = [];
+  public subjectsWithTags: { subject: string, tags: TagModel[] }[] = [];
+
+  blogTags: TagModel[]
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private blogPostService: BlogPostService) {}
+  constructor(private blogPostService: BlogPostService, private blogTagsService: BlogTagsService) {}
 
   ngOnInit(): void {
     this.blogPostService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((blogs) => {
-      this.recent_blogs = blogs.slice(-3); 
-      this.buildSubjectsWithTags(blogs);   
+      this.recent_blogs = blogs.slice(-3);
+      this.buildSubjectsWithTags(blogs);
     });
+
+    this.blogTagsService.streamAll().subscribe(tags => {
+      this.blogTags = tags;
+    })
   }
 
   ngOnDestroy(): void {
@@ -50,11 +58,11 @@ export class BlogSidebarComponent implements OnInit, OnDestroy {
   }
 
   private buildSubjectsWithTags(blogs: BlogPostModel[]): void {
-    const subjectTagMap = new Map<string, Set<string>>();
+    const subjectTagMap = new Map<string, Set<TagModel>>();
     blogs.forEach((blog) => {
       if (blog.subject) {
         if (!subjectTagMap.has(blog.subject)) {
-          subjectTagMap.set(blog.subject, new Set<string>());
+          subjectTagMap.set(blog.subject, new Set<TagModel>());
         }
         blog.tags?.forEach((tag) => subjectTagMap.get(blog.subject)?.add(tag));
       }
@@ -64,5 +72,14 @@ export class BlogSidebarComponent implements OnInit, OnDestroy {
       subject,
       tags: Array.from(tags),
     }));
+  }
+
+  getTagNameById(id: string){
+    let tag: TagModel = this.blogTags?.find(tag => tag.id === id);
+    if(tag){
+      return tag.tag
+    }
+
+    return '';
   }
 }
