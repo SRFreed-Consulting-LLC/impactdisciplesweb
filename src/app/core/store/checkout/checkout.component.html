@@ -82,13 +82,38 @@
                 [colSpan]="2"
                 [label]="{ text: 'Sign up for our Newsletter to receive emails about our next Events!', location: 'right' }"
               ></dxi-item>
+
+              <dxi-item
+                cssClass="checkbox"
+                dataField="isCreateAccount"
+                editorType="dxCheckBox"
+                [colSpan]="2"
+                [label]="{ text: 'Create Account', location: 'right' }"
+              ></dxi-item>
+
+              <dxi-item *ngIf="checkoutForm?.isCreateAccount" [colSpan]="2" [isRequired]="true">
+                <dx-text-box
+                  placeholder="Enter Password"
+                  mode="password"
+                  [(ngModel)]="password"
+                ></dx-text-box>
+              </dxi-item>
+
+
               <dxi-item [colSpan]="2">
                 <div *dxTemplate><h4>Billing Address</h4></div>
               </dxi-item>
               <dxi-item dataField="billingAddress.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
               <dxi-item dataField="billingAddress.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
               <dxi-item dataField="billingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
-              <dxi-item dataField="billingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
+              <dxi-item dataField="billingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
+                <div *dxTemplate>
+                  <dx-select-box
+                    [items]="states"
+                    [(value)]="checkoutForm.billingAddress.state">
+                  </dx-select-box>
+                </div>
+              </dxi-item>
               <dxi-item dataField="billingAddress.zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
               <dxi-item
                 dataField="billingAddress.country"

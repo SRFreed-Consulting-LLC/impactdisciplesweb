@@ -13,6 +13,16 @@ import { Router } from '@angular/router';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
 import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
+import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
+import { Timestamp } from 'firebase/firestore';
+import { AppUserService } from 'impactdisciplescommon/src/services/admin/user.service';
+import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
+import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
+import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
+import { PHONE_TYPES } from 'impactdisciplescommon/src/lists/phone_types.enum';
+import { Role } from 'impactdisciplescommon/src/lists/roles.enum';
+import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 
 @Component({
   selector: 'app-checkout',
@@ -36,8 +46,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   discountAmount: number = 0;
   orignalTotal: number = 0;
   isPercent: boolean = false;
-
+  password: string = '';
   paymentIntent: string;
+  public states: string[];
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -47,9 +58,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private toastrService: ToastrService,
     private authService: AuthService,
     public cartService: CartService,
+    private userService: AppUserService,
     private couponService: CouponService,
     private salesService: SalesService,
-    private router: Router
+    private router: Router,
+    private newsletterSubscriptionService: NewsletterSubscriptionService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -63,7 +76,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
     this.orignalTotal = this.checkoutForm.total;
 
-    this.toggleForm()
+    this.toggleForm();
+
+    this.states = EnumHelper.getStateRoleTypesAsArray();
 
     this.actions$.pipe(
       ofActionDispatched(UserAuthenticated),
@@ -132,8 +147,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             const paymentElement = this.elements.create("payment", paymentElementOptions);
             paymentElement.mount("#payment-element");
 
-
-
           }
         }, 0);  // Ensures form is rendered before Stripe is initialized
 
@@ -157,6 +170,62 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         if(this.checkoutFormComponent.instance.validate().isValid) {
           e.preventDefault();
           this.setLoading(true);
+
+          if(this.checkoutForm.isNewsletter){
+            let subscriber: NewsletterSubscriptionModel = {...new NewsletterSubscriptionModel()};
+            subscriber.firstName = this.checkoutForm.firstName;
+            subscriber.lastName = this.checkoutForm.lastName;
+            subscriber.email = this.checkoutForm.email;
+            subscriber.date = Timestamp.now();
+            this.newsletterSubscriptionService.add(subscriber);
+          }
+    
+          if(this.checkoutForm.isCreateAccount){
+            await this.userService.getAllByValue('email', this.checkoutForm.email).then(async users => {
+              if(users && users.length == 0){
+                let newUser: AppUser = {... new AppUser()};
+                newUser.firstName = this.checkoutForm.firstName;
+                newUser.lastName = this.checkoutForm.lastName;
+                newUser.email = this.checkoutForm.email;
+    
+                let address = {... new Address()};
+                address.address1 = this.checkoutForm.billingAddress.address1;
+                address.address2 = this.checkoutForm.billingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
+                address.city = this.checkoutForm.billingAddress.city;
+                address.state = this.checkoutForm.billingAddress.state;
+                address.zip = this.checkoutForm.billingAddress.zip;
+                address.country = this.checkoutForm.billingAddress.country;
+    
+                newUser.address = address;
+    
+                let phone = {... new Phone()}
+                phone.countryCode = '1';
+                phone.number = this.checkoutForm.phone.number;
+                phone.extension = PHONE_TYPES.CELL;
+    
+                newUser.phone = phone;
+    
+                newUser.role = Role.CUSTOMER;
+                await this.userService.add(newUser).then(async user => {
+                  await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
+                    if (result.isOk) {
+                      this.toastrService.success('Success', 'Your account has been created.', {
+                        timeOut: 10000,
+                      });
+                    } else {
+                      this.toastrService.error('Error','There was an error creating your account: ' + result.message, {
+                        timeOut: 10000,
+                      });
+                    }
+                  })
+                });
+              } else  {
+                this.toastrService.success('Warning', 'An account with this email already exists.', {
+                  timeOut: 10000,
+                })
+              }
+            })
+          }
 
           let response = await this.stripeService.getStripe().then(async stripe => {
             return await stripe.confirmPayment({
@@ -266,15 +335,18 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
           let itemIds: string[] = this.checkoutForm.cartItems.map(item => item.id)
 
-          if(!validCoupon.tags){
-            validCoupon.tags = [];
+          console.log(validCoupon)
+
+          if(validCoupon?.tags?.length > 0) {
+            validCoupon.tags.forEach(tag => {
+              if(itemIds.includes(tag.id)){
+                isvalid = true;
+              }
+            })
+          } else {
+            isvalid = true;
           }
 
-          validCoupon.tags.forEach(tag => {
-            if(itemIds.includes(tag)){
-              isvalid = true;
-            }
-          })
 
           if(isvalid){
             if (validCoupon.percentOff) {
