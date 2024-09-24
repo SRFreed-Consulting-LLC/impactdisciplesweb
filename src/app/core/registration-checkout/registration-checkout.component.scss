@@ -1,4 +1,10 @@
 .checkout {
+  tr {
+    border-bottom: 1px solid #eaedff;
+  }
+  td {
+    border-bottom: none;
+  }
   .text-right {
     text-align: end;
   }

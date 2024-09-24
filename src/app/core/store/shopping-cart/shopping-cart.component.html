@@ -25,29 +25,29 @@
                 <tbody>
                   <tr  *ngFor="let item of cartService.getCartProducts()">
                     <td class="product-thumbnail">
-                      <a [routerLink]="['/shop/shop-details', item.id]">
-                        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Events%2FSimple-DMC-Cover-2024.webp?alt=media&token=dd328a1f-44bc-49ea-bb3e-c5f410065291'" alt="product-img">
+                      <a [routerLink]="['/shop/shop-details', item?.id]">
+                        <img [src]="item?.img?.url" alt="product-img">
                       </a>
                     </td>
                     <td class="product-name">
-                      <a [routerLink]="['/shop/shop-details', item.id]"><strong>{{item.itemName}}</strong></a>
-                      <div *ngIf="item.isEvent">
-                        <span *ngFor="let attendee of item.attendees; let i = index">
-                          {{ attendee.firstName }} {{ attendee.lastName }}<span *ngIf="i !== item.attendees.length - 1">, </span> 
+                      <a [routerLink]="['/shop/shop-details', item?.id]"><strong>{{item?.itemName}}</strong></a>
+                      <div *ngIf="item?.isEvent">
+                        <span *ngFor="let attendee of item?.attendees; let i = index">
+                          {{ attendee?.firstName }} {{ attendee?.lastName }}<span *ngIf="i !== item?.attendees?.length - 1">, </span> 
                         </span>
                       </div>
                     </td>
                     <td class="product-price"><span class="amount">${{item.price.toFixed(2)}}</span></td>
                     <td class="product-quantity">
                       <div class="cart-plus-minus">
-                        <input type="text" [value]="item.orderQuantity" readonly />
-                        <div *ngIf="!item.isEvent" (click)="cartService.quantityDecrement(item)" class="dec qtybutton">-</div>
-                        <div *ngIf="!item.isEvent" (click)="cartService.addCartProduct(item)" class="inc qtybutton">+</div>
+                        <input type="text" [value]="item?.orderQuantity" readonly />
+                        <div *ngIf="!item?.isEvent" (click)="cartService.quantityDecrement(item)" class="dec qtybutton">-</div>
+                        <div *ngIf="!item?.isEvent" (click)="cartService.addCartProduct(item)" class="inc qtybutton">+</div>
                       </div>
                     </td>
                     <td class="product-subtotal">
                       <span class="amount">
-                      ${{(item.price * item.orderQuantity!).toFixed(2)}}
+                      ${{(item.price * item?.orderQuantity!).toFixed(2)}}
                       </span>
                    </td>
                     <td class="product-remove">

@@ -6,17 +6,17 @@
     <ul [ngClass]="['mini-cart-list', cartService.getCartProducts().length === 1 ? 'slider-height_1' :  cartService.getCartProducts().length === 2 ? 'slider-height_2' : 'slider-height']">
       <li *ngFor="let item of cartService.getCartProducts()">
         <div class="cart-img f-left">
-          <a [routerLink]="['/shop/shop-details', item.id]">
-            <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Events%2FSimple-DMC-Cover-2024.webp?alt=media&token=dd328a1f-44bc-49ea-bb3e-c5f410065291'" alt="cart-img" />
+          <a [routerLink]="['/shop/shop-details', item?.id]">
+            <img [src]="item?.img?.url" alt="cart-img" />
           </a>
         </div>
         <div class="cart-content f-left text-left">
           <h5>
-            <a [routerLink]="['/shop/shop-details', item.id]">{{item.itemName}}</a>
+            <a [routerLink]="['/shop/shop-details', item?.id]">{{item?.itemName}}</a>
           </h5>
           <div class="cart-price">
-            <span class="ammount">{{item.orderQuantity}} <i class="fal fa-times"></i></span>
-            <span class="price">$ {{item.price.toFixed(2)}}</span>
+            <span class="ammount">{{item?.orderQuantity}} <i class="fal fa-times"></i></span>
+            <span class="price">$ {{item?.price.toFixed(2)}}</span>
           </div>
         </div>
         <div class="del-icon f-right mt-30">

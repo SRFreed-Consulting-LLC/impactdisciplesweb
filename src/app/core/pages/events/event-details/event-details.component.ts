@@ -34,6 +34,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           itemName: event.eventName,
           orderQuantity: 1,
           price: event.costInDollars,
+          img: event.imageUrl,
           isEvent: true,
           attendees: [{ firstName: '', lastName: '', email: '' }]
         }
