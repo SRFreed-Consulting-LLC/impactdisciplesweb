@@ -15,7 +15,6 @@ export class CartService {
   constructor(private toastrService: ToastrService){}
 
   public getCartProducts(): CartItem[] {
-    console.log(state.cart)
     return state.cart;
   }
 
