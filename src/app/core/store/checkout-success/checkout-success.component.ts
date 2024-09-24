@@ -88,7 +88,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
         sale.email = cart.email;
         sale.totalAfterDiscount = cart.total;
         sale.totalBeforeDiscount = cart.totalBeforeDiscount;
-        sale.receipt = cart.receipt;
+        sale.receipt = paymentIntent;
         await this.affiliateSaleService.add(sale);
       }
 

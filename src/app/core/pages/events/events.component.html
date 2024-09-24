@@ -56,10 +56,10 @@
                 <div *ngFor="let event of eventsList" class="col-xl-4 col-lg-6 col-md-9 col-sm-12 events-list__event">
                   <div class="events-list__event-image fix">
                     <a [routerLink]="['/event-details', event.id]" class="w-img">
-                      <img class="transform" [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Events%2FSimple-DMC-Cover-2024.webp?alt=media&token=dd328a1f-44bc-49ea-bb3e-c5f410065291'" alt="blog">
+                      <img class="transform" [src]="event.imageUrl.url" alt="blog">
                     </a>
                   </div>
-              
+
                   <div class="events-list__content">
                     <h4><a [routerLink]="['/event-details', event.id]">{{ event.eventName }}</a></h4>
                     <div class="events-list__meta">
@@ -90,7 +90,7 @@
         </div>
       </section>
 
-      
+
 
       <!--DISCIPLE MAKING SUMMIT-->
       <div id="DMS">
