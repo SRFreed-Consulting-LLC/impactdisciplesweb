@@ -43,7 +43,7 @@ export class BlogComponent implements OnInit {
   }
 
   loadBlogs(): void {
-    this.blogPostService.streamAll().subscribe((blogs) => {
+    this.blogPostService.streamAllByValue('isActive', true).subscribe((blogs) => {
       this.blogs = blogs.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
       this.paginate = this.getPager(this.blogs.length, Number(+this.pageNo), this.pageSize);
       this.filteredBlogs = this.blogs.slice(this.paginate.startIndex, this.paginate.endIndex + 1);

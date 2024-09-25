@@ -2,6 +2,7 @@ import { TestimonialService } from './../../../../../impactdisciplescommon/src/s
 import { Component,Input, OnInit } from '@angular/core';
 import Swiper from 'swiper';
 import { TestimonialModel } from 'impactdisciplescommon/src/models/domain/testimonial.model';
+import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
 
 @Component({
   selector: 'app-testimonials',
@@ -26,7 +27,12 @@ export class TestimonialsComponent implements OnInit{
       }
     });
 
-    this.testimonials = await this.testimonialService.getAllByValue('type', this.testimonialType);
+    let queryParams:QueryParam[] = [
+      new QueryParam('type', WhereFilterOperandKeys.equal, this.testimonialType),
+      new QueryParam('isActive', WhereFilterOperandKeys.equal, true)
+    ];
+
+    await this.testimonialService.queryAllStreamByMultiValue(queryParams).subscribe(testimonials => this.testimonials = testimonials);
   }
 
 }

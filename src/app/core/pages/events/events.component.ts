@@ -36,12 +36,12 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   constructor(private eventService: EventService, private router: Router){}
 
   ngOnInit(): void {
-    this.eventService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
-      const currentDate = new Date();  
+    this.eventService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
+      const currentDate = new Date();
       this.dms = events.find(event => event.isSummit);
       this.eventsList = events.filter(event => {
-        const eventStartDate = new Date(event.startDate.toString());  
-        return eventStartDate >= currentDate; 
+        const eventStartDate = new Date(event.startDate.toString());
+        return eventStartDate >= currentDate;
       });
     });
   }

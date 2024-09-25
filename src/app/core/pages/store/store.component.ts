@@ -37,7 +37,7 @@ export class StoreComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.productService.streamAll().subscribe((products) => {
+    this.productService.streamAllByValue('isActive', true).subscribe((products) => {
       this.products = products;
       this.viewBySeries();
       this.paginate = this.getPager(this.products.length, Number(+this.pageNo), this.pageSize);

@@ -27,14 +27,14 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     combineLatest([
-      this.productService.streamAll(),
+      this.productService.streamAllByValue('isActive', true),
       this.productCategoriesService.streamAll()
     ]).pipe(
       takeUntil(this.ngUnsubscribe),
-      map(([products, categories]) => 
+      map(([products, categories]) =>
         categories.map(category => {
           const categoryProducts = products.filter(product => product.category === category.id);
-          
+
           return {
             category: category,
             products: categoryProducts,
