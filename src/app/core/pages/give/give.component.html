@@ -73,13 +73,13 @@
                     </div>
                   </div>
                 </div>
-              
+
                 <div class="col-lg-4 give__gift-option">
                   <div class="box">
                     <h3>Monthly</h3>
                     <i class="large-icon fas fa-calendar-days"></i>
                     <div class="buttons" [ngClass]="{'hidden': isFormVisible === 'monthly'}">
-                      <button class="impact-btn impact-btn-primary mb-10" (click)="togglePaymentForm('monthly')">SEND DONATION</button>
+                      <button class="impact-btn impact-btn-primary mb-10" (click)="window.open('https://billing.stripe.com/p/login/test_6oEg0g8vh7vz5CoeUU', '_blank');">SEND DONATION</button>
                     </div>
                     <div *ngIf="isFormVisible === 'monthly'" class="payment-form" [ngClass]="{'active': isFormVisible === 'monthly'}">
                       <!-- Stripe payment form for Monthly -->
@@ -112,7 +112,7 @@
                     </div>
                   </div>
                 </div>
-              
+
                 <div class="col-lg-4 give__gift-option">
                   <div class="box">
                     <h3>Church Budget</h3>

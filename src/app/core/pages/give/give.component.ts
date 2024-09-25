@@ -12,13 +12,15 @@ import { environment } from 'src/environments/environment';
 })
 export class GiveComponent implements OnInit {
   public impactDisciplesInfo = impactDisciplesInfo;
-  isFormVisible: string = ''; 
+  isFormVisible: string = '';
   status: string = "REQUEST";
   elements;
   items = [{ id: "xl-tshirt", amount: 1000 }];
   loading: boolean = false;
   oneTimeAmount: number = 0;
   monthlyAmount: number = 0;
+
+  window = window;
 
   constructor (
     private stripeService: StripeService,
@@ -47,30 +49,30 @@ export class GiveComponent implements OnInit {
           const paymentForm = document.querySelector("#payment-form");
           if (paymentForm) {
             paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
-  
+
             // Fetch client secret for Stripe payment
             const response = await fetch(environment.stripeURL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(this.items),
             });
-  
+
             if (!response.ok) {
               throw new Error('Failed to fetch client secret');
             }
-  
+
             const { clientSecret } = await response.json();
-  
+
             // Initialize Stripe Elements
             this.elements = (await this.stripeService.getStripe()).elements({ clientSecret });
-  
+
             const paymentElementOptions = {
               layout: "tabs",
             };
-  
+
             const paymentElement = this.elements.create("payment", paymentElementOptions);
             paymentElement.mount("#payment-element");
-  
+
             // Set loading to false once form is ready
             this.loading = false;
           }
@@ -178,7 +180,7 @@ export class GiveComponent implements OnInit {
     } else {
       this.isFormVisible = formType;  // Show the selected form
       this.loading = true;
-      this.initializeStripeForm(); 
+      this.initializeStripeForm();
     }
   }
 }
