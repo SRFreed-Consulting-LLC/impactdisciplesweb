@@ -23,6 +23,7 @@ import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model
 import { PHONE_TYPES } from 'impactdisciplescommon/src/lists/phone_types.enum';
 import { Role } from 'impactdisciplescommon/src/lists/roles.enum';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
+import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
 
 @Component({
   selector: 'app-checkout',
@@ -43,7 +44,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   loggedInUser: string = '';
   logInForm: { email: string, password: string } = { email: '', password: '' };
   couponCode: string = '';
-  discountAmount: number = 0;
+  discountAmount: CouponModel;
   orignalTotal: number = 0;
   isPercent: boolean = false;
   password: string = '';
@@ -72,7 +73,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       total: this.cartService.totalPriceQuantity().total,
       totalBeforeDiscount: this.cartService.totalPriceQuantity().total,
       isShippingSameAsBilling: true,
-      isNewsletter: true
+      isNewsletter: true,
+      billingAddress: {
+        state: ''
+      },
+      shippingAddress: {
+        state: ''
+      }
     }
     this.orignalTotal = this.checkoutForm.total;
 
@@ -117,9 +124,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.items = [];
 
             this.cartService.getCartProducts().forEach(product => {
-              if(product.isEvent){
-                this.items.push({id: product.id, amount: (this.checkoutForm.total * 100)})
-              }
+              this.items.push({id: product.id, amount: (this.checkoutForm.total * 100)})
             })
 
             // Fetch client secret for Stripe payment
@@ -327,52 +332,120 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.couponService.getAllByValue('code', this.couponCode).then(coupons => {
         if (coupons.length > 0 && coupons[0].isActive) {
           let validCoupon = coupons[0];
-          let total = this.calculateTotal(this.checkoutForm.cartItems);
-
-          let isvalid: boolean = false;
-
-          let itemIds: string[] = this.checkoutForm.cartItems.map(item => item.id)
-
-          console.log(validCoupon)
-
-          if(validCoupon?.tags?.length > 0) {
-            validCoupon.tags.forEach(tag => {
-              if(itemIds.includes(tag.id)){
-                isvalid = true;
+          let total = 0; // Initialize the total for applicable items
+  
+          let isValid: boolean = false;
+  
+          this.checkoutForm.cartItems.forEach(item => {
+            let itemTotal = item.price * item.orderQuantity; // Calculate total for each item
+            
+            // Check if the item has a matching tag in the coupon
+            if (validCoupon?.tags?.length > 0) {
+              let matchingTag = validCoupon.tags.some(tag => tag.id === item.id);
+              if (matchingTag) {
+                isValid = true;
+                // Apply the discount to the item total
+                if (validCoupon.percentOff) {
+                  this.isPercent = true;
+                  this.discountAmount = validCoupon;
+                  total += itemTotal - ((itemTotal * validCoupon.percentOff) / 100);
+                } else if (validCoupon.dollarsOff) {
+                  let discountAmount = Math.min(validCoupon.dollarsOff, itemTotal);
+                  total += itemTotal - discountAmount;
+                }
+              } else {
+                // If item tags don't match, add the item total without discount
+                total += itemTotal;
               }
-            })
-          } else {
-            isvalid = true;
-          }
-
-
-          if(isvalid){
-            if (validCoupon.percentOff) {
-              this.discountAmount = validCoupon.percentOff;
-              this.checkoutForm.total = total - ((total * validCoupon.percentOff) / 100);
-              this.isPercent = true;
-            } else if (validCoupon.dollarsOff) {
-              this.discountAmount = validCoupon.dollarsOff;
-              this.discountAmount = Math.min(this.discountAmount, total);
-              this.checkoutForm.total = total - this.discountAmount;
+            } else {
+              // If no tags on the coupon, apply discount to all items
+              isValid = true;
+              if (validCoupon.percentOff) {
+                this.isPercent = true;
+                this.discountAmount = validCoupon;
+                total += itemTotal - ((itemTotal * validCoupon.percentOff) / 100);
+              } else if (validCoupon.dollarsOff) {
+                let discountAmount = Math.min(validCoupon.dollarsOff, itemTotal);
+                total += itemTotal - discountAmount;
+              }
             }
-
+          });
+  
+          if (isValid) {
+            this.checkoutForm.total = total;
             this.checkoutForm.couponCode = validCoupon.code;
-
+            this.discountAmount = validCoupon
             this.showMessage("Coupon applied successfully.", 'SUCCESS');
           } else {
-            this.showMessage("Coupon not Valid for these items.", 'ERROR');
+            this.showMessage("Coupon not valid for these items.", 'ERROR');
           }
-
         } else {
           this.showMessage("Invalid or inactive coupon.", 'ERROR');
         }
-        this.toggleForm()
+        this.toggleForm();
       }).catch(error => {
         console.error("Error fetching coupon:", error);
         this.showMessage("Failed to apply coupon.", 'ERROR');
       });
+    } else {
+      this.checkoutForm.total = this.cartService.totalPriceQuantity().total
+      this.orignalTotal = this.checkoutForm.total;
+      this.discountAmount = null;
+      this.toggleForm();
     }
+
+
+
+
+    // if (this.couponCode) {
+    //   this.couponService.getAllByValue('code', this.couponCode).then(coupons => {
+    //     if (coupons.length > 0 && coupons[0].isActive) {
+    //       let validCoupon = coupons[0];
+    //       let total = this.calculateTotal(this.checkoutForm.cartItems);
+
+    //       let isvalid: boolean = false;
+
+    //       let itemIds: string[] = this.checkoutForm.cartItems.map(item => item.id)
+
+    //       console.log(validCoupon)
+
+    //       if(validCoupon?.tags?.length > 0) {
+    //         validCoupon.tags.forEach(tag => {
+    //           if(itemIds.includes(tag.id)){
+    //             isvalid = true;
+    //           }
+    //         })
+    //       } else {
+    //         isvalid = true;
+    //       }
+
+    //       if(isvalid){
+    //         if (validCoupon.percentOff) {
+    //           this.isPercent = true;
+    //           this.discountAmount = validCoupon.percentOff;
+    //           this.checkoutForm.total = total - ((total * validCoupon.percentOff) / 100);
+    //         } else if (validCoupon.dollarsOff) {
+    //           this.discountAmount = validCoupon.dollarsOff;
+    //           this.discountAmount = Math.min(this.discountAmount, total);
+    //           this.checkoutForm.total = total - this.discountAmount;
+    //         }
+
+    //         this.checkoutForm.couponCode = validCoupon.code;
+
+    //         this.showMessage("Coupon applied successfully.", 'SUCCESS');
+    //       } else {
+    //         this.showMessage("Coupon not Valid for these items.", 'ERROR');
+    //       }
+
+    //     } else {
+    //       this.showMessage("Invalid or inactive coupon.", 'ERROR');
+    //     }
+    //     this.toggleForm()
+    //   }).catch(error => {
+    //     console.error("Error fetching coupon:", error);
+    //     this.showMessage("Failed to apply coupon.", 'ERROR');
+    //   });
+    // }
   }
 
   ngOnDestroy(): void {

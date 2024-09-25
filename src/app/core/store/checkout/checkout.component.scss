@@ -5,6 +5,9 @@
   td {
     border-bottom: none;
   }
+  .product-total {
+    max-width: 50px;
+  }
   .text-right {
     text-align: end;
   }
@@ -15,7 +18,7 @@
     font-style: italic;
     color: #a4a4a4;
   }
-  .newsletter > .dx-field-item-content.dx-field-item-content-location-bottom {
-    max-width: 30px;
+  ::ng-deep .checkbox > .dx-field-item-content.dx-field-item-content-location-bottom {
+    max-width: 20px !important;
   }
 }

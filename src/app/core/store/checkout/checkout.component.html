@@ -76,7 +76,7 @@
               <dxi-item dataField="email" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
               <dxi-item dataField="phone.number" [isRequired]="true" [label]="{ text: 'Phone Number' }"></dxi-item>
               <dxi-item
-                cssClass="newsletter"
+                cssClass="checkbox"
                 dataField="isNewsletter"
                 editorType="dxCheckBox"
                 [colSpan]="2"
@@ -110,7 +110,7 @@
                 <div *dxTemplate>
                   <dx-select-box
                     [items]="states"
-                    [value]="checkoutForm?.billingAddress?.state">
+                    [(value)]="checkoutForm.billingAddress.state">
                   </dx-select-box>
                 </div>
               </dxi-item>
@@ -187,7 +187,7 @@
                       <td class="product-name">
                         {{ cartItem?.itemName }} <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong>
                       </td>
-                      <td class="attendees text-right" *ngIf="cartItem.isEvent">
+                      <td class="attendees text-center" *ngIf="cartItem.isEvent">
                         <div *ngFor="let attendee of cartItem.attendees">
                           {{ attendee.firstName }} {{ attendee.lastName }}
                         </div>
@@ -209,11 +209,11 @@
                     </tr>
                     <tr *ngIf="discountAmount">
                       <th>Discount</th>
-                      <td></td>
+                      <td>{{ discountAmount?.code }}</td>
                       <td class="text-right">
                         <strong>
-                          <span *ngIf="!isPercent" class="amount">- ${{ this.discountAmount }}</span>
-                          <span *ngIf="isPercent" class="amount">- {{ this.discountAmount }}%</span>
+                          <span *ngIf="!isPercent" class="amount">- ${{ discountAmount.dollarsOff }}</span>
+                          <span *ngIf="isPercent" class="amount">- {{ discountAmount.percentOff }}%</span>
                         </strong>
                       </td>
                     </tr>

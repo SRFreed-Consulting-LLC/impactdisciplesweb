@@ -106,7 +106,7 @@ export class CartService {
 
   clearCart() {
     const confirmMsg = window.confirm(
-      "Are you sure deleted your all cart items ?"
+      "Are you sure you want to delete all of your items? ?"
     );
     if (confirmMsg) {
       state.cart = [];

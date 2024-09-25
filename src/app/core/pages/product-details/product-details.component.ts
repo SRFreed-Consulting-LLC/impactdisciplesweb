@@ -37,6 +37,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         itemName: product.title,
         orderQuantity: 1,
         price: product.cost,
+        img: product.imageUrl,
         isEvent: false,
       }
 

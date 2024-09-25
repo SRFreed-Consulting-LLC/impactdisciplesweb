@@ -3,6 +3,7 @@ import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { AffilliateSaleModel } from 'impactdisciplescommon/src/models/utils/affilliate-sale.model';
+import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
@@ -21,6 +22,7 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 export class CheckoutSuccessComponent implements AfterViewInit{
 
   saleId: string;
+  checkoutForm: CheckoutForm;
 
   constructor(private stripeService: StripeService,
     public cartService: CartService,
@@ -78,6 +80,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   async handleSale(paymentIntent: PaymentIntent | string){
     //send email
     return await this.salesService.getById(this.saleId).then(async cart => {
+      this.checkoutForm = cart;
       cart.dateProcessed = Timestamp.now();
       cart.paymentIntent = paymentIntent;
 
@@ -124,6 +127,13 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
           this.cartService.clearCartNoConfirmation();
         })
+      } else {
+        let subject = 'Thank you for Your Purchase';
+        let text = 'You have purchased ' + product.orderQuantity + ' of ' + product.itemName + ' for $' + this.checkoutForm.total + '. Your confirmationId is ' + this.checkoutForm.receipt;
+        let to = this.checkoutForm.email;
+
+        this.emailService.sendTextEmail(to, subject, text);
+        this.cartService.clearCartNoConfirmation()
       }
     })
   }

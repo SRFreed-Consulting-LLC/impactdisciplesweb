@@ -53,7 +53,10 @@
               <div>
                 <div class="product__tag mb-25">
                   <span>Tags:</span>
-                  <span><a class="cursor-pointer">{{ product?.tags }}</a></span>
+                  <span *ngFor="let tag of product?.tags; let i = index">
+                    <a class="cursor-pointer">{{ tag?.tag }}</a>
+                    <span *ngIf="i < product.tags.length - 1">, </span>
+                  </span>
                 </div>
                 <div class="product__share">
                   <span>Share :</span>
@@ -85,7 +88,7 @@
                   <div *ngFor="let p of relatedProducts" class="col-xl-6 col-lg-6 col-md-6">
                     <div class="blog__item mb-30">
                       <div class="blog__thumb fix">
-                        <a [routerLink]="['/blog-details', p?.id]">
+                        <a [routerLink]="['/product-details', p?.id]">
                           <img [src]="p?.imageUrl?.url" alt="blog" height="250px">
                         </a>
                       </div>
