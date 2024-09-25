@@ -6,8 +6,8 @@
         <!-- event details - agenda -->
         <div class="col-lg-6">
           <div class="event-details__left">
-            <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Events%2FSimple-DMC-Cover-2024.webp?alt=media&token=dd328a1f-44bc-49ea-bb3e-c5f410065291'" alt="blog">
-
+            <img [src]="event?.imageUrl?.url" alt="Summit">
+            
             <h2>{{ event?.eventName }}</h2>
             <span class="event-details__right-subtitle">
               <span *ngIf="event?.startDate" class="date">{{ event.startDate.toString()| date: 'M/d' }} </span>

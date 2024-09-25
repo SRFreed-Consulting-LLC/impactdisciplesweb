@@ -5,7 +5,7 @@
     <div class="container">
       <div *ngIf="cartService.getCartProducts().length === 0" class="text-center pt-50">
         <h3>No Cart Items Found</h3>
-        <a routerLink="/shop" class="os-btn os-btn-black">Continue Shopping</a>
+        <a routerLink="/store" class="os-btn os-btn-black">Continue Shopping</a>
       </div>
 
       <div *ngIf="cartService.getCartProducts().length > 0" class="row">
@@ -25,12 +25,12 @@
                 <tbody>
                   <tr  *ngFor="let item of cartService.getCartProducts()">
                     <td class="product-thumbnail">
-                      <a [routerLink]="['/shop/shop-details', item?.id]">
-                        <img [src]="item?.img?.url" alt="product-img">
+                      <a [routerLink]="item?.isEvent ? ['/events/event-details', item?.id] : ['/store/product-details', item?.id]">
+                        <img [src]="item?.img?.url" [alt]="item?.itemName">
                       </a>
                     </td>
                     <td class="product-name">
-                      <a [routerLink]="['/shop/shop-details', item?.id]"><strong>{{item?.itemName}}</strong></a>
+                      <a *ngIf="item?.isEvent" [routerLink]="item?.isEvent ? ['/events/event-details', item?.id] : ['/store/product-details', item?.id]"><strong>{{item?.itemName}}</strong></a>
                       <div *ngIf="item?.isEvent">
                         <span *ngFor="let attendee of item?.attendees; let i = index">
                           {{ attendee?.firstName }} {{ attendee?.lastName }}<span *ngIf="i !== item?.attendees?.length - 1">, </span> 
