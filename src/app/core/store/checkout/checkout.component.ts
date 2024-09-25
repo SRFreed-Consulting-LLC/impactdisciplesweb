@@ -255,7 +255,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return await stripe.confirmPayment({
         elements: this.elements,
         confirmParams: {
-          return_url: environment.domain + "/registration-checkout-success?savedForm=" + savedForm.id,
+          return_url: environment.domain + "/checkout-success?savedForm=" + savedForm.id,
         },
       })
     })

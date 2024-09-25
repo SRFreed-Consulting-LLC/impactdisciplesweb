@@ -133,6 +133,6 @@ export class RegistrationCheckoutSuccessComponent implements AfterViewInit{
     form['eventName'] = event.eventName;
     form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
 
-    this.emailService.sendTemplateEmail(registration.email, 'Registration Success Template', form);
+    this.emailService.sendTemplateEmail(registration.email, 'Summit Registration Success Template', form);
   }
 }

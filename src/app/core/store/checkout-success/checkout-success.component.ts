@@ -140,7 +140,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     form['eventName'] = event.eventName;
     form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
 
-    this.emailService.sendTemplateEmail(registration.email, 'Registration Success Template', form);
+    this.emailService.sendTemplateEmail(registration.email, 'Summit Registration Success Template', form);
   }
 
   sendProductPurchaseSuccessEmail(){
@@ -148,7 +148,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     let text = 'You have purchased the following: \n'
 
     this.cartService.getCartProducts().forEach(product => {
-      text += product.orderQuantity + ' of ' + product.itemName + ' totaling $' + (product.orderQuantity * product.price - product.discount) + '\n';
+      text += product.orderQuantity + ' of ' + product.itemName + ' totaling $' + (product.orderQuantity * product.price) + '\n';
     })
 
     text += 'Total: $' + this.checkoutForm.total; + '\n'
