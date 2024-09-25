@@ -63,7 +63,7 @@
                 <div *dxTemplate>
                   <dx-select-box
                     [items]="states"
-                    [(value)]="checkoutForm.billingAddress.state">
+                    [value]="checkoutForm?.billingAddress?.state">
                   </dx-select-box>
                 </div>
               </dxi-item>
@@ -114,11 +114,12 @@
                       <td class="product-name">
                         {{ cartItem?.itemName }} <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong>
                       </td>
-                      <td class="attendees text-right" *ngIf="cartItem.isEvent">
+                      <td class="attendees text-center" *ngIf="cartItem.isEvent">
                         <div *ngFor="let attendee of cartItem.attendees">
                           {{ attendee.firstName }} {{ attendee.lastName }}
                         </div>
                       </td>
+                      <td *ngIf="!cartItem.isEvent"></td>
                       <td class="product-total text-right">
                         <span class="amount">${{ cartItem?.price }}</span>
                       </td>
