@@ -86,6 +86,11 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     this.states = EnumHelper.getStateRoleTypesAsArray();
   }
 
+  clearCart() {
+    this.cartService.clearCart();
+    this.router.navigateByUrl('/register');
+  }
+
   async toggleForm(): Promise<void> {
     if(this.checkoutForm.total && this.checkoutForm.total > 0){
       try {
