@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
 import { CoachService } from 'impactdisciplescommon/src/services/coach.service';
+import { Observable } from 'rxjs';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
@@ -13,12 +14,12 @@ export class TeamComponent implements OnInit, AfterViewInit {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
 
-  coaches$: Promise<CoachModel[]>;
+  coaches$: Observable<CoachModel[]>;
 
   constructor(private coachService: CoachService){}
 
   ngOnInit(): void {
-    this.coaches$ = this.coachService.getAll()
+    this.coaches$ = this.coachService.streamAllByValue('isActive', true)
 
   }
 
