@@ -114,11 +114,14 @@ export class RegistrationCheckoutSuccessComponent implements AfterViewInit{
                 ' starting on ' + dateFromTimestamp(event.startDate)
               );
 
-              let subject = 'You have been registered for an event!';
-              let text = 'You have been registered for ' + event.eventName + ' starting on ' + dateFromTimestamp(event.startDate) + ', Your confirmationId is ' + registration.receipt;
-              let to = registration.email;
+              let form = {};
+              form['firstName'] = registration.firstName;
+              form['lastName'] = registration.lastName;
+              form['email'] = registration.email;
+              form['eventName'] = event.eventName;
+              form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
 
-              this.emailService.sendTextEmail(to, subject, text);
+              this.emailService.sendTemplateEmail(registration.email, 'Registration Success Template', form);
             })
           })
 
