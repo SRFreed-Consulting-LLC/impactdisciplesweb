@@ -149,101 +149,113 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
   }
 
   async handleSubmit(e) {
-    let savedForm: CheckoutForm = await this.salesService.add(this.checkoutForm);
-
     if(this.checkoutFormComponent.instance.validate().isValid) {
+      let savedForm: CheckoutForm = await this.salesService.add(this.checkoutForm);
+
       e.preventDefault();
+
       this.setLoading(true);
 
       if(this.checkoutForm.isNewsletter){
-        let subscriber: NewsletterSubscriptionModel = {...new NewsletterSubscriptionModel()};
-        subscriber.firstName = this.checkoutForm.firstName;
-        subscriber.lastName = this.checkoutForm.lastName;
-        subscriber.email = this.checkoutForm.email;
-        subscriber.date = Timestamp.now();
-        this.newsletterSubscriptionService.add(subscriber);
+        this.createNewLetter()
       }
 
       if(this.checkoutForm.isCreateAccount){
-        await this.userService.getAllByValue('email', this.checkoutForm.email).then(async users => {
-          if(users && users.length == 0){
-            let newUser: AppUser = {... new AppUser()};
-            newUser.firstName = this.checkoutForm.firstName;
-            newUser.lastName = this.checkoutForm.lastName;
-            newUser.email = this.checkoutForm.email;
-
-            let address = {... new Address()};
-            address.address1 = this.checkoutForm.billingAddress.address1;
-            address.address2 = this.checkoutForm.billingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
-            address.city = this.checkoutForm.billingAddress.city;
-            address.state = this.checkoutForm.billingAddress.state;
-            address.zip = this.checkoutForm.billingAddress.zip;
-            address.country = this.checkoutForm.billingAddress.country;
-
-            newUser.address = address;
-
-            let phone = {... new Phone()}
-            phone.countryCode = '1';
-            phone.number = this.checkoutForm.phone.number;
-            phone.extension = PHONE_TYPES.CELL;
-
-            newUser.phone = phone;
-
-            newUser.role = Role.CUSTOMER;
-            await this.userService.add(newUser).then(async user => {
-              await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
-                if (result.isOk) {
-                  this.toastrService.success('Success', 'Your account has been created.', {
-                    timeOut: 10000,
-                  });
-                } else {
-                  this.toastrService.error('Error','There was an error creating your account: ' + result.message, {
-                    timeOut: 10000,
-                  });
-                }
-              })
-            });
-          } else  {
-            this.toastrService.success('Warning', 'An account with this email already exists.', {
-              timeOut: 10000,
-            })
-          }
-        })
+        this.createUserAccount();
       }
 
       if(this.checkoutForm.total > 0){
-        let response = await this.stripeService.getStripe().then(async stripe => {
-          return await stripe.confirmPayment({
-            elements: this.elements,
-            confirmParams: {
-              // Make sure to change this to your payment completion page
-              return_url: environment.domain + "/registration-checkout-success?savedForm=" + savedForm.id,
-            },
-          }).then((response) => {
-            this.router.navigate(['/', 'registration-checkout-success'], {queryParams: {savedForm: savedForm.id}});
-
-            return response;
-          })
-        })
-
-        if (response.error.type === "card_error" || response.error.type === "validation_error") {
-          this.showMessage(response.error.message, 'ERROR');
-        } else {
-          this.showMessage("An unexpected error occurred.", 'ERROR');
-        }
+        this.submitStripePayment(savedForm);
       } else {
-        await fetch(environment.stripeCancelURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
-        }).then(() => {
-          this.router.navigate(['/', 'registration-checkout-success'], {queryParams: {savedForm: savedForm.id}});
-        });
+        this.cancelStripeIntent(savedForm);
       }
 
       this.setLoading(false);
     }
-}
+  }
+
+  async createUserAccount(){
+    await this.userService.getAllByValue('email', this.checkoutForm.email).then(async users => {
+      if(users && users.length == 0){
+        let newUser: AppUser = {... new AppUser()};
+        newUser.firstName = this.checkoutForm.firstName;
+        newUser.lastName = this.checkoutForm.lastName;
+        newUser.email = this.checkoutForm.email;
+
+        let address = {... new Address()};
+        address.address1 = this.checkoutForm.billingAddress.address1;
+        address.address2 = this.checkoutForm.billingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
+        address.city = this.checkoutForm.billingAddress.city;
+        address.state = this.checkoutForm.billingAddress.state;
+        address.zip = this.checkoutForm.billingAddress.zip;
+        address.country = this.checkoutForm.billingAddress.country;
+
+        newUser.address = address;
+
+        let phone = {... new Phone()}
+        phone.countryCode = '1';
+        phone.number = this.checkoutForm.phone.number;
+        phone.extension = PHONE_TYPES.CELL;
+
+        newUser.phone = phone;
+
+        newUser.role = Role.CUSTOMER;
+        await this.userService.add(newUser).then(async user => {
+          await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
+            if (result.isOk) {
+              this.toastrService.success('Success', 'Your account has been created.', {
+                timeOut: 10000,
+              });
+            } else {
+              this.toastrService.error('Error','There was an error creating your account: ' + result.message, {
+                timeOut: 10000,
+              });
+            }
+          })
+        });
+      } else  {
+        this.toastrService.success('Warning', 'An account with this email already exists.', {
+          timeOut: 10000,
+        })
+      }
+    })
+  }
+
+  async createNewLetter(){
+    let subscriber: NewsletterSubscriptionModel = {...new NewsletterSubscriptionModel()};
+    subscriber.firstName = this.checkoutForm.firstName;
+    subscriber.lastName = this.checkoutForm.lastName;
+    subscriber.email = this.checkoutForm.email;
+    subscriber.date = Timestamp.now();
+    await this.newsletterSubscriptionService.add(subscriber);
+  }
+
+  async submitStripePayment(savedForm: CheckoutForm){
+    let response = await this.stripeService.getStripe().then(async stripe => {
+      return await stripe.confirmPayment({
+        elements: this.elements,
+        confirmParams: {
+          return_url: environment.domain + "/registration-checkout-success?savedForm=" + savedForm.id,
+        },
+      })
+    })
+
+    if (response.error.type === "card_error" || response.error.type === "validation_error") {
+      this.showMessage(response.error.message, 'ERROR');
+    } else {
+      this.showMessage("An unexpected error occurred.", 'ERROR');
+    }
+  }
+
+  async cancelStripeIntent(savedForm: CheckoutForm){
+    await fetch(environment.stripeCancelURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
+    }).then(() => {
+      this.router.navigate(['/', 'registration-checkout-success'], {queryParams: {savedForm: savedForm.id}});
+    });
+  }
 
   // ------- UI helpers -------
   showMessage(messageText, type) {
@@ -295,25 +307,31 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     if (this.couponCode) {
       this.couponService.getAllByValue('code', this.couponCode).then(coupons => {
         if (coupons.length > 0 && coupons[0].isActive) {
-          let validCoupon = coupons[0];
+          let validCoupon:CouponModel = coupons[0];
+
           let total = 0;
-  
+
           let isValid: boolean = false;
-  
+
           this.checkoutForm.cartItems.forEach(item => {
-            let itemTotal = item.price * item.orderQuantity; 
-            
+            let itemTotal = item.price * item.orderQuantity;
+
             if (validCoupon?.tags?.length > 0) {
               let matchingTag = validCoupon.tags.some(tag => tag.id === item.id);
+
               if (matchingTag) {
                 isValid = true;
+
                 // Apply the discount to the item total
                 if (validCoupon.percentOff) {
                   this.isPercent = true;
+
                   this.discountAmount = validCoupon.percentOff;
+
                   total += itemTotal - ((itemTotal * validCoupon.percentOff) / 100);
                 } else if (validCoupon.dollarsOff) {
                   let discountAmount = Math.min(validCoupon.dollarsOff, itemTotal);
+
                   total += itemTotal - discountAmount;
                 }
               } else {
@@ -323,21 +341,26 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
             } else {
               // If no tags on the coupon, apply discount to all items
               isValid = true;
+
               if (validCoupon.percentOff) {
                 this.isPercent = true;
+
                 this.discountAmount = validCoupon.percentOff;
+
                 total += itemTotal - ((itemTotal * validCoupon.percentOff) / 100);
               } else if (validCoupon.dollarsOff) {
                 let discountAmount = Math.min(validCoupon.dollarsOff, itemTotal);
+
                 total += itemTotal - discountAmount;
               }
             }
           });
-  
+
           if (isValid) {
             this.checkoutForm.total = total;
+
             this.checkoutForm.couponCode = validCoupon.code;
-      
+
             this.showMessage("Coupon applied successfully.", 'SUCCESS');
           } else {
             this.showMessage("Coupon not valid for these items.", 'ERROR');

@@ -2,6 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
+import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { AffilliateSaleModel } from 'impactdisciplescommon/src/models/utils/affilliate-sale.model';
 import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
@@ -42,6 +43,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       "savedForm"
     );
 
+    //clientSecret will exist if payment sent to Stripe
     if (clientSecret) {
       const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
         return await stripe.retrievePaymentIntent(clientSecret);
@@ -117,27 +119,44 @@ export class CheckoutSuccessComponent implements AfterViewInit{
                 ' starting on ' + dateFromTimestamp(event.startDate)
               );
 
-              let form = {};
-              form['firstName'] = registration.firstName;
-              form['lastName'] = registration.lastName;
-              form['email'] = registration.email;
-              form['eventName'] = event.eventName;
-              form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
-
-              this.emailService.sendTemplateEmail(registration.email, 'Registration Success Template', form);
+              this.sendRegistrationSuccessEmail(registration, event);
             })
           })
 
           this.cartService.clearCartNoConfirmation();
         })
       } else {
-        let subject = 'Thank you for Your Purchase';
-        let text = 'You have purchased ' + product.orderQuantity + ' of ' + product.itemName + ' for $' + this.checkoutForm.total + '. Your confirmationId is ' + this.checkoutForm.receipt;
-        let to = this.checkoutForm.email;
-
-        this.emailService.sendTextEmail(to, subject, text);
+        this.sendProductPurchaseSuccessEmail();
         this.cartService.clearCartNoConfirmation()
       }
     })
+  }
+
+  sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel){
+    let form = {};
+    form['firstName'] = registration.firstName;
+    form['lastName'] = registration.lastName;
+    form['email'] = registration.email;
+    form['eventName'] = event.eventName;
+    form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
+
+    this.emailService.sendTemplateEmail(registration.email, 'Registration Success Template', form);
+  }
+
+  sendProductPurchaseSuccessEmail(){
+    let subject = 'Thank you for Your Purchase ';
+    let text = 'You have purchased the following: \n'
+
+    this.cartService.getCartProducts().forEach(product => {
+      text += product.orderQuantity + ' of ' + product.itemName + ' totaling $' + (product.orderQuantity * product.price - product.discount) + '\n';
+    })
+
+    text += 'Total: $' + this.checkoutForm.total; + '\n'
+    text += '(* Discounts applied above if Coupon was applied)\n'
+
+
+    text += 'Confirmation Id: ' + this.checkoutForm.receipt + '\n'
+
+    this.emailService.sendTextEmail(this.checkoutForm.email, subject, text);
   }
 }

@@ -2,6 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
+import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { AffilliateSaleModel } from 'impactdisciplescommon/src/models/utils/affilliate-sale.model';
 import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/event-registration.service';
@@ -111,17 +112,10 @@ export class RegistrationCheckoutSuccessComponent implements AfterViewInit{
           await this.eventService.getById(product.id).then(async event => {
             await this.eventRegistrationService.add(registration).then(registration => {
               this.toastrService.success(registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
-                ' starting on ' + dateFromTimestamp(event.startDate)
+                ' starting on ' + dateFromTimestamp(event.startDate as Timestamp).toDateString()
               );
 
-              let form = {};
-              form['firstName'] = registration.firstName;
-              form['lastName'] = registration.lastName;
-              form['email'] = registration.email;
-              form['eventName'] = event.eventName;
-              form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
-
-              this.emailService.sendTemplateEmail(registration.email, 'Registration Success Template', form);
+              this.sendRegistrationSuccessEmail(registration, event);
             })
           })
 
@@ -129,5 +123,16 @@ export class RegistrationCheckoutSuccessComponent implements AfterViewInit{
         })
       }
     })
+  }
+
+  sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel){
+    let form = {};
+    form['firstName'] = registration.firstName;
+    form['lastName'] = registration.lastName;
+    form['email'] = registration.email;
+    form['eventName'] = event.eventName;
+    form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
+
+    this.emailService.sendTemplateEmail(registration.email, 'Registration Success Template', form);
   }
 }
