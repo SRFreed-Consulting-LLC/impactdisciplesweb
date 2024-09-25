@@ -140,20 +140,25 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     form['eventName'] = event.eventName;
     form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
 
-    this.emailService.sendTemplateEmail(registration.email, 'Summit Registration Success Template', form);
+    this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
   }
 
   sendProductPurchaseSuccessEmail(){
     let subject = 'Thank you for Your Purchase ';
-    let text = 'You have purchased the following: \n'
+    let text = 'You have purchased the following: \n\n'
 
     this.cartService.getCartProducts().forEach(product => {
-      text += product.orderQuantity + ' of ' + product.itemName + ' totaling $' + (product.orderQuantity * product.price) + '\n';
+      text += product.orderQuantity + '  x  ' + product.itemName + 'for $' + (product.orderQuantity * product.price) + '\n';
     })
 
-    text += 'Total: $' + this.checkoutForm.total; + '\n'
-    text += '(* Discounts applied above if Coupon was applied)\n'
 
+    if(this.checkoutForm.couponCode) {
+      text += 'Subtotal: $' + this.checkoutForm.totalBeforeDiscount; + '\n\n'
+      text += 'Applied Coupon: ' + this.checkoutForm.couponCode + '\n\n';
+      text += 'Total: $' + this.checkoutForm.total; + '\n\n'
+    } else {
+      text += 'Total: $' + this.checkoutForm.total; + '\n\n'
+    }
 
     text += 'Confirmation Id: ' + this.checkoutForm.receipt + '\n'
 
