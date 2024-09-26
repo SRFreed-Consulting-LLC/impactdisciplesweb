@@ -124,7 +124,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.items = [];
 
             this.cartService.getCartProducts().forEach(product => {
-              this.items.push({id: product.id, amount: (this.checkoutForm.total * 100)})
+              this.items.push({id: product.id, amount: ((product.discountPrice ? product.discountPrice : product.price) * product.orderQuantity * 100)})
             })
 
             // Fetch client secret for Stripe payment
@@ -352,41 +352,18 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.checkoutForm.cartItems.forEach(item => {
             let itemTotal = item.price * item.orderQuantity; // Calculate total for each item
 
-            // Check if the item has a matching tag in the coupon
-            if (validCoupon?.tags?.length > 0) {
-              let matchingTag = validCoupon.tags.some(tag => tag.id === item.id);
-
-              if (matchingTag) {
-                isValid = true;
-
-                // Apply the discount to the item total
-                if (validCoupon.percentOff) {
-                  this.isPercent = true;
-                  this.discountAmount = validCoupon;
-                  total += itemTotal - ((itemTotal * validCoupon.percentOff) / 100);
-                } else if (validCoupon.dollarsOff) {
-                  let discountAmount = Math.min(validCoupon.dollarsOff, itemTotal);
-                  total += itemTotal - discountAmount;
-                }
-              } else {
-                // If item tags don't match, add the item total without discount
-                total += itemTotal;
-              }
-            } else {
-              // If no tags on the coupon, apply discount to all items
+            if (!validCoupon?.tags || (validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id))) {
               isValid = true;
 
               if (validCoupon.percentOff) {
-                this.isPercent = true;
-
-                this.discountAmount = validCoupon;
-
-                total += itemTotal - ((itemTotal * validCoupon.percentOff) / 100);
+                item.discountPrice = (item.price * validCoupon.percentOff) / 100;
               } else if (validCoupon.dollarsOff) {
-                let discountAmount = Math.min(validCoupon.dollarsOff, itemTotal);
-
-                total += itemTotal - discountAmount;
+                item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
               }
+
+              total+=(item.discountPrice * item.orderQuantity);
+            } else {
+              total+=itemTotal;
             }
           });
 

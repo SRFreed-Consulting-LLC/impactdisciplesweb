@@ -50,10 +50,10 @@ export class CartService {
   public totalPriceQuantity() {
     return state.cart.reduce(
       (cartTotal: { total: number; quantity: number }, cartItem: CartItem) => {
-        const { price, orderQuantity, discount } = cartItem;
+        const { price, orderQuantity, discountPrice } = cartItem;
         if (typeof orderQuantity !== "undefined") {
-          if (discount && discount > 0) {
-            const itemTotal = (price - (price * discount) / 100) * orderQuantity;
+          if (discountPrice && discountPrice > 0) {
+            const itemTotal = (price - (price * discountPrice) / 100) * orderQuantity;
             cartTotal.total += itemTotal;
           } else {
             const itemTotal = price * orderQuantity;
