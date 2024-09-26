@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -67,7 +67,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
- 
+
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       total: this.cartService.totalPriceQuantity().total,
@@ -355,7 +355,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           if(validCoupon?.tags?.length > 0) {
             this.checkoutForm.cartItems.forEach(item => {
               let itemTotal = item.price * item.orderQuantity; // Calculate total for each item
-           
+
               if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id))) {
                 isValid = true;
                 this.itemDiscountAmount = validCoupon;
@@ -365,7 +365,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                 } else if (validCoupon.dollarsOff) {
                   item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
                 }
-  
+
                 total+=(item.discountPrice * item.orderQuantity);
               } else {
                 total+=itemTotal;
@@ -381,7 +381,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               total += this.checkoutForm.total - discountAmount;
             }
           }
-   
+
 
           if (isValid) {
             this.checkoutForm.total = total;
@@ -405,7 +405,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.toggleForm();
     }
     console.log(this.checkoutForm)
- 
+
   }
 
   resetCartItems() {

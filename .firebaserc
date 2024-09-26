@@ -1,5 +1,17 @@
 {
-  "projects": {
-    "default": "impactdisciples-a82a8"
-  }
+  "projects": {},
+  "targets": {
+    "impactdisciples-a82a8": {
+      "hosting": {
+        "development": [
+          "impactdisciplesdev-public"
+        ],
+        "production": [
+          "impactdisciples-public"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

@@ -1,15 +1,15 @@
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyDRfdv2XgpLQ-ll2oxpEEMyhtC75rzkP4c",
-    authDomain: "impactdisciples-a82a8.firebaseapp.com",
-    projectId: "impactdisciples-a82a8",
-    storageBucket: "impactdisciples-a82a8.appspot.com",
-    messagingSenderId: "562759240809",
-    appId: "1:562759240809:web:7d6fa117db35b887b6a6f8",
-    measurementId: "G-KJL13HB8DV"
+    apiKey: "AIzaSyDuxbnrsCjpHqlNauBWsaSrQHChUN-w008",
+    authDomain: "impactdisciplesdev.firebaseapp.com",
+    projectId: "impactdisciplesdev",
+    storageBucket: "impactdisciplesdev.appspot.com",
+    messagingSenderId: "989008672868",
+    appId: "1:989008672868:web:d2ee543e60c5e927260771",
+    measurementId: "G-1EEHPL0SRD"
   },
-  domain: 'http://localhost:4200',
+  domain: 'https://impactdisciplesdev-public.web.app/',
   session_expires: 30,
   stripeURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/checkout",
   stripeCancelURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/cancel",
