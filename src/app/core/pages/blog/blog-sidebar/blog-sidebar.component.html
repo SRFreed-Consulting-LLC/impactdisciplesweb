@@ -1,0 +1,83 @@
+<div class="sidebar__wrapper blog-sidebar">
+
+  <div class="sidebar__widget mb-55">
+    <div class="widget__search p-relative">
+      <form (submit)="onSearch(searchInput.value)">
+        <input
+          type="text"
+          #searchInput
+          placeholder="Search..."
+          (input)="onSearchInputChange(searchInput.value)"
+        />
+        <button type="submit"><i class="far fa-search"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <div class="sidebar__widget mb-30">
+    <div class="sidebar__widget-title d-flex justify-content-between align-items-center">
+      <h3 class="mb-10 underline">Blog Categories</h3>
+      <dx-button class="clear-filter-button" (click)="onClearFilters()">View All</dx-button>
+    </div>
+    <div class="sidebar__widget-content">
+      <div class="categories">
+        <div id="accordion">
+          <dx-accordion
+            #accordion
+            [dataSource]="categoryWithBlogs"
+            [collapsible]="true"
+            [multiple]="false"
+            [animationDuration]="300"
+            id="accordion-container"
+          >
+            <div *dxTemplate="let product of 'title'">
+              <div class="header">{{ product?.category?.tag }}</div>
+            </div>
+          
+            <div *dxTemplate="let item of 'item'">
+              <div class="tags-container">
+                <dx-button 
+                  *ngFor="let product of item?.displayProducts" 
+                  [text]="product?.title" 
+                  (onClick)="onItemClick(product?.id)">
+                </dx-button>
+          
+                <span *ngIf="item?.products?.length > 10"  class="view-all__truncate">... and more!</span>
+                <dx-button  
+                  class="view-all" 
+                  [text]="'VIEW ALL '" 
+                  (onClick)="onCategoryClick(item?.category)">
+                </dx-button>
+              </div>
+            </div>
+          </dx-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar__widget mb-55">
+    <div class="sidebar__widget-title mb-25">
+      <h3 class="mb-10">Latest Posts</h3>
+    </div>
+    <div class="sidebar__widget-content">
+      <div class="rc__post-wrapper">
+        <ul>
+          <li *ngFor="let b of recent_blogs" class="d-flex">
+            <div class="rc__post-thumb mr-20">
+              <a [routerLink]="['/pages/blog-details', b.id]">
+                <img [src]="b.mainImage.url" alt="blog-1" style="width: 70px; height: 70px;" />
+              </a>
+            </div>
+            <div class="rc__post-content">
+              <h6><a [routerLink]="['/pages/blog-details', b.id]">{{ b.title.slice(0, 20) }}</a></h6>
+              <div class="rc__meta">
+                <span>{{ b.date.toString() | date }}</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

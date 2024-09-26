@@ -13,21 +13,36 @@ export class HomeHeaderSliderComponent {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   
   public swiperInstance: Swiper | undefined;
-  public hero_slider_data: HomeHeaderSlider[] = homeHeaderSlider;
 
   ngAfterViewInit() {
     if (this.heroSliderContainer) {
       this.swiperInstance = new Swiper('.slider-active', {
         slidesPerView: 1,
         spaceBetween: 0,
-        loop: false,
+        loop: true,
         effect : 'fade',
         modules:[Pagination,EffectFade],
         pagination: {
           clickable: true,
           el:'.tp-slider-dot-2'
         },
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false
+        }
       })
+    }
+  }
+
+  pauseAutoplay() {
+    if (this.swiperInstance && this.swiperInstance.autoplay) {
+      this.swiperInstance.autoplay.stop();
+    }
+  }
+
+  resumeAutoplay() {
+    if (this.swiperInstance && this.swiperInstance.autoplay) {
+      this.swiperInstance.autoplay.start();
     }
   }
 }

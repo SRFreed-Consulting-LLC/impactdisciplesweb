@@ -1,0 +1,71 @@
+@import '../../../../../assets/theme/scss/variables';
+:root {
+  --border: 30px;
+  --color1: #939393;
+  --color2: #ffcc00;
+  --from: 30deg;
+  --distance: 46%;
+}
+.team-details {
+  .image-column{
+    display: grid;
+    place-items: center;
+    margin: 0;
+  }
+  &__team-image {
+    position: relative;
+    padding: 30px;
+    img {
+      border-radius: 999px;
+      display: block;
+      width: calc(100vw - 80px);
+      max-width: 360px;
+      height: auto;
+    }
+  }
+  &__team-image::after {
+    content: '';
+    border-radius: 999px;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: conic-gradient(
+      from 30deg,
+      #ffcc00,
+      #939393 46%,
+      transparent 46%
+    );
+    -webkit-mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - 25px),
+      #fff calc(100% - 25px + 1px)
+    );
+    mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - 25px),
+      #fff calc(100% - 25px + 1px)
+    );
+  }
+  .custom-hr {
+    width: 200px; 
+    border: 0;    
+    border-top: 6px solid $theme-color;  
+    margin: 50px auto;
+    opacity: 1;
+  }
+  h1 {
+    font-weight: 800;
+    color: #515151;
+    font-size: 50px;
+    letter-spacing: 2px;
+  }
+  h5 {
+    font-size: 30px;
+    color: #757575;
+    letter-spacing: 2px;
+    font-weight: 500;
+  }
+}

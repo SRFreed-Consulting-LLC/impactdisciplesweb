@@ -1,0 +1,24 @@
+.checkout {
+  tr {
+    border-bottom: 1px solid #eaedff;
+  }
+  td {
+    border-bottom: none;
+  }
+  .product-total {
+    max-width: 50px;
+  }
+  .text-right {
+    text-align: end;
+  }
+  .attendees {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-style: italic;
+    color: #a4a4a4;
+  }
+  ::ng-deep .checkbox > .dx-field-item-content.dx-field-item-content-location-bottom {
+    max-width: 20px !important;
+  }
+}

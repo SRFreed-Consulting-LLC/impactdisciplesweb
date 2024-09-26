@@ -15,6 +15,10 @@ import { LocationPipe } from "./utils/pipes/location.pipe";
 import { CourseNamePipe } from "./utils/pipes/course-name.pipe";
 import { BookBannerComponent } from "./components/book-banner/book-banner.component";
 import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.component";
+import { ComingSoonComponent } from "./components/coming-soon/coming-soon.component";
+import { PaginationComponent } from "./components/pagination/pagination.component";
+import { DiscipleMakingSummitBannerComponent } from './components/disciple-making-summit-banner/disciple-making-summit-banner.component';
+import { CategoryNamePipe } from "./utils/pipes/category-name.pipe";
 
 @NgModule({
   declarations: [
@@ -28,8 +32,12 @@ import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.componen
     TestimonialsComponent,
     BookBannerComponent,
     BreadcrumbComponent,
+    ComingSoonComponent,
+    PaginationComponent,
     LocationPipe,
-    CourseNamePipe
+    CourseNamePipe,
+    CategoryNamePipe,
+    DiscipleMakingSummitBannerComponent
   ],
   imports: [
     CommonModule,
@@ -49,8 +57,12 @@ import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.componen
     TestimonialsComponent,
     BookBannerComponent,
     BreadcrumbComponent,
+    ComingSoonComponent,
+    PaginationComponent,
     LocationPipe,
-    CourseNamePipe
+    CourseNamePipe,
+    CategoryNamePipe,
+    DiscipleMakingSummitBannerComponent
   ]
 })
 export class SharedModule { }

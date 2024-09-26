@@ -1,0 +1,65 @@
+<app-home-header></app-home-header>
+
+<main class="prayer-team grey-bg">
+  <div class="prayer-team__container container">
+    <!--PRAYER TEAM HEADER - SWIPER-->
+    <section class="slider__area slider__area-4 p-relative">
+      <div class="slider-active swiper-container" #heroSliderContainer >
+        <div class="swiper-wrapper">
+          <div class="prayer-team__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fprayer-team-header.png?alt=media&token=84dfb8e7-2ffe-482e-9490-804c4c4cccb9)'">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="slider__content slider__content-4 pr-50">
+                  <h5 class="prayer-team__header__pretitle">GROW AS DISCIPLES TOGETHER</h5>
+                  <h1 class="prayer-team__header__title w-80">Join the Prayer Team</h1>
+                  <hr class="custom-hr mb-30">
+                  <a href="/newsletter" class="os-btn">NEWSLETTER<i class="fa fa-envelope-open-text ml-10"></i></a>
+                  <a href="/give" class="os-btn">GIVE<i class="fa-solid fa-hand-holding-medical ml-10"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="text-center mt-80 mb-80">
+      <p>Join our prayer team and you will receive an exclusive monthly email newsletter detailing specific prayer needs for Impact and Impact partners.</p>
+      <form (ngSubmit)="handleFormSubmit()">
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-6">
+            <div class="contact__input mb-20">
+              <label>First Name <span class="required">*</span></label>
+              <input required type="name" name="name" [(ngModel)]="prayerTeamSubscription.firstName">
+            </div>
+          </div>
+          <div class="col-3"></div>
+          <div class="col-3"></div>
+          <div class="col-6">
+            <div class="contact__input mb-20">
+              <label>Last Name <span class="required">*</span></label>
+              <input required type="name" name="name" [(ngModel)]="prayerTeamSubscription.lastName">
+            </div>
+          </div>
+          <div class="col-3"></div>
+          <div class="col-3"></div>
+          <div class="col-6">
+            <div class="contact__input mb-20">
+              <label>Email <span class="required">*</span></label>
+              <input required type="email" name="email" [(ngModel)]="prayerTeamSubscription.email">
+            </div>
+          </div>
+          <div class="col-3"></div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-center">
+            <button class="subscribe__button os-btn os-btn-2 os-btn-3" type="submit">JOIN THE PRAYER TEAM</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<app-footer></app-footer>

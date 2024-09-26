@@ -1,0 +1,23 @@
+.breadcrumb.page__title {
+  height: 100px;
+}
+
+::ng-deep .consultation {
+  &__button {
+    float: right;
+  }
+
+  .dx-item {
+    margin-top: 10px;
+  }
+
+  .dx-button-has-text .dx-button-content {
+    padding-block: 13px;
+    padding-inline-start: 12px;
+    padding-inline-end: 12px;
+  }
+
+  .dx-button-text{
+    color: black;
+  }
+}

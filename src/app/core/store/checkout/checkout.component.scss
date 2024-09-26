@@ -1,0 +1,55 @@
+.checkout {
+  tr {
+    border-bottom: 1px solid #eaedff;
+  }
+  td {
+    border-bottom: none;
+  }
+  .product-total {
+    max-width: 50px;
+  }
+  .text-right {
+    text-align: end;
+  }
+  .attendees {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-style: italic;
+    color: #a4a4a4;
+  }
+  .tag-icon {
+    margin-right: 10px;
+    color: #29e829;
+  }
+  .code-text {
+    font-weight: 700;
+      margin-right: 10px;
+      align-items: center;
+      display: flex;
+  } 
+  .discount-amount {
+    font-weight: 800;
+    color: #29e829;
+  }
+  
+  .before-discount {
+    text-decoration: line-through;
+  }
+  .after-discount {
+    margin-right: 10px;
+    font-weight: 800;
+    color: #29e829;
+  }
+  .order-total {
+    th {
+      font-size: 20px;
+    }
+    .amount {
+      font-size: 25px;
+    }
+  }
+  ::ng-deep .checkbox > .dx-field-item-content.dx-field-item-content-location-bottom {
+    max-width: 20px !important;
+  }
+}

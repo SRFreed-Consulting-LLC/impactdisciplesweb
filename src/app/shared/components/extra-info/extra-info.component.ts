@@ -1,13 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-extra-info',
   templateUrl: './extra-info.component.html',
   styleUrls: ['./extra-info.component.scss']
 })
-export class ExtraInfoComponent {
+export class ExtraInfoComponent implements OnDestroy {
+  isLoggedIn: boolean = false;
 
-  constructor(public authService: AuthService) {}
+  private ngUnsubscribe = new Subject<void>();
+
+  constructor(public authService: AuthService) {
+    this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
+      if(user) {
+        this.isLoggedIn = true;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
 
 }

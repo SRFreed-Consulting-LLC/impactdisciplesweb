@@ -9,7 +9,7 @@
         </li>
       </ul>
 
-      <ul *ngIf="item.hasDropdown && item.megamenu" class="submenu transition-3" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fmap-light.PNG?alt=media&token=3cdad053-36cc-4a35-8949-c245489a5e34)'">
+      <ul *ngIf="item.hasDropdown && item.megamenu" class="submenu transition-3" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap-light.PNG?alt=media&token=8801ee61-cd27-47a4-970b-285916eb22af)'">
         <li *ngFor="let m_mnu of item.dropdownItems; let index = index" class="has-dropdown">
           <a [routerLink]="m_mnu.link">{{ m_mnu.title }}</a>
           <ul>

@@ -1,0 +1,18 @@
+<div class="product__item product__border-bottom mb-30 pb-60">
+  <div class="product__thumb fix">
+      <a [routerLink]="['/product-details', product?.id]">
+        <img class="product__img" [src]="product?.imageUrl?.url" alt="product">
+      </a>
+  </div>
+  <div class="product__content">
+      <h4>
+        <strong><a [routerLink]="['/product-details', product?.id]">{{product?.title}}</a></strong>
+      </h4>
+      <h5><strong>$ {{ product.cost }}</strong></h5>
+      <p class="truncate" [innerHTML]="product?.description"></p>
+      <div class="d-flex">
+        <a [routerLink]="['/product-details', product?.id]" class="impact-btn mr-20">view</a>
+        <a (click)="addCartProduct()" class="impact-icon-btn impact-icon-btn-no-border"><i class="fas fa-cart-plus"></i>ADD</a>
+      </div>
+  </div>
+</div>

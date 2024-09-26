@@ -1,14 +1,14 @@
 <app-home-header></app-home-header>
 
-<!-- EVENT DETAILS -->
 <main class="event-details">
   <section class="pb-70 mt-60">
     <div class="container">
       <div class="row">
+
         <!-- event details - agenda -->
         <div class="col-lg-6">
           <div class="event-details__left">
-            <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Events%2FSimple-DMC-Cover-2024.webp?alt=media&token=dd328a1f-44bc-49ea-bb3e-c5f410065291'" alt="blog">
+            <img [src]="event?.imageUrl?.url" alt="Summit">
 
             <ng-template #noAgenda class="your-order-table table-responsive">
               <h3>Agenda</h3>
@@ -29,10 +29,10 @@
                           <div class="agenda__date-number">{{ dayGroup.date | date: 'd' }}</div>
                         </div>
                         <td>
-                          <tr *ngFor="let item of dayGroup.items" class="agenda__group">
-                            <td *ngIf="item.isCourse">{{ item.course | courseName | async }}</td>
-                            <td *ngIf="!item.isCourse">{{ item.text }}</td>
-                            <td class="agenda__group-time">{{ item.startDate | date: 'shortTime' }} - {{ item.endDate | date: 'shortTime' }}</td>
+                          <tr class="row" *ngFor="let item of dayGroup.items" class="agenda__group">
+                            <td class="col-8" *ngIf="item.isCourse">{{ item.course | courseName | async }}</td>
+                            <td class="col-8" *ngIf="!item.isCourse">{{ item.text }}</td>
+                            <td class="agenda__group-time col-4">{{ item.startDate | date: 'shortTime'}} - {{ item.endDate | date: 'shortTime' }}</td>
                           </tr>
                         </td>
                       </tr>
@@ -43,9 +43,11 @@
             </div>
           </div>
         </div>
+
         <!-- event details - details -->
         <div class="col-lg-6">
           <div class="row event-details__right">
+
             <h2>{{ event?.eventName }}</h2>
             <span class="event-details__right-subtitle">
               <span *ngIf="event?.startDate" class="date">{{ event.startDate.toString()| date: 'M/d' }} </span>
@@ -53,22 +55,36 @@
               <span *ngIf="event?.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
             </span>
             <p *ngIf="event?.description" class="events-list__content-description">{{ event.description }}</p>
-            <div class="mt-20">
+
+            <div class="mt-20 mb-30">
               <h4>ADD TICKETS:</h4>
               <div class="event-details__right-ticket-number">
                 <button class="os-btn" (click)="decrement()"> <i class="dx-icon-minus"></i></button>
-                 <dx-number-box [value]="quantity"></dx-number-box>
+                 <dx-number-box [value]="cartItem?.attendees?.length"></dx-number-box>
                 <button class="os-btn" (click)="increment()"><i class="dx-icon-plus"></i></button>
               </div>
             </div>
+
+            <h3>Tickets</h3>
+            <dx-accordion *ngFor="let attendee of cartItem?.attendees; let i = index" [collapsible]="true" [multiple]="true" [selectedIndex]="0">
+              <dxi-item  title="Attendee {{ i + 1 }} *">
+                <dx-form #attendeeForms [formData]="attendee">
+                  <dxi-item dataField="firstName" [isRequired]="true"></dxi-item>
+                  <dxi-item dataField="lastName" [isRequired]="true"></dxi-item>
+                  <dxi-item dataField="email"></dxi-item>
+                </dx-form>
+              </dxi-item>
+            </dx-accordion>
+
             <div class="cart-page-total">
               <h2>Cart totals</h2>
               <ul class="mb-20">
-                <li>Subtotal <span>${{ event?.costInDollars }}</span></li>
+                <li>Ticket Price <span>${{ event?.costInDollars }}</span></li>
                 <li>Total <span>${{ total }}</span></li>
               </ul>
-              <a class="os-btn"(click)="proceedToCheckout()">Proceed to checkout</a>
+              <a class="os-btn"(click)="proceedToCheckout()">Add To Cart</a>
             </div>
+
           </div>
         </div>
       </div>

@@ -15,6 +15,8 @@ import { EffectFade, Pagination } from 'swiper/modules';
 export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
+  public canRegisterForDMS: boolean = true;
+  public dms: EventModel;
   public impactDisciplesInfo = impactDisciplesInfo;
   @Input() images: string[] = [
     'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Disciple-Making-Summit%2Fgroup-session-2.jpg?alt=media&token=9f6c7dad-e31b-4c9e-9eb9-7220cb122c5c',
@@ -29,27 +31,22 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   currentIndex: number = 0;
   visibleSlides: number = 4;
 
-  public days: number = 0;
-  public hours: number = 0;
-  public minutes: number = 0;
-  public seconds: number = 0;
-
-  private intervalId: any;
   private ngUnsubscribe = new Subject<void>();
 
   constructor(private eventService: EventService, private router: Router){}
 
   ngOnInit(): void {
-    this.startCountdown();
-    this.eventService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
-      this.eventsList = events;
+    this.eventService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
+      const currentDate = new Date();
+      this.dms = events.find(event => event.isSummit);
+      this.eventsList = events.filter(event => {
+        const eventStartDate = new Date(event.startDate.toString());
+        return eventStartDate >= currentDate;
+      });
     });
   }
 
   ngOnDestroy(): void {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
@@ -85,24 +82,6 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
 
   getTransform() {
     return `translateX(-${this.currentIndex * (100 / this.visibleSlides)}%)`;
-  }
-
-  private startCountdown(): void {
-    const endDate = new Date(this.impactDisciplesInfo.yearEventCountdown).getTime();
-
-    this.intervalId = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = endDate - now;
-
-      if (distance < 0) {
-        clearInterval(this.intervalId);
-      } else {
-        this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        this.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        this.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        this.seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      }
-    }, 1000);
   }
 
 }

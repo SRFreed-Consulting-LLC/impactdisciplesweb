@@ -5,6 +5,10 @@
 @import './assets/theme/css/animate.min.css';
 @import "~bootstrap/dist/css/bootstrap.css";
 @import './assets/theme/scss/main.scss';
+@import './assets/theme/scss/variables';
+
+
+//GLOBAL STYLES
 
 html, body {
   margin: 0;
@@ -29,3 +33,247 @@ html, body {
 h1, h2, h3, h4, h5, h6, p {
   font-family: 'Lato', sans-serif !important;
 }
+
+
+//buttons
+.impact-btn {
+	position: relative;
+	display: inline-block;
+	text-transform: uppercase;
+	text-align: center;
+	font-weight: 600;
+	height: 50px;
+	line-height: 46px;
+	padding: 0 42px;
+	border: 2px solid #ebebeb;
+	color: $black-2;
+	background: transparent;
+	z-index: 1;
+	font-size: 12px;
+	cursor: pointer;
+	.dx-button-content {
+		display: flex;
+		justify-content: center;
+	}
+	& span{
+		color: $theme-color;
+	}
+	&::after{
+		position: absolute;
+		content: '';
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 0;
+		background-color: $theme-color;
+		z-index: -1;
+	}
+	&:hover{
+		color: $white;
+		border-color: $theme-color;
+		&::after{
+			height: 100%;
+		}
+		& span{
+			color: $white;
+		}
+	}
+  &-primary{
+		color: $white;
+		background-color: $theme-color;
+		border-color: $theme-color;
+		&::after{
+			background-color: $black-2;
+		}
+		&:hover{
+			border-color: $black-2;
+		}
+    & span{
+      color: $white;
+    }
+	}
+	&-black-bg{
+		color: $white;
+		background-color: $black-2;
+		border-color: $black-2;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+		.dx-icon {
+			color: $white;
+		}
+	}
+	&-black-border{
+		color: $black-2;
+		background-color: $white;
+		border-color: $black-2;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+	}
+	&-white{
+		color: $white;
+		border-color: $white;
+		&:hover{
+			color: $black-2;
+			border-color: $white;
+			&::after{
+				background: $white;
+			}
+		}
+	}
+  &-white-primary {
+    color: $white;
+		border-color: $white;
+    &:hover{
+			color: $white;
+			border-color: $theme-color;
+			&::after{
+				background: $theme-color;
+			}
+		}
+  }
+}
+
+.impact-icon-btn {
+	background: transparent;
+	position: relative;
+	z-index: 1;
+	border: 2px solid #ebebeb;
+	color: $black-2;
+	position: relative;
+	display: flex;
+	align-items: center;
+	text-transform: uppercase;
+	text-align: center;
+	height: 50px;
+	line-height: 46px;
+  padding: 0 20px;
+	i {
+		font-size: 20px;
+		margin-right: 10px;
+	}
+	cursor: pointer;
+	.dx-button-content {
+		display: flex;
+		justify-content: center;
+	}
+	&::after{
+		position: absolute;
+		content: '';
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 0;
+		background-color: $theme-color;
+		z-index: -1;
+	}
+	&:hover{
+		color: $white;
+		border-color: $theme-color;
+		&::after{
+			height: 100%;
+		}
+		& span{
+			color: $white;
+		}
+		i {
+			color: $white;
+		}
+	}
+	&:focus {
+		i {
+			color: $white;
+		}
+	}
+	&-no-border {
+		color: $black-2;
+		background-color: $white;
+		border-color: transparent;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+	}
+	&-black-bg{
+		color: $white;
+		background-color: $black-2;
+		border-color: $black-2;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+		.dx-icon {
+			color: $white;
+		}
+	}
+	&-black-border{
+		color: $black-2;
+		background-color: $white;
+		border-color: $black-2;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+	}
+}
+
+.slider-hr {
+  background-image: linear-gradient(to right, transparent, #ffcc00);
+  height: 5px;
+  border: none;
+  outline: none;
+  position: relative;
+  width: 50%;
+  opacity: .8;
+  
+  &:before {
+    position: absolute;
+    top: 1px;
+    left: 90%;
+    background: black;
+    color: white;
+    padding: 1em;
+    width: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.slider-hr-large {
+  background-image: linear-gradient(to right, transparent, #ffcc00);
+  height: 10px;
+  border: none;
+  outline: none;
+  position: relative;
+  width: 100%;
+  opacity: .8;
+  
+  &:before {
+    position: absolute;
+    top: 1px;
+    left: 90%;
+    background: black;
+    color: white;
+    padding: 1em;
+    width: 100%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.coming-soon-box {
+	background-color: #f5f5f5;
+	padding: 50px;
+}
+

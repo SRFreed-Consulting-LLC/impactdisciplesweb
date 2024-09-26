@@ -1,22 +1,23 @@
 <app-home-header></app-home-header>
 
-<!-- SEMINARS -->
-<div class="seminars page-wrapper">
+<!-- LUNCH AND LEARN -->
+<div class="lunch page-wrapper">
   <main class="grey-bg">
-    <div class="seminars__container container">
-      <!--SEMINARS HEADER - SWIPER-->
+    <div class="lunch__container container">
+      <!--LUNCH AND LEARN HEADER - SWIPER-->
       <section class="slider__area slider__area-4 p-relative">
         <div class="slider-active swiper-container" #heroSliderContainer >
           <div class="swiper-wrapper">
-            <div class="seminars__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Flunch-and-learn-header.jpg?alt=media&token=c67b07dd-aad7-4465-bd9d-824b3ea9e5a1)'">
+            <div class="lunch__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Flunch-and-learn-header.jpg?alt=media&token=a55dce17-1644-4807-8824-32327b2c9dc3)'">
               <div class="container">
                 <div class="row justify-content-end text-end">
                   <div class="col-xl-8 col-lg-7 col-md-9 col-sm-11 col-12">
                     <div class="slider__content slider__content-4 pr-50">
-                      <h5 class="seminars__header__pretitle">DISCIPLE-MAKING CHURCH</h5>
-                      <h1 class="seminars__header__title">Lunch & Learns</h1>
+                      <h5 class="lunch__header__pretitle">DISCIPLE-MAKING CHURCH</h5>
+                      <h1 class="lunch__header__title">Lunch & Learns</h1>
                       <hr class="custom-hr float-right">
-                      <p class="seminars__header__subtitle">Structure your church to make and multiply disciples with the Disciple Making Church strategy. We come to <strong>you</strong> and give you a <strong>free</strong> overview of a proven strategy to multiply disciples through your ministry.</p>
+                      <p class="lunch__header__subtitle">Structure your church to make and multiply disciples with the Disciple Making Church strategy. We come to <strong>you</strong> and give you a <strong>free</strong> overview of a proven strategy to multiply disciples through your ministry.</p>
+                      <a href="/lunch-and-learn-form" class="os-btn lunch__header-button">Request to Book a Lunch and Learn</a>
                     </div>
                   </div>
                 </div>
@@ -26,9 +27,10 @@
         </div>
       </section>
 
+      <!--LUNCH AND LEARN - OVERVIEW-->
       <section class="mt-80">
         <div class="container custom-container">
-          <div class="seminars__overview row justify-content-center">
+          <div class="lunch__overview row justify-content-center">
             <div class="col-xl-8">
               <div class="section__title-wrapper text-center mb-55">
                 <div class="section__title mb-10 mt-50">
@@ -43,11 +45,11 @@
             </div>
           </div>
 
-         
-          <div class="seminars__description banner__inner p-relative z-index-1 pt-50 mb-80">
+          <!--LUNCH AND LEARN - WHAT YOU GET-->
+          <div class="lunch__description banner__inner p-relative z-index-1 pt-50 mb-80">
             <div class="row justify-content-center align-items-center">
-              <div class="seminars__description__text-area col-xl-5 col-lg-5 d-flex z-index-1">
-                <div class="seminars__description__title mb-10">
+              <div class="lunch__description__text-area col-xl-5 col-lg-5 d-flex z-index-1">
+                <div class="lunch__description__title mb-10">
                   <h4>WHAT YOU <strong> GET</strong></h4>
                   <hr class="custom-hr">
                 </div>
@@ -58,16 +60,19 @@
                 </ul>
               </div>
               <div class="col-xl-5 col-lg-5">
-                <div class="video__area-df" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Flunch-and-learn-thumbnail.jpg?alt=media&token=fa075bf9-c5c8-4c7c-9a1a-942498483be7)">
+                <div *ngIf="!isPlaying" class="video__area-df mb-60" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Flunch-and-learn-thumbnail.jpg?alt=media&token=88186f35-4e15-4ba1-b115-e02c613b513d)">
                   <div class="container">
                     <div class="video__content text-center">
-                      <div class="video__button mb-30">
-                        <a (click)="utilsService.playVideo('HxKSa24hF60')" class="cursor-pointer">
+                      <div class="video__button mb-60">
+                        <a (click)="playVideo()" class="cursor-pointer">
                           <i class="fas fa-play"></i>
                         </a>
                       </div>
                     </div>
                   </div>
+                </div>
+                <div *ngIf="isPlaying" id="video-overlay"  class="mb-60">
+                  <youtube-player [videoId]="'HxKSa24hF60'" [width]="450" [height]="250" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player>
                 </div>
               </div>
             </div>

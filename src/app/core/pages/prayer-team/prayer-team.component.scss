@@ -1,0 +1,29 @@
+@import '../../../../assets/theme/scss/variables';
+
+.prayer-team {
+  &__container {
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  &__header {
+    height: 480px;
+    &__pretitle {
+      color: #ffcc00;
+      font-size: 20px;
+    }
+    &__title {
+      font-size: 50px;
+      font-weight: 600;
+      color: #161616;
+    }
+    .os-btn {
+      border: 1px solid #161616;
+    }
+  }
+  .custom-hr {
+    width: 200px; 
+    border: 0;    
+    border-top: 6px solid $theme-color;  
+    opacity: 1;
+  }
+}

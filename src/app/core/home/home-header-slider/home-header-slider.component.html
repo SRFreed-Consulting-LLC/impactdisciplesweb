@@ -1,16 +1,29 @@
-<!-- TODO: Test isDark true/false styles -->
 <section class="slider__area slider__area-2 p-relative pl-15 pr-15">
   <div class="slider-active swiper-container" #heroSliderContainer>
     <div class="swiper-wrapper">
-      <div *ngFor="let item of hero_slider_data" class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(' + item.bgImg + ')'">
+      <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fhome-header-1.jpg?alt=media&token=a0be193a-1e03-4c0f-bbd9-fed6084af9fc)'">
         <div class="container-fluid">
           <div class="row">
             <div class="col-xl-6 col-lg-7 col-md-10 col-sm-10 col-12">
-              <!-- TODO: Set up different texts and buttons for multiple images -->
-              <div class="slider__content slider__content-3 pl-250" [class.slider__content-black]="item.isDark">
-                <h2 [innerHTML]="item.title"></h2>
-                <p>{{item.subtitle}}</p>
-                <a href="/registration" [ngClass]="item.isDark ? 'os-btn-white' : 'os-btn-2'" class="os-btn">Register For Event</a>
+              <div class="slider__content slider__content-3 pl-250" [class.slider__content-black]="true">
+                <h2>Impact Discipleship Ministries</h2>
+                <hr class="slider-hr">
+                <p>We exist to inspire people and churches to be and build disciples of Jesus Christ.</p>
+                <a href="/events" class="impact-btn impact-btn-white-primary" (mouseenter)="pauseAutoplay()" (mouseleave)="resumeAutoplay()">Register For Event</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fhome-header-2.PNG?alt=media&token=9f2866c3-5b8c-4cdc-9604-573c276fd7f9)'">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xl-6 col-lg-7 col-md-10 col-sm-10 col-12">
+              <div class="slider__content slider__content-3 pl-250" [class.slider__content-black]="true">
+                <h2>Disciple-Making Summit</h2>
+                <hr class="slider-hr">
+                <p>Join us at the Disciple-Making Summit and come together in community with hundreds of other disciple-makers to learn what it means to leave a legacy that lasts through multiplying disciples.</p>
+                <a href="/events" class="impact-btn impact-btn-white-primary"(mouseenter)="pauseAutoplay()" (mouseleave)="resumeAutoplay()">Register For Event</a>
               </div>
             </div>
           </div>

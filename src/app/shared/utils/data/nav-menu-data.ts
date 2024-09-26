@@ -58,7 +58,7 @@ const menuData: MenuModel[] = [
       }
     ]
   },
-  { link: '/shop', title: 'Shop', hasDropdown: false }
+  { link: '/store', title: 'Shop', hasDropdown: false }
 ]
 
 export default menuData;

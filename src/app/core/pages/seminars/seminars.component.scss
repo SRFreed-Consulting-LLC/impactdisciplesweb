@@ -19,6 +19,11 @@
       font-size: 80px;
       font-weight: 600;
     }
+    &-button {
+      background-color: $theme-color;
+      color: #ffffff;
+      font-size: 18px;
+    }
     .custom-hr {
       width: 200px; 
       border: 0;    
@@ -65,7 +70,14 @@
     z-index: 1;
     justify-content: center;
     background-color: $theme-color;
-    padding: 100px 0;
+    padding: 50px 0;
+
+    &-title {
+      text-align: center;
+      h2 {
+        font-size: 45px;
+      }
+    }
 
     &__box {
       display: flex;
@@ -75,7 +87,7 @@
       height: 450px;
       justify-content: space-between;
       background-color: #fff;
-      margin: 0 25px;
+      margin: 50px 25px;
       .title {
         font-size: 30px;
         color: $theme-color;
@@ -200,4 +212,9 @@
       background-color: #414141;
     }
   }
+}
+
+#video-overlay {
+  z-index: 1;
+  position: relative;
 }

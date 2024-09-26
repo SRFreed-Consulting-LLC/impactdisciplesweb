@@ -9,4 +9,6 @@ import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data
 export class ContactComponent {
   public impactDisciplesInfo = impactDisciplesInfo;
 
+  public contactForm: any;
+
 }

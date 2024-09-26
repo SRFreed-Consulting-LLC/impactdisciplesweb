@@ -1,6 +1,6 @@
 import { Component, HostListener, Input } from '@angular/core';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
-import { CartService } from 'src/app/theme/shared/services/cart.service';
+import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 
 @Component({

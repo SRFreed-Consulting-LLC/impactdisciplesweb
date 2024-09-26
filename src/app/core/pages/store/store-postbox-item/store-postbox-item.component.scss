@@ -1,0 +1,35 @@
+.truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.product {
+  &__thumb {
+    position: relative;
+    margin-bottom: 15px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  &__img {
+    height: 200px;
+  }
+}
+
+.product__content {
+  h4 {
+    a {
+      display: -webkit-box;  
+      -webkit-box-orient: vertical;  
+      overflow: hidden;        
+      text-overflow: ellipsis;   
+      line-height: 1.2em;       
+      min-height: 2.3em;          
+      -webkit-line-clamp: 2;  
+    }
+  }
+}

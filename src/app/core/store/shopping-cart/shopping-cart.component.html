@@ -1,0 +1,89 @@
+<app-home-header></app-home-header>
+
+<main>
+
+  <app-breadcrumb [currentPageName]="'Shopping Cart'" [bgColor]="'#1F1F1F'" [previousLink]="'/store'" [previousLinkName]="'Store'" [isDark]="true"></app-breadcrumb>
+
+  <section class="cart-area pt-100 pb-100">
+    <div class="container">
+      <div *ngIf="cartService.getCartProducts().length === 0" class="text-center pt-50">
+        <h3>No Cart Items Found</h3>
+        <a routerLink="/store" class="os-btn os-btn-black">Continue Shopping</a>
+      </div>
+
+      <div *ngIf="cartService.getCartProducts().length > 0" class="row">
+        <div class="col-12">
+            <div class="table-content table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="product-thumbnail">Images</th>
+                    <th class="cart-product-name">Product</th>
+                    <th class="product-price">Unit Price</th>
+                    <th class="product-quantity">Quantity</th>
+                    <th class="product-subtotal">Total</th>
+                    <th class="product-remove">Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr  *ngFor="let item of cartService.getCartProducts()">
+                    <td class="product-thumbnail">
+                      <a [routerLink]="item?.isEvent ? ['/event-details', item?.id] : ['/product-details', item?.id]">
+                        <img [src]="item?.img?.url" [alt]="item?.itemName">
+                      </a>
+                    </td>
+                    <td class="product-name">
+                      <a [routerLink]="item?.isEvent ? ['/event-details', item?.id] : ['/product-details', item?.id]"><strong>{{item?.itemName}}</strong></a>
+                      <div *ngIf="item?.isEvent">
+                        <span *ngFor="let attendee of item?.attendees; let i = index">
+                          {{ attendee?.firstName }} {{ attendee?.lastName }}<span *ngIf="i !== item?.attendees?.length - 1">, </span> 
+                        </span>
+                      </div>
+                    </td>
+                    <td class="product-price"><span class="amount">${{item.price.toFixed(2)}}</span></td>
+                    <td class="product-quantity">
+                      <div class="cart-plus-minus">
+                        <input type="text" [value]="item?.orderQuantity" readonly />
+                        <div *ngIf="!item?.isEvent" (click)="cartService.quantityDecrement(item)" class="dec qtybutton">-</div>
+                        <div *ngIf="!item?.isEvent" (click)="cartService.addCartProduct(item)" class="inc qtybutton">+</div>
+                      </div>
+                    </td>
+                    <td class="product-subtotal">
+                      <span class="amount">
+                      ${{(item.price * item?.orderQuantity!).toFixed(2)}}
+                      </span>
+                   </td>
+                    <td class="product-remove">
+                      <a (click)="cartService.removeCartProduct(item)" class="cursor-pointer">
+                        <i class="fa fa-times"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="4"><strong>Cart Total:</strong></td>
+                    <td colspan="2"><strong>${{ cartService.totalPriceQuantity().total.toFixed(2) }}</strong></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="row align-items-center justify-content-between mt-50">
+              <div class="col-8">
+                <div>
+                  <div class="coupon">
+                    <button (click)="cartService.clearCart()" class="impact-btn impact-btn-black-border" name="update_cart" type="submit">
+                      Clear cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-3">
+                <a class="impact-btn impact-btn-black-bg" routerLink="/checkout">Proceed to checkout</a>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

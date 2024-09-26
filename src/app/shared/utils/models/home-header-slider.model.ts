@@ -6,4 +6,6 @@ export type HomeHeaderSlider = {
   subtitle: string;
   isDark?: boolean;
   meta?: boolean;
+  buttonLink?: string;
+  buttonText?: string;
 }

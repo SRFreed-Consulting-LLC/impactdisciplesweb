@@ -7,7 +7,7 @@
   <section class="slider__area p-relative">
     <div class="slider-active swiper-container" #heroSliderContainer>
       <div class="swiper-wrapper">
-        <div class="single-slider slider__height d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fhistory-header.PNG?alt=media&token=f328e316-bb79-493c-9dcf-3355141c72a9)'">
+        <div class="single-slider slider__height d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fhistory-header.PNG?alt=media&token=f3e35d82-8571-4cee-8a7a-db7894d21578)'">
           <div class="container h-100 d-flex justify-content-center">
             <h2 class="history-header__title">OUR HISTORY</h2>
           </div>
@@ -30,16 +30,19 @@
             <p>We provide disciple making resources, training, and consultations. We help people explore the concepts of disciple making, we educate people and churches in the principles of disciple making, we assist people and churches to establish disciple-making movements, and engage individuals and churches in developing movements of multiplication.</p>
           </div>
           <div class="col-xl-5 col-lg-5">
-            <div class="video__area-df" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fmap.jpg?alt=media&token=69c71f2a-3c1b-4745-a1bc-362e4cbf29aa)">
+            <div *ngIf="!isPlaying" class="video__area-df mb-60" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap.jpg?alt=media&token=9db9c6f4-c852-4722-807e-5fa5d93f881a)">
               <div class="container">
                 <div class="video__content text-center">
-                  <div class="video__button mb-30">
-                    <a (click)="utilsService.playVideo('HxKSa24hF60')" class="cursor-pointer">
+                  <div class="video__button mb-60">
+                    <a (click)="playVideo()" class="cursor-pointer">
                       <i class="fas fa-play"></i>
                     </a>
                   </div>
                 </div>
               </div>
+            </div>
+            <div *ngIf="isPlaying" id="video-overlay"  class="mb-60">
+              <youtube-player [videoId]="'HxKSa24hF60'" [width]="550" [height]="300" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player>
             </div>
           </div>
         </div>
@@ -60,13 +63,13 @@
               </div>
             </div>
             <div class="col-lg-5 ml-60">
-              <img class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fhistory-1.jpg?alt=media&token=da19bd0b-0761-438c-8b5c-69a9a58bf846" alt="Image 1">
+              <img class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2Fhistory-1.jpg?alt=media&token=b97d532d-c943-429f-b81b-02f428d6ed06" alt="Image 1">
             </div>
           </div>
           
           <div class="timeline-section row">
             <div class="col-lg-5 mr-60">
-              <img class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fhistory-2.PNG?alt=media&token=bab064a3-c9c4-4da8-8411-a9531a2f03f6" alt="Image 2">
+              <img class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2Fhistory-2.PNG?alt=media&token=34a67ae1-7124-405a-b739-00395a6a5659" alt="Image 2">
             </div>
             <div class="timeline-item right col-lg-5 ml-60">
               <div class="timeline-content">
@@ -82,13 +85,13 @@
               </div>
             </div>
             <div class="col-lg-5 ml-60">
-              <img class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fken-speaking-1.PNG?alt=media&token=a2165748-a853-4dcc-8315-48ce9b3a6d15" alt="Image 3">
+              <img class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2Fhistory-3.PNG?alt=media&token=75dcda00-f148-489d-a885-794276e2235c" alt="Image 3">
             </div>
           </div>
         
           <div class="timeline-section row">
             <div class="col-lg-5 mr-60">
-              <img class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fevent-large-group.PNG?alt=media&token=d12142cd-6902-4de2-a160-1550b6cfd812" alt="Image 4">
+              <img class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2Fhistory-4.PNG?alt=media&token=23516f82-74de-423a-adb5-12e49531678e" alt="Image 4">
             </div>
             <div class="timeline-item right col-lg-5 ml-60">
               <div class="timeline-content">
@@ -110,7 +113,7 @@
   </div>
 
   <!-- COUNTRIES SERVED BANNER -->
-  <section class="countries-banner page__title p-relative d-flex align-items-center mt-80 mb-80" [style.background-image]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fyellow-world-banner.PNG?alt=media&token=82459d72-cfa0-4294-adba-d9dfdd336b7f)'">
+  <section class="countries-banner page__title p-relative d-flex align-items-center mt-80 mb-80" [style.background-image]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fyellow-world-banner.PNG?alt=media&token=a2f4b0e2-dacb-4101-b6f6-8de82c5de4dc)'">
     <div class="row justify-content-center">
       <div class="col-xl-5 countries-banner__left">
         <h1><strong>15</strong></h1>

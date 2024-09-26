@@ -1,0 +1,44 @@
+<section>
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="DMS" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fsummit-banner-large.PNG?alt=media&token=74f6f522-2b3e-48f0-bdb9-2b363abbe80e)'">
+        <div class="DMS__container row">
+          <div class="col-xl-12">
+            <h1>REGISTER TODAY</h1>
+          </div>
+          <div class="col-xl-12">
+            <h2>DISCIPLE MAKING SUMMIT</h2>
+          </div>
+          <div class="col-xl-12">
+            <p>Join us at the Disciple-Making Summit and come together in community with hundreds of other disciple-makers to learn what it means to leave a legacy that lasts through multiplying disciples.</p>
+          </div>
+          <a [routerLink]="['/event-details', dms?.id]"  class="impact-btn impact-btn-white">REGISTER NOW</a>
+          <hr class="slider-hr-large mb-50 mt-50">
+          <div class="col-xl-12">
+            <div class="col-xl-12 countdown-timer mb-30">
+              <div class="time-part">
+                <span class="number">{{ days }}</span>
+                <span class="label">DAYS</span>
+              </div>
+              <span class="colon">:</span>
+              <div class="time-part">
+                <span class="number">{{ hours }}</span>
+                <span class="label">HOURS</span>
+              </div>
+              <span class="colon">:</span>
+              <div class="time-part">
+                <span class="number">{{ minutes }}</span>
+                <span class="label">MINUTES</span>
+              </div>
+              <span class="colon">:</span>
+              <div class="time-part">
+                <span class="number">{{ seconds }}</span>
+                <span class="label">SECONDS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

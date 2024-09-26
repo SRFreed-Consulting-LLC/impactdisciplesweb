@@ -1,5 +1,5 @@
 <section class="footer__area dark-soft-bg">
-  <div class="footer__top pt-100 pb-50" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Ffooter.PNG?alt=media&token=27ac8955-1841-47b3-80c9-8b643535464c)'">
+  <div class="footer__top pt-100 pb-50" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Ffooter.PNG?alt=media&token=d3761dba-c027-414a-8487-931627a7304f)'">
     <div class="container custom-container-3">
       <div class="row">
         <div class="col-xl-4 col-lg-6 col-md-6 col-12">
@@ -10,7 +10,7 @@
               </a>
             </div>
             <div class="footer__title-links mb-25">
-              <a href="#">Give </a><span>|</span><a href="#"> Join the Prayer Team</a>
+              <a href="/give">Give </a><span>|</span><a href="/prayer-team"> Join the Prayer Team</a>
             </div>
             <div class="footer__widget-content">
               <p>&#64;2024 Ken Adams All Right reserved.</p>
@@ -53,9 +53,9 @@
             <div class="footer__widget-content">
               <div class="footer__links">
                 <ul>
-                  <li><a href="/about">About Us</a></li>
                   <li><a href="/events">Events</a></li>
                   <li><a href="/shop">Shop</a></li>
+                  <li><a href="/history">History</a></li>
                   <li><a href="/private-policy">Privacy Policy</a></li>
                   <li><a href="/terms">Terms & Condition</a></li>
                 </ul>
@@ -75,7 +75,6 @@
                   <li><a href="/equipping-groups">Equipping Groups</a></li>
                   <li><a href="/coaching-with-impact">Coaching with Impact</a></li>
                   <li><a href="/lunch-and-learns">Lunch and Learns</a></li>
-                  <li><a href="/terms">Terms & Conditions</a></li>
                 </ul>
               </div>
             </div>
@@ -104,11 +103,13 @@
             </div>
             <div class="footer__widget-content">
               <p>Join over 1,000 people who get free and fresh content delivered automatically each time we publish.</p>
-              <!-- TODO: Set up subscription form -->
               <div class="form-group">
-                <input class="form-control" id="newsletter-input" type="name" name="name" placeholder="Name">
-                <input class="form-control" id="newsletter-input" type="email" name="email" placeholder="Email">
-                <button class="ss-btn btnNewsletter" type="submit">Subscribe</button>
+                <form (ngSubmit)="handleFormSubmit()">
+                  <input required type="name" name="firstName" class="form-control" [(ngModel)]="subscription.firstName" placeholder="First Name">
+                  <input required type="name" name="lastName" class="form-control" [(ngModel)]="subscription.lastName" placeholder="Last Name">
+                  <input required type="email" name="email" class="form-control" [(ngModel)]="subscription.email" placeholder="Email">
+                  <button class="ss-btn btnNewsletter" type="submit">Subscribe</button>
+                </form>
               </div>
             </div>
           </div>
@@ -121,7 +122,7 @@
       <div class="row">
         <div class="col-xl-6 col-lg-7 col-md-8">
           <div class="footer__copyright footer__copyright-3">
-            <p>Copyright © <a routerLink="/home/home-style-1" class="link">Outstock</a> all rights reserved. Powered by <a routerLink="/home/home-style-1" class="link">Theme_pure</a></p>
+            <p>Copyright © SRFreedConsulting all rights reserved. For inquiries, <a href="mailto:gabby.freed@srfreedconsulting.com" class="link">contact</a>.</p>
           </div>
         </div>
         <div class="col-xl-6 col-lg-5">

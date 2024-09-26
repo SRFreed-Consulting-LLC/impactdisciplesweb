@@ -7,5 +7,11 @@ import { UtilsService } from 'src/app/theme/shared/services/utils.service';
   styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent  {
-  constructor(public utilsService: UtilsService) { }
+  isPlaying: boolean = false;
+
+  constructor() { }
+
+  playVideo(){
+    this.isPlaying = true;
+  }
 }

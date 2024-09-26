@@ -5,24 +5,19 @@
     background-color: #ffffff;
     padding: 20px;
   }
-  &__slider {
-    padding: 0 50px;
-  }
   &__header {
-    &-title {
+    height: 480px;
+    &__pretitle {
+      color: #ffcc00;
+      font-size: 20px;
+    }
+    &__title {
       font-size: 50px;
-      color: #ffffff;
-    }
-    &-subtitle {
-      font-size: 25px;
-      color: #ffffff;
-    }
-    &-button {
-      border: 2px solid #ffffff;
-      color: #ffffff;
-      background-color: #00000080;
+      font-weight: 600;
+      color: #fff;
     }
   }
+
   .events-list {
     &__event {
       margin-bottom: 50px;
@@ -49,36 +44,6 @@
     }
   }
 }
-
-.countdown-timer {
-  display: flex;
-  justify-content: center;
-  font-family: Arial, sans-serif;
-
-  .time-part {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 10px;
-
-    .number {
-      font-size: 4rem; 
-      font-weight: bold;
-    }
-
-    .label {
-      font-size: 1rem;
-      margin-top: 25px;
-    }
-  }
-
-  .colon {
-    font-size: 4rem;
-    font-weight: bold;
-  }
-}
-
-
 
 .slider-container {
   position: relative;

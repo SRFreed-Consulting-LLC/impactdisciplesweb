@@ -1,0 +1,198 @@
+<app-home-header></app-home-header>
+
+<main class="seminar-form">
+  <app-breadcrumb [currentPageName]="'Seminar Request Form'" [previousLinkName]="'Seminars'" [previousLink]="'/seminars'"></app-breadcrumb>
+
+  <section class="seminar-form__area pb-100 mt-30">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-8">
+          <div class="seminar-form__info">
+            <form action="your-action" (submit)="onSubmitForm()">
+            <dx-form
+              #seminarRequestFormComponent
+              [formData]="seminarForm"
+              [colCount]="6"
+              labelLocation="top"
+              [showColonAfterLabel]="false"
+            >
+              <dxi-item
+                dataField="requestedDate"
+                editorType="dxDateBox"
+                [colSpan]="2"
+                [label]="{ text: 'Date' }"
+                [editorOptions]="{
+                  displayFormat: 'M/d/yyyy',
+                  type: 'date',
+                  useMaskBehavior: true
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="requestedStartTime"
+                editorType="dxDateBox"
+                [colSpan]="2"
+                [label]="{ text: 'Start Time' }"
+                [editorOptions]="{
+                  displayFormat: 'HH:mm',
+                  type: 'time',
+                  useMaskBehavior: true
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="requestedEndTime"
+                editorType="dxDateBox"
+                [colSpan]="2"
+                [label]="{ text: 'End Time' }"
+                [editorOptions]="{
+                  displayFormat: 'HH:mm',
+                  type: 'time',
+                  useMaskBehavior: true
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="preferredTrainer"
+                editorType="dxAutocomplete"
+                [colSpan]="6"
+                [label]="{ text: 'Is there a trainer from our team who you would prefer to lead your seminar?' }"
+                [editorOptions]="{
+                  items: coaches$ | async,
+                  valueExpr: 'fullname',
+                  displayExpr: 'fullname',
+                  showClearButton: true,
+                  searchExpr: ['fullname']
+                }"
+              ></dxi-item>
+
+              <!-- TODO: A location id might help here to be able to prefill the address information on location selection-->
+              <dxi-item dataField="preferredLocationName" [label]="{ text: 'Location Name' }" [colSpan]="6"></dxi-item>
+
+              <dxi-item itemType="group" [colCount]="6" [colSpan]="6">
+                <dxi-item dataField="preferredLocation.address1" [isRequired]="true" [label]="{ text: 'Address 1' }" [colSpan]="6"></dxi-item>
+                <dxi-item dataField="preferredLocation.address2" [label]="{ text: 'Address 2' }" [colSpan]="6"></dxi-item>
+                <dxi-item dataField="preferredLocation.city" [isRequired]="true" [label]="{ text: 'City' }" [colSpan]="3"></dxi-item>
+                <dxi-item dataField="preferredLocation.state" [isRequired]="true" [label]="{ text: 'State' }"  [colSpan]="2">
+                  <div *dxTemplate>
+                    <dx-select-box
+                      [items]="states"
+                      [(value)]="seminarForm.preferredLocation.state">
+                    </dx-select-box>
+                  </div>
+                </dxi-item>
+                <dxi-item dataField="preferredLocation.zip" [isRequired]="true" [label]="{ text: 'Zip' }"  [colSpan]="1"></dxi-item>
+              </dxi-item>
+              <dxi-item dataField="eventCoordinator"[colSpan]="2" [isRequired]="true" [label]="{ text: 'Event Coordinator' }"></dxi-item>
+              <dxi-item dataField="email"[colSpan]="2" [isRequired]="true" [label]="{ text: 'Email' }">
+                <dxi-validation-rule type="required" message="Email is required"></dxi-validation-rule>
+                <dxi-validation-rule type="email" message="Email is invalid"></dxi-validation-rule>
+              </dxi-item>
+              <dxi-item dataField="phone.number" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Phone' }" [editorOptions]="phoneEditorOptions">
+                <dxi-validation-rule type="required" message="Phone is required"></dxi-validation-rule>
+                <dxi-validation-rule
+                  type="pattern"
+                  [pattern]="phonePattern"
+                  message="The phone must have a correct USA phone format">
+                </dxi-validation-rule>
+              </dxi-item>
+              <dxi-item
+                dataField="hasProjectingDevice"
+                editorType="dxRadioGroup"
+                [colSpan]="3"
+                [label]="{ text: 'Does location have a screen projector or TV for seminar presentation?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Yes' },
+                    { value: false, label: 'No' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="volunteersAvailable"
+                editorType="dxRadioGroup"
+                [colSpan]="3"
+                [label]="{ text: 'Will a volunteer be available to assist in running presentation during seminar?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Yes' },
+                    { value: false, label: 'No' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="isPrivateEvent"
+                editorType="dxRadioGroup"
+                [colSpan]="6"
+                [label]="{ text: 'Is this a private seminar, or is it open to the public? (We will advertise this event if it is open to the public)' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Private Seminar' },
+                    { value: false, label: 'Open to Public' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="isPersonalRegistration"
+                editorType="dxRadioGroup"
+                [colSpan]="6"
+                [label]="{ text: 'Will guests register for this seminar on your website, or do you need us to create a registration page?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Guest will register on my website and I will provide the link' },
+                    { value: false, label: 'I would like Impact to create a registration page for my event' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item dataField="requestedTicketPrice"[colSpan]="6" [isRequired]="true" [label]="{ text: 'How much would you like your tickets to cost? (Typically ranges from $10-$40)' }"></dxi-item>
+              <dxi-item
+                dataField="isLunchProvided"
+                editorType="dxRadioGroup"
+                [colSpan]="3"
+                [label]="{ text: 'Do you plan to provide lunch for your participants?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Yes' },
+                    { value: false, label: 'No' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item
+                dataField="isLunchIncluded"
+                editorType="dxRadioGroup"
+                [colSpan]="3"
+                [label]="{ text: 'If yes, is lunch included in their ticket cost?' }"
+                [editorOptions]="{
+                  dataSource: [
+                    { value: true, label: 'Yes' },
+                    { value: false, label: 'No' }
+                  ],
+                  valueExpr: 'value',
+                  displayExpr: 'label',
+                  layout: 'horizontal'
+                }"
+              ></dxi-item>
+              <dxi-item dataField="comments" [colSpan]="6" editorType="dxTextArea" [label]="{ text: 'Any questions, concerns, or comments?' }" [editorOptions]="{ height: 125 }"></dxi-item>
+              <dxi-item itemType="button" [colSpan]="6" [buttonOptions]="registerButtonOptions"></dxi-item>
+            </dx-form>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

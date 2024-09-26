@@ -1,4 +1,3 @@
-<!-- TODO: connect to cart data -->
 <div class="mini-cart">
   <div *ngIf="cartService.getCartProducts().length === 0">
     <h5>Your cart is empty</h5>
@@ -7,17 +6,17 @@
     <ul [ngClass]="['mini-cart-list', cartService.getCartProducts().length === 1 ? 'slider-height_1' :  cartService.getCartProducts().length === 2 ? 'slider-height_2' : 'slider-height']">
       <li *ngFor="let item of cartService.getCartProducts()">
         <div class="cart-img f-left">
-          <a [routerLink]="['/shop/shop-details', item.id]">
-            <img [src]="item.img" alt="cart-img" />
+          <a [routerLink]="item?.isEvent ? ['/event-details', item?.id] : ['/product-details', item?.id]">
+            <img [src]="item?.img?.url" alt="cart-img" />
           </a>
         </div>
         <div class="cart-content f-left text-left">
           <h5>
-            <a [routerLink]="['/shop/shop-details', item.id]">{{item.title}}</a>
+            <a [routerLink]="item?.isEvent ? ['/event-details', item?.id] : ['/product-details', item?.id]">{{item?.itemName}}</a>
           </h5>
           <div class="cart-price">
-            <span class="ammount">{{item.orderQuantity}} <i class="fal fa-times"></i></span>
-            <span class="price">$ {{item.price.toFixed(2)}}</span>
+            <span class="ammount">{{item?.orderQuantity}} <i class="fal fa-times"></i></span>
+            <span class="price">$ {{item?.price.toFixed(2)}}</span>
           </div>
         </div>
         <div class="del-icon f-right mt-30">
@@ -29,11 +28,11 @@
     </ul>
     <div class="total-price d-flex justify-content-between mb-30">
       <span>Subtotal:</span>
-      <span>${{(cartService.totalPriceQuantity().total).toFixed(2)}}</span>
+      <span>${{(cartService.totalPriceQuantity().totalBeforeDiscount).toFixed(2)}}</span>
     </div>
     <div class="checkout-link">
-      <a routerLink="/shop/cart" class="os-btn">view Cart</a>
-      <a class="os-btn os-btn-black" routerLink="/pages/checkout">Checkout</a>
+      <a routerLink="/shopping-cart" class="os-btn">View Cart</a>
+      <a class="os-btn os-btn-black" routerLink="/checkout">Checkout</a>
     </div>
   </div>
 </div>

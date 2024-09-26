@@ -1,0 +1,25 @@
+<app-home-header></app-home-header>
+
+<main class="team-details">
+  <section class="pb-70 mt-60">
+    <div >
+      <div class="row justify-content-center">
+        <div class="col-xl-4 image-column">
+          <div class="team-details__team-image fix">
+            <img class="transform" [src]="teamMember?.photoUrl?.url" [alt]="teamMember?.firstName">
+          </div>
+        </div>
+        <div class="col-xl-6 text-center">
+          <h1>{{ teamMember?.firstName }} {{ teamMember?.lastName }}</h1>
+          <hr class="custom-hr">
+          <h5>{{ teamMember?.title }}</h5>
+          <p class="mt-50 pl-50 pr-50">{{ teamMember?.bio }}</p>
+          <!--TODO: implement donations specific to team member-->
+          <!-- <a class="os-btn mt-20">Donate to {{ teamMember?.firstName }}'s Ministry</a> -->
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

@@ -8,7 +8,7 @@
       <section class="slider__area slider__area-4 p-relative">
         <div class="slider-active swiper-container" #heroSliderContainer >
           <div class="swiper-wrapper">
-            <div class="seminars__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fseminar-drawing-light.PNG?alt=media&token=ff487fe7-0c9f-412f-a464-c1bab75467e5)'">
+            <div class="seminars__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fseminar-header.PNG?alt=media&token=ff0a80af-49fb-4d0d-b5c6-26aff5c8309a)'">
               <div class="container">
                 <div class="row">
                   <div class="col-xl-7 col-lg-6 col-md-8 col-sm-10 col-12">
@@ -17,6 +17,7 @@
                       <h1 class="seminars__header__title">Seminars</h1>
                       <hr class="custom-hr">
                       <p class="seminars__header__subtitle">Structure your church to make and multiply disciples with the Disciple-Making Church strategy. We come to <strong>you</strong> and train your staff to implement a proven strategy to grow your ministry.</p>
+                      <a href="/seminar-form" class="os-btn seminars__header-button">Book a Seminar</a>
                     </div>
                   </div>
                 </div>
@@ -43,31 +44,36 @@
             </div>
           </div>
 
-          <div class="seminars__prices-row row mt-80">
+          <div class="seminars__prices-row row mt-80 pb-50">
+            <!--TODO: style this title better-->
+            <!-- <div class="seminars__prices-row-title section__title mb-40">
+              <h2>PRICING</h2>
+            </div> -->
             <div class="seminars__prices-row__box col-xl-4 col-md-6 col-sm-9">
               <div class="title">IN PERSON, LIVE</div>
-              <div class="price">$900</div>
+              <div class="price">${{webConfig.inpersonSeminarCost}}</div>
               <ul class="custom-bullets">
                 <li class="perks">Experienced Trainer</li>
                 <li class="perks">A Proven Church Multiplication Strategy</li>
                 <li class="perks">Tools + Resources for Multiplication</li>
                 <li class="perks">Follow-up Support</li>
               </ul>
-              <button class="os-btn">GET STARTED</button>
+              <a href="/seminar-form" class="os-btn">GET STARTED</a>
             </div>
             <div class="seminars__prices-row__box col-xl-4 col-md-6 col-sm-9">
               <div class="title">ONLINE VIDEO TRAINING</div>
-              <div class="price">$149</div>
+              <div class="price">${{webConfig.onlineSeminarCost}}</div>
               <ul class="custom-bullets">
                 <li class="perks">Experienced Trainer (Recordings)</li>
                 <li class="perks">A Proven Church Multiplication Strategy</li>
                 <li class="perks">Tools + Resources for Multiplication</li>
                 <li class="perks">Contact us for Follow-up Support</li>
               </ul>
-              <button class="os-btn">GET STARTED</button>
+              <!--TODO: link to store item-->
+              <a href="/store" class="os-btn">GET STARTED</a>
             </div>
           </div>
-         
+
           <div class="seminars__description banner__inner p-relative z-index-1 pt-50">
             <div class="row justify-content-center align-items-center">
               <div class="seminars__description__text-area col-xl-5 col-lg-5 d-flex z-index-1">
@@ -83,16 +89,19 @@
                 </ul>
               </div>
               <div class="col-xl-5 col-lg-5">
-                <div class="video__area-df" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fseminar-video-thumbnail.png?alt=media&token=7b647fcd-7a81-4f1a-820f-b736210a1ae9)">
+                <div *ngIf="!isPlaying" class="video__area-df mb-60" style="width: 100%; background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-video-thumbnail.png?alt=media&token=9fb83005-f1c7-4973-884c-98436560271b)">
                   <div class="container">
                     <div class="video__content text-center">
-                      <div class="video__button mb-30">
-                        <a (click)="utilsService.playVideo('Civbm8KNXhE')" class="cursor-pointer">
+                      <div class="video__button mb-60">
+                        <a (click)="playVideo()" class="cursor-pointer">
                           <i class="fas fa-play"></i>
                         </a>
                       </div>
                     </div>
                   </div>
+                </div>
+                <div *ngIf="isPlaying" id="video-overlay"  class="mb-60">
+                  <youtube-player [videoId]="'Civbm8KNXhE'" [width]="443" [height]="250" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player>
                 </div>
               </div>
             </div>
@@ -109,7 +118,7 @@
                   <div class="banner__item mb-30 p-relative">
                     <div class="banner__thumb fix">
                       <div class="w-img">
-                        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fseminar-mission.PNG?alt=media&token=ebc2c4fd-316c-4039-abc6-2446497983bc'" alt="banner" height="350px" />
+                        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-mission.PNG?alt=media&token=1163d382-936e-4625-8995-9dda8986e751'" alt="banner" height="350px" />
                       </div>
                     </div>
                     <div class="banner__content p-absolute transition-3 text-white">
@@ -124,7 +133,7 @@
                   <div class="banner__item mb-30 p-relative">
                     <div class="banner__thumb fix">
                       <div class="w-img">
-                        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fseminar-model.PNG?alt=media&token=220fe635-2bb7-41c6-a2f3-d8117c64bc64'" alt="banner" height="350px" />
+                        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-model.PNG?alt=media&token=aee4f0a7-ce6d-40e3-9905-10e851008dd3'" alt="banner" height="350px" />
                       </div>
                     </div>
                     <div class="banner__content p-absolute transition-3 text-white">
@@ -139,7 +148,7 @@
                   <div class="banner__item mb-30 p-relative">
                     <div class="banner__thumb fix">
                       <div class="w-img">
-                        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fseminar-method.PNG?alt=media&token=cd1365ca-3b95-4b6c-8874-7ffc3aeaa830'" alt="banner" height="350px" />
+                        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-method.PNG?alt=media&token=87bb6f25-226b-4cd5-b681-d002be26f94c'" alt="banner" height="350px" />
                       </div>
                     </div>
                     <div class="banner__content p-absolute transition-3 text-white">
@@ -154,7 +163,7 @@
                   <div class="banner__item mb-30 p-relative">
                     <div class="banner__thumb fix">
                       <div class="w-img">
-                        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fseminar-takeaway.PNG?alt=media&token=2a489db1-4342-4386-8abd-70c16261c88e'" alt="banner" height="350px" />
+                        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-takeaway.PNG?alt=media&token=2fc66e00-43c3-42e1-90b9-70c346d63da7'" alt="banner" height="350px" />
                       </div>
                     </div>
                     <div class="banner__content p-absolute transition-3 text-white">
@@ -172,7 +181,7 @@
         </div>
       </section>
     </div>
-    <section class="countries-banner page__title p-relative d-flex align-items-center mt-80 mb-80" [style.background-image]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fyellow-world-banner.PNG?alt=media&token=82459d72-cfa0-4294-adba-d9dfdd336b7f)'">
+    <section class="countries-banner page__title p-relative d-flex align-items-center mt-80 mb-80" [style.background-image]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fyellow-world-banner.PNG?alt=media&token=a2f4b0e2-dacb-4101-b6f6-8de82c5de4dc)'">
       <div class="row">
         <h1 class="mb-50">START TODAY</h1>
         <div class="col-xl-5 countries-banner__left">
@@ -181,20 +190,19 @@
             You want to see your church actively growing. We can help you accomplish all of these things and more. Let’s get started together!</div>
         </div>
         <div class="col-xl-5 countries-banner__right">
-          <dx-form
-            [colCount]="2"
-          >
-            <dxi-item dataField="name" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Name' }"></dxi-item>
-            <dxi-item dataField="email" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Email' }"></dxi-item>
+          <dx-form [formData]="consultationRequest" [colCount]="2">
+            <dxi-item dataField="firstName" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'First Name' }"></dxi-item>
+            <dxi-item dataField="lastName" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Last Name' }"></dxi-item>
+            <dxi-item dataField="email" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Email' }" [colSpan]="2"></dxi-item>
             <dxi-item dataField="message" editorType="dxTextArea" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Message' }" [colSpan]="2"></dxi-item>
           </dx-form>
-          <button class="os-btn bg-white mt-30">GET MY FREE CONSULTATION</button>
+          <button class="os-btn bg-white mt-30" (click)="handleFormSubmit()">GET MY FREE CONSULTATION</button>
         </div>
       </div>
     </section>
 
     <!-- testimonials -->
-    <app-testimonials [testimonials]="seminarTestimonials"></app-testimonials>
+    <app-testimonials [testimonialType]="'Seminars'"></app-testimonials>
   </main>
 </div>
 

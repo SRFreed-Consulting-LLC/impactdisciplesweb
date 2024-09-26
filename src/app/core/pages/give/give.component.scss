@@ -1,22 +1,115 @@
+@import '../../../../assets/theme/scss/variables';
+
 .give {
   &__container {
     background-color: #ffffff;
     padding: 20px;
+  }
+  &__header {
+    height: 480px;
+    &__pretitle {
+      color: #ffcc00;
+      font-size: 20px;
+    }
+    &__title {
+      font-size: 50px;
+      font-weight: 600;
+      color: #fff;
+    }
+    p {
+      color: #fff;
+      margin: 0;
+    }
+  }
+  .single-slider {
+    height: 400px;
+    hr {
+      background-image: linear-gradient(to right, transparent, #ffcc00);
+      height: 5px;
+      border: none;
+      outline: none;
+      position: relative;
+      width: 50%;
+      opacity: .8;
+      
+      &:before {
+        position: absolute;
+        top: 1px;
+        left: 90%;
+        background: black;
+        color: white;
+        padding: 1em;
+        width: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
   }
   &__gift-option {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     text-align: center;
-    height: 200px;
     align-items: center;
-    margin: 0 30px;
-    border: 1px solid black;
-    padding: 20px;
     .buttons {
       display: flex;
       flex-direction: column;
       width: 100%;
     }
   }
+  .box {
+    border: 1px solid black;
+    width: 100%;
+    min-height: 200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .large-icon {
+      font-size: 40px;
+      margin: 25px 0;
+    }
+    .field-container {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.payment-form {
+  overflow: hidden;
+  transition: max-height 0.6s ease, opacity 0.6s ease; 
+  max-height: 0; /* Default hidden */
+  opacity: 0;
+  padding: 10px;
+  visibility: hidden;
+}
+
+.payment-form.active {
+  max-height: 520px; /* Expanded form */
+  opacity: 1;
+  visibility: visible;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.buttons {
+  transition: opacity 0.6s ease;
+}
+
+.buttons.hidden {
+  opacity: 0;
+  visibility: hidden;
+  display: none !important;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: $theme-color;
+  cursor: pointer;
+  display: block;
+  margin-top: 50px;
 }

@@ -1,0 +1,82 @@
+<app-home-header></app-home-header>
+
+<main class="consultation">
+  <section class="breadcrumb page__title p-relative d-flex align-items-center" [style.background-image]="'url()'">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="page__title-inner text-center">
+            <h1>Free Consultation Pre-Survey</h1>
+            <div class="page__title-breadcrumb">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center">
+                  <li class="breadcrumb-item">
+                    Please complete this initial survey. Once it is submitted, an Impact Consultant will contact you within 1-2 business days to schedule your free consultation.
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="consultation__area pb-100 mt-30">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-10">
+          <div class="consultation__info">
+            <form  (submit)="onSubmitForm()">
+              <dx-form
+                #lunchRequestFormComponent
+                [formData]="consultationSurveyForm"
+                labelLocation="top"
+                [colCount]="2"
+                [showColonAfterLabel]="false">
+                <dxi-item dataField="firstName" [isRequired]="true" [label]="{ text: 'First Name' }"></dxi-item>
+                <dxi-item dataField="lastName" [isRequired]="true" [label]="{ text: 'Last Name' }"></dxi-item>
+                <dxi-item dataField="phone.number" [isRequired]="true" [label]="{ text: 'Phone Number' }" [editorOptions]="phoneEditorOptions">
+                  <dxi-validation-rule type="required" message="Phone is required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="email" [isRequired]="true" [label]="{ text: 'Email Address' }">
+                  <dxi-validation-rule type="required" message="Email is required"></dxi-validation-rule>
+                  <dxi-validation-rule type="email" message="Email is invalid"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="churchName" [isRequired]="true" [label]="{ text: 'Church Name' }"></dxi-item>
+                <dxi-item dataField="country" [isRequired]="true" [label]="{ text: 'Country where church is located (Must be in U.S. for full consultation package)' }"></dxi-item>
+                <dxi-item
+                  dataField="committment"
+                  editorType="dxRadioGroup"
+                  [label]="{ text: 'How committed is the church to making disciples? (1 being not committed, 5 being very committed)' }"
+                  [editorOptions]="{
+                    items: [1, 2, 3, 4, 5],
+                    layout: 'horizontal'
+                  }"
+                ></dxi-item>
+                <dxi-item
+                  dataField="readiness"
+                  editorType="dxRadioGroup"
+                  [label]="{ text: 'How ready is the church\'s staff leadership to support changes in the church?' }"
+                  [editorOptions]="{
+                    items: [1, 2, 3, 4, 5],
+                    layout: 'horizontal'
+                  }"
+                ></dxi-item>
+                <dxi-item dataField="strategyDescription" editorType="dxTextArea" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Have you used any kind of discpleship strategy? If yes, how effective has this strategy been in the past?' }" [editorOptions]="{ height: 155 }"></dxi-item>
+                <dxi-item dataField="teamDescription" editorType="dxTextArea" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Describe your discipleship team if you have one in place.' }" [editorOptions]="{ height: 155 }"></dxi-item>
+                <dxi-item dataField="communicationDescription" editorType="dxTextArea" [colSpan]="2" [isRequired]="true" [label]="{ text: 'What communication has taken place so far related to growth, expansion of disciple making, and revitalization?' }" [editorOptions]="{ height: 155 }"></dxi-item>
+                <dxi-item dataField="resourceDescription" editorType="dxTextArea" [colSpan]="2" [isRequired]="true" [label]="{ text: 'What resources or tools are you currently using for discipleship?' }" [editorOptions]="{ height: 155 }"></dxi-item>
+                <dxi-item dataField="resultsDescription" editorType="dxTextArea" [colSpan]="2" [isRequired]="true" [label]="{ text: 'What kinds of results are you getting from your current small groups, if you have them? Are new groups being made? Are disciples being reproduced?' }" [editorOptions]="{ height: 155 }"></dxi-item>
+                <dxi-item dataField="supportDescription" editorType="dxTextArea" [colSpan]="2" [isRequired]="true" [label]="{ text: 'In what area of leadership development do you feel you need the most support?' }" [editorOptions]="{ height: 155 }"></dxi-item>
+                <dxi-item itemType="button" [colSpan]="2" [buttonOptions]="registerButtonOptions"></dxi-item>
+              </dx-form>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

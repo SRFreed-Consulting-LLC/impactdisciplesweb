@@ -1,5 +1,5 @@
 <section class="subscribe__area pb-100">
-  <div class="container-img pb-60" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Standard-Web-Images%2Fgroup-1.PNG?alt=media&token=68964f3a-ff3a-4965-b155-2efa128f6640)'">
+  <div class="container-img pb-60" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fnewsletter-banner.PNG?alt=media&token=928f4a44-6a3a-420b-8bf2-9aa127c1f48a)'">
     <div class="subscribe__inner pt-40 pr-20 pl-20">
       <div class="row justify-content-center text-center">
         <h2 class="subscribe__title">STAY IN THE LOOP</h2>
@@ -7,9 +7,28 @@
         <div class="subscribe__content text-center pt-30">
           <div class="subscribe__form">
             <form (ngSubmit)="handleFormSubmit()">
-              <input required type="name" name="name" [(ngModel)]="name" placeholder="Name">
-              <input required type="email" name="email" [(ngModel)]="email" placeholder="Email">
-              <button class="subscribe__button os-btn os-btn-2 os-btn-3" type="submit">subscribe</button>
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-3">
+                  <input required type="name" name="name" [(ngModel)]="subscription.firstName" placeholder="First Name">
+                </div>
+                <div class="col-3">
+                  <input required type="name" name="name" [(ngModel)]="subscription.lastName" placeholder="Last Name">
+                </div>
+                <div class="col-3"></div>
+              </div>
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                  <input required type="email" name="email" [(ngModel)]="subscription.email" placeholder="Email">
+                </div>
+                <div class="col-3"></div>
+              </div>
+              <div class="row">
+                <div class="col-12 text-center">
+                  <button class="subscribe__button os-btn os-btn-2 os-btn-3" type="submit">subscribe</button>
+                </div>
+              </div>
             </form>
           </div>
         </div>
