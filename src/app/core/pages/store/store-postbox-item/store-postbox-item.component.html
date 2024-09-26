@@ -10,6 +10,9 @@
       </h4>
       <h5><strong>$ {{ product.cost }}</strong></h5>
       <p class="truncate" [innerHTML]="product?.description"></p>
-      <a [routerLink]="['/product-details', product?.id]" class="os-btn">view</a>
+      <div class="d-flex">
+        <a [routerLink]="['/product-details', product?.id]" class="impact-btn mr-20">view</a>
+        <a (click)="addCartProduct()" class="impact-icon-btn impact-icon-btn-no-border"><i class="fas fa-cart-plus"></i>ADD</a>
+      </div>
   </div>
 </div>

@@ -45,11 +45,12 @@ h1, h2, h3, h4, h5, h6, p {
 	height: 50px;
 	line-height: 46px;
 	padding: 0 42px;
-	border: 2px solid $theme-color;
+	border: 2px solid #ebebeb;
 	color: $black-2;
 	background: transparent;
 	z-index: 1;
 	font-size: 12px;
+	cursor: pointer;
 	.dx-button-content {
 		display: flex;
 		justify-content: center;
@@ -101,6 +102,20 @@ h1, h2, h3, h4, h5, h6, p {
 		&:hover{
 			border-color: $theme-color;
 		}
+		.dx-icon {
+			color: $white;
+		}
+	}
+	&-black-border{
+		color: $black-2;
+		background-color: $white;
+		border-color: $black-2;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
 	}
 	&-white{
 		color: $white;
@@ -124,6 +139,95 @@ h1, h2, h3, h4, h5, h6, p {
 			}
 		}
   }
+}
+
+.impact-icon-btn {
+	background: transparent;
+	position: relative;
+	z-index: 1;
+	border: 2px solid #ebebeb;
+	color: $black-2;
+	position: relative;
+	display: flex;
+	align-items: center;
+	text-transform: uppercase;
+	text-align: center;
+	height: 50px;
+	line-height: 46px;
+  padding: 0 20px;
+	i {
+		font-size: 20px;
+		margin-right: 10px;
+	}
+	cursor: pointer;
+	.dx-button-content {
+		display: flex;
+		justify-content: center;
+	}
+	&::after{
+		position: absolute;
+		content: '';
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 0;
+		background-color: $theme-color;
+		z-index: -1;
+	}
+	&:hover{
+		color: $white;
+		border-color: $theme-color;
+		&::after{
+			height: 100%;
+		}
+		& span{
+			color: $white;
+		}
+		i {
+			color: $white;
+		}
+	}
+	&:focus {
+		i {
+			color: $white;
+		}
+	}
+	&-no-border {
+		color: $black-2;
+		background-color: $white;
+		border-color: transparent;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+	}
+	&-black-bg{
+		color: $white;
+		background-color: $black-2;
+		border-color: $black-2;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+		.dx-icon {
+			color: $white;
+		}
+	}
+	&-black-border{
+		color: $black-2;
+		background-color: $white;
+		border-color: $black-2;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+	}
 }
 
 .slider-hr {

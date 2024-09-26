@@ -44,9 +44,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   loggedInUser: string = '';
   logInForm: { email: string, password: string } = { email: '', password: '' };
   couponCode: string = '';
-  discountAmount: CouponModel;
+  itemDiscountAmount: CouponModel;
+  cartDiscountAmount: CouponModel;
   orignalTotal: number = 0;
-  isPercent: boolean = false;
   password: string = '';
   paymentIntent: string;
   public states: string[];
@@ -67,7 +67,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-
+ 
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       total: this.cartService.totalPriceQuantity().total,
@@ -82,6 +82,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }
     }
     this.orignalTotal = this.checkoutForm.total;
+
+    console.log(this.checkoutForm)
 
     this.toggleForm();
 
@@ -340,6 +342,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   // Method to handle coupon application
   applyCoupon() {
+    this.resetCartItems();
     if (this.couponCode) {
       this.couponService.getAllByValue('code', this.couponCode).then(coupons => {
         if (coupons.length > 0 && coupons[0].isActive) {
@@ -349,30 +352,41 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
           let isValid: boolean = false;
 
-          this.checkoutForm.cartItems.forEach(item => {
-            let itemTotal = item.price * item.orderQuantity; // Calculate total for each item
+          if(validCoupon?.tags?.length > 0) {
+            this.checkoutForm.cartItems.forEach(item => {
+              let itemTotal = item.price * item.orderQuantity; // Calculate total for each item
+           
+              if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id))) {
+                isValid = true;
+                this.itemDiscountAmount = validCoupon;
 
-            if (!validCoupon?.tags || (validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id))) {
-              isValid = true;
-
-              if (validCoupon.percentOff) {
-                item.discountPrice = (item.price * validCoupon.percentOff) / 100;
-              } else if (validCoupon.dollarsOff) {
-                item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
+                if (validCoupon.percentOff) {
+                  item.discountPrice = (item.price * validCoupon.percentOff) / 100;
+                } else if (validCoupon.dollarsOff) {
+                  item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
+                }
+  
+                total+=(item.discountPrice * item.orderQuantity);
+              } else {
+                total+=itemTotal;
               }
-
-              total+=(item.discountPrice * item.orderQuantity);
-            } else {
-              total+=itemTotal;
+            });
+          } else {
+            isValid = true;
+            this.cartDiscountAmount = validCoupon;
+            if (validCoupon.percentOff) {
+              total += this.checkoutForm.total - ((this.checkoutForm.total * validCoupon.percentOff) / 100);
+            } else if (validCoupon.dollarsOff) {
+              let discountAmount = Math.min(validCoupon.dollarsOff, this.checkoutForm.total);
+              total += this.checkoutForm.total - discountAmount;
             }
-          });
+          }
+   
 
           if (isValid) {
             this.checkoutForm.total = total;
 
             this.checkoutForm.couponCode = validCoupon.code;
-
-            this.discountAmount = validCoupon
 
             this.showMessage("Coupon applied successfully.", 'SUCCESS');
           } else {
@@ -387,67 +401,27 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.showMessage("Failed to apply coupon.", 'ERROR');
       });
     } else {
-      this.checkoutForm.total = this.cartService.totalPriceQuantity().total
-      this.orignalTotal = this.checkoutForm.total;
-      this.discountAmount = null;
+      this.resetCartItems();
       this.toggleForm();
     }
+    console.log(this.checkoutForm)
+ 
+  }
 
-
-
-
-    // if (this.couponCode) {
-    //   this.couponService.getAllByValue('code', this.couponCode).then(coupons => {
-    //     if (coupons.length > 0 && coupons[0].isActive) {
-    //       let validCoupon = coupons[0];
-    //       let total = this.calculateTotal(this.checkoutForm.cartItems);
-
-    //       let isvalid: boolean = false;
-
-    //       let itemIds: string[] = this.checkoutForm.cartItems.map(item => item.id)
-
-    //       console.log(validCoupon)
-
-    //       if(validCoupon?.tags?.length > 0) {
-    //         validCoupon.tags.forEach(tag => {
-    //           if(itemIds.includes(tag.id)){
-    //             isvalid = true;
-    //           }
-    //         })
-    //       } else {
-    //         isvalid = true;
-    //       }
-
-    //       if(isvalid){
-    //         if (validCoupon.percentOff) {
-    //           this.isPercent = true;
-    //           this.discountAmount = validCoupon.percentOff;
-    //           this.checkoutForm.total = total - ((total * validCoupon.percentOff) / 100);
-    //         } else if (validCoupon.dollarsOff) {
-    //           this.discountAmount = validCoupon.dollarsOff;
-    //           this.discountAmount = Math.min(this.discountAmount, total);
-    //           this.checkoutForm.total = total - this.discountAmount;
-    //         }
-
-    //         this.checkoutForm.couponCode = validCoupon.code;
-
-    //         this.showMessage("Coupon applied successfully.", 'SUCCESS');
-    //       } else {
-    //         this.showMessage("Coupon not Valid for these items.", 'ERROR');
-    //       }
-
-    //     } else {
-    //       this.showMessage("Invalid or inactive coupon.", 'ERROR');
-    //     }
-    //     this.toggleForm()
-    //   }).catch(error => {
-    //     console.error("Error fetching coupon:", error);
-    //     this.showMessage("Failed to apply coupon.", 'ERROR');
-    //   });
-    // }
+  resetCartItems() {
+    this.checkoutForm.cartItems.forEach(item => {
+      if (item.discountPrice) {
+        item.discountPrice = null;
+      }
+    });
+    this.checkoutForm.total = this.cartService.totalPriceQuantity().total
+    this.orignalTotal = this.checkoutForm.total;
+    this.itemDiscountAmount = null;
+    this.cartDiscountAmount = null;
   }
 
   ngOnDestroy(): void {
+    this.resetCartItems();
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

@@ -1,6 +1,9 @@
 <app-home-header></app-home-header>
 
 <main>
+
+  <app-breadcrumb [currentPageName]="'Shopping Cart'" [bgColor]="'#1F1F1F'" [previousLink]="'/store'" [previousLinkName]="'Store'" [isDark]="true"></app-breadcrumb>
+
   <section class="cart-area pt-100 pb-100">
     <div class="container">
       <div *ngIf="cartService.getCartProducts().length === 0" class="text-center pt-50">
@@ -69,14 +72,14 @@
               <div class="col-8">
                 <div>
                   <div class="coupon">
-                    <button (click)="cartService.clearCart()" class="os-btn os-btn-black" name="update_cart" type="submit">
+                    <button (click)="cartService.clearCart()" class="impact-btn impact-btn-black-border" name="update_cart" type="submit">
                       Clear cart
                     </button>
                   </div>
                 </div>
               </div>
               <div class="col-3">
-                <a class="os-btn w-100" routerLink="/checkout">Proceed to checkout</a>
+                <a class="impact-btn impact-btn-black-bg" routerLink="/checkout">Proceed to checkout</a>
               </div>
             </div>
         </div>

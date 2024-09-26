@@ -49,11 +49,13 @@ export class CartService {
 
   public totalPriceQuantity() {
     return state.cart.reduce(
-      (cartTotal: { total: number; quantity: number }, cartItem: CartItem) => {
+      (cartTotal: { total: number; quantity: number; totalBeforeDiscount: number }, cartItem: CartItem) => {
         const { price, orderQuantity, discountPrice } = cartItem;
         if (typeof orderQuantity !== "undefined") {
+          const itemTotal = price * orderQuantity;
+          cartTotal.totalBeforeDiscount += itemTotal;
           if (discountPrice && discountPrice > 0) {
-            const itemTotal = (price - (price * discountPrice) / 100) * orderQuantity;
+            const itemTotal = discountPrice * orderQuantity;
             cartTotal.total += itemTotal;
           } else {
             const itemTotal = price * orderQuantity;
@@ -66,6 +68,7 @@ export class CartService {
       {
         total: 0,
         quantity: 0,
+        totalBeforeDiscount: 0
       }
     );
   };
