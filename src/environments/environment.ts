@@ -13,7 +13,7 @@ export const environment = {
   session_expires: 30,
   stripeURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/checkout",
   stripeCancelURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/cancel",
-  stripeTestKey: "pk_test_51IP8IBC4Pv6WfeJrdtjF5O4PsGZ4iCtIHV0QdUXya0hZZph4guaxLrR83RCiLMIkcCm5RdkuMVDCz1axYQyBfaWH00nFnZhjrl"
+  stripeTestKey: "pk_live_51IP8IBC4Pv6WfeJrsYMjRAmzFsA0L6kjBvQx8upqGHxuo3T0WI60u1isqXBz29SyfC27v3yB34sGUYu1pl7oU1Co00LY6lIrrW"
 };
 
 
