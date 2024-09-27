@@ -124,9 +124,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.items = [];
 
             this.cartService.getCartProducts().forEach(product => {
-              this.items.push({id: product.id, amount: ((product.discountPrice ? product.discountPrice : product.price) * product.orderQuantity * 100)})
+              this.items.push({id: product.id, amount: ((product?.discountPrice === null || product?.discountPrice === undefined ? product.price : product.discountPrice) * product.orderQuantity * 100)})
             })
-            console.log(this.items)
+
             // Fetch client secret for Stripe payment
             const response = await fetch(environment.stripeURL, {
               method: "POST",
@@ -186,8 +186,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         if(this.checkoutForm.total > 0){
           this.submitStripePayment(savedForm)
-        } else {
-          this.cancelStripeIntent(savedForm)
         }
 
         this.setLoading(false);
@@ -251,6 +249,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async submitStripePayment(savedForm: CheckoutForm){
+    console.log(environment.domain + "/checkout-success?savedForm=" + savedForm.id)
     let response = await this.stripeService.getStripe().then(async stripe => {
       return await stripe.confirmPayment({
         elements: this.elements,
@@ -267,13 +266,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  async cancelStripeIntent(savedForm: CheckoutForm){
+  async cancelStripeIntent(){
     await fetch(environment.stripeCancelURL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
-    }).then(() => {
-      this.router.navigate(['/', 'checkout-success'], {queryParams: {savedForm: savedForm.id}});
     });
   }
 
@@ -340,6 +337,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   // Method to handle coupon application
   applyCoupon() {
+    this.cancelStripeIntent();
+
     this.resetCartItems();
     if (this.couponCode) {
       this.couponService.getAllByValue('code', this.couponCode).then(coupons => {
@@ -383,7 +382,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.checkoutForm.total = total;
 
             this.checkoutForm.couponCode = validCoupon.code;
-            
+
             this.showMessage("Coupon applied successfully.", 'SUCCESS');
           } else {
             this.showMessage("Coupon not valid for these items.", 'ERROR');

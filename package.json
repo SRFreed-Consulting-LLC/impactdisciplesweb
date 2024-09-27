@@ -2,6 +2,8 @@
   "name": "impactdisciplesweb",
   "version": "0.0.0",
   "scripts": {
+    "start-local": "ng serve --configuration=local",
+    "build-local": "ng build --configuration=local",
     "start-dev": "ng serve --configuration=development",
     "build-dev": "ng build --configuration=development",
     "build-deploy-dev": "ng build --configuration=development && firebase deploy --only hosting:development",
