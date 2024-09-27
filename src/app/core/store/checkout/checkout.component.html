@@ -188,7 +188,7 @@
                     <tr *ngFor="let cartItem of checkoutForm.cartItems" class="cart_item">
                       <td class="product-name">
                         <span>{{ cartItem?.itemName }} <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong></span>
-                        <div *ngIf="cartItem?.discountPrice" class="coupon-text d-flex">
+                        <div *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="coupon-text d-flex">
                           <span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ itemDiscountAmount?.code }}</span>
                           <span *ngIf="itemDiscountAmount?.dollarsOff" class="amount">- ${{ itemDiscountAmount.dollarsOff }}</span>
                           <span *ngIf="itemDiscountAmount?.percentOff" class="amount">- {{ itemDiscountAmount.percentOff }}%</span>
@@ -202,7 +202,7 @@
                       <td *ngIf="!cartItem.isEvent"></td>
                       <td class="product-total text-right">
                         <span *ngIf="!cartItem?.discountPrice" class="amount">${{ cartItem?.price }}</span>
-                        <div *ngIf="cartItem?.discountPrice" class="d-flex">
+                        <div *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="d-flex">
                           <span class="after-discount">${{ cartItem?.discountPrice }}</span>
                           <span class="before-discount">${{ cartItem?.price }}</span>
                         </div>

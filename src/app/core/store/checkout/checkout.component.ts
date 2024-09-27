@@ -359,13 +359,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id))) {
                 isValid = true;
                 this.itemDiscountAmount = validCoupon;
-
+                console.log('valid coupon')
+                console.log(validCoupon)
                 if (validCoupon.percentOff) {
-                  item.discountPrice = (item.price * validCoupon.percentOff) / 100;
+                  item.discountPrice = item.price - ((item.price * validCoupon.percentOff) / 100);
                 } else if (validCoupon.dollarsOff) {
                   item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
                 }
-  
+                console.log('item')
+                console.log(item)
                 total+=(item.discountPrice * item.orderQuantity);
               } else {
                 total+=itemTotal;
