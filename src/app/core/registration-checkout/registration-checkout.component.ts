@@ -150,7 +150,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
 
   async handleSubmit(e) {
     if(this.checkoutFormComponent.instance.validate().isValid) {
-      let savedForm: CheckoutForm = await this.salesService.add(this.checkoutForm);
+      let savedForm: CheckoutForm = await this.saveCheckoutForm();
 
       e.preventDefault();
 
@@ -228,6 +228,22 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     subscriber.email = this.checkoutForm.email;
     subscriber.date = Timestamp.now();
     await this.newsletterSubscriptionService.add(subscriber);
+  }
+
+  async saveCheckoutForm(){
+    this.checkoutForm.processedStatus = "NEW";
+    this.checkoutForm.dateProcessed = Timestamp.now();
+
+    if(this.checkoutForm.isShippingSameAsBilling){
+      this.checkoutForm.shippingAddress = this.checkoutForm.billingAddress;
+    }
+
+    this.checkoutForm.cartItems.forEach(item => {
+      item.dateProcessed = Timestamp.now();
+      item.processedStatus = "NEW"
+    })
+
+    return await this.salesService.add(this.checkoutForm);
   }
 
   async submitStripePayment(savedForm: CheckoutForm){
