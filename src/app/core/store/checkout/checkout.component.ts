@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -67,7 +67,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
- 
+
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       total: this.cartService.totalPriceQuantity().total,
@@ -82,8 +82,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }
     }
     this.orignalTotal = this.checkoutForm.total;
-
-    console.log(this.checkoutForm)
 
     this.toggleForm();
 
@@ -128,7 +126,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.cartService.getCartProducts().forEach(product => {
               this.items.push({id: product.id, amount: ((product.discountPrice ? product.discountPrice : product.price) * product.orderQuantity * 100)})
             })
-
+            console.log(this.items)
             // Fetch client secret for Stripe payment
             const response = await fetch(environment.stripeURL, {
               method: "POST",
@@ -275,7 +273,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
     }).then(() => {
-      this.router.navigate(['/', 'registration-checkout-success'], {queryParams: {savedForm: savedForm.id}});
+      this.router.navigate(['/', 'checkout-success'], {queryParams: {savedForm: savedForm.id}});
     });
   }
 
@@ -355,19 +353,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           if(validCoupon?.tags?.length > 0) {
             this.checkoutForm.cartItems.forEach(item => {
               let itemTotal = item.price * item.orderQuantity; // Calculate total for each item
-           
+
               if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id))) {
                 isValid = true;
                 this.itemDiscountAmount = validCoupon;
-                console.log('valid coupon')
-                console.log(validCoupon)
                 if (validCoupon.percentOff) {
                   item.discountPrice = item.price - ((item.price * validCoupon.percentOff) / 100);
                 } else if (validCoupon.dollarsOff) {
                   item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
                 }
-                console.log('item')
-                console.log(item)
                 total+=(item.discountPrice * item.orderQuantity);
               } else {
                 total+=itemTotal;
@@ -383,13 +377,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               total += this.checkoutForm.total - discountAmount;
             }
           }
-   
+
 
           if (isValid) {
             this.checkoutForm.total = total;
 
             this.checkoutForm.couponCode = validCoupon.code;
-
+            
             this.showMessage("Coupon applied successfully.", 'SUCCESS');
           } else {
             this.showMessage("Coupon not valid for these items.", 'ERROR');
@@ -406,8 +400,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.resetCartItems();
       this.toggleForm();
     }
-    console.log(this.checkoutForm)
- 
+
   }
 
   resetCartItems() {
