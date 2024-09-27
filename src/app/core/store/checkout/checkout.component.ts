@@ -404,7 +404,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   resetCartItems() {
     this.checkoutForm.cartItems.forEach(item => {
-      if (item.discountPrice) {
+      if (item.discountPrice || item.discountPrice === 0) {
         item.discountPrice = null;
       }
     });
