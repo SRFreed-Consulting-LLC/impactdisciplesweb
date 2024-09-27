@@ -3,11 +3,15 @@
   "targets": {
     "impactdisciples-a82a8": {
       "hosting": {
-        "development": [
-          "impactdisciplesdev-public"
-        ],
         "production": [
-          "impactdisciples-public"
+          "impactdisciples-admin"
+        ]
+      }
+    },
+    "impactdisciplesdev": {
+      "hosting": {
+        "development": [
+          "impactdisciplesdev-admin"
         ]
       }
     }

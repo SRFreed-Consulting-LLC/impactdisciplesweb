@@ -6,10 +6,10 @@
     "build-local": "ng build --configuration=local",
     "start-dev": "ng serve --configuration=development",
     "build-dev": "ng build --configuration=development",
-    "build-deploy-dev": "ng build --configuration=development && firebase deploy --only hosting:development",
+    "build-deploy-dev": "ng build --configuration=development && firebase use impactdisciplesdev && firebase deploy --only hosting:development",
     "start-prod": "ng serve --configuration=production",
     "build-prod": "ng build --configuration=production",
-    "build-deploy-prod": "ng build --configuration=production && firebase deploy --only hosting:production",
+    "build-deploy-prod": "ng build --configuration=production && firebase use impactdisciples-a82a8 && firebase deploy --only hosting:production",
     "add-git-submodule": "git submodule add -b development https://github.com/SRFreed-Consulting-LLC/impactdisciplescommon.git",
     "init-git-submodules": "git submodule update --init --recursive && git submodule status --recursive"
   },
