@@ -65,12 +65,12 @@
         <ul>
           <li *ngFor="let series of seriesItems" class="d-flex">
             <div class="rc__post-thumb mr-20">
-              <a (click)="onSeriesClick(series?.name)">
+              <a (click)="onSeriesClick(series)">
                 <img [src]="series?.imageUrl?.url" alt="blog-1" style="width: 100px; height: 60px;" />
               </a>
             </div>
             <div class="rc__post-content">
-              <h5><a (click)="onSeriesClick(series?.name)">{{ series?.name }}</a></h5>
+              <h5><a (click)="onSeriesClick(series)">{{ series?.name }}</a></h5>
             </div>
           </li>
         </ul>

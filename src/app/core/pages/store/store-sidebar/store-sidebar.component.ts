@@ -15,7 +15,7 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
   @Input() showSeriesInSidebar = false;
   @Input() seriesItems: SeriesModel[] = [];
   @Output() categoryFilterEvent = new EventEmitter<TagModel>();
-  @Output() seriesFilterEvent = new EventEmitter<string>();
+  @Output() seriesFilterEvent = new EventEmitter<SeriesModel>();
   @Output() searchEvent = new EventEmitter<string>();
   @Output() viewAllProductsEvents = new EventEmitter<void>();
 
@@ -70,8 +70,8 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
     this.categoryFilterEvent.emit(category);
   }
 
-  onSeriesClick(tag: string): void {
-    this.seriesFilterEvent.emit(tag);
+  onSeriesClick(series: SeriesModel): void {
+    this.seriesFilterEvent.emit(series);
   }
 
   onItemClick(id: string): void {

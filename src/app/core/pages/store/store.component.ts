@@ -60,8 +60,8 @@ export class StoreComponent implements OnInit {
     this.showSeriesInMainView = false;
   }
 
-  filterProductsBySeries(series: string): void {
-    this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === series);
+  filterProductsBySeries(series: SeriesModel): void {
+    this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === series.id);
     this.showSeriesInMainView = false;
   }
 
