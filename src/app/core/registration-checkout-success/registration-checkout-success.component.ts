@@ -46,25 +46,26 @@ export class RegistrationCheckoutSuccessComponent implements AfterViewInit{
         return await stripe.retrievePaymentIntent(clientSecret);
       })
 
-      await this.handleSale(paymentIntent).then(cart => {
-        switch (paymentIntent.status) {
-          case "succeeded":
+
+      switch (paymentIntent.status) {
+        case "succeeded":
+          await this.updateSale(paymentIntent).then(() => {
             this.showMessage("Payment succeeded!");
             this.registerUsers(paymentIntent.id);
-            break;
-          case "processing":
-            this.showMessage("Your payment is processing.");
-            break;
-          case "requires_payment_method":
-            this.showMessage("Your payment was not successful, please try again.");
-            break;
-          default:
-            this.showMessage("Something went wrong.");
-            break;
-        }
-      })
+          });
+          break;
+        case "processing":
+          this.showMessage("Your payment is processing.");
+          break;
+        case "requires_payment_method":
+          this.showMessage("Your payment was not successful, please try again.");
+          break;
+        default:
+          this.showMessage("Something went wrong.");
+          break;
+      }
     } else {
-      await this.handleSale("COUPON").then(cart => {
+      await this.updateSale("COUPON").then(cart => {
         this.showMessage("You have been successfully Registered!");
         this.registerUsers(cart.couponCode);
       });
@@ -76,7 +77,7 @@ export class RegistrationCheckoutSuccessComponent implements AfterViewInit{
     messageContainer.textContent = messageText;
   }
 
-  async handleSale(paymentIntent: PaymentIntent | string){
+  async updateSale(paymentIntent: PaymentIntent | string){
     //send email
     return await this.salesService.getById(this.saleId).then(async cart => {
       cart.dateProcessed = Timestamp.now();
