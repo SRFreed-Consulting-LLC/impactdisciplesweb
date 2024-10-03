@@ -4,14 +4,14 @@
     "impactdisciples-a82a8": {
       "hosting": {
         "production": [
-          "impactdisciples-admin"
+          "impactdisciples-public"
         ]
       }
     },
     "impactdisciplesdev": {
       "hosting": {
         "development": [
-          "impactdisciplesdev-admin"
+          "impactdisciplesdev-public"
         ]
       }
     }
