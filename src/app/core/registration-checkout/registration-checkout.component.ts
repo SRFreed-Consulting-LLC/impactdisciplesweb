@@ -167,7 +167,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
       if(this.checkoutForm.total > 0){
         this.submitStripePayment(savedForm);
       } else {
-        this.cancelStripeIntent(savedForm);
+        this.cancelStripeIntent();
       }
 
       this.setLoading(false);
@@ -263,14 +263,12 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  async cancelStripeIntent(savedForm: CheckoutForm){
+  async cancelStripeIntent(){
     await fetch(environment.stripeCancelURL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
-    }).then(() => {
-      this.router.navigate(['/', 'registration-checkout-success'], {queryParams: {savedForm: savedForm.id}});
-    });
+    })
   }
 
   // ------- UI helpers -------
