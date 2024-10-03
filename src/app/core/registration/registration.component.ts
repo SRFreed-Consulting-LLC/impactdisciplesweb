@@ -32,6 +32,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         itemName: this.event.eventName,
         orderQuantity: 1,
         price: this.event.costInDollars,
+        img: this.event.imageUrl,
         isEvent: true,
         attendees: [{ firstName: '', lastName: '', email: '' }]
       }

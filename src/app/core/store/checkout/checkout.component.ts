@@ -277,7 +277,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async submitStripePayment(savedForm: CheckoutForm){
-    console.log(environment.domain + "/checkout-success?savedForm=" + savedForm.id)
     let response = await this.stripeService.getStripe().then(async stripe => {
       return await stripe.confirmPayment({
         elements: this.elements,
