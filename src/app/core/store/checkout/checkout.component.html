@@ -211,6 +211,15 @@
                   </tbody>
                   <tfoot>
                     <tr>
+                      <th>Shipping</th>
+                      <td><button class="os-btn os-btn-black ml-10" (click)="this.calculateShippingCost()">Calculate Shipping</button></td>
+                      <td class="text-right">
+                        <strong>
+                          <span class="amount" *ngIf="this.checkoutForm.shippingRate">{{this.checkoutForm.shippingRate | currency}}</span>
+                        </strong>
+                      </td>
+                    </tr>
+                    <tr>
                       <th>Subtotal</th>
                       <td></td>
                       <td class="text-right"><strong><span class="amount">

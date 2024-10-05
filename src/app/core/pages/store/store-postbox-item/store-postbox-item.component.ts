@@ -22,6 +22,8 @@ export class StorePostboxItemComponent {
       price: this.product.cost,
       img: this.product.imageUrl,
       isEvent: false,
+      weight: this.product.weight,
+      uom: this.product.uom
     }
     this.cartService.addCartProduct(this.cartItem)
   }

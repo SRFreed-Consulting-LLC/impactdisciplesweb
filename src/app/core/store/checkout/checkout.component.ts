@@ -1,3 +1,4 @@
+import { ShippingService } from './../../../../../impactdisciplescommon/src/services/shipping.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
@@ -24,6 +25,7 @@ import { PHONE_TYPES } from 'impactdisciplescommon/src/lists/phone_types.enum';
 import { Role } from 'impactdisciplescommon/src/lists/roles.enum';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
+import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
 
 @Component({
   selector: 'app-checkout',
@@ -63,7 +65,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private couponService: CouponService,
     private salesService: SalesService,
     private router: Router,
-    private newsletterSubscriptionService: NewsletterSubscriptionService
+    private newsletterSubscriptionService: NewsletterSubscriptionService,
+    private shippingService: ShippingService,
+    private webConfigService: WebConfigService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -112,6 +116,36 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }
     });
   }
+  calculateShippingCost(){
+    if(this.checkoutFormComponent.instance.validate().isValid) {
+      let totalWeight: number = this.checkoutForm.cartItems.map(item => item.weight).reduce((a,b) => a + b);
+
+      this.webConfigService.getAll().then(configs => {
+        if(configs){
+          this.shippingService.calculateShipping(configs[0], this.checkoutForm.firstName + ' ' + this.checkoutForm.lastName, this.checkoutForm.billingAddress, this.checkoutForm.phone, totalWeight)
+          .then(result => {
+            if(result) {
+              result.rateResponse.rates.sort((a, b) => a.shippingAmount.amount - b.shippingAmount.amount);
+
+              this.checkoutForm.shippingRate = result.rateResponse.rates[0].shippingAmount.amount
+
+              this.checkoutForm.totalBeforeDiscount += this.checkoutForm.shippingRate;
+
+              this.checkoutForm.total += this.checkoutForm.shippingRate;
+              this.cancelStripeIntent().then(() => this.toggleForm());
+            }
+          })
+        } else {
+          this.toastrService.error('Error','There was an getting the Senders Adress', {
+            timeOut: 10000,
+          });
+
+          return null
+        }
+      })
+
+    }
+  }
 
   async toggleForm(): Promise<void> {
     if(this.checkoutForm.total && this.checkoutForm.total > 0){
@@ -126,6 +160,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.cartService.getCartProducts().forEach(product => {
               this.items.push({id: product.id, amount: ((product?.discountPrice === null || product?.discountPrice === undefined ? product.price : product.discountPrice) * product.orderQuantity * 100)})
             })
+
+            if(this.checkoutForm.shippingRate){
+              this.items.push({id: 'shipping', amount: this.checkoutForm.shippingRate * 100})
+            }
+            console.log(this.items);
 
             // Fetch client secret for Stripe payment
             const response = await fetch(environment.stripeURL, {
