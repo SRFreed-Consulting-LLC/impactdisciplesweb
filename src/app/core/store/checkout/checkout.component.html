@@ -1,54 +1,8 @@
 <app-home-header></app-home-header>
 
-<main class="checkout">
-
+<main class="checkout pb-50">
   <app-breadcrumb [currentPageName]="'Checkout'" [bgColor]="'#1F1F1F'" [previousLink]="'/shopping-cart'" [previousLinkName]="'Shopping Cart'" [isDark]="true"></app-breadcrumb>
 
-  <!-- login / coupon area
-  <section class="coupon-area pt-50 pb-30">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div *ngIf="!isLoggedIn" class="coupon-accordion">
-            <h3>Returning customer? <span id="showlogin" (click)="handleOpenLogin()">Click here to login</span></h3>
-            <div *ngIf="isOpenLogin" id="checkout-login" class="coupon-content">
-              <div class="coupon-info">
-                <dx-form
-                  #loginFormComponent
-                  [formData]="logInForm"
-                  labelLocation="top"
-                  [showColonAfterLabel]="false"
-                >
-                  <dxi-item dataField="email" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
-                  <dxi-item dataField="password" [isRequired]="true" [label]="{ text: 'Password' }"></dxi-item>
-                </dx-form>
-                <button class="os-btn os-btn-black" type="submit" (click)="handleLogin()">Login</button>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="isLoggedIn" class="coupon-accordion">
-            <h3>Logged in as {{ loggedInUser }} <span id="showlogin" (click)="handleLogout()">Click here to logout</span></h3>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="coupon-accordion">
-            <h3>Have a coupon? <span id="showcoupon" (click)="handleOpenCoupon()">Click here to enter your code</span></h3>
-            <div *ngIf="isOpenCoupon" id="checkout_coupon" class="coupon-checkout-content">
-              <div class="coupon-info">
-                <form action="#">
-                  <p class="checkout-coupon">
-                    <input type="text" [(ngModel)]="couponCode" name="couponCode" placeholder="Coupon Code" />
-                    <button class="os-btn os-btn-black" (click)="applyCoupon()">Apply Coupon</button>
-                  </p>
-                </form>
-              </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>-->
-
-  <!-- checkout-area -->
   <section class="checkout-area pb-70 mt-80">
     <div class="container-xxl">
 
@@ -60,23 +14,24 @@
         </a>
       </div>
 
-      <!-- checkout with items block -->
       <ng-template #checkoutBlock>
         <div class="row">
-          <div class="col-lg-6">
 
-            <!-- checkout billing form -->
+          <div *ngIf="isShippingView" class="col-lg-7">
             <dx-form
-              #checkoutFormComponent
+              #shippingFormComponent
               [formData]="checkoutForm"
-              [colCount]="2"
+              [colCount]="4"
               labelLocation="top"
               [showColonAfterLabel]="false"
             >
-              <dxi-item dataField="firstName" [isRequired]="true" [label]="{ text: 'First Name' }"></dxi-item>
-              <dxi-item dataField="lastName" [isRequired]="true" [label]="{ text: 'Last Name' }"></dxi-item>
-              <dxi-item dataField="email" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
-              <dxi-item dataField="phone.number" [isRequired]="true" [label]="{ text: 'Phone Number' }"></dxi-item>
+              <dxi-item [colSpan]="4">
+                <div *dxTemplate><h4>Customer Information</h4></div>
+              </dxi-item>
+              <dxi-item dataField="firstName" [colSpan]="2" [isRequired]="true" [label]="{ text: 'First Name' }"></dxi-item>
+              <dxi-item dataField="lastName" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Last Name' }"></dxi-item>
+              <dxi-item dataField="email" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
+              <dxi-item dataField="phone.number" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Phone Number' }"></dxi-item>
               <dxi-item
                 cssClass="checkbox"
                 dataField="isNewsletter"
@@ -84,14 +39,14 @@
                 [colSpan]="2"
                 [label]="{ text: 'Sign up for our Newsletter to receive emails about our next Events!', location: 'right' }"
               ></dxi-item>
-
+              <dxi-item [colSpan]="2" itemType="empty"></dxi-item>
               <dxi-item
                 cssClass="checkbox"
                 dataField="isCreateAccount"
                 editorType="dxCheckBox"
-                [colSpan]="2"
                 [label]="{ text: 'Create Account', location: 'right' }"
               ></dxi-item>
+              <dxi-item [colSpan]="3" itemType="empty"></dxi-item>
 
               <dxi-item *ngIf="checkoutForm?.isCreateAccount" [colSpan]="2" [isRequired]="true">
                 <dx-text-box
@@ -100,25 +55,24 @@
                   [(ngModel)]="password"
                 ></dx-text-box>
               </dxi-item>
-
-
-              <dxi-item [colSpan]="2">
-                <div *dxTemplate><h4>Billing Address</h4></div>
+              <dxi-item [colSpan]="4" itemType="empty"></dxi-item>
+              <dxi-item [colSpan]="4">
+                <div *dxTemplate><h4>Shipping Address</h4></div>
               </dxi-item>
-              <dxi-item dataField="billingAddress.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
-              <dxi-item dataField="billingAddress.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
-              <dxi-item dataField="billingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
-              <dxi-item dataField="billingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
+              <dxi-item dataField="shippingAddress.address1" [isRequired]="true" [colSpan]="4" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
+              <dxi-item dataField="shippingAddress.address2" [colSpan]="4" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
+              <dxi-item dataField="shippingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
+              <dxi-item dataField="shippingAddress.state" [isRequired]="true" [colSpan]="2" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
                 <div *dxTemplate>
                   <dx-select-box
                     [items]="states"
-                    [(value)]="checkoutForm.billingAddress.state">
+                    [(value)]="checkoutForm.shippingAddress.state">
                   </dx-select-box>
                 </div>
               </dxi-item>
-              <dxi-item dataField="billingAddress.zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
+              <dxi-item dataField="shippingAddress.zip" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
               <dxi-item
-                dataField="billingAddress.country"
+                dataField="shippingAddress.country"
                 editorType="dxSelectBox"
                 [label]="{ text: 'Country' }"
                 [isRequired]="true"
@@ -132,19 +86,50 @@
                   onInput: handleCountryInput
                 }"
               ></dxi-item>
-              <dxi-item dataField="isShippingSameAsBilling" editorType="dxCheckBox" [label]="{ text: 'Is Shipping Same As Billing?', location: 'right' }"></dxi-item>
-              <dxi-item itemType="empty"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" [colSpan]="2">
-                <div *dxTemplate><h4>Shipping Address</h4></div>
+            </dx-form>
+            <dx-button class="mt-20 f-right impact-btn impact-btn-black-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
+          </div>
+
+          <div *ngIf="isBillingView" class="col-lg-7">
+            <div class="checkout__customer-info mb-50">
+              <div class="checkout__customer-info-block customer">
+                <span>Customer</span>
+                <span class="info">{{ checkoutForm?.email }}</span>
+                <a (click)="setView('shipping')">Change</a>
+              </div>
+              <div class="checkout__customer-info-block">
+                <span>Ship To</span>
+                <span class="info">
+                  {{ checkoutForm?.shippingAddress?.address1 }} 
+                  {{ checkoutForm?.shippingAddress?.address2 }} 
+                  {{ checkoutForm?.shippingAddress?.city }}, 
+                  {{ checkoutForm?.shippingAddress?.state }} 
+                  {{ checkoutForm?.shippingAddress?.zip }} 
+                  {{ checkoutForm?.shippingAddress?.country }}
+                </span>
+                <a (click)="setView('shipping')">Change</a>
+              </div>
+            </div>
+            <dx-form
+              #billingFormComponent
+              [formData]="checkoutForm"
+              [colCount]="4"
+              labelLocation="top"
+              [showColonAfterLabel]="false"
+            >
+              <dxi-item [colSpan]="4">
+                <div *dxTemplate><h4>Billing Address</h4></div>
               </dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
+              <dxi-item dataField="isShippingSameAsBilling" editorType="dxCheckBox" [label]="{ text: 'Is Billing Same As Shipping?', location: 'right' }"></dxi-item>
+              <dxi-item itemType="empty" [colSpan]="3"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address1" [isRequired]="true" [colSpan]="4" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address2" [colSpan]="4" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.state" [isRequired]="true" [colSpan]="2" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.zip" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
               <dxi-item
                 *ngIf="!checkoutForm?.isShippingSameAsBilling"
-                dataField="shippingAddress.country"
+                dataField="billingAddress.country"
                 editorType="dxSelectBox"
                 [label]="{ text: 'Country' }"
                 [isRequired]="true"
@@ -159,13 +144,23 @@
                 }"
               ></dxi-item>
             </dx-form>
-
+            <!-- checkout payment -->
+            <div class="payment-method mb-80">
+              <form id="payment-form">
+                <div id="payment-element">
+                  <!--Stripe.js injects the Payment Element-->
+                </div>
+                <div id="payment-message" class="hidden"></div>
+              </form>
+            </div>
+            <button id="submit" class="os-btn os-btn-black pay-button" (click)="handleSubmit($event)">
+              <div class="spinner hidden" id="spinner"></div>
+              <span id="button-text">Pay now</span>
+            </button>
           </div>
 
-          <div class="col-lg-6">
-            <div class="your-order mb-30 ">
-
-              <!-- checkout order details -->
+          <div class="col-lg-5">
+            <div class="checkout__your-order mb-30">
               <h3>Your order</h3>
               <div class="coupon-info">
                 <form action="#">
@@ -175,98 +170,73 @@
                   </p>
                 </form>
               </div>
-              <div class="your-order-table table-responsive">
-                <table>
-                  <thead>
-                    <tr>
-                      <th class="product-name"><strong>Item</strong></th>
-                      <th></th>
-                      <th class="product-total text-right"><strong>Total</strong></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let cartItem of checkoutForm.cartItems" class="cart_item">
-                      <td class="product-name">
-                        <span>{{ cartItem?.itemName }} <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong></span>
-                        <div *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="coupon-text d-flex">
-                          <span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ itemDiscountAmount?.code }}</span>
-                          <span *ngIf="itemDiscountAmount?.dollarsOff" class="amount">- ${{ itemDiscountAmount.dollarsOff }}</span>
-                          <span *ngIf="itemDiscountAmount?.percentOff" class="amount">- {{ itemDiscountAmount.percentOff }}%</span>
-                        </div>
-                      </td>
-                      <td class="attendees text-center" *ngIf="cartItem.isEvent">
-                        <div *ngFor="let attendee of cartItem.attendees">
-                          {{ attendee.firstName }} {{ attendee.lastName }}
-                        </div>
-                      </td>
-                      <td *ngIf="!cartItem.isEvent"></td>
-                      <td class="product-total text-right">
-                        <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">${{ cartItem?.price }}</span>
-                        <div *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="d-flex justify-content-center">
-                          <span class="after-discount">${{ cartItem?.discountPrice }}</span>
-                          <span class="before-discount">${{ cartItem?.price }}</span>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Shipping</th>
-                      <td><button class="os-btn os-btn-black ml-10" (click)="this.calculateShippingCost()">Calculate Shipping</button></td>
-                      <td class="text-right">
-                        <strong>
-                          <span class="amount" *ngIf="this.checkoutForm.shippingRate">{{this.checkoutForm.shippingRate | currency}}</span>
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Subtotal</th>
-                      <td></td>
-                      <td class="text-right"><strong><span class="amount">
-                        ${{ this.checkoutForm.totalBeforeDiscount.toFixed(2) }}
-                        </span></strong>
-                      </td>
-                    </tr>
-                    <tr class="coupon-text" *ngIf="cartDiscountAmount">
-                      <th>Discount</th>
-                      <td><span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ cartDiscountAmount?.code }}</span></td>
-                      <td class="text-right">
-                        <strong>
-                          <span *ngIf="cartDiscountAmount?.dollarsOff" class="discount-amount">- ${{ cartDiscountAmount.dollarsOff }}</span>
-                          <span *ngIf="cartDiscountAmount?.percentOff" class="discount-amount">- {{ cartDiscountAmount.percentOff }}%</span>
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr class="order-total">
-                      <th><span><strong>Order Total</strong></span></th>
-                      <td></td>
-                      <td class="text-right">
-                        <span class="amount"><strong>${{ checkoutForm?.total }}</strong></span>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <!-- checkout payment -->
-              <div class="payment-method mb-80">
-                <form id="payment-form">
-                  <div id="payment-element">
-                    <!--Stripe.js injects the Payment Element-->
+
+              <div class="your-order-table mt-20">
+                <div class="row">
+                  <div class="col-lg-5">Item</div>
+                  <div class="col-lg-5"></div>
+                  <div class="col-lg-2 text-end">Total</div>
+                </div>
+                <div *ngFor="let cartItem of checkoutForm.cartItems" class="row">
+                  <div class="col-lg-5">
+                    {{ cartItem?.itemName }} 
+                    <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong>
+                    <div *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="coupon-text d-flex">
+                      <span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ itemDiscountAmount?.code }}</span>
+                      <span *ngIf="itemDiscountAmount?.dollarsOff" class="amount">- ${{ itemDiscountAmount.dollarsOff }}</span>
+                      <span *ngIf="itemDiscountAmount?.percentOff" class="amount">- {{ itemDiscountAmount.percentOff }}%</span>
+                    </div>
                   </div>
-                  <div id="payment-message" class="hidden"></div>
-                </form>
+                  <div class="col-lg-5">
+                    <div *ngIf="cartItem.isEvent">
+                      <div *ngFor="let attendee of cartItem.attendees">
+                        {{ attendee.firstName }} {{ attendee.lastName }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 text-end">
+                    <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">${{ cartItem?.price }}</span>
+                    <div *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="d-flex justify-content-center">
+                      <span class="after-discount">${{ cartItem?.discountPrice }}</span>
+                      <span class="before-discount">${{ cartItem?.price }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-5">Subtotal</div>
+                  <div class="col-lg-5"></div>
+                  <div class="col-lg-2 text-end"> ${{ this.checkoutForm.totalBeforeDiscount.toFixed(2) }}</div>
+                </div>
+                <div *ngIf="cartDiscountAmount" class="row">
+                  <div class="col-lg-5">Discount</div>
+                  <div class="col-lg-5"><span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ cartDiscountAmount?.code }}</span></div>
+                  <div class="col-lg-2 text-end">
+                    <strong>
+                      <span *ngIf="cartDiscountAmount?.dollarsOff" class="discount-amount">- ${{ cartDiscountAmount.dollarsOff }}</span>
+                      <span *ngIf="cartDiscountAmount?.percentOff" class="discount-amount">- {{ cartDiscountAmount.percentOff }}%</span>
+                    </strong>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-5">Shipping</div>
+                  <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-5"></div>
+                  <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-2 text-end">{{this.checkoutForm.shippingRate | currency}}</div>
+                  <div *ngIf="!this.checkoutForm.shippingRate" class="col-lg-7 text-end shipping-text">Calculated at Next Step</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6">Estimated Tax</div>
+                  <div class="col-lg-6 text-end">$0.00</div>
+                </div>
+                <div class="row order-total">
+                  <div class="col-lg-6 order-total__title">Order Total</div>
+                  <div class="col-lg-6 text-end order-total__amount"><strong>${{ checkoutForm?.total.toFixed(2) }}</strong></div>
+                </div>
               </div>
-              <button id="submit" class="os-btn os-btn-black pay-button" (click)="handleSubmit($event)">
-                <div class="spinner hidden" id="spinner"></div>
-                <span id="button-text">Pay now</span>
-              </button>
             </div>
           </div>
         </div>
       </ng-template>
+
     </div>
   </section>
-
 </main>
-
-<app-footer></app-footer>

@@ -1,55 +1,71 @@
+@import '../../../../assets/theme/scss/variables';
+
 .checkout {
-  tr {
-    border-bottom: 1px solid #eaedff;
+  &__customer-info {
+    padding: 10px;
+	  border: 3px solid #eaedff;
+    &-block {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      .info {
+        color: #000;
+      }
+      a {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+    .customer {
+      border-bottom: 1px solid #eaedff;
+    }
   }
-  td {
-    border-bottom: none;
-  }
-  .product-total {
-    max-width: 70px;
-  }
-  .text-right {
-    text-align: end;
-  }
-  .attendees {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-style: italic;
-    color: #a4a4a4;
-  }
-  .tag-icon {
-    margin-right: 10px;
-    color: #29e829;
-  }
-  .code-text {
-    font-weight: 700;
-    margin-right: 10px;
-    align-items: center;
-    display: flex;
-  } 
-  .discount-amount {
-    font-weight: 800;
-    color: #29e829;
+  &__your-order {
+    padding: 30px 40px 45px;
+	  border: 3px solid #eaedff;
+    .your-order-table {
+      .row {
+        border-bottom: 1px solid #eaedff;
+        padding: 10px 0;
+        align-items: center;
+      }
+      .shipping-text {
+        color: #b9b9b9;
+        font-weight: 100;
+      }
+      .order-total {
+        font-size: 25px;
+        border-bottom: none !important;
+        &__amount {
+          color: $theme-color;
+        }
+      }
+      .tag-icon {
+        margin-right: 10px;
+        color: #29e829;
+      }
+      .code-text {
+        font-weight: 700;
+        margin-right: 10px;
+        align-items: center;
+        display: flex;
+      } 
+      .discount-amount {
+        font-weight: 800;
+        color: #29e829;
+      }
+      
+      .before-discount {
+        text-decoration: line-through;
+      }
+      .after-discount {
+        margin-right: 10px;
+        font-weight: 800;
+        color: #29e829;
+      }
+    }
   }
   
-  .before-discount {
-    text-decoration: line-through;
-  }
-  .after-discount {
-    margin-right: 10px;
-    font-weight: 800;
-    color: #29e829;
-  }
-  .order-total {
-    th {
-      font-size: 20px;
-    }
-    .amount {
-      font-size: 25px;
-    }
-  }
-  ::ng-deep .checkbox > .dx-field-item-content.dx-field-item-content-location-bottom {
-    max-width: 20px !important;
-  }
+  
 }
