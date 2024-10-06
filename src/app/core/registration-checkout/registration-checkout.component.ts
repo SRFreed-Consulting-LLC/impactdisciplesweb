@@ -13,7 +13,6 @@ import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.s
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
-import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 import { Timestamp } from 'firebase/firestore';
@@ -35,7 +34,6 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
   status: string = "REQUEST";
   elements;
   items = [];
-  countries = COUNTRIES;
   couponCode: string = '';
   discountAmount: number = 0;
   orignalTotal: number = 0;
@@ -52,6 +50,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
 
   paymentIntent: string;
   public states: string[];
+  public countries: string[];
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -84,6 +83,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     this.toggleForm()
 
     this.states = EnumHelper.getStateRoleTypesAsArray();
+    this.countries = EnumHelper.getCountryTypesAsArray()
   }
 
   clearCart() {
@@ -300,17 +300,6 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     // Add Logic to handle purchase completion
     this.cartService.clearCart();
   }
-
-  handleCountryInput = (e: any) => {
-    const inputValue = e.component.option("text");
-    const country = this.countries.find(
-      (c) => c.name.toLowerCase() === inputValue.toLowerCase()
-    );
-
-    if (country) {
-      e.component.option("value", country.name);
-    }
-  };
 
   calculateTotal(cartItems: CartItem[]): number {
     return cartItems.reduce((acc, item) => acc + (item.price ?? 0) * (item.orderQuantity ?? 1), 0);

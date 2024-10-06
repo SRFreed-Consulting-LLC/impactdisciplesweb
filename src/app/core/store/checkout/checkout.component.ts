@@ -4,7 +4,6 @@ import { DxFormComponent } from 'devextreme-angular';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
-import { COUNTRIES } from 'src/app/shared/utils/data/countries-data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 import { Actions, ofActionDispatched } from '@ngxs/store';
@@ -39,7 +38,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   status: string = "REQUEST";
   elements;
   items = [];
-  countries = COUNTRIES;
   isOpenLogin = false;
   isOpenCoupon = false;
   isLoggedIn = false;
@@ -52,6 +50,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   password: string = '';
   paymentIntent: string;
   public states: string[];
+  public countries: string[];
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -90,6 +89,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.toggleForm();
 
     this.states = EnumHelper.getStateRoleTypesAsArray();
+    this.countries = EnumHelper.getCountryTypesAsArray()
 
     this.actions$.pipe(
       ofActionDispatched(UserAuthenticated),
@@ -385,17 +385,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   handleLogin() {
     this.authService.logIn(this.logInForm.email, this.logInForm.password);
   }
-
-  handleCountryInput = (e: any) => {
-    const inputValue = e.component.option("text");
-    const country = this.countries.find(
-      (c) => c.name.toLowerCase() === inputValue.toLowerCase()
-    );
-
-    if (country) {
-      e.component.option("value", country.name);
-    }
-  };
 
   calculateTotal(cartItems: CartItem[]): number {
     return cartItems.reduce((acc, item) => acc + (item.price ?? 0) * (item.orderQuantity ?? 1), 0);

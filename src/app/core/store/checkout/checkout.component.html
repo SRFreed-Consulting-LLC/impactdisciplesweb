@@ -110,28 +110,23 @@
               <dxi-item dataField="billingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
               <dxi-item dataField="billingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
                 <div *dxTemplate>
-                  <dx-select-box
+                  <dx-lookup
+                    [showCancelButton]="false"
                     [items]="states"
                     [(value)]="checkoutForm.billingAddress.state">
-                  </dx-select-box>
+                  </dx-lookup>
                 </div>
               </dxi-item>
               <dxi-item dataField="billingAddress.zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
-              <dxi-item
-                dataField="billingAddress.country"
-                editorType="dxSelectBox"
-                [label]="{ text: 'Country' }"
-                [isRequired]="true"
-                [colSpan]="2"
-                [editorOptions]="{
-                  dataSource: countries,
-                  placeholder: 'Select Country',
-                  displayExpr: 'name',
-                  valueExpr: 'name',
-                  searchEnabled: true,
-                  onInput: handleCountryInput
-                }"
-              ></dxi-item>
+              <dxi-item dataField="billingAddress.country" [isRequired]="true" [label]="{ text: 'Country' }">
+                <div *dxTemplate>
+                  <dx-lookup
+                    [showCancelButton]="false"
+                    [items]="countries"
+                    [(value)]="checkoutForm.billingAddress.country">
+                  </dx-lookup>
+                </div>
+              </dxi-item>
               <dxi-item dataField="isShippingSameAsBilling" editorType="dxCheckBox" [label]="{ text: 'Is Shipping Same As Billing?', location: 'right' }"></dxi-item>
               <dxi-item itemType="empty"></dxi-item>
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" [colSpan]="2">
@@ -140,24 +135,25 @@
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.address1" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.address2" [colSpan]="2" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.state" [isRequired]="true" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
+                <div *dxTemplate>
+                  <dx-lookup
+                    [showCancelButton]="false"
+                    [items]="countries"
+                    [(value)]="checkoutForm.shippingAddress.country">
+                  </dx-lookup>
+                </div>
+              </dxi-item>
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
-              <dxi-item
-                *ngIf="!checkoutForm?.isShippingSameAsBilling"
-                dataField="shippingAddress.country"
-                editorType="dxSelectBox"
-                [label]="{ text: 'Country' }"
-                [isRequired]="true"
-                [colSpan]="2"
-                [editorOptions]="{
-                  dataSource: countries,
-                  placeholder: 'Select Country',
-                  searchEnabled: true,
-                  displayExpr: 'name',
-                  valueExpr: 'name',
-                  onInput: handleCountryInput
-                }"
-              ></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.country" [isRequired]="true" [label]="{ text: 'Country' }">
+                <div *dxTemplate>
+                  <dx-lookup
+                    [showCancelButton]="false"
+                    [items]="countries"
+                    [(value)]="checkoutForm.shippingAddress.country">
+                  </dx-lookup>
+                </div>
+              </dxi-item>
             </dx-form>
 
           </div>
