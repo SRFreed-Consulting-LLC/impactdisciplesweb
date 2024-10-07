@@ -9,8 +9,8 @@
           <div class="col-xl-9 col-lg-8">
             <div class="postbox__title mb-55">
               <div class="blog__meta">
-                <span><a [routerLink]="['/blog-details', blog?.id]">{{ (blog?.category | categoryName: 'blog') | async }} </a></span>
-                <span>/ {{blog?.date.toDate() | date}}</span>
+                <span *ngIf="blog?.category"><a [routerLink]="['/blog-details', blog?.id]">{{ (blog?.category | categoryName: 'blog') | async }} / </a></span>
+                <span>{{blog?.date.toDate() | date}}</span>
               </div>
             </div>
             <div class="postbox__wrapper mb-70 mt-30">

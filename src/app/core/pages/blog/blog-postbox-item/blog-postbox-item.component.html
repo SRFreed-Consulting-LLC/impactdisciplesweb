@@ -9,7 +9,7 @@
         <a [routerLink]="['/blog-details', blog?.id]">{{blog?.title}}</a>
       </h4>
       <div class="blog__meta" *>
-          <span *ngIf=""blog?.category><a [routerLink]="['/blog-details', blog?.id]">{{ (blog?.category | categoryName: 'blog') | async }} </a> / </span>
+          <span *ngIf="blog?.category"><a [routerLink]="['/blog-details', blog?.id]">{{ (blog?.category | categoryName: 'blog') | async }} </a> / </span>
           <span>{{blog?.date.toString() | date }}</span>
       </div>
       <p class="truncate" [innerHTML]="blog?.blogText"></p>
