@@ -1,30 +1,30 @@
-import { ShippingService } from './../../../../../impactdisciplescommon/src/services/shipping.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Actions, ofActionDispatched } from '@ngxs/store';
 import { DxFormComponent } from 'devextreme-angular';
+import { Timestamp } from 'firebase/firestore';
+import { PHONE_TYPES } from 'impactdisciplescommon/src/lists/phone_types.enum';
+import { Role } from 'impactdisciplescommon/src/lists/roles.enum';
+import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
+import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
+import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
+import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
+import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
+import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
+import { AppUserService } from 'impactdisciplescommon/src/services/admin/user.service';
+import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
+import { ShippingService } from 'impactdisciplescommon/src/services/shipping.service';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
+import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.service';
+import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
+import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
+import { TaxRateService } from 'impactdisciplescommon/src/services/utils/tax-rate.service';
+import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
+import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
-import { Actions, ofActionDispatched } from '@ngxs/store';
-import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
-import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.service';
-import { Router } from '@angular/router';
-import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
-import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
-import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
-import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
-import { Timestamp } from 'firebase/firestore';
-import { AppUserService } from 'impactdisciplescommon/src/services/admin/user.service';
-import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
-import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
-import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { PHONE_TYPES } from 'impactdisciplescommon/src/lists/phone_types.enum';
-import { Role } from 'impactdisciplescommon/src/lists/roles.enum';
-import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
-import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
-import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
 
 @Component({
   selector: 'app-checkout',
@@ -32,62 +32,56 @@ import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-c
   styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
-  @ViewChild('checkoutFormComponent', { static: false }) checkoutFormComponent: DxFormComponent;
+  @ViewChild('shippingFormComponent', { static: false }) shippingFormComponent: DxFormComponent;
+  @ViewChild('billingFormComponent', { static: false }) billingFormComponent: DxFormComponent;
 
   checkoutForm: CheckoutForm = {};
-  status: string = "REQUEST";
-  elements;
-  items = [];
-  isOpenLogin = false;
-  isOpenCoupon = false;
-  isLoggedIn = false;
-  loggedInUser: string = '';
-  logInForm: { email: string, password: string } = { email: '', password: '' };
+  orignalTotal: number = 0;
   couponCode: string = '';
   itemDiscountAmount: CouponModel;
   cartDiscountAmount: CouponModel;
-  orignalTotal: number = 0;
-  password: string = '';
   paymentIntent: string;
+  elements;
+  items = [];
+
+  isLoggedIn = false;
+  loggedInUser: string = '';
+  password: string = '';
+
+  isShippingView = false;
+  isBillingView = false;
   public states: string[];
   public countries: string[];
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor (
-    private actions$: Actions,
-    private stripeService: StripeService,
-    private toastrService: ToastrService,
-    private authService: AuthService,
+  constructor(
     public cartService: CartService,
-    private userService: AppUserService,
-    private couponService: CouponService,
+    private stripeService: StripeService,
     private salesService: SalesService,
-    private router: Router,
-    private newsletterSubscriptionService: NewsletterSubscriptionService,
+    private couponService: CouponService,
     private shippingService: ShippingService,
-    private webConfigService: WebConfigService
+    private authService: AuthService,
+    private userService: AppUserService,
+    private toastrService: ToastrService,
+    private webConfigService: WebConfigService,
+    private newsletterSubscriptionService: NewsletterSubscriptionService,
+    private taxService: TaxRateService,
+    private actions$: Actions
   ) {}
 
   async ngOnInit(): Promise<void> {
-
+    this.setView();
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       total: this.cartService.totalPriceQuantity().total,
       totalBeforeDiscount: this.cartService.totalPriceQuantity().total,
       isShippingSameAsBilling: true,
       isNewsletter: true,
-      billingAddress: {
-        state: ''
-      },
-      shippingAddress: {
-        state: ''
-      }
+      billingAddress: { state: '' },
+      shippingAddress: { state: '' }
     }
     this.orignalTotal = this.checkoutForm.total;
-
-    this.toggleForm();
-
     this.states = EnumHelper.getStateRoleTypesAsArray();
     this.countries = EnumHelper.getCountryTypesAsArray()
 
@@ -116,281 +110,47 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }
     });
   }
-  calculateShippingCost(){
-    if(this.checkoutFormComponent.instance.validate().isValid) {
-      let totalWeight: number = this.checkoutForm.cartItems.map(item => item.weight).reduce((a,b) => a + b);
 
-      this.webConfigService.getAll().then(configs => {
-        if(configs){
-          this.shippingService.calculateShipping(configs[0], this.checkoutForm.firstName + ' ' + this.checkoutForm.lastName, this.checkoutForm.billingAddress, this.checkoutForm.phone, totalWeight)
-          .then(result => {
-            if(result) {
-              result.rateResponse.rates.sort((a, b) => a.shippingAmount.amount - b.shippingAmount.amount);
+  calculateShippingCost = () => {
+    let totalWeight: number = this.checkoutForm.cartItems.map(item => item.weight).reduce((a,b) => a + b);
 
-              this.checkoutForm.shippingRate = result.rateResponse.rates[0].shippingAmount.amount
+    this.webConfigService.getAll().then(configs => {
+      if(configs){
+        this.shippingService.calculateShipping(configs[0], this.checkoutForm, totalWeight).then(result => {
+          if(result) {
+            result.rateResponse.rates.sort((a, b) => a.shippingAmount.amount - b.shippingAmount.amount);
 
-              this.checkoutForm.totalBeforeDiscount += this.checkoutForm.shippingRate;
+            this.checkoutForm.shippingRate = result.rateResponse.rates[0].shippingAmount.amount
 
-              this.checkoutForm.total += this.checkoutForm.shippingRate;
-              this.cancelStripeIntent().then(() => this.toggleForm());
-            }
-          })
-        } else {
-          this.toastrService.error('Error','There was an getting the Senders Adress', {
-            timeOut: 10000,
-          });
+            this.checkoutForm.total += this.checkoutForm.shippingRate;
 
-          return null
-        }
-      })
-
-    }
-  }
-
-  async toggleForm(): Promise<void> {
-    if(this.checkoutForm.total && this.checkoutForm.total > 0){
-      try {
-        setTimeout(async () => {
-          const paymentForm = document.querySelector("#payment-form");
-          if (paymentForm) {
-            paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
-
-            this.items = [];
-
-            this.cartService.getCartProducts().forEach(product => {
-              this.items.push({id: product.id, amount: ((product?.discountPrice === null || product?.discountPrice === undefined ? product.price : product.discountPrice) * product.orderQuantity * 100)})
-            })
-
-            if(this.checkoutForm.shippingRate){
-              this.items.push({id: 'shipping', amount: this.checkoutForm.shippingRate * 100})
-            }
-            console.log(this.items);
-
-            // Fetch client secret for Stripe payment
-            const response = await fetch(environment.stripeURL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(this.items),
-            })
-
-            if (!response.ok) {
-              throw new Error('Failed to fetch client secret: ' + JSON.stringify(response));
-            }
-
-            const { clientSecret, paymentIntent } = await response.json();
-
-            this.paymentIntent = paymentIntent;
-
-            // Initialize Stripe Elements
-            this.elements = (await this.stripeService.getStripe()).elements({ clientSecret });
-
-            const paymentElementOptions = {
-              layout: "tabs",
-            };
-
-            const paymentElement = this.elements.create("payment", paymentElementOptions);
-            paymentElement.mount("#payment-element");
-
+            this.cancelStripeIntent().then(() => this.toggleForm());
           }
-        }, 0);  // Ensures form is rendered before Stripe is initialized
-
-      } catch (error) {
-
-        this.showMessage('Failed to load payment form. Please try again.', 'ERROR');
-      }
-    } else {
-      const paymentForm = document.querySelector("#payment-form");
-      if(paymentForm){
-        paymentForm.remove();
-      }
-
-    }
-  }
-
-  async handleSubmit(e) {
-      if(this.checkoutFormComponent.instance.validate().isValid) {
-        this.checkoutForm.processedStatus = "NEW";
-        this.checkoutForm.dateProcessed = Timestamp.now();
-
-        if(this.checkoutForm.isShippingSameAsBilling){
-          this.checkoutForm.shippingAddress = this.checkoutForm.billingAddress;
-        }
-
-        this.checkoutForm.cartItems.forEach(item => {
-          item.dateProcessed = Timestamp.now();
-          item.processedStatus = "NEW"
         })
-
-        let savedForm: CheckoutForm = await this.saveCheckoutForm();
-
-        e.preventDefault();
-
-        this.setLoading(true);
-
-        if(this.checkoutForm.isNewsletter){
-          this.createNewLetter()
-        }
-
-        if(this.checkoutForm.isCreateAccount){
-          this.createUserAccount()
-        }
-
-        if(this.checkoutForm.total > 0){
-          this.submitStripePayment(savedForm)
-        }
-
-        this.setLoading(false);
-      }
-  }
-
-  async createUserAccount(){
-    await this.userService.getAllByValue('email', this.checkoutForm.email).then(async users => {
-      if(users && users.length == 0){
-        let newUser: AppUser = {... new AppUser()};
-        newUser.firstName = this.checkoutForm.firstName;
-        newUser.lastName = this.checkoutForm.lastName;
-        newUser.email = this.checkoutForm.email;
-
-        let address = {... new Address()};
-        address.address1 = this.checkoutForm.billingAddress.address1;
-        address.address2 = this.checkoutForm.billingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
-        address.city = this.checkoutForm.billingAddress.city;
-        address.state = this.checkoutForm.billingAddress.state;
-        address.zip = this.checkoutForm.billingAddress.zip;
-        address.country = this.checkoutForm.billingAddress.country;
-
-        newUser.address = address;
-
-        let phone = {... new Phone()}
-        phone.countryCode = '1';
-        phone.number = this.checkoutForm.phone.number;
-        phone.extension = PHONE_TYPES.CELL;
-
-        newUser.phone = phone;
-
-        newUser.role = Role.CUSTOMER;
-        await this.userService.add(newUser).then(async user => {
-          await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
-            if (result.isOk) {
-              this.toastrService.success('Success', 'Your account has been created.', {
-                timeOut: 10000,
-              });
-            } else {
-              this.toastrService.error('Error','There was an error creating your account: ' + result.message, {
-                timeOut: 10000,
-              });
-            }
-          })
-        });
-      } else  {
-        this.toastrService.success('Warning', 'An account with this email already exists.', {
+      } else {
+        this.toastrService.error('Error','There was an getting the Senders Adress', {
           timeOut: 10000,
-        })
+        });
       }
     })
   }
 
-  async createNewLetter(){
-    let subscriber: NewsletterSubscriptionModel = {...new NewsletterSubscriptionModel()};
-    subscriber.firstName = this.checkoutForm.firstName;
-    subscriber.lastName = this.checkoutForm.lastName;
-    subscriber.email = this.checkoutForm.email;
-    subscriber.date = Timestamp.now();
-    await this.newsletterSubscriptionService.add(subscriber);
-  }
+  calculateEstimatedTax = () => {
+    this.taxService.getAllByValue("zipCode", this.checkoutForm.shippingAddress.zip).then(taxRates => {
+      if(! taxRates || taxRates.length == 0){
+        console.log("No qualified tax rate found for zip code " + this.checkoutForm.shippingAddress.zip);
+      } else if(taxRates.length > 1){
+        console.log("found more than 1 qualified tax rate");
+      } else {
+        this.checkoutForm.estimatedTaxes = this.checkoutForm.totalBeforeDiscount * taxRates[0].estimatedCombinedRate;
 
-  async saveCheckoutForm(){
-    this.checkoutForm.processedStatus = "NEW";
-    this.checkoutForm.dateProcessed = Timestamp.now();
+        this.checkoutForm.total += this.checkoutForm.estimatedTaxes;
+      }
 
-    if(this.checkoutForm.isShippingSameAsBilling){
-      this.checkoutForm.shippingAddress = this.checkoutForm.billingAddress;
-    }
-
-    this.checkoutForm.cartItems.forEach(item => {
-      item.dateProcessed = Timestamp.now();
-      item.processedStatus = "NEW"
+      this.cancelStripeIntent().then(() => this.toggleForm());
     })
-
-    return await this.salesService.add(this.checkoutForm);
   }
 
-  async submitStripePayment(savedForm: CheckoutForm){
-    let response = await this.stripeService.getStripe().then(async stripe => {
-      return await stripe.confirmPayment({
-        elements: this.elements,
-        confirmParams: {
-          return_url: environment.domain + "/checkout-success?savedForm=" + savedForm.id,
-        },
-      })
-    })
-
-    if (response.error.type === "card_error" || response.error.type === "validation_error") {
-      this.showMessage(response.error.message, 'ERROR');
-    } else {
-      this.showMessage("An unexpected error occurred.", 'ERROR');
-    }
-  }
-
-  async cancelStripeIntent(){
-    await fetch(environment.stripeCancelURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
-    });
-  }
-
-  // ------- UI helpers -------
-  showMessage(messageText, type) {
-    if(type ==='SUCCESS'){
-      this.toastrService.success(messageText, 'SUCCESS!')
-    } else if(type ==='INFO'){
-      this.toastrService.info(messageText)
-    } else if(type ==='ERROR'){
-      this.toastrService.error(messageText, 'ERROR!')
-    }
-  }
-
-  // Show a spinner on payment submission
-  setLoading(isLoading) {
-    if (isLoading) {
-      // Disable the button and show a spinner
-      document.querySelector("#submit")['disabled'] = true;
-      document.querySelector("#spinner").classList.remove("hidden");
-      document.querySelector("#button-text").classList.add("hidden");
-    } else {
-      document.querySelector("#submit")['disabled'] = false;
-      document.querySelector("#spinner").classList.add("hidden");
-      document.querySelector("#button-text").classList.remove("hidden");
-    }
-  }
-
-  completePurchase() {
-    // Add Logic to handle purchase completion
-    this.cartService.clearCart();
-  }
-
-  handleOpenLogin() {
-    this.router.navigate(['/checkout-user']);
-    //this.isOpenLogin = !this.isOpenLogin;
-  }
-  handleOpenCoupon() {
-    this.isOpenCoupon = !this.isOpenCoupon;
-  }
-  handleLogout() {
-    this.authService.logOut();
-    this.isLoggedIn = false;
-  }
-
-  handleLogin() {
-    this.authService.logIn(this.logInForm.email, this.logInForm.password);
-  }
-
-  calculateTotal(cartItems: CartItem[]): number {
-    return cartItems.reduce((acc, item) => acc + (item.price ?? 0) * (item.orderQuantity ?? 1), 0);
-  }
-
-  // Method to handle coupon application
   applyCoupon() {
     this.cancelStripeIntent();
 
@@ -454,7 +214,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.resetCartItems();
       this.toggleForm();
     }
-
   }
 
   resetCartItems() {
@@ -469,10 +228,259 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.cartDiscountAmount = null;
   }
 
+  setView(view?: string){
+    switch(view) {
+      case 'shipping':
+        this.isShippingView = true;
+        this.isBillingView = false;
+        break;
+      case 'billing':
+        if(this.shippingFormComponent.instance.validate().isValid) {
+          this.isShippingView = false;
+          this.isBillingView = true;
+
+          this.calculateShippingCost();
+          if(this.checkoutForm.shippingAddress.state == 'Georgia'){
+            this.calculateEstimatedTax();
+          }
+        }
+        break;
+      default:
+        this.isShippingView = true;
+        this.isBillingView = false;
+        break;
+    }
+  }
+
+  async createUserAccount(){
+    await this.userService.getAllByValue('email', this.checkoutForm.email).then(async users => {
+      if(users && users.length == 0){
+        let newUser: AppUser = {... new AppUser()};
+        newUser.firstName = this.checkoutForm.firstName;
+        newUser.lastName = this.checkoutForm.lastName;
+        newUser.email = this.checkoutForm.email;
+
+        let address = {... new Address()};
+        address.address1 = this.checkoutForm.billingAddress.address1;
+        address.address2 = this.checkoutForm.billingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
+        address.city = this.checkoutForm.billingAddress.city;
+        address.state = this.checkoutForm.billingAddress.state;
+        address.zip = this.checkoutForm.billingAddress.zip;
+        address.country = this.checkoutForm.billingAddress.country;
+
+        newUser.address = address;
+
+        let phone = {... new Phone()}
+        phone.countryCode = '1';
+        phone.number = this.checkoutForm.phone.number;
+        phone.extension = PHONE_TYPES.CELL;
+
+        newUser.phone = phone;
+
+        newUser.role = Role.CUSTOMER;
+        await this.userService.add(newUser).then(async user => {
+          await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
+            if (result.isOk) {
+              this.toastrService.success('Success', 'Your account has been created.', {
+                timeOut: 10000,
+              });
+            } else {
+              this.toastrService.error('Error','There was an error creating your account: ' + result.message, {
+                timeOut: 10000,
+              });
+            }
+          })
+        });
+      } else  {
+        this.toastrService.success('Warning', 'An account with this email already exists.', {
+          timeOut: 10000,
+        })
+      }
+    })
+  }
+
+  async createNewsLetter(){
+    let subscriber: NewsletterSubscriptionModel = {...new NewsletterSubscriptionModel()};
+    subscriber.firstName = this.checkoutForm.firstName;
+    subscriber.lastName = this.checkoutForm.lastName;
+    subscriber.email = this.checkoutForm.email;
+    subscriber.date = Timestamp.now();
+    await this.newsletterSubscriptionService.add(subscriber);
+  }
+
   ngOnDestroy(): void {
-    this.resetCartItems();
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+
+
+  //PAYMENT METHODS
+  async toggleForm(): Promise<void> {
+    if(this.checkoutForm.total && this.checkoutForm.total > 0){
+      try {
+        setTimeout(async () => {
+          const paymentForm = document.querySelector("#payment-form");
+          if (paymentForm) {
+            paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
+
+            this.items = [];
+
+            this.cartService.getCartProducts().forEach(product => {
+              this.items.push({id: product.id, amount: ((product?.discountPrice === null || product?.discountPrice === undefined ? product.price : product.discountPrice) * product.orderQuantity * 100)})
+            })
+
+            if(this.checkoutForm.shippingRate){
+              this.items.push({id: 'shipping', amount: this.checkoutForm.shippingRate * 100})
+            }
+
+            if(this.checkoutForm.estimatedTaxes){
+              this.items.push({id: 'taxes', amount: this.checkoutForm.estimatedTaxes * 100})
+            }
+
+            let request = {};
+            request['items'] = this.items;
+            request['description'] = "Payment from " + this.checkoutForm.firstName + ' ' + this.checkoutForm.lastName;
+
+            // Fetch client secret for Stripe payment
+            const response = await fetch(environment.stripeURL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(request),
+            })
+
+            if (!response.ok) {
+              throw new Error('Failed to fetch client secret: ' + JSON.stringify(response));
+            }
+
+            const { clientSecret, paymentIntent } = await response.json();
+
+            this.paymentIntent = paymentIntent;
+
+            // Initialize Stripe Elements
+            this.elements = (await this.stripeService.getStripe()).elements({ clientSecret });
+
+            const paymentElementOptions = {
+              layout: "tabs",
+            };
+
+            const paymentElement = this.elements.create("payment", paymentElementOptions);
+            paymentElement.mount("#payment-element");
+
+          }
+        }, 0);  // Ensures form is rendered before Stripe is initialized
+
+      } catch (error) {
+
+        this.showMessage('Failed to load payment form. Please try again.', 'ERROR');
+      }
+    } else {
+      const paymentForm = document.querySelector("#payment-form");
+      if(paymentForm){
+        paymentForm.remove();
+      }
+
+    }
+  }
+
+  async handleSubmit(e) {
+    if(this.billingFormComponent.instance.validate().isValid) {
+      this.checkoutForm.processedStatus = "NEW";
+      this.checkoutForm.dateProcessed = Timestamp.now();
+
+      if(this.checkoutForm.isShippingSameAsBilling){
+        this.checkoutForm.billingAddress = this.checkoutForm.shippingAddress;
+      }
+
+      this.checkoutForm.cartItems.forEach(item => {
+        item.dateProcessed = Timestamp.now();
+        item.processedStatus = "NEW"
+      })
+
+      let savedForm: CheckoutForm = await this.saveCheckoutForm();
+
+      e.preventDefault();
+
+      this.setLoading(true);
+
+      if(this.checkoutForm.isNewsletter){
+        this.createNewsLetter()
+      }
+
+      if(this.checkoutForm.isCreateAccount){
+        this.createUserAccount()
+      }
+
+      if(this.checkoutForm.total > 0){
+        this.submitStripePayment(savedForm)
+      }
+
+      this.setLoading(false);
+    }
+  }
+
+  async saveCheckoutForm(){
+    this.checkoutForm.processedStatus = "NEW";
+    this.checkoutForm.dateProcessed = Timestamp.now();
+
+    if(this.checkoutForm.isShippingSameAsBilling){
+      this.checkoutForm.billingAddress = this.checkoutForm.shippingAddress;
+    }
+
+    this.checkoutForm.cartItems.forEach(item => {
+      item.dateProcessed = Timestamp.now();
+      item.processedStatus = "NEW"
+    })
+
+    return await this.salesService.add(this.checkoutForm);
+  }
+
+  async submitStripePayment(savedForm: CheckoutForm){
+    let response = await this.stripeService.getStripe().then(async stripe => {
+      return await stripe.confirmPayment({
+        elements: this.elements,
+        confirmParams: {
+          return_url: environment.domain + "/checkout-success?savedForm=" + savedForm.id,
+        },
+      })
+    })
+
+    if (response.error.type === "card_error" || response.error.type === "validation_error") {
+      this.showMessage(response.error.message, 'ERROR');
+    } else {
+      this.showMessage("An unexpected error occurred.", 'ERROR');
+    }
+  }
+
+  async cancelStripeIntent(){
+    await fetch(environment.stripeCancelURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
+    });
+  }
+
+  showMessage(messageText, type) {
+    if(type ==='SUCCESS'){
+      this.toastrService.success(messageText, 'SUCCESS!')
+    } else if(type ==='INFO'){
+      this.toastrService.info(messageText)
+    } else if(type ==='ERROR'){
+      this.toastrService.error(messageText, 'ERROR!')
+    }
+  }
+
+  setLoading(isLoading) {
+    if (isLoading) {
+      // Disable the button and show a spinner
+      document.querySelector("#submit")['disabled'] = true;
+      document.querySelector("#spinner").classList.remove("hidden");
+      document.querySelector("#button-text").classList.add("hidden");
+    } else {
+      document.querySelector("#submit")['disabled'] = false;
+      document.querySelector("#spinner").classList.add("hidden");
+      document.querySelector("#button-text").classList.remove("hidden");
+    }
   }
 
 }
