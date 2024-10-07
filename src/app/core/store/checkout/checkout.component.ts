@@ -8,7 +8,7 @@ import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
 import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
 import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
 import { AppUserService } from 'impactdisciplescommon/src/services/admin/user.service';
@@ -36,7 +36,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   @ViewChild('billingFormComponent', { static: false }) billingFormComponent: DxFormComponent;
 
   checkoutForm: CheckoutForm = {};
-  orignalTotal: number = 0;
   couponCode: string = '';
   itemDiscountAmount: CouponModel;
   cartDiscountAmount: CouponModel;
@@ -85,7 +84,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       billingAddress: { state: '' },
       shippingAddress: { state: '' }
     }
-    this.orignalTotal = this.checkoutForm.total;
+
     this.states = EnumHelper.getStateRoleTypesAsArray();
     this.countries = EnumHelper.getCountryTypesAsArray()
 
@@ -118,7 +117,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   calculateShippingCost = async () => {
     this.showShippingSpinner = true;
 
-    let totalWeight: number = this.checkoutForm.cartItems.map(item => item.weight).reduce((a,b) => a + b);
+    let totalWeight: number = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.weight).reduce((a,b) => a + b);
 
     const configs = await this.webConfigService.getAll();
 
@@ -131,7 +130,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.checkoutForm.total += this.checkoutForm.shippingRate;
       }
     });
-
   }
 
   calculateEstimatedTax = async () => {
@@ -143,7 +141,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     } else if (taxRates.length > 1) {
       console.log("found more than 1 qualified tax rate");
     } else {
-      this.checkoutForm.estimatedTaxes = this.checkoutForm.totalBeforeDiscount * taxRates[0].estimatedCombinedRate;
+      let taxable_amount = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.price).reduce((a,b) => a + b);
+      console.log(taxable_amount);
+
+      this.checkoutForm.estimatedTaxes = taxable_amount * taxRates[0].estimatedCombinedRate;
 
       this.checkoutForm.total += this.checkoutForm.estimatedTaxes;
     }
@@ -221,7 +222,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }
     });
     this.checkoutForm.total = this.cartService.totalPriceQuantity().total
-    this.orignalTotal = this.checkoutForm.total;
     this.itemDiscountAmount = null;
     this.cartDiscountAmount = null;
   }
