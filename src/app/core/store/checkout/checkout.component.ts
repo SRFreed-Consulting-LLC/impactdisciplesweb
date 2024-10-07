@@ -141,8 +141,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     } else if (taxRates.length > 1) {
       console.log("found more than 1 qualified tax rate");
     } else {
+      this.checkoutForm.taxRate = taxRates[0].estimatedCombinedRate;
+
       let taxable_amount = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.price).reduce((a,b) => a + b);
-      console.log(taxable_amount);
 
       this.checkoutForm.estimatedTaxes = taxable_amount * taxRates[0].estimatedCombinedRate;
 
