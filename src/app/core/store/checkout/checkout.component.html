@@ -209,14 +209,28 @@
                   <div class="col-lg-5">Shipping</div>
                   <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-5"></div>
                   <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-2 text-end">{{this.checkoutForm.shippingRate | currency}}</div>
-                  <div *ngIf="!this.checkoutForm.shippingRate" class="col-lg-7 text-end shipping-text">Calculated at Next Step</div>
+                  <div *ngIf="!this.checkoutForm.shippingRate" class="col-lg-7 text-end shipping-text">
+                    <dx-load-indicator
+                      class="button-indicator"
+                      [visible]="showShippingSpinner">
+                    </dx-load-indicator>
+                    <span *ngIf="!showShippingSpinner" class="dx-button-text">{{ 'Calculated at Next Step' }}</span>
+                  </div>
                 </div>
                 <div class="row">
                   <div class="col-lg-5">Estimated Tax</div>
                   <div *ngIf="this.checkoutForm.estimatedTaxes" class="col-lg-5"></div>
                   <div *ngIf="this.checkoutForm.estimatedTaxes" class="col-lg-2 text-end">{{this.checkoutForm.estimatedTaxes | currency}}</div>
-                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state == 'Georgia'" class="col-lg-7 text-end shipping-text">Calculated at Next Step</div>
-                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state != 'Georgia'" class="col-lg-7 text-end shipping-text">Only required if in Georgia</div>
+                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state == 'Georgia'" class="col-lg-7 text-end shipping-text">
+                    <dx-load-indicator
+                      class="button-indicator"
+                      [visible]="showEstimatedTaxesSpinner">
+                    </dx-load-indicator>
+                    <span *ngIf="!showEstimatedTaxesSpinner" class="dx-button-text">{{ 'Calculated at Next Step' }}</span>
+                  </div>
+                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state != 'Georgia'" class="col-lg-7 text-end shipping-text">
+                    Only required if in Georgia
+                  </div>
                 </div>
                 <div class="row order-total">
                   <div class="col-lg-6 order-total__title">Order Total</div>

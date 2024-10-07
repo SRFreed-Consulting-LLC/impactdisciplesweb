@@ -53,6 +53,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   public states: string[];
   public countries: string[];
 
+  showEstimatedTaxesSpinner: boolean = false;
+
+  showShippingSpinner: boolean = false;
+
   private ngUnsubscribe = new Subject<void>();
 
   constructor(
@@ -111,44 +115,38 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
   }
 
-  calculateShippingCost = () => {
+  calculateShippingCost = async () => {
+    this.showShippingSpinner = true;
+
     let totalWeight: number = this.checkoutForm.cartItems.map(item => item.weight).reduce((a,b) => a + b);
 
-    this.webConfigService.getAll().then(configs => {
-      if(configs){
-        this.shippingService.calculateShipping(configs[0], this.checkoutForm, totalWeight).then(result => {
-          if(result) {
-            result.rateResponse.rates.sort((a, b) => a.shippingAmount.amount - b.shippingAmount.amount);
+    const configs = await this.webConfigService.getAll();
 
-            this.checkoutForm.shippingRate = result.rateResponse.rates[0].shippingAmount.amount
+    return this.shippingService.calculateShipping(configs[0], this.checkoutForm, totalWeight).then(result_1 => {
+      if (result_1) {
+        result_1.rateResponse.rates.sort((a_1, b_1) => a_1.shippingAmount.amount - b_1.shippingAmount.amount);
 
-            this.checkoutForm.total += this.checkoutForm.shippingRate;
+        this.checkoutForm.shippingRate = result_1.rateResponse.rates[0].shippingAmount.amount;
 
-            this.cancelStripeIntent().then(() => this.toggleForm());
-          }
-        })
-      } else {
-        this.toastrService.error('Error','There was an getting the Senders Adress', {
-          timeOut: 10000,
-        });
+        this.checkoutForm.total += this.checkoutForm.shippingRate;
       }
-    })
+    });
+
   }
 
-  calculateEstimatedTax = () => {
-    this.taxService.getAllByValue("zipCode", this.checkoutForm.shippingAddress.zip).then(taxRates => {
-      if(! taxRates || taxRates.length == 0){
-        console.log("No qualified tax rate found for zip code " + this.checkoutForm.shippingAddress.zip);
-      } else if(taxRates.length > 1){
-        console.log("found more than 1 qualified tax rate");
-      } else {
-        this.checkoutForm.estimatedTaxes = this.checkoutForm.totalBeforeDiscount * taxRates[0].estimatedCombinedRate;
+  calculateEstimatedTax = async () => {
+    this.showEstimatedTaxesSpinner = true;
 
-        this.checkoutForm.total += this.checkoutForm.estimatedTaxes;
-      }
+    const taxRates = await this.taxService.getAllByValue("zipCode", this.checkoutForm.shippingAddress.zip);
+    if (!taxRates || taxRates.length == 0) {
+      console.log("No qualified tax rate found for zip code " + this.checkoutForm.shippingAddress.zip);
+    } else if (taxRates.length > 1) {
+      console.log("found more than 1 qualified tax rate");
+    } else {
+      this.checkoutForm.estimatedTaxes = this.checkoutForm.totalBeforeDiscount * taxRates[0].estimatedCombinedRate;
 
-      this.cancelStripeIntent().then(() => this.toggleForm());
-    })
+      this.checkoutForm.total += this.checkoutForm.estimatedTaxes;
+    }
   }
 
   applyCoupon() {
@@ -239,10 +237,21 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.isShippingView = false;
           this.isBillingView = true;
 
-          this.calculateShippingCost();
+          let promises = [];
+
+          promises.push(this.calculateShippingCost());
+
           if(this.checkoutForm.shippingAddress.state == 'Georgia'){
-            this.calculateEstimatedTax();
+            promises.push(this.calculateEstimatedTax());
           }
+
+          Promise.all(promises).then(() => {
+            this.cancelStripeIntent().then(() => {
+              this.showEstimatedTaxesSpinner = false;
+              this.showShippingSpinner = false;
+              this.toggleForm();
+            });
+          })
         }
         break;
       default:
