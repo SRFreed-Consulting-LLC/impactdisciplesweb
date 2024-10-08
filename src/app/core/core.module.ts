@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule, DxSelectBoxModule, DxLoadIndicatorModule, DxCheckBoxModule, DxTextBoxModule, DxLookupModule, DxLoadPanelModule } from "devextreme-angular";
+import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule, DxSelectBoxModule, DxLoadIndicatorModule, DxCheckBoxModule, DxTextBoxModule, DxLookupModule, DxLoadPanelModule, DxDataGridModule, DxPopupModule } from "devextreme-angular";
 import { SharedModule } from "../shared/shared.module";
 import { HomeHeaderComponent } from "./home/home-header/home-header.component";
 import { HomeComponent } from "./home/home.component";
@@ -46,6 +46,7 @@ import { RegistrationCheckoutSuccessComponent } from './registration-checkout-su
 import { StoreSidebarComponent } from './pages/store/store-sidebar/store-sidebar.component';
 import { StorePostboxItemComponent } from './pages/store/store-postbox-item/store-postbox-item.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { ProductDetailsComponent } from './pages/product-details/product-details
     RegistrationCheckoutSuccessComponent,
     StoreSidebarComponent,
     StorePostboxItemComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,
@@ -98,6 +100,7 @@ import { ProductDetailsComponent } from './pages/product-details/product-details
     DxNumberBoxModule,
     DxAccordionModule,
     DxButtonModule,
+    DxDataGridModule,
     DxFormModule,
     ImpactDisciplesModule,
     YouTubePlayerModule,
@@ -105,6 +108,7 @@ import { ProductDetailsComponent } from './pages/product-details/product-details
     DxAutocompleteModule,
     DxLoadPanelModule,
     DxLookupModule,
+    DxPopupModule,
     DxRadioGroupModule,
     DxTextAreaModule,
     DxSelectBoxModule,

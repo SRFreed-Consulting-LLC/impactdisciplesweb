@@ -1,0 +1,269 @@
+<app-home-header></app-home-header>
+<main class="lunch-form">
+  <section class="lunch-form__area pb-100 mt-30">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-12 col-lg-12">
+          <div class="lunch-form__info">
+            <dx-form
+              #addEditForm
+              [(formData)]="loggedInUser"
+              [showColonAfterLabel]="false"
+              labelLocation="left">
+              <dxi-item itemType="tabbed">
+                <dxi-tab title="Info">
+                  <dxi-item itemType="group" [colCount]="2" [colSpan]="1">
+                    <dxi-item dataField="firstName" [colSpan]="1" [isRequired]="true"></dxi-item>
+                    <dxi-item dataField="lastName" [colSpan]="1" [isRequired]="true"></dxi-item>
+                    <dxi-item dataField="email" [colSpan]="1" [isRequired]="true" [disabled]="true"></dxi-item>
+                    <dxi-item dataField="role" [label]="{ text: 'Roles' }" [isRequired]="true" [disabled]="true"></dxi-item>
+                  </dxi-item>
+                  <dxi-item itemType="group" caption="Phone Number" [colCount]="6" [colSpan]="2">
+                    <dxi-item dataField="phone.countryCode" [colSpan]="2" [label]="{ text: 'Country Code' }"></dxi-item>
+                    <dxi-item dataField="phone.number" [colSpan]="2" [label]="{ text: 'Number' }" [editorOptions]="phoneEditorOptions"></dxi-item>
+                    <dxi-item [label]="{ text: 'Type' }" [colSpan]="2">
+                      <div *dxTemplate>
+                        <dx-select-box
+                          [items]="phoneTypes"
+                          [(value)]="loggedInUser.phone.type">
+                        </dx-select-box>
+                      </div>
+                    </dxi-item>
+                  </dxi-item>
+                  <dxi-item>
+                    <div class="row">
+                      <div class="col-12 text-end">
+                        <dx-button text="Save" width="250" [type]="'default'"[stylingMode]="'contained'" (onClick)="save()"></dx-button>
+                      </div>
+                    </div>
+                  </dxi-item>
+                </dxi-tab>
+                <dxi-tab title="Address">
+                  <dxi-item itemType="group" caption="Address" [colCount]="6" [colSpan]="2">
+                    <dxi-item dataField="address.address1" [colSpan]="6" [label]="{ text: 'Address1' }"></dxi-item>
+                    <dxi-item dataField="address.address2" [colSpan]="6" [label]="{ text: 'Address2' }"></dxi-item>
+                    <dxi-item dataField="address.city" [colSpan]="3" [label]="{ text: 'City' }"></dxi-item>
+                    <dxi-item dataField="address.state" [colSpan]="2" [label]="{ text: 'State' }">
+                      <div *dxTemplate>
+                        <dx-lookup
+                          [showCancelButton]="false"
+                          [items]="states"
+                          [(value)]="loggedInUser.address.state">
+                        </dx-lookup>
+                      </div>
+                    </dxi-item>
+                    <dxi-item dataField="address.zip" [colSpan]="2" [label]="{ text: 'Zip' }"></dxi-item>
+                    <dxi-item dataField="address.county" [colSpan]="3" [label]="{ text: 'County' }"></dxi-item>
+                    <dxi-item dataField="address.country" [colSpan]="3" [label]="{ text: 'Country' }">
+                      <div *dxTemplate>
+                        <dx-lookup
+                          [showCancelButton]="false"
+                          [items]="countries"
+                          [(value)]="loggedInUser.address.country">
+                        </dx-lookup>
+                      </div>
+                    </dxi-item>
+                  </dxi-item>
+                  <dxi-item>
+                    <div class="row">
+                      <div class="col-12 text-end">
+                        <dx-button text="Save" width="250" [type]="'default'"[stylingMode]="'contained'" (onClick)="save()"></dx-button>
+                      </div>
+                    </div>
+                  </dxi-item>
+                </dxi-tab>
+                <dxi-tab title="Purchases">
+                  <dx-data-grid class="dx-card wide-card"
+                    #grid
+                    [dataSource]="salesDatasource$ | async"
+                    [height]="'75vh'"
+                    [showBorders]="false"
+                    [showColumnLines]="true"
+                    [showColumnLines]="true"
+                    [showRowLines]="true"
+                    [focusedRowEnabled]="true"
+                    [columnAutoWidth]="true">
+
+                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+                    <dxi-column dataField="processedStatus"></dxi-column>
+                    <dxi-column dataField="id" [visible]="false"></dxi-column>
+                    <dxi-column dataField="dateProcessed" [dataType]="'date'" sortOrder="desc" width="100"></dxi-column>
+                    <dxi-column dataField="receipt" cellTemplate="receiptTemplate"></dxi-column>
+                    <dxi-column dataField="couponCode"></dxi-column>
+                    <dxi-column dataField="totalBeforeDiscount" [caption]="'Total'" cellTemplate="amountOtherTemplate"></dxi-column>
+                    <dxi-column dataField="estimatedTaxes" [caption]="'Taxes'" cellTemplate="amountOtherTemplate"></dxi-column>
+                    <dxi-column dataField="shippingRate" [caption]="'Shipping'" cellTemplate="amountOtherTemplate"></dxi-column>
+                    <dxi-column dataField="paymentIntent.amount" cellTemplate="amountDollarTemplate" [caption]="'Charged'"></dxi-column>
+                    <dxi-column dataField="refundAmount" cellTemplate="amountOtherTemplate" [caption]="'Refunded'"></dxi-column>
+                    <dxi-column type="buttons" [allowReordering]="false" width="50">
+                      <dxi-button icon="eyeopen" hint="View Details" [onClick]="showPurchasesEditModal"></dxi-button>
+                    </dxi-column>
+
+                    <div *dxTemplate="let data of 'receiptTemplate'">
+                      {{data.data?.paymentIntent?.id ? data.data.paymentIntent.id : data.data.paymentIntent }}
+                    </div>
+
+                    <div *dxTemplate="let data of 'itemCountTemplate'">
+                      {{data.data.cartItems.length}}
+                    </div>
+
+                    <div *dxTemplate="let data of 'amountDollarTemplate'">
+                      {{data.value > 0 ? (data.value / 100 | currency) : (0 | currency)}}
+                    </div>
+
+                    <div *dxTemplate="let data of 'amountOtherTemplate'">
+                      {{data.value > 0 ? (data.value | currency) : (0 | currency)}}
+                    </div>
+                  </dx-data-grid>
+                </dxi-tab>
+                <dxi-tab title="Events Attended">
+                  <dx-data-grid class="dx-card wide-card"
+                    #grid
+                    [dataSource]="eventsRegistrantsDatasource$ | async"
+                    [height]="'75vh'"
+                    [showBorders]="false"
+                    [showColumnLines]="true"
+                    [showColumnLines]="true"
+                    [showRowLines]="true"
+                    [focusedRowEnabled]="true"
+                    [columnAutoWidth]="true">
+
+                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxi-column dataField="firstName"></dxi-column>
+                    <dxi-column dataField="lastName"></dxi-column>
+                    <dxi-column dataField="eventId">
+                      <dxo-lookup [dataSource]="events" [displayExpr]="'eventName'" [valueExpr]="'id'"></dxo-lookup>
+                    </dxi-column>
+                    <dxi-column dataField="email"></dxi-column>
+                    <dxi-column dataField="receipt"></dxi-column>
+                    <dxi-column dataField="registrationDate" [dataType]="'date'"></dxi-column>
+                    <dxi-column type="buttons" [allowReordering]="false" width="50">
+                      <dxi-button icon="eyeopen" hint="View Details" [onClick]="showRegistrationsEditModal"></dxi-button>
+                    </dxi-column>
+                  </dx-data-grid>
+                </dxi-tab>
+              </dxi-item>
+            </dx-form>
+          </div>
+        </div>
+      </div>
+    </div>
+    </section>
+</main>
+
+<dx-popup
+  #addEditPopup
+  [showTitle]="true"
+  [dragEnabled]="false"
+  [visible]="isSalesEditVisible$ | async"
+  [width]="'75%'"
+  [height]="'80%'"
+  [showCloseButton]="true"
+  (onHiding)="isSalesEditVisible$.next(false)">
+  <div *dxTemplate="let data of 'content'">
+    <div class="add-item-modal">
+      <div class="add-item-modal__content" *ngIf="isSalesEditVisible$ | async">
+        <dx-form
+          #addEditForm
+          [(formData)]="selectedPurchase"
+          [showColonAfterLabel]="false"
+          labelLocation="left"
+          [colCount]="6">
+            <dxi-item [colSpan]="6">
+              <div *dxTemplate>
+                <dx-data-grid class="dx-card wide-card"
+                  #grid
+                  [dataSource]="selectedPurchase.cartItems"
+                  [height]="'55vh'"
+                  [showBorders]="false"
+                  [showColumnLines]="true"
+                  [wordWrapEnabled]="true"
+                  [showColumnLines]="true"
+                  [showRowLines]="true"
+                  [columnAutoWidth]="true">
+
+                  <dxo-scrolling mode="virtual"></dxo-scrolling>
+
+                  <dxi-column dataField="img" cellTemplate="imageCellTemplate" [caption]="''" [width]="120"></dxi-column>
+                  <dxi-column dataField="itemName" cellTemplate="descriptionCellTemplate" [caption]="'Description'"></dxi-column>
+                  <dxi-column dataField="orderQuantity" [dataType]="'number'" [caption]="'Count'" [width]="100"></dxi-column>
+                  <dxi-column dataField="price" [dataType]="'number'" [format]="'currency'" [caption]="'Unit Price'" [width]="120"></dxi-column>
+                  <dxi-column caption="Tax" cellTemplate="taxAmountTemplate"></dxi-column>
+                  <dxi-column caption="Shipping" cellTemplate="shippingAmountTemplate"></dxi-column>
+                  <dxi-column caption="Total" cellTemplate="totalAmountTemplate"></dxi-column>
+                  <dxi-column dataField="processedStatus" [caption]="'Status'" [width]="150"></dxi-column>
+
+                  <div *dxTemplate="let data of 'taxAmountTemplate'">
+                    <span width="100">{{getItemTaxableAmount(data) | currency}}</span>
+                  </div>
+
+                  <div *dxTemplate="let data of 'shippingAmountTemplate'">
+                    <span width="100">{{getItemShippingAmount(data) | currency}}</span>
+                  </div>
+
+                  <div *dxTemplate="let data of 'totalAmountTemplate'">
+                    <span width="100">{{getItemTotalAmount(data) | currency}}</span>
+                  </div>
+
+                  <div *dxTemplate="let data of 'imageCellTemplate'">
+                    <img *ngIf="data?.value" width="100" [src]="data?.value?.url" [alt]="data?.value?.name"/>
+                  </div>
+
+                  <div *dxTemplate="let data of 'descriptionCellTemplate'">
+                    <div>{{data.value}}</div>
+                    <div *ngIf="(data.data.attendees?.length) > 0">
+                      <ol type="1">
+                        <li *ngFor="let attendee of data.data.attendees">
+                          {{attendee.firstName}} {{attendee.lastName}} - ({{attendee.email}})
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </dxi-item>
+        </dx-form>
+      </div>
+    </div>
+  </div>
+</dx-popup>
+
+<dx-popup
+  #addEditPopup
+  [showTitle]="true"
+  [dragEnabled]="false"
+  [visible]="isRegistrationEditVisible$ | async"
+  [width]="'70%'"
+  [height]="'60%'"
+  [showCloseButton]="true"
+  (onHiding)="isRegistrationEditVisible$.next(false)">
+  <div *dxTemplate="let data of 'content'">
+    <div class="add-item-modal">
+      <div class="add-item-modal__content" *ngIf="isRegistrationEditVisible$ | async">
+        <dx-form
+          #addEditForm
+          [(formData)]="selectedEvent"
+          [showColonAfterLabel]="false"
+          labelLocation="left"
+          [colCount]="2">
+            <dxi-item dataField="eventName" [colSpan]="2" [label]="{ text: 'Event Name' }" [disabled]="true"></dxi-item>
+            <dxi-item dataField="startDate" [disabled]="true"></dxi-item>
+            <dxi-item dataField="endDate" [disabled]="true"></dxi-item>
+            <dxi-item dataField="isSummit" [colSpan]="1" [disabled]="true"></dxi-item>
+            <dxi-item dataField="costInDollars" [disabled]="true" [label]="{ text: 'Cost'}">
+              <div *dxTemplate>
+                <dx-number-box [value]="selectedEvent.costInDollars" [format]="'currency'"></dx-number-box>
+              </div>
+            </dxi-item>
+            <dxi-item dataField="location.name" [colSpan]="1" [label]="{ text: 'Location' }" [disabled]="true"></dxi-item>
+            <dxi-item dataField="organization.name" [colSpan]="1" [label]="{ text: 'Organization' }" [disabled]="true"></dxi-item>
+            <dxi-item dataField="description" [colSpan]="2" [editorType]="'dxTextArea'" [editorOptions]="{ height: 150 }" [label]="{ text: 'Description' }" [disabled]="true"></dxi-item>
+          </dx-form>
+      </div>
+    </div>
+  </div>
+</dx-popup>
+<app-footer></app-footer>

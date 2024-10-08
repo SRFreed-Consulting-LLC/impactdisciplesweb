@@ -28,7 +28,6 @@ import { NgxsModule } from '@ngxs/store';
     SharedModule,
     ThemeSharedModule,
     ImpactDisciplesModule
-
   ],
   providers: [
     CookieService
