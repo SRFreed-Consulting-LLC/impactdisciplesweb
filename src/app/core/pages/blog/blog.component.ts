@@ -55,10 +55,12 @@ export class BlogComponent implements OnInit {
     this.filteredBlogs = this.blogs.filter(
       (blog) =>
         blog.category?.toLowerCase().includes(termLower) ||
-        blog.tags.some((tag) => tag.tag.toLowerCase().includes(termLower)) ||
+        blog.tags?.some((tag) => tag.tag.toLowerCase().includes(termLower)) ||
         blog.date.toString().includes(termLower) ||
         blog.title.toLocaleLowerCase().includes(termLower)
     );
+    this.paginate = this.getPager(this.filteredBlogs.length, Number(+this.pageNo), this.pageSize);
+
   }
 
   filterBlogsByCategory(category: TagModel): void {
@@ -66,7 +68,7 @@ export class BlogComponent implements OnInit {
   }
 
   clearFilters(): void {
-    this.filteredBlogs = [...this.blogs];
+    this.loadBlogs()
   }
 
   setPage(page: number) {

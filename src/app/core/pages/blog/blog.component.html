@@ -27,7 +27,7 @@
         <div class="col-xl-3 col-lg-4">
           <app-blog-sidebar (searchEvent)="searchBlogs($event)" (categoryFilterEvent)="filterBlogsByCategory($event)" (clearFiltersEvent)="clearFilters()"></app-blog-sidebar>
         </div>
-  
+
         <div class="col-xl-9 col-lg-8">
           <div class="blog__wrapper">
             <div class="row">
@@ -35,12 +35,11 @@
                 <app-blog-postbox-item [blog]="blog"></app-blog-postbox-item>
               </div>
             </div>
-  
+
             <div class="row">
               <div class="col-xl-12">
                 <div class="shop-pagination-wrapper">
-                  <app-pagination [data]="filteredBlogs" [paginate]="paginate" (setPage)="setPage($event)">
-                  </app-pagination>
+                  <app-pagination [data]="filteredBlogs" [paginate]="paginate" (setPage)="setPage($event)"></app-pagination>
                 </div>
               </div>
             </div>

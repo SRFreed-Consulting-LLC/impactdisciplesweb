@@ -1,5 +1,5 @@
 <div class="basic-pagination">
-  <ul *ngIf="paginate.pages && paginate.pages.length">
+  <ul *ngIf="paginate.pages && paginate.pages.length ">
     <li [ngClass]="{ disabled: paginate.currentPage === 1 }">
       <a (click)="pageSet(paginate.currentPage - 1)" class="cursor-pointer">
         <i class="fal fa-angle-left"></i>
