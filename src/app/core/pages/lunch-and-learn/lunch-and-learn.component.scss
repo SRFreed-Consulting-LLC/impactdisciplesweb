@@ -14,7 +14,7 @@
     .slider__content {
       display: flex;
       flex-direction: column;
-      align-items: end;
+      align-items: flex-end;
     }
     &__pretitle {
       color: #ffcc00;
@@ -30,9 +30,9 @@
       font-size: 18px;
     }
     .custom-hr {
-      width: 200px; 
-      border: 0;    
-      border-top: 6px solid $theme-color;  
+      width: 200px;
+      border: 0;
+      border-top: 6px solid $theme-color;
       opacity: 1;
     }
   }
@@ -51,16 +51,16 @@
     &__title {
       text-align: center;
       .custom-hr {
-        width: 200px; 
-        border: 0;    
-        border-top: 6px solid $theme-color;  
+        width: 200px;
+        border: 0;
+        border-top: 6px solid $theme-color;
         margin: 20px auto;
         opacity: 1;
       }
       h4 {
         color: $black;
         font-size: 36px;
-    
+
         strong {
           color: $theme-color;
         }
@@ -120,11 +120,11 @@
     position: relative;
     padding-left: 30px;
   }
-  
+
   .custom-bullets li::before {
     content: "•";
-    color: #ffcc00; 
-    font-size: 3em; 
+    color: #ffcc00;
+    font-size: 3em;
     position: absolute;
     left: 0;
     top: 0;
@@ -158,8 +158,8 @@
     }
     &__content {
       left: 0;
-      z-index: 2; 
-      color: inherit; 
+      z-index: 2;
+      color: inherit;
       padding: 0 30px;
     }
   }
@@ -167,7 +167,7 @@
     position: relative;
     overflow: hidden;
   }
-  
+
   .banner__item::before {
     content: '';
     position: absolute;
@@ -179,11 +179,11 @@
     transition: top 0.3s ease;
     z-index: 1;
   }
-  
+
   .banner__item:hover::before {
     top: 0;
   }
-  
+
 }
 
 .countries-banner {
@@ -195,7 +195,7 @@
       text-align: center;
       font-size: 100px;
       font-weight: 900;
-      letter-spacing: 20px;  
+      letter-spacing: 20px;
     }
   }
   &__left {
