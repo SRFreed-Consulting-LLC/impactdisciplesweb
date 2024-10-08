@@ -56,8 +56,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   showShippingSpinner: boolean = false;
 
-  isLoadPanelVisible: boolean = false;
-
+  isProcessingPanelVisible: boolean = false;
+  isSetupPanelVisible: boolean = false;
   isPayButtonVisible: boolean = false;
 
   private ngUnsubscribe = new Subject<void>();
@@ -121,19 +121,33 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   calculateShippingCost = async () => {
     this.showShippingSpinner = true;
 
-    let totalWeight: number = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.weight).reduce((a,b) => a + b);
+    let totalWeight: number;
+    try{
+      totalWeight = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.weight).reduce((a,b) => a + b);
+    }
+    catch(err){
+      totalWeight = 0;
+    }
 
-    const configs = await this.webConfigService.getAll();
+    if(totalWeight > 0){
+      const configs = await this.webConfigService.getAll();
 
-    return this.shippingService.calculateShipping(configs[0], this.checkoutForm, totalWeight).then(result_1 => {
-      if (result_1) {
-        result_1.rateResponse.rates.sort((a_1, b_1) => a_1.shippingAmount.amount - b_1.shippingAmount.amount);
+      return this.shippingService.calculateShipping(configs[0], this.checkoutForm, totalWeight).then(result => {
+        if (result) {
+          result.rateResponse.rates.sort((a, b) => a.shippingAmount.amount - b.shippingAmount.amount);
 
-        this.checkoutForm.shippingRate = Number(Number(result_1.rateResponse.rates[0].shippingAmount.amount).toFixed(2));
+          this.checkoutForm.shippingRate = Number(Number(result.rateResponse.rates[0].shippingAmount.amount).toFixed(2));
 
-        this.checkoutForm.total += this.checkoutForm.shippingRate;
-      }
-    });
+          this.checkoutForm.total += this.checkoutForm.shippingRate;
+        }
+      })
+    } else {
+      this.checkoutForm.shippingRate = 0;
+
+      return Promise.resolve(0)
+    }
+
+
   }
 
   calculateEstimatedTax = async () => {
@@ -147,9 +161,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     } else {
       this.checkoutForm.taxRate = taxRates[0].estimatedCombinedRate;
 
-      let taxable_amount = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.price).reduce((a,b) => a + b);
+      let taxableAmount : number;
 
-      this.checkoutForm.estimatedTaxes = Number((taxable_amount * taxRates[0].estimatedCombinedRate).toFixed(2));
+      try{
+        taxableAmount = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.price)?.reduce((a,b) => a + b);
+      } catch(err){
+        taxableAmount = 0;
+      }
+
+      this.checkoutForm.estimatedTaxes = Number((taxableAmount * taxRates[0].estimatedCombinedRate).toFixed(2));
 
       this.checkoutForm.total += Number(this.checkoutForm.estimatedTaxes.toFixed(2));
     }
@@ -241,6 +261,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         if(this.shippingFormComponent.instance.validate().isValid) {
           this.isShippingView = false;
           this.isBillingView = true;
+          this.isSetupPanelVisible = true;
 
           let promises = [];
 
@@ -255,7 +276,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               this.showEstimatedTaxesSpinner = false;
               this.showShippingSpinner = false;
               this.toggleForm();
-              this.isLoadPanelVisible = false;
             });
           })
         }
@@ -381,6 +401,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               const paymentElement = this.elements.create("payment", paymentElementOptions);
               paymentElement.mount("#payment-element");
               this.isPayButtonVisible = true;
+              this.isSetupPanelVisible = false;
+
             })
           }
         }, 0);  // Ensures form is rendered before Stripe is initialized
@@ -400,7 +422,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   async handleSubmit(e) {
     if(this.billingFormComponent.instance.validate().isValid) {
-      this.isLoadPanelVisible = true;
+      this.isProcessingPanelVisible = true;
       this.checkoutForm.processedStatus = "NEW";
       this.checkoutForm.dateProcessed = Timestamp.now();
 

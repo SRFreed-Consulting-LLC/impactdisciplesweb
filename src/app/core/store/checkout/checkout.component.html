@@ -214,7 +214,9 @@
                       class="button-indicator"
                       [visible]="showShippingSpinner">
                     </dx-load-indicator>
-                    <span *ngIf="!showShippingSpinner" class="dx-button-text">{{ 'Calculated at Next Step' }}</span>
+                    <span *ngIf="!showShippingSpinner && this.checkoutForm.shippingRate != 0" class="dx-button-text">Calculated at Next Step</span>
+                    <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.shippingRate == 0" class="dx-button-text shipping-text">{{this.checkoutForm.shippingRate | currency}}</span>
+
                   </div>
                 </div>
                 <div class="row">
@@ -226,7 +228,8 @@
                       class="button-indicator"
                       [visible]="showEstimatedTaxesSpinner">
                     </dx-load-indicator>
-                    <span *ngIf="!showEstimatedTaxesSpinner" class="dx-button-text">{{ 'Calculated at Next Step' }}</span>
+                    <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.estimatedTaxes != 0" class="dx-button-text">Calculated at Next Step</span>
+                    <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.estimatedTaxes == 0" class="dx-button-text shipping-text">{{this.checkoutForm.estimatedTaxes | currency}}</span>
                   </div>
                   <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state != 'Georgia'" class="col-lg-7 text-end shipping-text">
                     Only required if in Georgia
@@ -248,9 +251,21 @@
 <dx-load-panel
     #loadPanel
     shadingColor="rgba(0,0,0,0.4)"
-    [position]="{ of: '#upload' }"
-    [visible]="isLoadPanelVisible"
+    [position]="{ of: '#checkoutBlock' }"
+    [visible]="isProcessingPanelVisible"
     [message] = "'Please wait while payment is processed!'"
+    [showIndicator]="true"
+    [showPane]="true"
+    [shading]="true"
+    [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+<dx-load-panel
+    #loadPanel
+    shadingColor="rgba(0,0,0,0.4)"
+    [position]="{ of: '#checkoutBlock' }"
+    [visible]="isSetupPanelVisible"
+    [message] = "'Please wait while setting up payment!'"
     [showIndicator]="true"
     [showPane]="true"
     [shading]="true"
