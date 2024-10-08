@@ -141,7 +141,7 @@
                 <div id="payment-message" class="hidden"></div>
               </form>
             </div>
-            <button id="submit" class="os-btn os-btn-black pay-button" (click)="handleSubmit($event)">
+            <button id="submit" class="os-btn os-btn-black pay-button" (click)="handleSubmit($event)" *ngIf="isPayButtonVisible">
               <div class="spinner hidden" id="spinner"></div>
               <span id="button-text">Pay now</span>
             </button>
@@ -241,7 +241,18 @@
           </div>
         </div>
       </ng-template>
-
     </div>
   </section>
 </main>
+
+<dx-load-panel
+    #loadPanel
+    shadingColor="rgba(0,0,0,0.4)"
+    [position]="{ of: '#upload' }"
+    [visible]="isLoadPanelVisible"
+    [message] = "'Please wait while payment is processed!'"
+    [showIndicator]="true"
+    [showPane]="true"
+    [shading]="true"
+    [closeOnOutsideClick]="false">
+</dx-load-panel>

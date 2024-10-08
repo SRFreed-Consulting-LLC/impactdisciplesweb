@@ -56,6 +56,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   showShippingSpinner: boolean = false;
 
+  isLoadPanelVisible: boolean = false;
+
+  isPayButtonVisible: boolean = false;
+
   private ngUnsubscribe = new Subject<void>();
 
   constructor(
@@ -125,7 +129,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       if (result_1) {
         result_1.rateResponse.rates.sort((a_1, b_1) => a_1.shippingAmount.amount - b_1.shippingAmount.amount);
 
-        this.checkoutForm.shippingRate = result_1.rateResponse.rates[0].shippingAmount.amount;
+        this.checkoutForm.shippingRate = Number(Number(result_1.rateResponse.rates[0].shippingAmount.amount).toFixed(2));
 
         this.checkoutForm.total += this.checkoutForm.shippingRate;
       }
@@ -145,9 +149,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
       let taxable_amount = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.price).reduce((a,b) => a + b);
 
-      this.checkoutForm.estimatedTaxes = taxable_amount * taxRates[0].estimatedCombinedRate;
+      this.checkoutForm.estimatedTaxes = Number((taxable_amount * taxRates[0].estimatedCombinedRate).toFixed(2));
 
-      this.checkoutForm.total += this.checkoutForm.estimatedTaxes;
+      this.checkoutForm.total += Number(this.checkoutForm.estimatedTaxes.toFixed(2));
     }
   }
 
@@ -251,6 +255,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               this.showEstimatedTaxesSpinner = false;
               this.showShippingSpinner = false;
               this.toggleForm();
+              this.isLoadPanelVisible = false;
             });
           })
         }
@@ -323,8 +328,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-
-
   //PAYMENT METHODS
   async toggleForm(): Promise<void> {
     if(this.checkoutForm.total && this.checkoutForm.total > 0){
@@ -368,15 +371,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.paymentIntent = paymentIntent;
 
             // Initialize Stripe Elements
-            this.elements = (await this.stripeService.getStripe()).elements({ clientSecret });
+            await this.stripeService.getStripe().then(stripe => {
+              this.elements = stripe.elements({ clientSecret });
 
-            const paymentElementOptions = {
-              layout: "tabs",
-            };
+              const paymentElementOptions = {
+                layout: "tabs",
+              };
 
-            const paymentElement = this.elements.create("payment", paymentElementOptions);
-            paymentElement.mount("#payment-element");
-
+              const paymentElement = this.elements.create("payment", paymentElementOptions);
+              paymentElement.mount("#payment-element");
+              this.isPayButtonVisible = true;
+            })
           }
         }, 0);  // Ensures form is rendered before Stripe is initialized
 
@@ -395,6 +400,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   async handleSubmit(e) {
     if(this.billingFormComponent.instance.validate().isValid) {
+      this.isLoadPanelVisible = true;
       this.checkoutForm.processedStatus = "NEW";
       this.checkoutForm.dateProcessed = Timestamp.now();
 
@@ -463,11 +469,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async cancelStripeIntent(){
-    await fetch(environment.stripeCancelURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
-    });
+    if(this.paymentIntent){
+      await fetch(environment.stripeCancelURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 'paymentIntent': this.paymentIntent })
+      });
+    }
   }
 
   showMessage(messageText, type) {
