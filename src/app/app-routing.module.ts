@@ -39,6 +39,7 @@ import { RegistrationCheckoutComponent } from './core/registration-checkout/regi
 import { RegistrationCheckoutSuccessComponent } from './core/registration-checkout-success/registration-checkout-success.component';
 import { ProductDetailsComponent } from './core/pages/product-details/product-details.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
+import { SummitComponent } from './core/pages/summit/summit.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -169,6 +170,10 @@ const routes: Routes = [
   {
     path: 'prayer-team',
     component: PrayerTeamComponent
+  },
+  {
+    path: 'summit/:year',
+    component: SummitComponent
   },
   {
     path: 'profile',
