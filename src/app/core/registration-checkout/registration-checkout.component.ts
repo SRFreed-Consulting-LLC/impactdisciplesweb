@@ -74,9 +74,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
       isNewsletter: true,
       isCreateAccount: false,
       totalBeforeDiscount: this.cartService.totalPriceQuantity().total,
-      billingAddress: {
-        state: ''
-      }
+      billingAddress: { state: '', country:'United States'}
     }
     this.orignalTotal = this.checkoutForm.total;
 

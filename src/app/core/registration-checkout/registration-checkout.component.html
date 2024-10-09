@@ -69,7 +69,7 @@
                 </div>
               </dxi-item>
               <dxi-item dataField="billingAddress.zip" [isRequired]="true" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
-              <dxi-item dataField="billingAddress.country">
+              <dxi-item dataField="billingAddress.country" [label]="{ text: 'Country' }" [editorOptions]="{ placeholder: 'Country' }">
                 <div *dxTemplate>
                   <dx-lookup
                     [showCancelButton]="false"
