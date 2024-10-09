@@ -20,47 +20,36 @@
             <dx-form
               #shippingFormComponent
               [formData]="checkoutForm"
-              [colCount]="4"
+              [colCount]="6"
               labelLocation="top"
               [showColonAfterLabel]="false"
             >
-              <dxi-item [colSpan]="4">
+              <dxi-item [colSpan]="6">
                 <div *dxTemplate><h4>Customer Information</h4></div>
               </dxi-item>
-              <dxi-item dataField="firstName" [colSpan]="2" [isRequired]="true" [label]="{ text: 'First Name' }"></dxi-item>
-              <dxi-item dataField="lastName" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Last Name' }"></dxi-item>
-              <dxi-item dataField="email" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
-              <dxi-item dataField="phone.number" [colSpan]="2" [isRequired]="true" [label]="{ text: 'Phone Number' }"></dxi-item>
-              <dxi-item
-                cssClass="checkbox"
-                dataField="isNewsletter"
-                editorType="dxCheckBox"
-                [colSpan]="2"
-                [label]="{ text: 'Sign up for our Newsletter to receive emails about our next Events!', location: 'right' }"
-              ></dxi-item>
-              <dxi-item [colSpan]="2" itemType="empty"></dxi-item>
-              <dxi-item
-                cssClass="checkbox"
-                dataField="isCreateAccount"
-                editorType="dxCheckBox"
-                [label]="{ text: 'Create Account', location: 'right' }"
-              ></dxi-item>
-              <dxi-item [colSpan]="3" itemType="empty"></dxi-item>
-
-              <dxi-item *ngIf="checkoutForm?.isCreateAccount" [colSpan]="2" [isRequired]="true">
+              <dxi-item dataField="firstName" [colSpan]="3" [isRequired]="true" [label]="{ text: 'First Name' }"></dxi-item>
+              <dxi-item dataField="lastName" [colSpan]="3" [isRequired]="true" [label]="{ text: 'Last Name' }"></dxi-item>
+              <dxi-item dataField="email" [colSpan]="3" [isRequired]="true" [label]="{ text: 'Email Address' }"></dxi-item>
+              <dxi-item dataField="phone.number" [colSpan]="3" [isRequired]="true" [label]="{ text: 'Phone Number' }"></dxi-item>
+              <dxi-item dataField="isNewsletter" editorType="dxCheckBox" [colSpan]="1" cssClass="checkbox" [label]="{ text: 'Sign up for our Newsletter to receive emails about our next Events!', location: 'right' }"></dxi-item>
+              <dxi-item [colSpan]="5" itemType="empty"></dxi-item>
+              <dxi-item dataField="isCreateAccount" editorType="dxCheckBox" [colSpan]="1" cssClass="checkbox" [label]="{ text: 'Create Account', location: 'right' }"></dxi-item>
+              <dxi-item [colSpan]="5" itemType="empty"></dxi-item>
+              <dxi-item *ngIf="checkoutForm?.isCreateAccount" [colSpan]="3" [isRequired]="true">
                 <dx-text-box
                   placeholder="Enter Password"
                   mode="password"
                   [(ngModel)]="password"
                 ></dx-text-box>
               </dxi-item>
-              <dxi-item [colSpan]="4" itemType="empty"></dxi-item>
-              <dxi-item [colSpan]="4">
+              <dxi-item [colSpan]="6" itemType="empty"></dxi-item>
+
+              <dxi-item [colSpan]="6">
                 <div *dxTemplate><h4>Shipping Address</h4></div>
               </dxi-item>
-              <dxi-item dataField="shippingAddress.address1" [isRequired]="true" [colSpan]="4" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
-              <dxi-item dataField="shippingAddress.address2" [colSpan]="4" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
-              <dxi-item dataField="shippingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
+              <dxi-item dataField="shippingAddress.address1" [isRequired]="true" [colSpan]="6" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
+              <dxi-item dataField="shippingAddress.address2" [colSpan]="6" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
+              <dxi-item dataField="shippingAddress.city" [isRequired]="true" [colSpan]="3" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
               <dxi-item dataField="shippingAddress.state" [isRequired]="true" [colSpan]="2" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
                 <div *dxTemplate>
                   <dx-lookup
@@ -70,8 +59,8 @@
                   </dx-lookup>
                 </div>
               </dxi-item>
-              <dxi-item dataField="shippingAddress.zip" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
-              <dxi-item dataField="shippingAddress.country" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Country' }">
+              <dxi-item dataField="shippingAddress.zip" [isRequired]="true" [colSpan]="1" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
+              <dxi-item dataField="shippingAddress.country" [isRequired]="true" [colSpan]="3" [label]="{ text: 'Country' }">
                 <div *dxTemplate>
                   <dx-lookup
                     [showCancelButton]="false"
@@ -108,22 +97,22 @@
             <dx-form
               #billingFormComponent
               [formData]="checkoutForm"
-              [colCount]="4"
+              [colCount]="6"
               labelLocation="top"
               [showColonAfterLabel]="false"
             >
-              <dxi-item [colSpan]="4">
+              <dxi-item [colSpan]="6">
                 <div *dxTemplate><h4>Billing Address</h4></div>
               </dxi-item>
               <dxi-item dataField="isShippingSameAsBilling" editorType="dxCheckBox" [label]="{ text: 'Is Billing Same As Shipping?', location: 'right' }"></dxi-item>
-              <dxi-item itemType="empty" [colSpan]="3"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address1" [isRequired]="true" [colSpan]="4" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address2" [colSpan]="4" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.city" [isRequired]="true" [colSpan]="2" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
+              <dxi-item itemType="empty" [colSpan]="5"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address1" [isRequired]="true" [colSpan]="6" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address2" [colSpan]="6" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.city" [isRequired]="true" [colSpan]="3" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.state" [isRequired]="true" [colSpan]="2" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.zip" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.zip" [isRequired]="true" [colSpan]="1" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
 
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.country" [isRequired]="true" [label]="{ text: 'Country' }">
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.country" [colSpan]="3" [isRequired]="true" [label]="{ text: 'Country' }">
                 <div *dxTemplate>
                   <dx-lookup
                     [showCancelButton]="false"

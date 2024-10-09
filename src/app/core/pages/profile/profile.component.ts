@@ -18,6 +18,8 @@ import { OrganizationService } from 'impactdisciplescommon/src/services/organiza
 import { LocationModel } from 'impactdisciplescommon/src/models/domain/location.model';
 import { OrganizationModel } from 'impactdisciplescommon/src/models/domain/organization.model';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
+import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
+import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
 
 @Component({
   selector: 'app-profile',
@@ -69,7 +71,21 @@ export class ProfileComponent implements OnInit{
     this.countries = EnumHelper.getCountryTypesAsArray();
     this.phoneTypes = EnumHelper.getPhoneTypesAsArray();
 
-    this.authService.getUser().subscribe(user => this.loggedInUser = user);
+    this.authService.getUser().subscribe(user => {
+      this.loggedInUser = user;
+
+      if(!this.loggedInUser.shippingAddress){
+        this.loggedInUser.shippingAddress = {... new Address()}
+      }
+
+      if(!this.loggedInUser.billingAddress){
+        this.loggedInUser.billingAddress = {... new Address()}
+      }
+
+      if(!this.loggedInUser.phone){
+        this.loggedInUser.phone = {... new Phone()}
+      }
+    });
 
     this.salesDatasource$ = this.salesService.streamAllByValue("email", this.loggedInUser.email).pipe(
       map(
@@ -88,7 +104,6 @@ export class ProfileComponent implements OnInit{
       )
     );
     this.events = await this.eventService.getAll();
-    console.log(this.events)
 
     this.eventsRegistrantsDatasource$ = this.eventRegistrationService.streamAllByValue("email", this.loggedInUser.email).pipe(
       map(
