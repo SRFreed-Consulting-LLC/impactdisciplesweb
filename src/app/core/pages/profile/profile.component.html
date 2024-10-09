@@ -38,28 +38,53 @@
                     </div>
                   </dxi-item>
                 </dxi-tab>
-                <dxi-tab title="Address">
-                  <dxi-item itemType="group" caption="Address" [colCount]="6" [colSpan]="2">
-                    <dxi-item dataField="address.address1" [colSpan]="6" [label]="{ text: 'Address1' }"></dxi-item>
-                    <dxi-item dataField="address.address2" [colSpan]="6" [label]="{ text: 'Address2' }"></dxi-item>
-                    <dxi-item dataField="address.city" [colSpan]="3" [label]="{ text: 'City' }"></dxi-item>
-                    <dxi-item dataField="address.state" [colSpan]="2" [label]="{ text: 'State' }">
+                <dxi-tab title="Addresses">
+                  <dxi-item itemType="group" caption="Shipping Address" [colCount]="6" [colSpan]="2">
+                    <dxi-item dataField="shippingAddress.address1" [colSpan]="6" [label]="{ text: 'Address1' }"></dxi-item>
+                    <dxi-item dataField="shippingAddress.address2" [colSpan]="6" [label]="{ text: 'Address2' }"></dxi-item>
+                    <dxi-item dataField="shippingAddress.city" [colSpan]="3" [label]="{ text: 'City' }"></dxi-item>
+                    <dxi-item dataField="shippingAddress.state" [colSpan]="2" [label]="{ text: 'State' }">
                       <div *dxTemplate>
                         <dx-lookup
                           [showCancelButton]="false"
                           [items]="states"
-                          [(value)]="loggedInUser.address.state">
+                          [(value)]="loggedInUser.shippingAddress.state">
                         </dx-lookup>
                       </div>
                     </dxi-item>
-                    <dxi-item dataField="address.zip" [colSpan]="2" [label]="{ text: 'Zip' }"></dxi-item>
-                    <dxi-item dataField="address.county" [colSpan]="3" [label]="{ text: 'County' }"></dxi-item>
-                    <dxi-item dataField="address.country" [colSpan]="3" [label]="{ text: 'Country' }">
+                    <dxi-item dataField="shippingAddress.zip" [colSpan]="2" [label]="{ text: 'Zip' }"></dxi-item>
+                    <dxi-item dataField="shippingAddress.county" [colSpan]="3" [label]="{ text: 'County' }"></dxi-item>
+                    <dxi-item dataField="shippingAddress.country" [colSpan]="3" [label]="{ text: 'Country' }">
                       <div *dxTemplate>
                         <dx-lookup
                           [showCancelButton]="false"
                           [items]="countries"
-                          [(value)]="loggedInUser.address.country">
+                          [(value)]="loggedInUser.shippingAddress.country">
+                        </dx-lookup>
+                      </div>
+                    </dxi-item>
+                  </dxi-item>
+                  <dxi-item itemType="group" caption="Billing Address" [colCount]="6" [colSpan]="2">
+                    <dxi-item dataField="billingAddress.address1" [colSpan]="6" [label]="{ text: 'Address1' }"></dxi-item>
+                    <dxi-item dataField="billingAddress.address2" [colSpan]="6" [label]="{ text: 'Address2' }"></dxi-item>
+                    <dxi-item dataField="billingAddress.city" [colSpan]="3" [label]="{ text: 'City' }"></dxi-item>
+                    <dxi-item dataField="billingAddress.state" [colSpan]="2" [label]="{ text: 'State' }">
+                      <div *dxTemplate>
+                        <dx-lookup
+                          [showCancelButton]="false"
+                          [items]="states"
+                          [(value)]="loggedInUser.shippingAddress.state">
+                        </dx-lookup>
+                      </div>
+                    </dxi-item>
+                    <dxi-item dataField="billingAddress.zip" [colSpan]="2" [label]="{ text: 'Zip' }"></dxi-item>
+                    <dxi-item dataField="billingAddress.county" [colSpan]="3" [label]="{ text: 'County' }"></dxi-item>
+                    <dxi-item dataField="billingAddress.country" [colSpan]="3" [label]="{ text: 'Country' }">
+                      <div *dxTemplate>
+                        <dx-lookup
+                          [showCancelButton]="false"
+                          [items]="countries"
+                          [(value)]="loggedInUser.billingAddress.country">
                         </dx-lookup>
                       </div>
                     </dxi-item>
