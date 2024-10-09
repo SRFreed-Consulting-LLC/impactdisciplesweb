@@ -85,8 +85,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       totalBeforeDiscount: this.cartService.totalPriceQuantity().total,
       isShippingSameAsBilling: true,
       isNewsletter: true,
-      billingAddress: { state: '' },
-      shippingAddress: { state: '' }
+      billingAddress: { state: '', country: 'United States'},
+      shippingAddress: { state: '' , country: 'United States'}
     }
 
     this.states = EnumHelper.getStateRoleTypesAsArray();

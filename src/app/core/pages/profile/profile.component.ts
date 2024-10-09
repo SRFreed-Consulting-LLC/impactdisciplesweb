@@ -17,6 +17,7 @@ import { LocationService } from 'impactdisciplescommon/src/services/location.ser
 import { OrganizationService } from 'impactdisciplescommon/src/services/organization.service';
 import { LocationModel } from 'impactdisciplescommon/src/models/domain/location.model';
 import { OrganizationModel } from 'impactdisciplescommon/src/models/domain/organization.model';
+import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 
 @Component({
   selector: 'app-profile',
@@ -86,7 +87,8 @@ export class ProfileComponent implements OnInit{
           })
       )
     );
-    this.events = await this.eventService.getAll()
+    this.events = await this.eventService.getAll();
+    console.log(this.events)
 
     this.eventsRegistrantsDatasource$ = this.eventRegistrationService.streamAllByValue("email", this.loggedInUser.email).pipe(
       map(
@@ -176,5 +178,9 @@ export class ProfileComponent implements OnInit{
       return  Number(Number(0).toFixed(0));
 
     }
+  }
+
+  getEventDate(cell){
+    return (dateFromTimestamp(this.events.find(event => event.id == cell.data.eventId).startDate) as Date).toDateString()
   }
 }

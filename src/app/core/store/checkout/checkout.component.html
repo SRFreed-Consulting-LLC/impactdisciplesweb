@@ -71,10 +71,11 @@
                 </div>
               </dxi-item>
               <dxi-item dataField="shippingAddress.zip" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="shippingAddress.country" [isRequired]="true" [label]="{ text: 'Country' }">
+              <dxi-item dataField="shippingAddress.country" [isRequired]="true" [colSpan]="2" [label]="{ text: 'Country' }">
                 <div *dxTemplate>
                   <dx-lookup
                     [showCancelButton]="false"
+                    [value]="countries[0]"
                     [items]="countries"
                     [(value)]="checkoutForm.shippingAddress.country">
                   </dx-lookup>

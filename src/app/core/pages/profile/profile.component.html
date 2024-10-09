@@ -155,7 +155,7 @@
 
                     <dxo-scrolling mode="virtual"></dxo-scrolling>
                     <dxo-filter-row [visible]="true"></dxo-filter-row>
-                    <dxi-column dataField="startDate" [dataType]="'date'"></dxi-column>
+                    <dxi-column dataField="startDate" [dataType]="'date'" [cellTemplate]="'eventDateTemplate'" [sortOrder]="'desc'"></dxi-column>
                     <dxi-column dataField="eventId">
                       <dxo-lookup [dataSource]="events" [displayExpr]="'eventName'" [valueExpr]="'id'"></dxo-lookup>
                     </dxi-column>
@@ -165,6 +165,11 @@
                     <dxi-column type="buttons" [allowReordering]="false" width="50">
                       <dxi-button icon="eyeopen" hint="View Details" [onClick]="showRegistrationsEditModal"></dxi-button>
                     </dxi-column>
+                    <div *dxTemplate="let cell of 'eventDateTemplate'">
+                      <div class="">
+                        {{ getEventDate(cell)}}
+                      </div>
+                    </div>
                   </dx-data-grid>
                 </dxi-tab>
               </dxi-item>
