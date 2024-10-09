@@ -53,7 +53,6 @@
                       </div>
                     </dxi-item>
                     <dxi-item dataField="shippingAddress.zip" [colSpan]="2" [label]="{ text: 'Zip' }"></dxi-item>
-                    <dxi-item dataField="shippingAddress.county" [colSpan]="3" [label]="{ text: 'County' }"></dxi-item>
                     <dxi-item dataField="shippingAddress.country" [colSpan]="3" [label]="{ text: 'Country' }">
                       <div *dxTemplate>
                         <dx-lookup
@@ -78,7 +77,6 @@
                       </div>
                     </dxi-item>
                     <dxi-item dataField="billingAddress.zip" [colSpan]="2" [label]="{ text: 'Zip' }"></dxi-item>
-                    <dxi-item dataField="billingAddress.county" [colSpan]="3" [label]="{ text: 'County' }"></dxi-item>
                     <dxi-item dataField="billingAddress.country" [colSpan]="3" [label]="{ text: 'Country' }">
                       <div *dxTemplate>
                         <dx-lookup
@@ -157,8 +155,7 @@
 
                     <dxo-scrolling mode="virtual"></dxo-scrolling>
                     <dxo-filter-row [visible]="true"></dxo-filter-row>
-                    <dxi-column dataField="firstName"></dxi-column>
-                    <dxi-column dataField="lastName"></dxi-column>
+                    <dxi-column dataField="startDate" [dataType]="'date'"></dxi-column>
                     <dxi-column dataField="eventId">
                       <dxo-lookup [dataSource]="events" [displayExpr]="'eventName'" [valueExpr]="'id'"></dxo-lookup>
                     </dxi-column>

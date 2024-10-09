@@ -110,8 +110,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           email: user.email,
           phone: user.phone,
           // TODO: Need to change to use saved addresses in user account
-          billingAddress: user.address || null,
-          shippingAddress: this.checkoutForm.isShippingSameAsBilling ? user.address : null,
+          billingAddress: user.billingAddress || null,
+          shippingAddress: this.checkoutForm.isShippingSameAsBilling ? user.billingAddress : null,
           ...this.checkoutForm
         }
       }
@@ -295,15 +295,37 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         newUser.lastName = this.checkoutForm.lastName;
         newUser.email = this.checkoutForm.email;
 
-        let address = {... new Address()};
-        address.address1 = this.checkoutForm.billingAddress.address1;
-        address.address2 = this.checkoutForm.billingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
-        address.city = this.checkoutForm.billingAddress.city;
-        address.state = this.checkoutForm.billingAddress.state;
-        address.zip = this.checkoutForm.billingAddress.zip;
-        address.country = this.checkoutForm.billingAddress.country;
+        let billingAddress = {... new Address()};
+        billingAddress.address1 = this.checkoutForm.billingAddress.address1;
+        billingAddress.address2 = this.checkoutForm.billingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
+        billingAddress.city = this.checkoutForm.billingAddress.city;
+        billingAddress.state = this.checkoutForm.billingAddress.state;
+        billingAddress.zip = this.checkoutForm.billingAddress.zip;
+        billingAddress.country = this.checkoutForm.billingAddress.country;
 
-        newUser.address = address;
+        newUser.billingAddress = billingAddress;
+
+        let shippingAddress = {... new Address()};
+        shippingAddress.address1 = this.checkoutForm.shippingAddress.address1;
+        shippingAddress.address2 = this.checkoutForm.shippingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
+        shippingAddress.city = this.checkoutForm.shippingAddress.city;
+        shippingAddress.state = this.checkoutForm.shippingAddress.state;
+        shippingAddress.zip = this.checkoutForm.shippingAddress.zip;
+        shippingAddress.country = this.checkoutForm.shippingAddress.country;
+
+        if(this.checkoutForm.isShippingSameAsBilling){
+          newUser.shippingAddress = billingAddress;
+        } else {
+          let shippingAddress = {... new Address()};
+          shippingAddress.address1 = this.checkoutForm.shippingAddress.address1;
+          shippingAddress.address2 = this.checkoutForm.shippingAddress.address2 ? this.checkoutForm.billingAddress.address2 :  '';
+          shippingAddress.city = this.checkoutForm.shippingAddress.city;
+          shippingAddress.state = this.checkoutForm.shippingAddress.state;
+          shippingAddress.zip = this.checkoutForm.shippingAddress.zip;
+          shippingAddress.country = this.checkoutForm.shippingAddress.country;
+
+          newUser.shippingAddress = shippingAddress;
+        }
 
         let phone = {... new Phone()}
         phone.countryCode = '1';
