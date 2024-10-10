@@ -5,7 +5,6 @@ import DataSource from 'devextreme/data/data_source';
 import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { AppUserService } from 'impactdisciplescommon/src/services/admin/user.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
@@ -30,11 +29,10 @@ import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/cus
 })
 export class ProfileComponent implements OnInit{
   salesDatasource$: Observable<DataSource>;
+  eventsRegistrantsDatasource$: Observable<DataSource>;
 
   public isSalesEditVisible$ = new BehaviorSubject<boolean>(false);
   public isRegistrationEditVisible$ = new BehaviorSubject<boolean>(false);
-
-  eventsRegistrantsDatasource$: Observable<DataSource>;
 
   selectedPurchase: CheckoutForm;
   selectedEvent: EventModel;
@@ -105,6 +103,7 @@ export class ProfileComponent implements OnInit{
           })
       )
     );
+
     this.events = await this.eventService.getAll();
 
     this.eventsRegistrantsDatasource$ = this.eventRegistrationService.streamAllByValue("email", this.loggedInUser.email).pipe(
