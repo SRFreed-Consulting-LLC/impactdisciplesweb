@@ -11,6 +11,7 @@ import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model
 import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
 import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
+import { CustomerService } from 'impactdisciplescommon/src/services/admin/customer.service';
 import { AppUserService } from 'impactdisciplescommon/src/services/admin/user.service';
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
 import { ShippingService } from 'impactdisciplescommon/src/services/shipping.service';
@@ -69,7 +70,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private couponService: CouponService,
     private shippingService: ShippingService,
     private authService: AuthService,
-    private userService: AppUserService,
+    private customerService: CustomerService,
     private toastrService: ToastrService,
     private webConfigService: WebConfigService,
     private newsletterSubscriptionService: NewsletterSubscriptionService,
@@ -288,7 +289,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async createUserAccount(){
-    await this.userService.getAllByValue('email', this.checkoutForm.email).then(async users => {
+    await this.customerService.getAllByValue('email', this.checkoutForm.email).then(async users => {
       if(users && users.length == 0){
         let newUser: AppUser = {... new AppUser()};
         newUser.firstName = this.checkoutForm.firstName;
@@ -335,7 +336,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         newUser.phone = phone;
 
         newUser.role = Role.CUSTOMER;
-        await this.userService.add(newUser).then(async user => {
+        await this.customerService.add(newUser).then(async user => {
           await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
             if (result.isOk) {
               this.toastrService.success('Success', 'Your account has been created.', {

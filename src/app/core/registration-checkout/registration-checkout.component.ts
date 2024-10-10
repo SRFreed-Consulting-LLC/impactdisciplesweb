@@ -21,6 +21,7 @@ import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/c
 import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
 import { Router } from '@angular/router';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
+import { CustomerService } from 'impactdisciplescommon/src/services/admin/customer.service';
 
 @Component({
   selector: 'app-registration-checkout',
@@ -60,7 +61,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     public cartService: CartService,
     private couponService: CouponService,
-    private userService: AppUserService,
+    private customerService: CustomerService,
     private salesService: SalesService,
     private router: Router,
     private newsletterSubscriptionService: NewsletterSubscriptionService
@@ -173,7 +174,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
   }
 
   async createUserAccount(){
-    await this.userService.getAllByValue('email', this.checkoutForm.email).then(async users => {
+    await this.customerService.getAllByValue('email', this.checkoutForm.email).then(async users => {
       if(users && users.length == 0){
         let newUser: AppUser = {... new AppUser()};
         newUser.firstName = this.checkoutForm.firstName;
@@ -220,7 +221,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
         newUser.phone = phone;
 
         newUser.role = Role.CUSTOMER;
-        await this.userService.add(newUser).then(async user => {
+        await this.customerService.add(newUser).then(async user => {
           await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
             if (result.isOk) {
               this.toastrService.success('Success', 'Your account has been created.', {
