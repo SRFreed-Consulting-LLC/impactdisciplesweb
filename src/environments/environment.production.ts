@@ -14,7 +14,8 @@ export const environment = {
   stripeURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/checkout",
   stripeCancelURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/cancel",
   stripeTestKey: "pk_live_51IP8IBC4Pv6WfeJrsYMjRAmzFsA0L6kjBvQx8upqGHxuo3T0WI60u1isqXBz29SyfC27v3yB34sGUYu1pl7oU1Co00LY6lIrrW",
-  shippingUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/shipping"
+  shippingUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/shipping",
+  application: "web"
 };
 
 
