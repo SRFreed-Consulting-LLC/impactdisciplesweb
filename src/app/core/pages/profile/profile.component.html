@@ -110,9 +110,9 @@
                     <dxo-scrolling mode="virtual"></dxo-scrolling>
                     <dxo-filter-row [visible]="true"></dxo-filter-row>
 
+                    <dxi-column dataField="dateProcessed" [dataType]="'date'" sortOrder="desc" width="100"></dxi-column>
                     <dxi-column dataField="processedStatus"></dxi-column>
                     <dxi-column dataField="id" [visible]="false"></dxi-column>
-                    <dxi-column dataField="dateProcessed" [dataType]="'date'" sortOrder="desc" width="100"></dxi-column>
                     <dxi-column dataField="receipt" cellTemplate="receiptTemplate"></dxi-column>
                     <dxi-column dataField="couponCode"></dxi-column>
                     <dxi-column dataField="totalBeforeDiscount" [caption]="'Total'" cellTemplate="amountOtherTemplate"></dxi-column>
@@ -155,6 +155,7 @@
 
                     <dxo-scrolling mode="virtual"></dxo-scrolling>
                     <dxo-filter-row [visible]="true"></dxo-filter-row>
+
                     <dxi-column dataField="startDate" [dataType]="'date'" [cellTemplate]="'eventDateTemplate'" [sortOrder]="'desc'"></dxi-column>
                     <dxi-column dataField="eventId">
                       <dxo-lookup [dataSource]="events" [displayExpr]="'eventName'" [valueExpr]="'id'"></dxo-lookup>
