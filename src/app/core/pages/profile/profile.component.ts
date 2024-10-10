@@ -20,6 +20,8 @@ import { OrganizationModel } from 'impactdisciplescommon/src/models/domain/organ
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
+import { CustomerService } from 'impactdisciplescommon/src/services/admin/customer.service';
+import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
 
 @Component({
   selector: 'app-profile',
@@ -45,7 +47,7 @@ export class ProfileComponent implements OnInit{
   public organizations: OrganizationModel[];
 
   isLoggedIn = false;
-  loggedInUser: AppUser;
+  loggedInUser: AppUser | CustomerModel;
 
   phoneEditorOptions = {
     mask: '(X00) 000-0000',
@@ -57,7 +59,7 @@ export class ProfileComponent implements OnInit{
   };
 
   constructor(private authService: AuthService,
-    private appUserService: AppUserService,
+    private customerService: CustomerService,
     public tostrService: ToastrService,
     private salesService: SalesService,
     private eventRegistrationService: EventRegistrationService,
@@ -124,7 +126,7 @@ export class ProfileComponent implements OnInit{
   }
 
   save(){
-    this.appUserService.update(this.loggedInUser.id, this.loggedInUser).then(user => {
+    this.customerService.update(this.loggedInUser.id, this.loggedInUser).then(user => {
       this.authService.setUser(user).pipe(take(1)).subscribe(user => {
         this.tostrService.success(`${user.firstName} ${user.lastName} saved!`)
       })
