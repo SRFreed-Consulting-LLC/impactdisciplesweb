@@ -27,4 +27,12 @@ export class ShoppingCartComponent  {
     }
   }
 
+  public isNan(value){
+    if(Number.isNaN(value)){
+      return false
+    } else {
+      return true;
+    }
+   }
+
 }

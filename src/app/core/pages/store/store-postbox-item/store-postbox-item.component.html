@@ -8,7 +8,7 @@
       <h4>
         <strong><a [routerLink]="['/product-details', product?.id]">{{product?.title}}</a></strong>
       </h4>
-      <h5><strong>$ {{ product.cost }}</strong></h5>
+      <h5><strong>$ {{ product.cost? product.cost : '0.00' }}</strong></h5>
       <p class="truncate" [innerHTML]="product?.description"></p>
       <div class="d-flex">
         <a [routerLink]="['/product-details', product?.id]" class="impact-btn mr-20">view</a>

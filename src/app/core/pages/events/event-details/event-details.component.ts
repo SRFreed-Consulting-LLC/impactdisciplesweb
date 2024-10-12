@@ -33,8 +33,9 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           id: event.id,
           itemName: event.eventName,
           orderQuantity: 1,
-          price: event.costInDollars,
+          price: this.isNan(event.costInDollars)?event.costInDollars : 0,
           img: event.imageUrl,
+          isEBook: false,
           isEvent: true,
           attendees: [{ firstName: '', lastName: '', email: '' }]
         }
@@ -111,5 +112,13 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
+
+  public isNan(value){
+    if(Number.isNaN(value)){
+      return false
+    } else {
+      return true;
+    }
+   }
 
 }

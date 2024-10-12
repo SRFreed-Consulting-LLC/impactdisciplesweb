@@ -19,12 +19,22 @@ export class StorePostboxItemComponent {
       id: this.product.id,
       itemName: this.product.title,
       orderQuantity: 1,
-      price: this.product.cost,
+      price: this.isNan(this.product.cost)? this.product.cost : 0,
       img: this.product.imageUrl,
       isEvent: false,
+      isEBook: this.product.isEBook,
       weight: this.product.weight,
-      uom: this.product.uom
+      uom: this.product.uom,
+      eBookUrl: this.product.eBookUrl
     }
     this.cartService.addCartProduct(this.cartItem)
   }
+
+  public isNan(value){
+    if(Number.isNaN(value)){
+      return false
+    } else {
+      return true;
+    }
+   }
 }

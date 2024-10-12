@@ -7,5 +7,13 @@ import { CartService } from '../../utils/services/cart.service';
   styleUrls: ['./mini-cart.component.scss']
 })
 export class MiniCartComponent {
-  constructor(public cartService: CartService) { }
+   constructor(public cartService: CartService) { }
+
+   public isNan(value){
+    if(Number.isNaN(value)){
+      return false
+    } else {
+      return true;
+    }
+   }
 }

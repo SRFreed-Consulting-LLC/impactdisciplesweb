@@ -36,11 +36,13 @@
                       <a [routerLink]="item?.isEvent ? ['/event-details', item?.id] : ['/product-details', item?.id]"><strong>{{item?.itemName}}</strong></a>
                       <div *ngIf="item?.isEvent">
                         <span *ngFor="let attendee of item?.attendees; let i = index">
-                          {{ attendee?.firstName }} {{ attendee?.lastName }}<span *ngIf="i !== item?.attendees?.length - 1">, </span> 
+                          {{ attendee?.firstName }} {{ attendee?.lastName }}<span *ngIf="i !== item?.attendees?.length - 1">, </span>
                         </span>
                       </div>
                     </td>
-                    <td class="product-price"><span class="amount">${{item.price.toFixed(2)}}</span></td>
+                    <td class="product-price">
+                      <span class="amount">${{item.price? item.price.toFixed(2): '0.00'}}</span>
+                    </td>
                     <td class="product-quantity">
                       <div class="cart-plus-minus">
                         <input type="text" [value]="item?.orderQuantity" readonly />
@@ -49,10 +51,7 @@
                       </div>
                     </td>
                     <td class="product-subtotal">
-                      <span class="amount">
-                      ${{(item.price * item?.orderQuantity!).toFixed(2)}}
-                      </span>
-                   </td>
+                      <span class="amount" *ngIf="item.price">${{item.price? (item.price * item?.orderQuantity!).toFixed(2) : '0.00'}}</span>                   </td>
                     <td class="product-remove">
                       <a (click)="cartService.removeCartProduct(item)" class="cursor-pointer">
                         <i class="fa fa-times"></i>
@@ -63,7 +62,7 @@
                 <tfoot>
                   <tr>
                     <td colspan="4"><strong>Cart Total:</strong></td>
-                    <td colspan="2"><strong>${{ cartService.totalPriceQuantity().total.toFixed(2) }}</strong></td>
+                    <td colspan="2"><strong>${{ isNan(cartService.totalPriceQuantity().total) ? cartService.totalPriceQuantity().total.toFixed(2) : '0.00' }}</strong></td>
                   </tr>
                 </tfoot>
               </table>

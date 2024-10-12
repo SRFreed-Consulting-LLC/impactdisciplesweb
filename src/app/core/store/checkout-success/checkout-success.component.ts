@@ -161,23 +161,30 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
   sendProductPurchaseSuccessEmail(cart: CheckoutForm){
     let subject = 'Thank you for Your Purchase ';
-    let text = 'You have purchased the following: \n\n'
+    let text = '<div>You have purchased the following</div><br>';
 
     this.cartService.getCartProducts().forEach(product => {
-      text += product.orderQuantity + '  x  ' + product.itemName + ' for $' + (product.orderQuantity * product.price) + '\n';
+      text += "<li><span>"
+      text += product.orderQuantity + "  x  " + product.itemName + " for $ " + (product.orderQuantity * product.price?product.price:0)
+      if(product.isEBook){
+        text += "<a href='"+ product.eBookUrl.url+"' download>     DOWNLOAD</a>";
+      }
+      text += "</span></li>";
     })
-
+    text +="</ul><br>"
 
     if(cart.couponCode) {
-      text += 'Subtotal: $' + cart.totalBeforeDiscount + ' \n \n'
-      text += 'Applied Coupon: ' + cart.couponCode + ' \n \n';
-      text += 'Total: $' + cart.total + ' \n \n'
+      text += '<div>Subtotal: $' + cart.totalBeforeDiscount + '</div><br>'
+      text += '<div>Applied Coupon: ' + cart.couponCode + '</div><br>';
+      text += '<div>Total: $' + cart.total + '</div><br>'
     } else {
-      text += 'Total: $' + cart.total + ' \n \n'
+      text += '<div>Total: $' + cart.total + '</div><br>'
     }
 
-    text += 'Confirmation Id: ' + cart.receipt + '\n'
+    if(cart.receipt){
+      text += '<div>Confirmation Id: ' + cart.receipt + '<br>'
+    }
 
-    this.emailService.sendTextEmail(cart.email, subject, text);
+    this.emailService.sendHtmlEmail(cart.email, subject, text);
   }
 }

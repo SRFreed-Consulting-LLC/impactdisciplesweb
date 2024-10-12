@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, ofActionDispatched } from '@ngxs/store';
 import { DxFormComponent } from 'devextreme-angular';
 import { Timestamp } from 'firebase/firestore';
@@ -8,11 +9,10 @@ import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
 import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
 import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
 import { CustomerService } from 'impactdisciplescommon/src/services/admin/customer.service';
-import { AppUserService } from 'impactdisciplescommon/src/services/admin/user.service';
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
 import { ShippingService } from 'impactdisciplescommon/src/services/shipping.service';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
@@ -36,7 +36,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   @ViewChild('shippingFormComponent', { static: false }) shippingFormComponent: DxFormComponent;
   @ViewChild('billingFormComponent', { static: false }) billingFormComponent: DxFormComponent;
 
-  checkoutForm: CheckoutForm = {};
+  checkoutForm: CheckoutForm = {... new CheckoutForm()};
   couponCode: string = '';
   itemDiscountAmount: CouponModel;
   cartDiscountAmount: CouponModel;
@@ -75,15 +75,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private webConfigService: WebConfigService,
     private newsletterSubscriptionService: NewsletterSubscriptionService,
     private taxService: TaxRateService,
-    private actions$: Actions
+    private actions$: Actions,
+    private router: Router
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.setView();
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
-      total: this.cartService.totalPriceQuantity().total,
-      totalBeforeDiscount: this.cartService.totalPriceQuantity().total,
+      total: this.isNan(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
+      totalBeforeDiscount: this.isNan(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
       isShippingSameAsBilling: true,
       isNewsletter: true,
       billingAddress: { state: '', country: 'United States'},
@@ -124,7 +125,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     let totalWeight: number;
     try{
-      totalWeight = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.weight).reduce((a,b) => a + b);
+      totalWeight = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.weight? item.weight : 0).reduce((a,b) => a + b);
     }
     catch(err){
       totalWeight = 0;
@@ -139,7 +140,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
           this.checkoutForm.shippingRate = Number(Number(result.rateResponse.rates[0].shippingAmount.amount).toFixed(2));
 
-          this.checkoutForm.total += this.checkoutForm.shippingRate;
+          this.checkoutForm.total += this.checkoutForm.shippingRate > 0 ? this.checkoutForm.shippingRate : 0;
         }
       })
     } else {
@@ -147,8 +148,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
       return Promise.resolve(0)
     }
-
-
   }
 
   calculateEstimatedTax = async () => {
@@ -165,7 +164,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       let taxableAmount : number;
 
       try{
-        taxableAmount = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.price)?.reduce((a,b) => a + b);
+        taxableAmount = this.checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => item.price? item.price : 0)?.reduce((a,b) => a + b);
       } catch(err){
         taxableAmount = 0;
       }
@@ -191,7 +190,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
           if(validCoupon?.tags?.length > 0) {
             this.checkoutForm.cartItems.forEach(item => {
-              let itemTotal = item.price * item.orderQuantity; // Calculate total for each item
+              let itemTotal = item.price? item.price * item.orderQuantity : 0; // Calculate total for each item
 
               if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id))) {
                 isValid = true;
@@ -219,7 +218,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
 
           if (isValid) {
-            this.checkoutForm.total = total;
+            this.checkoutForm.total = this.isNan(total)? total : 0;
 
             this.checkoutForm.couponCode = validCoupon.code;
 
@@ -247,7 +246,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         item.discountPrice = null;
       }
     });
-    this.checkoutForm.total = this.cartService.totalPriceQuantity().total
+    this.checkoutForm.total = this.isNan(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0;
     this.itemDiscountAmount = null;
     this.cartDiscountAmount = null;
   }
@@ -373,7 +372,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   //PAYMENT METHODS
   async toggleForm(): Promise<void> {
-    if(this.checkoutForm.total && this.checkoutForm.total > 0){
+    if(this.isNan(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
       try {
         setTimeout(async () => {
           const paymentForm = document.querySelector("#payment-form");
@@ -383,14 +382,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.items = [];
 
             this.cartService.getCartProducts().forEach(product => {
-              this.items.push({id: product.id, amount: ((product?.discountPrice === null || product?.discountPrice === undefined ? product.price : product.discountPrice) * product.orderQuantity * 100)})
+              if(product.price && product.price > 0){
+                this.items.push({id: product.id, amount: ((product?.discountPrice === null || product?.discountPrice === undefined ? product.price? product.price : 0 : product.discountPrice) * product.orderQuantity * 100)})
+              }
             })
 
-            if(this.checkoutForm.shippingRate){
+            if(this.checkoutForm.shippingRate && this.checkoutForm.shippingRate > 0){
               this.items.push({id: 'shipping', amount: this.checkoutForm.shippingRate * 100})
             }
 
-            if(this.checkoutForm.estimatedTaxes){
+            if(this.checkoutForm.estimatedTaxes && this.checkoutForm.estimatedTaxes > 0){
               this.items.push({id: 'taxes', amount: this.checkoutForm.estimatedTaxes * 100})
             }
 
@@ -425,7 +426,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               paymentElement.mount("#payment-element");
               this.isPayButtonVisible = true;
               this.isSetupPanelVisible = false;
-
             })
           }
         }, 0);  // Ensures form is rendered before Stripe is initialized
@@ -439,6 +439,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       if(paymentForm){
         paymentForm.remove();
       }
+      this.isPayButtonVisible = true;
+      this.isSetupPanelVisible = false;
 
     }
   }
@@ -456,6 +458,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.checkoutForm.cartItems.forEach(item => {
         item.dateProcessed = Timestamp.now();
         item.processedStatus = "NEW"
+        item.price = item.price && this.isNan(item.price)? item.price : 0;
       })
 
       let savedForm: CheckoutForm = await this.saveCheckoutForm();
@@ -472,11 +475,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.createUserAccount()
       }
 
-      if(this.checkoutForm.total > 0){
+      if(this.isNan(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
+        console.log('submitting');
         this.submitStripePayment(savedForm)
+      } else {
+        console.log('routing');
+        this.router.navigate(['/checkout-success'], { queryParams: { savedForm: savedForm.id }});
       }
 
       this.setLoading(false);
+      this.isProcessingPanelVisible = false;
     }
   }
 
@@ -493,6 +501,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       item.processedStatus = "NEW"
     })
 
+    console.log(this.checkoutForm)
     return await this.salesService.add(this.checkoutForm);
   }
 
@@ -546,4 +555,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
+  public isNan(value){
+    if(Number.isNaN(value)){
+      return false
+    } else {
+      return true;
+    }
+   }
 }

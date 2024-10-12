@@ -16,7 +16,7 @@
           </h5>
           <div class="cart-price">
             <span class="ammount">{{item?.orderQuantity}} <i class="fal fa-times"></i></span>
-            <span class="price">$ {{item?.price.toFixed(2)}}</span>
+            <span class="price">$ {{item.price ? item.price.toFixed(2) : '0.00'}}</span>
           </div>
         </div>
         <div class="del-icon f-right mt-30">
@@ -28,7 +28,7 @@
     </ul>
     <div class="total-price d-flex justify-content-between mb-30">
       <span>Subtotal:</span>
-      <span>${{(cartService.totalPriceQuantity().totalBeforeDiscount).toFixed(2)}}</span>
+      <span>${{isNan(cartService.totalPriceQuantity().totalBeforeDiscount)? (cartService.totalPriceQuantity().totalBeforeDiscount).toFixed(2) : '0.00'}}</span>
     </div>
     <div class="checkout-link">
       <a routerLink="/shopping-cart" class="os-btn">View Cart</a>

@@ -36,9 +36,11 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         id: product.id,
         itemName: product.title,
         orderQuantity: 1,
-        price: product.cost,
+        price: this.isNan(product.cost)? product.cost : 0,
         img: product.imageUrl,
         isEvent: false,
+        isEBook: product.isEBook,
+        eBookUrl: product.eBookUrl
       }
 
       this.productService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((products) => {
@@ -67,5 +69,13 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  public isNan(value){
+    if(Number.isNaN(value)){
+      return false
+    } else {
+      return true;
+    }
   }
 }

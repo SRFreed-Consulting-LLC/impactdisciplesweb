@@ -173,7 +173,7 @@
                     </div>
                   </div>
                   <div class="col-lg-2 text-end">
-                    <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">${{ cartItem?.price.toFixed(2) }}</span>
+                    <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">${{ cartItem.price? cartItem?.price.toFixed(2) : '0.00' }}</span>
                     <div *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="d-flex justify-content-center">
                       <span class="after-discount">${{ cartItem?.discountPrice.toFixed(2) }}</span>
                       <span class="before-discount">${{ cartItem?.price.toFixed(2) }}</span>
@@ -183,7 +183,8 @@
                 <div class="row">
                   <div class="col-lg-5">Subtotal</div>
                   <div class="col-lg-5"></div>
-                  <div class="col-lg-2 text-end"> ${{ this.checkoutForm.totalBeforeDiscount.toFixed(2) }}</div>
+                  <div class="col-lg-2 text-end" *ngIf="isNan(this.checkoutForm.totalBeforeDiscount)"> ${{ this.checkoutForm.totalBeforeDiscount.toFixed(2) }}</div>
+                  <div class="col-lg-2 text-end" *ngIf="!isNan(this.checkoutForm.totalBeforeDiscount)"> $ 0.00</div>
                 </div>
                 <div *ngIf="cartDiscountAmount" class="row">
                   <div class="col-lg-5">Discount</div>
@@ -227,7 +228,8 @@
                 </div>
                 <div class="row order-total">
                   <div class="col-lg-6 order-total__title">Order Total</div>
-                  <div class="col-lg-6 text-end order-total__amount"><strong>${{ checkoutForm?.total.toFixed(2) }}</strong></div>
+                  <div class="col-lg-6 text-end order-total__amount" *ngIf="isNan(checkoutForm.total)"><strong>${{ checkoutForm?.total.toFixed(2) }}</strong></div>
+                  <div class="col-lg-6 text-end order-total__amount" *ngIf="!isNan(checkoutForm.total)"><strong>$ 0.00</strong></div>
                 </div>
               </div>
             </div>
@@ -247,7 +249,7 @@
     [showIndicator]="true"
     [showPane]="true"
     [shading]="true"
-    [closeOnOutsideClick]="false">
+    [hideOnOutsideClick]="false">
 </dx-load-panel>
 
 <dx-load-panel
@@ -259,5 +261,5 @@
     [showIndicator]="true"
     [showPane]="true"
     [shading]="true"
-    [closeOnOutsideClick]="false">
+    [hideOnOutsideClick]="false">
 </dx-load-panel>
