@@ -47,6 +47,7 @@ import { StoreSidebarComponent } from './pages/store/store-sidebar/store-sidebar
 import { StorePostboxItemComponent } from './pages/store/store-postbox-item/store-postbox-item.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { SummitComponent } from "./pages/summit/summit.component";
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
     StoreSidebarComponent,
     StorePostboxItemComponent,
     ProductDetailsComponent,
-    ProfileComponent
+    ProfileComponent,
+    SummitComponent
   ],
   imports: [
     CommonModule,

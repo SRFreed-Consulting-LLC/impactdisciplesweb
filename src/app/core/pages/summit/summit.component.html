@@ -1,3 +1,198 @@
-<p>
-  summit works!
-</p>
+<app-home-header></app-home-header>
+
+<!-- SUMMITEQUIPPING GROUPS -->
+<div class="summit page-wrapper">
+  <main class="grey-bg">
+    <div class="summit__container container">
+      <!--SUMMIT HEADER - SWIPER-->
+      <section class="slider__area slider__area-4 p-relative">
+        <div class="slider-active swiper-container" #heroSliderContainer >
+          <div class="swiper-wrapper">
+            <div class="summit__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(' + summit?.imageUrl?.url + ')'">
+              <div class="container h-100 d-flex justify-content-center">
+                <div class="row">
+   
+                    <div class="summit__header-button">
+                      <a  [routerLink]="['/event-details', summit?.id]" class="os-btn os-btn-white">REGISTER NOW</a>
+                    </div>
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--SUMMIT INFO-->
+      <section class="summit__info mb-30">
+        <div class="row summit__info-container">
+          <div class="col-xl-4 summit__info-text">
+            <i class="fa-solid fa-calendar-days"></i>
+            {{ summit?.startDate?.toString() | date: 'MMMM d'}} - {{ summit?.endDate.toString() | date: 'MMMM d'}}, {{ summit?.startDate.toString() | date: 'yyyy'}}
+          </div>
+          <div class="col-xl-4 summit__info-text">
+            <i class="fa-solid fa-location-dot"></i>
+            <a [href]="'https://www.google.com/maps/search/?api=1&query=' + (summit?.location?.toString() | location: 'address' | async)" target="_blank">
+              {{ summit?.location?.toString() | location: 'address' | async }}
+            </a>
+          </div>
+          <div class="col-xl-4 summit__info-text">
+            <i class="fa-solid fa-clock"></i>
+            Check-In: 6:30 | Start Time: {{ summit?.startDate.toString() | date: 'h:mm' }}
+          </div>
+        </div>
+      </section>
+
+      <!--SUMMIT COUNTDOWN-->
+      <section class="mt-80 mb-60">
+        <div class="col-xl-12">
+          <div class="col-xl-12 countdown-timer mb-30">
+            <div class="time-part">
+              <span class="number">{{ days }}</span>
+              <span class="label">DAYS</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-part">
+              <span class="number">{{ hours }}</span>
+              <span class="label">HOURS</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-part">
+              <span class="number">{{ minutes }}</span>
+              <span class="label">MINUTES</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-part">
+              <span class="number">{{ seconds }}</span>
+              <span class="label">SECONDS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--SUMMIT DESCRIPTION AND VIDEO-->
+      <div class="banner__area-2 mb-80">
+        <div class="container-fluid p-0">
+          <div class="row g-0 justify-content-center">
+            <div class="story__text-area col-xl-6 col-lg-6 d-flex">
+              <h4 class="story__title mb-10">REGISTER FOR <strong>SUMMIT</strong></h4>
+              <p>
+                From its start in 2021, the Disciple-Making Summit has had a singular mission—calling disciple-makers, leaders, and pastors across nation and around the world to come together to focus on our main purpose. Jesus told us in Matthew 28:19 to “Go and make disciples…” We are here to do just that.
+                <br>
+                <br>
+                Join the movement and come together with us for one weekend and learn more about how you can make and multiply disciples of Jesus.
+                <br>
+                <br>
+                This is a weekend for everyone – bring yourself, your small group, your youth group, your church staff – we promise that you will leave inspired and more equipped to make disciples in the coming year.
+              </p>
+            </div>
+            <div class="col-xl-5 col-lg-5 mt-80">
+              <div class="video__area-df" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fsummit-thumbnail.jpg?alt=media&token=8335d0ec-6702-46b3-b2c4-bbe53ef83ce1)">
+                <div class="container">
+                  <div class="video__content text-center">
+                    <div class="video__button mb-30">
+                      <a (click)="utilsService.playVideo('tUZtYD6621E')" class="cursor-pointer">
+                        <i class="fas fa-play"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--SUMMIT COACHES-->
+      <section class="mb-80">
+        <div class="row justify-content-around speakers">
+          <div class="col-lg-12">
+            <h3><strong>FEATURED SPEAKERS</strong></h3>
+            <div class="slider-container mt-10">
+              <div class="slider" [style.transform]="getTransform()">
+                <div *ngFor="let coach of coaches" class="slide teams-list__team">
+                  <div class="teams-list__team-image fix">
+                    <a [routerLink]="['/team-details', coach.id]" class="w-img">
+                      <img class="transform" [src]="coach.photoUrl.url" [alt]="coach.firstName">
+                    </a>
+                  </div>
+  
+                  <div class="teams-list__content">
+                    <h4><a [routerLink]="['/team-details', coach.id]">{{ coach.firstName }} {{ coach.lastName }}</a></h4>
+                    <div class="teams-list__meta">
+                      <span>{{ coach.title }}</span>
+                    </div>
+                    <a href="#" class="coach-link">Link to page</a>
+                  </div>
+                </div>
+              </div>
+              <button class="prev" (click)="prevSlide()">&#10094;</button>
+              <button class="next" (click)="nextSlide()">&#10095;</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr>
+
+      <!--SUMMIT FAQ-->
+      <section class="faq">
+        <div class="row justify-content-around mt-50">
+          <div class="col-lg-7">
+            <div class="event-details__left">
+  
+              <ng-template #noAgenda class="your-order-table table-responsive">
+                <h3>Agenda</h3>
+                <div class="no-agenda mt-30">
+                  Check back for more updates!
+                </div>
+              </ng-template>
+
+              <div *ngIf="summit?.agendaItems else noAgenda" class="your-order-table table-responsive">
+                <ng-container *ngFor="let monthGroup of groupedAgendaItems">
+                  <h3 class="mt-30">Agenda -<strong> {{ monthGroup.monthYear }}</strong></h3>
+                  <table class="agenda">
+                    <tbody>
+                      <ng-container *ngFor="let dayGroup of monthGroup.days">
+                        <tr>
+                          <div class="agenda__date">
+                            <div>{{ dayGroup.date | date: 'EEE' }}</div>
+                            <div class="agenda__date-number">{{ dayGroup.date | date: 'd' }}</div>
+                          </div>
+                          <td>
+                            <tr class="row" *ngFor="let item of dayGroup.items" class="agenda__group">
+                              <td class="col-8" *ngIf="item.isCourse">{{ item.course | courseName | async }}</td>
+                              <td class="col-8" *ngIf="!item.isCourse">{{ item.text }}</td>
+                              <td class="agenda__group-time col-4">{{ item.startDate | date: 'shortTime'}} - {{ item.endDate | date: 'shortTime' }}</td>
+                            </tr>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </ng-container>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-lg-4 justify-content-center">
+            <div class="faq__column">
+              <h3 class="faq__title"><strong>FAQs</strong></h3>
+              <hr>
+              <div *ngFor="let faq of summit?.faqList" class="faq__container">
+                <i class="fa-solid fa-angles-right faq__icon"></i>
+                <div>
+                  <strong class="faq__question">{{ faq.question }}</strong>
+                  <p class="faq__answer" [innerHTML]="faq.answer"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<app-footer></app-footer>

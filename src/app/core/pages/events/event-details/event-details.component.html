@@ -55,6 +55,7 @@
               <span *ngIf="event?.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
             </span>
             <p *ngIf="event?.description" class="events-list__content-description">{{ event.description }}</p>
+            <a *ngIf="event?.isSummit" [routerLink]="['/summit', event?.startDate?.toString() | date: 'yyyy']">View More Details</a>
 
             <div class="mt-20 mb-30">
               <h4>ADD TICKETS:</h4>
