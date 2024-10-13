@@ -10,7 +10,7 @@
     &-button {
       display: flex;
       flex-direction: column;
-      justify-content: end;
+      justify-content: flex-end;
       margin-bottom: 50px;
       a {
         font-size: 30px;
@@ -33,7 +33,7 @@
     &-text {
       display: flex;
       align-items: center;
-      justify-content: start;
+      justify-content: flex-start;
       flex-direction: column;
       text-align: center;
       color: #fff;
@@ -49,23 +49,23 @@
     &__title {
       color: $black;
       font-size: 36px;
-  
+
       strong {
         color: #4b92fe;
       }
     }
-  
+
     &__text-area {
       margin: 25px;
       padding: 20px;
       flex-direction: column;
     }
-  
+
     &__button-custom {
       width: 50%;
     }
   }
-  
+
   .video__area-df {
     min-height: 250px;
   }
@@ -104,7 +104,7 @@
   .coach-link {
     color: #4b92fe;
   }
- 
+
   .speakers {
     h3 {
       font-weight: 800;
@@ -129,7 +129,7 @@
     margin: 0 30px;
 
     .number {
-      font-size: 4rem; 
+      font-size: 4rem;
       font-weight: 800;
     }
 
@@ -193,7 +193,7 @@ button.prev:hover, button.next:hover {
 
 @media (max-width: 768px) {
   .slide {
-    flex: 0 0 calc(100% / 2); 
+    flex: 0 0 calc(100% / 2);
   }
   button.prev, button.next {
     font-size: 18px;
@@ -206,7 +206,7 @@ button.prev:hover, button.next:hover {
     background-color: #c2e4ed;
     padding: 30px 20px;
   }
-  &__title {    
+  &__title {
     font-size: 25px;
     font-weight: 800;
     text-align: center;
