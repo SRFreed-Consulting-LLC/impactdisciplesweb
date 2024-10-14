@@ -19,6 +19,7 @@ import { ComingSoonComponent } from "./components/coming-soon/coming-soon.compon
 import { PaginationComponent } from "./components/pagination/pagination.component";
 import { DiscipleMakingSummitBannerComponent } from './components/disciple-making-summit-banner/disciple-making-summit-banner.component';
 import { CategoryNamePipe } from "./utils/pipes/category-name.pipe";
+import { TimeFormatPipe } from "./utils/pipes/time-format.pipe";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { CategoryNamePipe } from "./utils/pipes/category-name.pipe";
     LocationPipe,
     CourseNamePipe,
     CategoryNamePipe,
+    TimeFormatPipe,
     DiscipleMakingSummitBannerComponent
   ],
   imports: [
@@ -62,6 +64,7 @@ import { CategoryNamePipe } from "./utils/pipes/category-name.pipe";
     LocationPipe,
     CourseNamePipe,
     CategoryNamePipe,
+    TimeFormatPipe,
     DiscipleMakingSummitBannerComponent
   ]
 })

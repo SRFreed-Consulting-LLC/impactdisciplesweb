@@ -38,7 +38,7 @@
           </div>
           <div class="col-xl-4 summit__info-text">
             <i class="fa-solid fa-clock"></i>
-            Check-In: 6:30 | Start Time: {{ summit?.startDate.toString() | date: 'h:mm' }}
+              Check-In: {{ summit?.checkIn.toString() | timeFormat }} | Start Time: {{ summit?.startDate.toString() | date: 'h:mm a' }}
           </div>
         </div>
       </section>

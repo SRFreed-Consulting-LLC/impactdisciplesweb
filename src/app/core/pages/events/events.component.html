@@ -53,35 +53,25 @@
           <div class="row">
             <div class="col-xl-12">
               <div class="row events-list">
-                <div *ngFor="let event of eventsList" class="col-xl-4 col-lg-6 col-md-9 col-sm-12 events-list__event">
+                <a *ngFor="let event of eventsList" class="col-xl-4 col-lg-6 col-md-9 col-sm-12 events-list__event" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" >
                   <div class="events-list__event-image fix">
-                    <a [routerLink]="['/event-details', event.id]" class="w-img">
+                    <a class="w-img">
                       <img class="transform" [src]="event.imageUrl.url" alt="blog">
                     </a>
                   </div>
 
                   <div class="events-list__content">
                     
-                    <h4>
-                      <a 
-                        [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
-                        {{ event.eventName }}
-                      </a>
-                    </h4>
+                    <h4><a>{{ event.eventName }}</a></h4>
                     <div class="events-list__meta">
                       <span *ngIf="event.startDate">{{ event.startDate.toString()| date: 'M/d' }} </span>
                       <span *ngIf="event.endDate">- {{ event.endDate.toString() | date: 'M/d' }} </span>
                       <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
                     </div>
                     <p *ngIf="event.description" class="events-list__content-description">{{ event.description }}</p>
-                    <a 
-                      [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" 
-                      class="impact-btn impact-btn-primary"
-                      >
-                      REGISTER NOW
-                    </a>
+                    <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-primary">REGISTER NOW</a>
                   </div>
-                </div>
+                </a>
               </div>
             </div>
           </div>
