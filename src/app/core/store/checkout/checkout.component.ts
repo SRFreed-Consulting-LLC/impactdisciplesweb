@@ -138,9 +138,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         if (result) {
           result.rateResponse.rates.sort((a, b) => a.shippingAmount.amount - b.shippingAmount.amount);
 
+          this.checkoutForm.shippingRateId = {... result.rateResponse.rates[0]};
+
           this.checkoutForm.shippingRate = Number(Number(result.rateResponse.rates[0].shippingAmount.amount).toFixed(2));
 
           this.checkoutForm.total += this.checkoutForm.shippingRate > 0 ? this.checkoutForm.shippingRate : 0;
+
+          console.log(this.checkoutForm)
         }
       })
     } else {
