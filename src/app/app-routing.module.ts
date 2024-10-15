@@ -49,6 +49,10 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'disciple-making-summit-2025',
+    component: RegistrationComponent
+  },
+  {
     path: 'register',
     component: RegistrationComponent
   },

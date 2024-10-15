@@ -2,7 +2,7 @@
   <li>
     <div class="my-account">
       <div *ngIf="isLoggedIn" class="extra-title">
-        <h5>My Account</h5>
+        <h5>Account: {{user.firstName + ' ' + user.lastName}}</h5>
       </div>
       <ul>
         <li *ngIf="isLoggedIn"><a routerLink="/profile">Profile</a></li>
