@@ -25,7 +25,7 @@ export class StorePostboxItemComponent {
       isEBook: this.product.isEBook,
       weight: this.product.weight,
       uom: this.product.uom,
-      eBookUrl: this.product.eBookUrl
+      eBookUrl: this.product.eBookUrl? this.product.eBookUrl : null
     }
     this.cartService.addCartProduct(this.cartItem)
   }

@@ -40,7 +40,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         img: product.imageUrl,
         isEvent: false,
         isEBook: product.isEBook,
-        eBookUrl: product.eBookUrl
+        eBookUrl: product.eBookUrl?product.eBookUrl:null
       }
 
       this.productService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((products) => {
