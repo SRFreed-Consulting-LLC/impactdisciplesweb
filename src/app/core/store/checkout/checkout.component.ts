@@ -143,8 +143,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.checkoutForm.shippingRate = Number(Number(result.rateResponse.rates[0].shippingAmount.amount).toFixed(2));
 
           this.checkoutForm.total += this.checkoutForm.shippingRate > 0 ? this.checkoutForm.shippingRate : 0;
-
-          console.log(this.checkoutForm)
         }
       })
     } else {
@@ -480,10 +478,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }
 
       if(this.isNan(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
-        console.log('submitting');
         this.submitStripePayment(savedForm)
       } else {
-        console.log('routing');
         this.router.navigate(['/checkout-success'], { queryParams: { savedForm: savedForm.id }});
       }
 
@@ -505,7 +501,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       item.processedStatus = "NEW"
     })
 
-    console.log(this.checkoutForm)
     return await this.salesService.add(this.checkoutForm);
   }
 

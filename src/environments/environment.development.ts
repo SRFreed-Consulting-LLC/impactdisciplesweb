@@ -12,9 +12,9 @@ export const environment = {
   domain: 'https://impactdisciplesdev-public.web.app/',
   session_expires: 30,
   stripeTestKey: "pk_test_51IP8IBC4Pv6WfeJrdtjF5O4PsGZ4iCtIHV0QdUXya0hZZph4guaxLrR83RCiLMIkcCm5RdkuMVDCz1axYQyBfaWH00nFnZhjrl",
-  stripeURL: "https://us-central1-impactdisciplesdev.cloudfunctions.net/checkout",
-  stripeCancelURL: "https://us-central1-impactdisciplesdev.cloudfunctions.net/cancel",
-  shippingUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/shipping",
+  stripeURL: "https://us-central1-impactdisciplesdev.cloudfunctions.net/create_payment_intent",
+  stripeCancelURL: "https://us-central1-impactdisciplesdev.cloudfunctions.net/cancel_payment_intent",
+  shippingUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_shipping_rates",
   application: "web"
 };
 
