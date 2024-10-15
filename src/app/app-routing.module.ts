@@ -40,6 +40,7 @@ import { RegistrationCheckoutSuccessComponent } from './core/registration-checko
 import { ProductDetailsComponent } from './core/pages/product-details/product-details.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
 import { SummitComponent } from './core/pages/summit/summit.component';
+import { RegistrationAttendeesComponent } from './core/registration-attendees/registration-attendees.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -50,6 +51,10 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegistrationComponent
+  },
+  {
+    path: 'registration-attendees',
+    component: RegistrationAttendeesComponent
   },
   {
     path: 'registration-checkout',

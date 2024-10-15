@@ -48,6 +48,7 @@ import { StorePostboxItemComponent } from './pages/store/store-postbox-item/stor
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SummitComponent } from "./pages/summit/summit.component";
+import { RegistrationAttendeesComponent } from "./registration-attendees/registration-attendees.component";
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { SummitComponent } from "./pages/summit/summit.component";
     BlogSidebarComponent,
     BlogPostboxItemComponent,
     RegistrationComponent,
+    RegistrationAttendeesComponent,
     RegistrationCheckoutComponent,
     RegistrationCheckoutSuccessComponent,
     StoreSidebarComponent,

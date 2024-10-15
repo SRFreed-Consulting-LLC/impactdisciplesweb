@@ -1,12 +1,21 @@
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Router } from '@angular/router';
-import { DxFormComponent } from 'devextreme-angular';
+import { query } from '@angular/fire/firestore';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
+import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
-import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
+import { forkJoin } from 'rxjs';
+import { CoachService } from 'impactdisciplescommon/src/services/coach.service';
 import { EventService } from 'impactdisciplescommon/src/services/event.service';
-import { Subject, takeUntil } from 'rxjs';
-import { CartService } from 'src/app/shared/utils/services/cart.service';
+
+interface GroupedAgendaItem {
+  startDate: string;
+  endDate: string;
+  courses: string[];
+  nonCourses: string[];
+}
 
 @Component({
   selector: 'app-registration',
@@ -14,73 +23,126 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
   styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
-  @ViewChildren('attendeeForms') attendeeForms: QueryList<DxFormComponent>;
-  event: EventModel;
-  total: number = 0;
-  cartItem: CartItem;
+
+  summit: EventModel;
+  coaches: CoachModel[] = [];
+  currentIndex: number = 0;
+  visibleSlides: number = 3;
   groupedAgendaItems: { monthYear: string; days: { date: Date; items: AgendaItem[] }[] }[] = [];
 
-  private ngUnsubscribe = new Subject<void>();
+  public days: number = 0;
+  public hours: number = 0;
+  public minutes: number = 0;
+  public seconds: number = 0;
+  
 
-  constructor(private eventService: EventService, private cartService: CartService, private router: Router) {}
+  private intervalId: any;
 
-  ngOnInit(): void {
-    this.eventService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
-      this.event = events.find(event => event.isSummit);
-      this.cartItem = {
-        id: this.event.id,
-        itemName: this.event.eventName,
-        orderQuantity: 1,
-        isEBook: false,
-        price: this.isNan(this.event.costInDollars) ? this.event.costInDollars : 0,
-        img: this.event.imageUrl,
-        isEvent: true,
-        attendees: [{ firstName: '', lastName: '', email: '' }]
+  constructor(private route: ActivatedRoute, private eventService: EventService, public utilsService: UtilsService, private coachService: CoachService) { }
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(async params => {
+      let year = Number(params.get('year'));
+      let query = [
+        new QueryParam('startDate', WhereFilterOperandKeys.more, new Date('1/1/' +(year))),
+        new QueryParam('isSummit', WhereFilterOperandKeys.equal, true)
+      ]
+
+      this.summit = await this.eventService.queryAllByValues(query).then(events => {
+        if(events && events.length == 1){
+          return events[0]
+        } else {
+          console.error('No summit event found for ' + year);
+
+          return null;
+        }
+
+      });
+      if(this.summit.agendaItems) {
+        this.groupAgendaItemsByMonthAndDate(this.summit.agendaItems);
+        const coachIds = Array.from(
+          new Set(
+            this.summit.agendaItems.flatMap(item => item.coaches || []) 
+          )
+        );
+  
+        if (coachIds.length > 0) {
+          const coachObservables = coachIds.map(id => this.coachService.getById(id));
+  
+          forkJoin(coachObservables).subscribe((coaches) => {
+            this.coaches = coaches;
+          });
+        }
       }
-      this.calculateTotal();
-    })
+      this.startCountdown();
+    });
   }
 
-  calculateTotal() {
-    if (this.event && this.event.costInDollars) {
-      this.total = this.event.costInDollars * this.cartItem.orderQuantity;
-    }
+  private startCountdown(): void {
+    const endDate = new Date(this.summit?.startDate.toString()).getTime();
+
+    this.intervalId = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = endDate - now;
+
+      if (distance < 0) {
+        clearInterval(this.intervalId);
+      } else {
+        this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        this.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        this.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        this.seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      }
+    }, 1000);
   }
 
-  increment() {
-    this.cartItem.attendees = [...this.cartItem.attendees, { firstName: '', lastName: '', email: '' }];
-    this.cartItem.orderQuantity = this.cartItem.attendees.length;
-    this.calculateTotal();
+  prevSlide() {
+    this.currentIndex = (this.currentIndex > 0) ? this.currentIndex - 1 : this.coaches.length - this.visibleSlides;
   }
 
-  decrement() {
-    if (this.cartItem.attendees.length > 1) {
-      this.cartItem.attendees = this.cartItem.attendees.slice(0, -1);
-      this.cartItem.orderQuantity = this.cartItem.attendees.length;
-      this.calculateTotal();
-    }
+  nextSlide() {
+    const maxIndex = this.coaches.length - this.visibleSlides;
+    this.currentIndex = (this.currentIndex < maxIndex) ? this.currentIndex + 1 : 0;
   }
 
-  proceedToCheckout() {
-    const isValid = this.attendeeForms.toArray().every(form => form.instance.validate().isValid);
+  getTransform() {
+    return `translateX(-${this.currentIndex * (100 / this.visibleSlides)}%)`;
+  }
 
-    if (isValid) {
-      this.cartService.addCartProduct(this.cartItem)
-      this.router.navigate(['/registration-checkout']);
-    }
+  private groupAgendaItemsByMonthAndDate(agendaItems: AgendaItem[]) {
+    agendaItems.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+
+    const groupedByMonthYear = agendaItems.reduce((acc, item) => {
+      const monthYearKey = new Date(item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' });
+      const dateKey = new Date(item.startDate).toDateString();
+
+      if (!acc[monthYearKey]) {
+        acc[monthYearKey] = {};
+      }
+
+      if (!acc[monthYearKey][dateKey]) {
+        acc[monthYearKey][dateKey] = [];
+      }
+
+      acc[monthYearKey][dateKey].push(item);
+      return acc;
+    }, {} as { [monthYear: string]: { [date: string]: AgendaItem[] } });
+
+    this.groupedAgendaItems = Object.keys(groupedByMonthYear).map(monthYear => ({
+      monthYear: monthYear,
+      days: Object.keys(groupedByMonthYear[monthYear])
+        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+        .map(date => ({
+          date: new Date(date),
+          items: groupedByMonthYear[monthYear][date],
+        })),
+    }));
   }
 
   ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
-
-  public isNan(value){
-    if(Number.isNaN(value)){
-      return false
-    } else {
-      return true;
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
     }
-   }
+  }
 
 }
