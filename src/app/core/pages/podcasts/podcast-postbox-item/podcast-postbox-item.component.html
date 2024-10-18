@@ -1,0 +1,13 @@
+<div class="podcast__item podcast__border-bottom mb-30" (click)="onSelectPodcast(podcast)">
+  <div class="podcast__thumb fix mb-10">
+      <a class="w-img">
+        <img [src]="podcast?.thumbnail?.url" alt="podcast" height="225px">
+      </a>
+  </div>
+  <div class="podcast__content">
+      <h4>
+        <a>{{podcast?.title}}</a>
+      </h4>
+      <span>{{podcast?.date.toString() | date }}</span>
+  </div>
+</div>

@@ -13,9 +13,9 @@
                   <h5 class="podcasts__header__pretitle">FREE ONLINE RESOURCES</h5>
                   <h1 class="podcasts__header__title w-50">The Disciple-Making Church Podcast</h1>
                   <hr class="slider-hr">
-                  <a [href]="impactDisciplesInfo.youtube" target="_blank" class="os-btn os-btn-white"><i class="fab fa-youtube mr-10"></i>YOUTUBE</a>
-                  <a [href]="impactDisciplesInfo.youtube" target="_blank" class="os-btn os-btn-white"><i class="fab fa-apple mr-10"></i>APPLE PODCASTS</a>
-                  <a [href]="impactDisciplesInfo.youtube" target="_blank" class="os-btn os-btn-white"><i class="fab fa-facebook-f mr-10"></i>FACEBOOK LIVE</a>
+                  <a [href]="webConfig.youtube" target="_blank" class="os-btn os-btn-white"><i class="fab fa-youtube mr-10"></i>YOUTUBE</a>
+                  <a [href]="webConfig.applePodCast" target="_blank" class="os-btn os-btn-white"><i class="fab fa-apple mr-10"></i>APPLE PODCASTS</a>
+                  <a [href]="webConfig.facebookLive" target="_blank" class="os-btn os-btn-white"><i class="fab fa-facebook-f mr-10"></i>FACEBOOK LIVE</a>
                 </div>
               </div>
             </div>
@@ -24,28 +24,34 @@
       </div>
     </section>
 
-    <section class="podcasts__latest mt-80">
-      <h1 class="text-center">{{ selectedPodcast?.title }}</h1>
-      <hr class="custom-hr">
-      <youtube-player *ngIf="selectedPodcast?.videoType == 'Youtube'" class="mt-50" [videoId]="selectedPodcast?.videoId" [width]="800" suggestedQuality="highres"></youtube-player>
-    </section>
+    <div class="row mt-50">
+      <div class="col-xl-3 col-lg-4">
+        <app-podcast-sidebar [podcasts]="podcasts" (searchEvent)="searchPodcasts($event)" (clearFiltersEvent)="clearFilters()" (selectPodcast)="selectPodcast($event)"></app-podcast-sidebar>
+      </div>
 
-    <hr>
+      <div class="col-xl-9 col-lg-8">
+        <div *ngIf="isListView" class="podcasts__wrapper">
+          <div class="row">
+            <div *ngFor="let podcast of filteredPodcasts" class="col-xl-6 col-lg-6 col-md-6">
+              <app-podcast-postbox-item [podcast]="podcast" (selectPodcast)="selectPodcast($event)"></app-podcast-postbox-item>
+            </div>
+          </div>
 
-    <div class="slider-container mt-50">
-      <div class="slider" [style.transform]="getTransform()">
-        <div *ngFor="let podcast of podcasts" class="slide">
-          <img (click)="selectPodcast(podcast)" [src]="podcast?.thumbnail.url" alt="Slide image">
-          <div class="truncate">{{ podcast?.title }}</div>
+          <div class="row">
+            <div class="col-xl-12">
+              <div class="shop-pagination-wrapper">
+                <app-pagination [data]="filteredPodcasts" [paginate]="paginate" (setPage)="setPage($event)"></app-pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="selectedPodcast && !this.isListView" class="podcasts__selected mt-50">
+          <h1>{{ selectedPodcast?.title }}</h1>
+          <youtube-player *ngIf="selectedPodcast?.videoType == 'Youtube'" class="mt-20" [videoId]="selectedPodcast?.videoId" [width]="800" suggestedQuality="highres"></youtube-player>
         </div>
       </div>
-      <button class="prev" (click)="prevSlide()">&#10094;</button>
-      <button class="next" (click)="nextSlide()">&#10095;</button>
     </div>
-
   </div>
-
-
 </main>
 
 <app-footer></app-footer>

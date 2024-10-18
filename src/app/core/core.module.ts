@@ -49,6 +49,8 @@ import { ProductDetailsComponent } from './pages/product-details/product-details
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SummitComponent } from "./pages/summit/summit.component";
 import { RegistrationAttendeesComponent } from "./registration-attendees/registration-attendees.component";
+import { PodcastSidebarComponent } from './pages/podcasts/podcast-sidebar/podcast-sidebar.component';
+import { PodcastPostboxItemComponent } from './pages/podcasts/podcast-postbox-item/podcast-postbox-item.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +95,9 @@ import { RegistrationAttendeesComponent } from "./registration-attendees/registr
     StorePostboxItemComponent,
     ProductDetailsComponent,
     ProfileComponent,
-    SummitComponent
+    SummitComponent,
+    PodcastSidebarComponent,
+    PodcastPostboxItemComponent
   ],
   imports: [
     CommonModule,
