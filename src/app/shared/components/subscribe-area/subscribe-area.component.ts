@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
 import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
-import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
+import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

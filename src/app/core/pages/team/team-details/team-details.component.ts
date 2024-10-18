@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
-import { CoachService } from 'impactdisciplescommon/src/services/coach.service';
+import { CoachService } from 'impactdisciplescommon/src/services/data/coach.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

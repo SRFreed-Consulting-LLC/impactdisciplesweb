@@ -4,7 +4,7 @@ import { DxFormComponent } from 'devextreme-angular';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { EventService } from 'impactdisciplescommon/src/services/event.service';
+import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 

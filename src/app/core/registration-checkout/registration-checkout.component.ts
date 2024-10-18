@@ -1,4 +1,3 @@
-import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
 import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
@@ -7,9 +6,7 @@ import { Role } from 'impactdisciplescommon/src/lists/roles.enum';
 import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { AppUserService } from 'impactdisciplescommon/src/services/admin/user.service';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
-import { CouponService } from 'impactdisciplescommon/src/services/utils/coupon.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
@@ -18,10 +15,12 @@ import { environment } from 'src/environments/environment';
 import { Timestamp } from 'firebase/firestore';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
 import { Router } from '@angular/router';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
-import { CustomerService } from 'impactdisciplescommon/src/services/admin/customer.service';
+import { CustomerService } from 'impactdisciplescommon/src/services/data/customer.service';
+import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
+import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
+import { CouponService } from 'impactdisciplescommon/src/services/data/coupon.service';
 
 @Component({
   selector: 'app-registration-checkout',

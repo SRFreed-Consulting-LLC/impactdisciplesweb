@@ -5,22 +5,22 @@ import DataSource from 'devextreme/data/data_source';
 import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { EventRegistrationService } from 'impactdisciplescommon/src/services/event-registration.service';
-import { EventService } from 'impactdisciplescommon/src/services/event.service';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
-import { SalesService } from 'impactdisciplescommon/src/services/utils/sales.service';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, map, Observable, take } from 'rxjs';
-import { LocationService } from 'impactdisciplescommon/src/services/location.service';
-import { OrganizationService } from 'impactdisciplescommon/src/services/organization.service';
 import { LocationModel } from 'impactdisciplescommon/src/models/domain/location.model';
 import { OrganizationModel } from 'impactdisciplescommon/src/models/domain/organization.model';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { CustomerService } from 'impactdisciplescommon/src/services/admin/customer.service';
 import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
+import { CustomerService } from 'impactdisciplescommon/src/services/data/customer.service';
+import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
+import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
+import { LocationService } from 'impactdisciplescommon/src/services/data/location.service';
+import { OrganizationService } from 'impactdisciplescommon/src/services/data/organization.service';
+import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
 
 @Component({
   selector: 'app-profile',

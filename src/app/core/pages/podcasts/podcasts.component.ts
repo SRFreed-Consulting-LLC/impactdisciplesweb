@@ -3,10 +3,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PodCastModel } from 'impactdisciplescommon/src/models/domain/pod-cast-model';
 import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-config.model';
-import { PodCastService } from 'impactdisciplescommon/src/services/pod-cast.service';
-import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
+import { PodCastService } from 'impactdisciplescommon/src/services/data/pod-cast.service';
+import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 import { Subject, takeUntil } from 'rxjs';
-import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 
 @Component({
   selector: 'app-podcasts',
@@ -26,7 +25,11 @@ export class PodcastsComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(public podcastService: PodCastService, private webConfigService: WebConfigService, private route: ActivatedRoute, private router: Router, private viewScroller: ViewportScroller) { }
+  constructor(public podcastService: PodCastService,
+    private webConfigService: WebConfigService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private viewScroller: ViewportScroller) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {

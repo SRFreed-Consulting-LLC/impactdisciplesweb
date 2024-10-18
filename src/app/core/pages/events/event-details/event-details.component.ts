@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
-import { EventService } from 'impactdisciplescommon/src/services/event.service';
 import { Subject, takeUntil } from 'rxjs';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
 import { DxFormComponent } from 'devextreme-angular';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 
 @Component({
   selector: 'app-event-details',

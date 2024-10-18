@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlogPostModel } from 'impactdisciplescommon/src/models/domain/blog-post.model';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
-import { BlogPostService } from 'impactdisciplescommon/src/services/blog-post.service';
-import { BlogTagsService } from 'impactdisciplescommon/src/services/blog-tags.service';
+import { BlogPostService } from 'impactdisciplescommon/src/services/data/blog-post.service';
+import { BlogTagsService } from 'impactdisciplescommon/src/services/data/blog-tags.service';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 
 @Component({

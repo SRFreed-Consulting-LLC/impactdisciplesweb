@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
-import { ProductService } from 'impactdisciplescommon/src/services/utils/product.service';
+import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 

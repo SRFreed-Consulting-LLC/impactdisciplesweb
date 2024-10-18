@@ -6,8 +6,8 @@ import { QueryParam } from 'impactdisciplescommon/src/dao/firebase.dao';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
 import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
-import { ProductService } from 'impactdisciplescommon/src/services/utils/product.service';
-import { SeriesService } from 'impactdisciplescommon/src/services/utils/series.service';
+import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
+import { SeriesService } from 'impactdisciplescommon/src/services/data/series.service';
 
 @Component({
   selector: 'app-e-books',
@@ -44,7 +44,7 @@ export class EBooksComponent {
       new QueryParam('isEBook', WhereFilterOperandKeys.equal, true)
     ]
 
-    this.productService.streamAllByValues(queries).subscribe((products) => {
+    this.productService.queryAllByMultiValue(queries).then((products) => {
       this.products = products;
       //this.viewBySeries();
       this.paginate = this.getPager(this.products.length, Number(+this.pageNo), this.pageSize);

@@ -1,10 +1,9 @@
-import { BlogTagsService } from './../../../../../../impactdisciplescommon/src/services/blog-tags.service';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BlogPostModel } from 'impactdisciplescommon/src/models/domain/blog-post.model';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
-import { BlogPostService } from 'impactdisciplescommon/src/services/blog-post.service';
-import { BlogCategoriesService } from 'impactdisciplescommon/src/services/utils/blog-categories.service';
+import { BlogCategoriesService } from 'impactdisciplescommon/src/services/data/blog-categories.service';
+import { BlogPostService } from 'impactdisciplescommon/src/services/data/blog-post.service';
 import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -21,7 +20,9 @@ export class BlogSidebarComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private blogPostService: BlogPostService, private blogTagsService: BlogTagsService, private blogCategoriesService: BlogCategoriesService, private router: Router) {}
+  constructor(private blogPostService: BlogPostService,
+    private blogCategoriesService: BlogCategoriesService,
+    private router: Router) {}
 
   ngOnInit(): void {
     combineLatest([
@@ -33,7 +34,7 @@ export class BlogSidebarComponent implements OnInit, OnDestroy {
         this.recent_blogs = blogs.slice(-3);
         return categories.map(category => {
           const categoryBlogs = blogs.filter(blog => blog.category === category.id);
-          
+
           return {
             category: category,
             blogs: categoryBlogs,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-config.model';
-import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
+import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 
 @Component({
   selector: 'app-private-policy',
@@ -10,9 +10,7 @@ import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-c
 export class PrivatePolicyComponent implements OnInit {
   public webConfig: WebConfigModel;
 
-  constructor(private webConfigService: WebConfigService){
-
-  }
+  constructor(private webConfigService: WebConfigService){}
 
   async ngOnInit(): Promise<void> {
     this.webConfig = await this.webConfigService.getAll().then(configs => {

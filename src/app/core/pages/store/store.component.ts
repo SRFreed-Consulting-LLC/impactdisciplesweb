@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
 import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
-import { ProductService } from 'impactdisciplescommon/src/services/utils/product.service';
-import { SeriesService } from 'impactdisciplescommon/src/services/utils/series.service';
+import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
+import { SeriesService } from 'impactdisciplescommon/src/services/data/series.service';
 
 @Component({
   selector: 'app-store',

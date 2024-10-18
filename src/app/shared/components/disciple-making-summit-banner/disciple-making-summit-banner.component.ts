@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
-import { EventService } from 'impactdisciplescommon/src/services/event.service';
+import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

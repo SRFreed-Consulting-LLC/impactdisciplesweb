@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PodCastModel } from 'impactdisciplescommon/src/models/domain/pod-cast-model';
-import { PodCastService } from 'impactdisciplescommon/src/services/pod-cast.service';
+import { PodCastService } from 'impactdisciplescommon/src/services/data/pod-cast.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

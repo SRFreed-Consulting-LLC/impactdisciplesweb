@@ -1,12 +1,12 @@
-import { WebConfigService } from './../../../../../impactdisciplescommon/src/services/utils/web-config.service';
 import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit,  } from '@angular/core';
 import { ConsultationSurveyModel } from 'impactdisciplescommon/src/models/domain/consultation-survey.model';
-import { ConsultationSurveyService } from 'impactdisciplescommon/src/services/consultation-survey.service';
 import { DxButtonTypes } from 'devextreme-angular/ui/button';
-import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
 import { Timestamp } from 'firebase/firestore';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
+import { ConsultationSurveyService } from 'impactdisciplescommon/src/services/data/consultation-survey.service';
+import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
+import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 
 @Component({
   selector: 'app-consultation-survey',
@@ -31,8 +31,10 @@ export class ConsultationSurveyComponent implements OnInit {
     valueChangeEvent: 'keyup',
   };
 
-  constructor(private consultationSurveyService: ConsultationSurveyService, private emailService: EMailService,
-    private webConfigService: WebConfigService, private toastrService: ToastrService){}
+  constructor(private consultationSurveyService: ConsultationSurveyService,
+    private emailService: EMailService,
+    private webConfigService: WebConfigService,
+    private toastrService: ToastrService){}
 
   ngOnInit(): void {
     this.consultationSurveyForm = {... new ConsultationSurveyModel()};

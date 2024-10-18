@@ -1,12 +1,12 @@
-import { EMailService } from './../../../../../../impactdisciplescommon/src/services/admin/email.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
 import { Timestamp } from 'firebase/firestore';
 import { LunchAndLearnModel } from 'impactdisciplescommon/src/models/domain/lunch-and-learn.model';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { LunchAndLearnService } from 'impactdisciplescommon/src/services/lunch-and-learn.service';
-import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
+import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
+import { LunchAndLearnService } from 'impactdisciplescommon/src/services/data/lunch-and-learn.service';
+import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { ToastrService } from 'ngx-toastr';

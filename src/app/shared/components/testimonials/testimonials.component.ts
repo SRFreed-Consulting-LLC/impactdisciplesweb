@@ -1,8 +1,8 @@
-import { TestimonialService } from './../../../../../impactdisciplescommon/src/services/utils/testimonial.service';
 import { Component,Input, OnInit } from '@angular/core';
 import Swiper from 'swiper';
 import { TestimonialModel } from 'impactdisciplescommon/src/models/domain/testimonial.model';
 import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
+import { TestimonialService } from 'impactdisciplescommon/src/services/data/testimonial.service';
 
 @Component({
   selector: 'app-testimonials',

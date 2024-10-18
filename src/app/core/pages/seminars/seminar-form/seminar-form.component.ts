@@ -1,5 +1,4 @@
 import { DxFormComponent } from 'devextreme-angular';
-import { CoachService } from './../../../../../../impactdisciplescommon/src/services/coach.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DxButtonTypes } from 'devextreme-angular/ui/button';
 import { Timestamp } from 'firebase/firestore';
@@ -7,14 +6,16 @@ import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model'
 import { SeminarModel } from 'impactdisciplescommon/src/models/domain/seminar.model';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { LocationService } from 'impactdisciplescommon/src/services/location.service';
-import { SeminarService } from 'impactdisciplescommon/src/services/seminar.service';
 import { ToastrService } from 'ngx-toastr';
 import { map, Observable } from 'rxjs';
-import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
-import { EMailService } from 'impactdisciplescommon/src/services/admin/email.service';
+
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
+import { CoachService } from 'impactdisciplescommon/src/services/data/coach.service';
+import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
+import { LocationService } from 'impactdisciplescommon/src/services/data/location.service';
+import { SeminarService } from 'impactdisciplescommon/src/services/data/seminar.service';
+import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 
 @Component({
   selector: 'app-seminar-form',
@@ -27,8 +28,12 @@ export class SeminarFormComponent implements OnInit {
   seminarForm: SeminarModel;
   coaches$: Observable<CoachModel[]>;
 
-  constructor(public locationService: LocationService, private seminarService: SeminarService, private webConfigService: WebConfigService,
-    private emailService: EMailService, private toastrService: ToastrService, private coachService: CoachService
+  constructor(public locationService: LocationService,
+    private seminarService: SeminarService,
+    private webConfigService: WebConfigService,
+    private emailService: EMailService,
+    private toastrService: ToastrService,
+    private coachService: CoachService
   ){}
 
   registerButtonOptions: DxButtonTypes.Properties = {

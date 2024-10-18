@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BlogPostModel } from 'impactdisciplescommon/src/models/domain/blog-post.model';
-import { BlogPostService } from 'impactdisciplescommon/src/services/blog-post.service';
+import { BlogPostService } from 'impactdisciplescommon/src/services/data/blog-post.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

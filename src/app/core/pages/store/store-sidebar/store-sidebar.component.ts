@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
-import { ProductService } from 'impactdisciplescommon/src/services/utils/product.service';
 import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
-import { ProductCategoriesService } from 'impactdisciplescommon/src/services/utils/product-categories.service';
+import { ProductCategoriesService } from 'impactdisciplescommon/src/services/data/product-categories.service';
+import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
 
 @Component({
   selector: 'app-store-sidebar',

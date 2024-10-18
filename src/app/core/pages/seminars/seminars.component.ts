@@ -1,12 +1,12 @@
-import { ConsultationRequestService } from './../../../../../impactdisciplescommon/src/services/consultation-request.service';
-import { ConsultationRequestModel } from './../../../../../impactdisciplescommon/src/models/domain/consultation-request.model';
 import { Component, OnInit } from '@angular/core';
 import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-config.model';
-import { WebConfigService } from 'impactdisciplescommon/src/services/utils/web-config.service';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 import { ToastrService } from 'ngx-toastr';
 import { Timestamp } from 'firebase/firestore';
+import { ConsultationRequestModel } from 'impactdisciplescommon/src/models/domain/consultation-request.model';
+import { ConsultationRequestService } from 'impactdisciplescommon/src/services/data/consultation-request.service';
+import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 
 @Component({
   selector: 'app-seminars',

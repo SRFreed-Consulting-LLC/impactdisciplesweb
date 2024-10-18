@@ -1,5 +1,3 @@
-import { query } from '@angular/fire/firestore';
-import { EventService } from './../../../../../impactdisciplescommon/src/services/event.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
@@ -8,7 +6,8 @@ import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
 import { forkJoin } from 'rxjs';
-import { CoachService } from 'impactdisciplescommon/src/services/coach.service';
+import { CoachService } from 'impactdisciplescommon/src/services/data/coach.service';
+import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 
 interface GroupedAgendaItem {
   startDate: string;
@@ -34,7 +33,7 @@ export class SummitComponent implements OnInit, OnDestroy {
   public hours: number = 0;
   public minutes: number = 0;
   public seconds: number = 0;
-  
+
 
   private intervalId: any;
 
@@ -48,7 +47,7 @@ export class SummitComponent implements OnInit, OnDestroy {
         new QueryParam('isSummit', WhereFilterOperandKeys.equal, true)
       ]
 
-      this.summit = await this.eventService.queryAllByValues(query).then(events => {
+      this.summit = await this.eventService.queryAllByMultiValue(query).then(events => {
         if(events && events.length == 1){
           return events[0]
         } else {
@@ -62,13 +61,13 @@ export class SummitComponent implements OnInit, OnDestroy {
         this.groupAgendaItemsByMonthAndDate(this.summit.agendaItems);
         const coachIds = Array.from(
           new Set(
-            this.summit.agendaItems.flatMap(item => item.coaches || []) 
+            this.summit.agendaItems.flatMap(item => item.coaches || [])
           )
         );
-  
+
         if (coachIds.length > 0) {
           const coachObservables = coachIds.map(id => this.coachService.getById(id));
-  
+
           forkJoin(coachObservables).subscribe((coaches) => {
             this.coaches = coaches;
           });

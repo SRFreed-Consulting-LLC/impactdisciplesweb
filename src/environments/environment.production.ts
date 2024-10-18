@@ -15,6 +15,7 @@ export const environment = {
   stripeURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/create_payment_intent",
   stripeCancelURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/cancel_payment_intent",
   shippingUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_shipping_rates",
+  youtubeKeyUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_youtube_keys",
   application: "web"
 };
 

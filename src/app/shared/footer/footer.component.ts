@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import impactDisciplesInfo from '../utils/data/impact-disciples.data';
 import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
-import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/newsletter-subscription.service';
 import { ToastrService } from 'ngx-toastr';
 import { Timestamp } from 'firebase/firestore';
+import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 
 @Component({
   selector: 'app-footer',
