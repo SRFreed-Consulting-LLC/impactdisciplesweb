@@ -155,7 +155,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
       this.setLoading(true);
 
       if(this.checkoutForm.isNewsletter){
-        this.createNewLetter()
+        await this.newsletterSubscriptionService.createNewsLetterSubscription(this.checkoutForm.firstName, this.checkoutForm.lastName, this.checkoutForm.email);
       }
 
       if(this.checkoutForm.isCreateAccount){
@@ -239,15 +239,6 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
         })
       }
     })
-  }
-
-  async createNewLetter(){
-    let subscriber: NewsletterSubscriptionModel = {...new NewsletterSubscriptionModel()};
-    subscriber.firstName = this.checkoutForm.firstName;
-    subscriber.lastName = this.checkoutForm.lastName;
-    subscriber.email = this.checkoutForm.email;
-    subscriber.date = Timestamp.now();
-    await this.newsletterSubscriptionService.add(subscriber);
   }
 
   async saveCheckoutForm(){
