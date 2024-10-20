@@ -358,20 +358,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     })
   }
 
-  async createNewsLetter(){
-    let subscriber: NewsletterSubscriptionModel = {...new NewsletterSubscriptionModel()};
-    subscriber.firstName = this.checkoutForm.firstName;
-    subscriber.lastName = this.checkoutForm.lastName;
-    subscriber.email = this.checkoutForm.email;
-    subscriber.date = Timestamp.now();
-    await this.newsletterSubscriptionService.add(subscriber);
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
-
   //PAYMENT METHODS
   async toggleForm(): Promise<void> {
     if(this.isNan(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
@@ -470,7 +456,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.setLoading(true);
 
       if(this.checkoutForm.isNewsletter){
-        this.createNewsLetter()
+        await this.newsletterSubscriptionService.createNewsLetterSubscription(this.checkoutForm.firstName, this.checkoutForm.lastName, this.checkoutForm.email);
       }
 
       if(this.checkoutForm.isCreateAccount){
@@ -561,4 +547,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return true;
     }
    }
+
+   ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
 }
