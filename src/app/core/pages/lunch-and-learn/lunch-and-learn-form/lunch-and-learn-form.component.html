@@ -56,6 +56,7 @@
                 <dxi-item dataField="locationAddress.state" [isRequired]="true" [label]="{ text: 'State' }"  [colSpan]="2">
                   <div *dxTemplate>
                     <dx-select-box
+                      [searchEnabled]="true"
                       [items]="states"
                       [(value)]="lunchRequestForm.locationAddress.state">
                     </dx-select-box>

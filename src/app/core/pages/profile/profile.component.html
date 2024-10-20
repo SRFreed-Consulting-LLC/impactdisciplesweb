@@ -45,21 +45,21 @@
                     <dxi-item dataField="shippingAddress.city" [colSpan]="3" [label]="{ text: 'City' }"></dxi-item>
                     <dxi-item dataField="shippingAddress.state" [colSpan]="2" [label]="{ text: 'State' }">
                       <div *dxTemplate>
-                        <dx-lookup
-                          [showCancelButton]="false"
+                        <dx-select-box
+                          [searchEnabled]="true"
                           [items]="states"
                           [(value)]="loggedInUser.shippingAddress.state">
-                        </dx-lookup>
+                        </dx-select-box>
                       </div>
                     </dxi-item>
                     <dxi-item dataField="shippingAddress.zip" [colSpan]="2" [label]="{ text: 'Zip' }"></dxi-item>
                     <dxi-item dataField="shippingAddress.country" [colSpan]="3" [label]="{ text: 'Country' }">
                       <div *dxTemplate>
-                        <dx-lookup
-                          [showCancelButton]="false"
+                        <dx-select-box
+                          [searchEnabled]="true"
                           [items]="countries"
                           [(value)]="loggedInUser.shippingAddress.country">
-                        </dx-lookup>
+                        </dx-select-box>
                       </div>
                     </dxi-item>
                   </dxi-item>
@@ -69,21 +69,21 @@
                     <dxi-item dataField="billingAddress.city" [colSpan]="3" [label]="{ text: 'City' }"></dxi-item>
                     <dxi-item dataField="billingAddress.state" [colSpan]="2" [label]="{ text: 'State' }">
                       <div *dxTemplate>
-                        <dx-lookup
-                          [showCancelButton]="false"
+                        <dx-select-box
+                          [searchEnabled]="true"
                           [items]="states"
                           [(value)]="loggedInUser.billingAddress.state">
-                        </dx-lookup>
+                        </dx-select-box>
                       </div>
                     </dxi-item>
                     <dxi-item dataField="billingAddress.zip" [colSpan]="2" [label]="{ text: 'Zip' }"></dxi-item>
                     <dxi-item dataField="billingAddress.country" [colSpan]="3" [label]="{ text: 'Country' }">
                       <div *dxTemplate>
-                        <dx-lookup
-                          [showCancelButton]="false"
+                        <dx-select-box
+                          [searchEnabled]="true"
                           [items]="countries"
                           [(value)]="loggedInUser.billingAddress.country">
-                        </dx-lookup>
+                        </dx-select-box>
                       </div>
                     </dxi-item>
                   </dxi-item>

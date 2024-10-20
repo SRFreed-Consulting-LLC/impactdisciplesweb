@@ -73,6 +73,7 @@
                 <dxi-item dataField="preferredLocation.state" [isRequired]="true" [label]="{ text: 'State' }"  [colSpan]="2">
                   <div *dxTemplate>
                     <dx-select-box
+                      [searchEnabled]="true"
                       [items]="states"
                       [(value)]="seminarForm.preferredLocation.state">
                     </dx-select-box>

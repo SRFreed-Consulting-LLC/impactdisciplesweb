@@ -52,22 +52,22 @@
               <dxi-item dataField="shippingAddress.city" [isRequired]="true" [colSpan]="3" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
               <dxi-item dataField="shippingAddress.state" [isRequired]="true" [colSpan]="2" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
                 <div *dxTemplate>
-                  <dx-lookup
-                    [showCancelButton]="false"
+                  <dx-select-box
+                    [searchEnabled]="true"
                     [items]="states"
                     [(value)]="checkoutForm.shippingAddress.state">
-                  </dx-lookup>
+                  </dx-select-box>
                 </div>
               </dxi-item>
               <dxi-item dataField="shippingAddress.zip" [isRequired]="true" [colSpan]="1" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
               <dxi-item dataField="shippingAddress.country" [isRequired]="true" [colSpan]="3" [label]="{ text: 'Country' }">
                 <div *dxTemplate>
-                  <dx-lookup
-                    [showCancelButton]="false"
+                  <dx-select-box
+                    [searchEnabled]="true"
                     [value]="countries[0]"
                     [items]="countries"
                     [(value)]="checkoutForm.shippingAddress.country">
-                  </dx-lookup>
+                  </dx-select-box>
                 </div>
               </dxi-item>
             </dx-form>
@@ -114,11 +114,11 @@
 
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.country" [colSpan]="3" [isRequired]="true" [label]="{ text: 'Country' }">
                 <div *dxTemplate>
-                  <dx-lookup
-                    [showCancelButton]="false"
+                  <dx-select-box
+                    [searchEnabled]="true"
                     [items]="countries"
                     [(value)]="checkoutForm.billingAddress.country">
-                  </dx-lookup>
+                  </dx-select-box>
                 </div>
               </dxi-item>
             </dx-form>
