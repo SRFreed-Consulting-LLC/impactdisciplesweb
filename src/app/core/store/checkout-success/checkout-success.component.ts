@@ -1,15 +1,18 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
+import { WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { AffilliateSaleModel } from 'impactdisciplescommon/src/models/utils/affilliate-sale.model';
 import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { TaxRateSummary } from 'impactdisciplescommon/src/models/utils/tax-rate-summary.model';
 import { AffilliateSalesService } from 'impactdisciplescommon/src/services/data/affiliate-sales.service';
 import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
+import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { ToastrService } from 'ngx-toastr';
@@ -31,6 +34,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private eventService: EventService,
     private salesService: SalesService,
     private affiliateSaleService: AffilliateSalesService,
+    private taxSummaryService: TaxRateSummaryService,
     private toastrService: ToastrService){}
 
   async ngAfterViewInit() {
@@ -51,10 +55,11 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       switch (paymentIntent.status) {
         case "succeeded":
           await this.updateSale(paymentIntent).then(cart => {
-            this.showMessage("Payment succeeded!");
-            this.confirmSale(paymentIntent.id, cart);
+            if(!cart.processed){
+              this.showMessage("Payment succeeded!");
+              this.confirmSale(paymentIntent.id, cart);
+            }
           });
-
           break;
         case "processing":
           this.showMessage("Your payment is processing.");
@@ -68,8 +73,10 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       }
     } else {
       await this.updateSale().then(cart => {
-        this.showMessage("You have been successfully Registered!");
-        this.confirmSale(cart.couponCode, cart);
+        if(!cart.processed){
+          this.showMessage("Payment succeeded!");
+          this.confirmSale(cart.couponCode, cart);
+        }
       });
     }
   }
@@ -96,6 +103,8 @@ export class CheckoutSuccessComponent implements AfterViewInit{
         await this.affiliateSaleService.add(sale);
       }
 
+      cart.processed = true;
+
       return await this.salesService.update(cart.id, cart);
     })
   }
@@ -118,7 +127,8 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
     if(products.length > 0) {
       this.sendProductPurchaseSuccessEmail(cart);
-      this.cartService.clearCartNoConfirmation()
+      this.taxSummaryService.recordStateTaxesCollected(cart);
+      this.cartService.clearCartNoConfirmation();
     }
   }
 
