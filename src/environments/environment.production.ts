@@ -11,7 +11,7 @@ export const environment = {
   },
   domain: 'https://impactdisciples-public.web.app',
   session_expires: 30,
-  stripeTestKey: "pk_live_51IP8IBC4Pv6WfeJrsYMjRAmzFsA0L6kjBvQx8upqGHxuo3T0WI60u1isqXBz29SyfC27v3yB34sGUYu1pl7oU1Co00LY6lIrrW",
+  stripeKey: "pk_live_51IP8IBC4Pv6WfeJrsYMjRAmzFsA0L6kjBvQx8upqGHxuo3T0WI60u1isqXBz29SyfC27v3yB34sGUYu1pl7oU1Co00LY6lIrrW",
   stripeURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/create_payment_intent",
   stripeCancelURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/cancel_payment_intent",
   shippingUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_shipping_rates",
