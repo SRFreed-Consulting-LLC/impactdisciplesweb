@@ -33,6 +33,7 @@
               <dxi-item dataField="phone.number" [colSpan]="3" [isRequired]="true" [label]="{ text: 'Phone Number' }"></dxi-item>
               <dxi-item dataField="isNewsletter" editorType="dxCheckBox" [colSpan]="1" cssClass="checkbox" [label]="{ text: 'Sign up for our Newsletter to receive emails about our next Events!', location: 'right' }"></dxi-item>
               <dxi-item [colSpan]="5" itemType="empty"></dxi-item>
+
               <dxi-item dataField="isCreateAccount" editorType="dxCheckBox" [colSpan]="1" cssClass="checkbox" [label]="{ text: 'Create Account', location: 'right' }"></dxi-item>
               <dxi-item [colSpan]="5" itemType="empty"></dxi-item>
               <dxi-item *ngIf="checkoutForm?.isCreateAccount" [colSpan]="3" [isRequired]="true">
@@ -42,7 +43,7 @@
                   [(ngModel)]="password"
                 ></dx-text-box>
               </dxi-item>
-              <dxi-item [colSpan]="6" itemType="empty"></dxi-item>
+              <dxi-item [colSpan]="checkoutForm?.isCreateAccount? 3 : 6" itemType="empty"></dxi-item>
 
               <dxi-item [colSpan]="6">
                 <div *dxTemplate><h4>Shipping Address</h4></div>

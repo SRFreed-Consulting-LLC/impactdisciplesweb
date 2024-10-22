@@ -56,7 +56,6 @@ export class CheckoutSuccessComponent implements AfterViewInit{
         case "succeeded":
           await this.updateSale(paymentIntent).then(cart => {
             if(!cart.processed){
-              this.showMessage("Payment succeeded!");
               this.confirmSale(paymentIntent.id, cart);
             }
           });
@@ -74,7 +73,6 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     } else {
       await this.updateSale().then(cart => {
         if(!cart.processed){
-          this.showMessage("Payment succeeded!");
           this.confirmSale(cart.couponCode, cart);
         }
       });
@@ -103,7 +101,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
         await this.affiliateSaleService.add(sale);
       }
 
-      cart.processed = true;
+      cart.processed = false;
 
       return await this.salesService.update(cart.id, cart);
     })
@@ -125,10 +123,13 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       this.registerUsers(confirmationId, cart, events)
     }
 
+    cart.processed = true;
+
     if(products.length > 0) {
       this.sendProductPurchaseSuccessEmail(cart);
       this.taxSummaryService.recordStateTaxesCollected(cart);
       this.cartService.clearCartNoConfirmation();
+      this.salesService.update(cart.id, cart);
     }
   }
 

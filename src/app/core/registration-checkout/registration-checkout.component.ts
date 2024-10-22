@@ -162,11 +162,11 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
         this.createUserAccount();
       }
 
-      if(this.checkoutForm.total > 0){
-        this.submitStripePayment(savedForm);
-      } else {
-        this.cancelStripeIntent();
-      }
+      // if(this.checkoutForm.total > 0){
+      //   this.submitStripePayment(savedForm);
+      // } else {
+      //   this.cancelStripeIntent();
+      // }
 
       this.setLoading(false);
     }
