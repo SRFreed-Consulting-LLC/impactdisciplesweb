@@ -38,7 +38,7 @@ export class StoreComponent implements OnInit {
 
   loadProducts(): void {
     this.productService.streamAllByValue('isActive', true).subscribe((products) => {
-      this.products = products;
+      this.products = products.sort((a,b) => a.title.localeCompare(b.title));
       this.viewBySeries();
       this.paginate = this.getPager(this.products.length, Number(+this.pageNo), this.pageSize);
       this.filteredProductItems = this.products.slice(this.paginate.startIndex, this.paginate.endIndex + 1)
@@ -51,22 +51,22 @@ export class StoreComponent implements OnInit {
       (product) =>
         product?.title?.toLowerCase().includes(termLower) ||
         product?.tags?.some((tag) => tag.tag.toLowerCase().includes(termLower))
-    );
+    ).sort((a,b) => a.title.localeCompare(b.title));
     this.showSeriesInMainView = false;
   }
 
   filterProductsByCategory(category: TagModel): void {
-    this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === category.id);
+    this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === category.id).sort((a,b) => a.title.localeCompare(b.title));
     this.showSeriesInMainView = false;
   }
 
   filterProductsBySeries(series: SeriesModel): void {
-    this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === series.id);
+    this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === series.id).sort((a,b) => a.title.localeCompare(b.title));
     this.showSeriesInMainView = false;
   }
 
   viewAllProducts(): void {
-    this.filteredProductItems = [...this.products];
+    this.filteredProductItems = [...this.products.sort((a,b) => a.title.localeCompare(b.title))];
     this.showSeriesInMainView = false;
   }
 

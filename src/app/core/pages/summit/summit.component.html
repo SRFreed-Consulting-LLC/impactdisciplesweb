@@ -11,11 +11,11 @@
             <div class="summit__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(' + summit?.imageUrl?.url + ')'">
               <div class="container h-100 d-flex justify-content-center">
                 <div class="row">
-   
+
                     <div class="summit__header-button">
                       <a  [routerLink]="['/event-details', summit?.id]" class="os-btn os-btn-white">REGISTER NOW</a>
                     </div>
-                
+
                 </div>
               </div>
             </div>
@@ -38,7 +38,7 @@
           </div>
           <div class="col-xl-4 summit__info-text">
             <i class="fa-solid fa-clock"></i>
-              Check-In: {{ summit?.checkIn.toString() | timeFormat }} | Start Time: {{ summit?.startDate.toString() | date: 'h:mm a' }}
+              Check-In: {{ summit?.checkIn?.toString() | timeFormat }} | Start Time: {{ summit?.startDate.toString() | date: 'h:mm a' }}
           </div>
         </div>
       </section>
@@ -116,7 +116,7 @@
                       <img class="transform" [src]="coach.photoUrl.url" [alt]="coach.firstName">
                     </a>
                   </div>
-  
+
                   <div class="teams-list__content">
                     <h4><a [routerLink]="['/team-details', coach.id]">{{ coach.firstName }} {{ coach.lastName }}</a></h4>
                     <div class="teams-list__meta">
@@ -140,7 +140,7 @@
         <div class="row justify-content-around mt-50">
           <div class="col-lg-7">
             <div class="event-details__left">
-  
+
               <ng-template #noAgenda class="your-order-table table-responsive">
                 <h3>Agenda</h3>
                 <div class="no-agenda mt-30">
