@@ -162,11 +162,11 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
         this.createUserAccount();
       }
 
-      // if(this.checkoutForm.total > 0){
-      //   this.submitStripePayment(savedForm);
-      // } else {
-      //   this.cancelStripeIntent();
-      // }
+      if(this.checkoutForm.total > 0){
+        this.submitStripePayment(savedForm);
+      } else {
+        this.cancelStripeIntent();
+      }
 
       this.setLoading(false);
     }
@@ -174,7 +174,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
 
   async createUserAccount(){
     await this.customerService.getAllByValue('email', this.checkoutForm.email).then(async users => {
-      if(users && users.length == 0){
+      if(!users || users.length == 0){
         let newUser: AppUser = {... new AppUser()};
         newUser.firstName = this.checkoutForm.firstName;
         newUser.lastName = this.checkoutForm.lastName;
@@ -220,6 +220,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
         newUser.phone = phone;
 
         newUser.role = Role.CUSTOMER;
+
         await this.customerService.add(newUser).then(async user => {
           await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
             if (result.isOk) {
