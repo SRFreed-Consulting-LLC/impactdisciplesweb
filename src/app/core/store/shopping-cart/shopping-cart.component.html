@@ -62,7 +62,7 @@
                 <tfoot>
                   <tr>
                     <td colspan="4"><strong>Cart Total:</strong></td>
-                    <td colspan="2"><strong>${{ isNan(cartService.totalPriceQuantity().total) ? cartService.totalPriceQuantity().total.toFixed(2) : '0.00' }}</strong></td>
+                    <td colspan="2"><strong>${{ NumberUtil.isNumber(cartService.totalPriceQuantity().total) ? cartService.totalPriceQuantity().total.toFixed(2) : '0.00' }}</strong></td>
                   </tr>
                 </tfoot>
               </table>

@@ -184,8 +184,8 @@
                 <div class="row">
                   <div class="col-lg-5">Subtotal</div>
                   <div class="col-lg-5"></div>
-                  <div class="col-lg-2 text-end" *ngIf="isNan(this.checkoutForm.totalBeforeDiscount)"> ${{ this.checkoutForm.totalBeforeDiscount.toFixed(2) }}</div>
-                  <div class="col-lg-2 text-end" *ngIf="!isNan(this.checkoutForm.totalBeforeDiscount)"> $ 0.00</div>
+                  <div class="col-lg-2 text-end" *ngIf="NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> ${{ this.checkoutForm.totalBeforeDiscount.toFixed(2) }}</div>
+                  <div class="col-lg-2 text-end" *ngIf="!NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> $ 0.00</div>
                 </div>
                 <div *ngIf="cartDiscountAmount" class="row">
                   <div class="col-lg-5">Discount</div>
@@ -229,8 +229,8 @@
                 </div>
                 <div class="row order-total">
                   <div class="col-lg-6 order-total__title">Order Total</div>
-                  <div class="col-lg-6 text-end order-total__amount" *ngIf="isNan(checkoutForm.total)"><strong>${{ checkoutForm?.total.toFixed(2) }}</strong></div>
-                  <div class="col-lg-6 text-end order-total__amount" *ngIf="!isNan(checkoutForm.total)"><strong>$ 0.00</strong></div>
+                  <div class="col-lg-6 text-end order-total__amount" *ngIf="NumberUtil.isNumber(checkoutForm.total)"><strong>${{ checkoutForm?.total.toFixed(2) }}</strong></div>
+                  <div class="col-lg-6 text-end order-total__amount" *ngIf="!NumberUtil.isNumber(checkoutForm.total)"><strong>$ 0.00</strong></div>
                 </div>
               </div>
             </div>

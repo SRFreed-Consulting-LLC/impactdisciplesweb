@@ -28,7 +28,7 @@
     </ul>
     <div class="total-price d-flex justify-content-between mb-30">
       <span>Subtotal:</span>
-      <span>${{isNan(cartService.totalPriceQuantity().totalBeforeDiscount)? (cartService.totalPriceQuantity().totalBeforeDiscount).toFixed(2) : '0.00'}}</span>
+      <span>${{NumberUtil.isNumber(cartService.totalPriceQuantity().totalBeforeDiscount)? (cartService.totalPriceQuantity().totalBeforeDiscount).toFixed(2) : '0.00'}}</span>
     </div>
     <div class="checkout-link">
       <a routerLink="/shopping-cart" class="os-btn">View Cart</a>

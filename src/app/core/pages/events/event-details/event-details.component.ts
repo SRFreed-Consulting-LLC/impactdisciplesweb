@@ -7,6 +7,7 @@ import { DxFormComponent } from 'devextreme-angular';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
+import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 
 @Component({
   selector: 'app-event-details',
@@ -33,7 +34,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           id: event.id,
           itemName: event.eventName,
           orderQuantity: 1,
-          price: this.isNan(event.costInDollars)?event.costInDollars : 0,
+          price: NumberUtil.isNumber(event.costInDollars)?event.costInDollars : 0,
           img: event.imageUrl,
           isEBook: false,
           isEvent: true,
@@ -112,13 +113,5 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
-
-  public isNan(value){
-    if(Number.isNaN(value)){
-      return false
-    } else {
-      return true;
-    }
-   }
 
 }

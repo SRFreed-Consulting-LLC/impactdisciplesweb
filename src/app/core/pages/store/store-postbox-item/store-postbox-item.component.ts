@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
+import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 @Component({
@@ -19,7 +20,7 @@ export class StorePostboxItemComponent {
       id: this.product.id,
       itemName: this.product.title,
       orderQuantity: 1,
-      price: this.isNan(this.product.cost)? this.product.cost : 0,
+      price: NumberUtil.isNumber(this.product.cost)? this.product.cost : 0,
       img: this.product.imageUrl,
       isEvent: false,
       isEBook: this.product.isEBook,
@@ -29,12 +30,4 @@ export class StorePostboxItemComponent {
     }
     this.cartService.addCartProduct(this.cartItem)
   }
-
-  public isNan(value){
-    if(Number.isNaN(value)){
-      return false
-    } else {
-      return true;
-    }
-   }
 }

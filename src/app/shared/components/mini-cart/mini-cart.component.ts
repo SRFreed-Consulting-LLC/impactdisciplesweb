@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CartService } from '../../utils/services/cart.service';
+import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 
 @Component({
   selector: 'app-mini-cart',
@@ -7,13 +8,7 @@ import { CartService } from '../../utils/services/cart.service';
   styleUrls: ['./mini-cart.component.scss']
 })
 export class MiniCartComponent {
-   constructor(public cartService: CartService) { }
+  NumberUtil = NumberUtil;
 
-   public isNan(value){
-    if(Number.isNaN(value)){
-      return false
-    } else {
-      return true;
-    }
-   }
+  constructor(public cartService: CartService) { }
 }

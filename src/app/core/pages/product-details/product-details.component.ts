@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
 import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
+import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
@@ -36,7 +37,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         id: product.id,
         itemName: product.title,
         orderQuantity: 1,
-        price: this.isNan(product.cost)? product.cost : 0,
+        price: NumberUtil.isNumber(product.cost)? product.cost : 0,
         img: product.imageUrl,
         isEvent: false,
         isEBook: product.isEBook,
@@ -69,13 +70,5 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-  }
-
-  public isNan(value){
-    if(Number.isNaN(value)){
-      return false
-    } else {
-      return true;
-    }
   }
 }

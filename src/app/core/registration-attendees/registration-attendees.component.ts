@@ -5,6 +5,7 @@ import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model'
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
+import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
@@ -32,7 +33,7 @@ export class RegistrationAttendeesComponent implements OnInit, OnDestroy {
         itemName: this.event.eventName,
         orderQuantity: 1,
         isEBook: false,
-        price: this.isNan(this.event.costInDollars) ? this.event.costInDollars : 0,
+        price: NumberUtil.isNumber(this.event.costInDollars) ? this.event.costInDollars : 0,
         img: this.event.imageUrl,
         isEvent: true,
         attendees: [{ firstName: '', lastName: '', email: '' }]
@@ -74,13 +75,4 @@ export class RegistrationAttendeesComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
-
-  public isNan(value){
-    if(Number.isNaN(value)){
-      return false
-    } else {
-      return true;
-    }
-   }
-
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 
@@ -10,6 +11,8 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 export class ShoppingCartComponent  {
   couponCode: string = '';
   shipCost: number = 0;
+
+  NumberUtil = NumberUtil;
 
   constructor (public cartService:CartService) {}
 
@@ -26,13 +29,5 @@ export class ShoppingCartComponent  {
       this.shipCost = value as number;
     }
   }
-
-  public isNan(value){
-    if(Number.isNaN(value)){
-      return false
-    } else {
-      return true;
-    }
-   }
 
 }

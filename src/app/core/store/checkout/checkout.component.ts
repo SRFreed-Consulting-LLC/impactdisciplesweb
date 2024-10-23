@@ -21,6 +21,7 @@ import { TaxRateService } from 'impactdisciplescommon/src/services/data/tax-rate
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
+import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, take, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
@@ -52,6 +53,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   states: string[];
   countries: string[];
 
+  NumberUtil = NumberUtil;
+
   showEstimatedTaxesSpinner: boolean = false;
   showShippingSpinner: boolean = false;
   isProcessingPanelVisible: boolean = false;
@@ -79,8 +82,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.setView();
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
-      total: this.isNan(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
-      totalBeforeDiscount: this.isNan(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
+      total: NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
+      totalBeforeDiscount: NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
       isShippingSameAsBilling: true,
       isNewsletter: true,
       billingAddress: { state: '', country: 'United States'},
@@ -160,7 +163,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
 
           if (isValid) {
-            this.checkoutForm.total = this.isNan(total)? total : 0;
+            this.checkoutForm.total = NumberUtil.isNumber(total)? total : 0;
 
             this.checkoutForm.couponCode = validCoupon.code;
 
@@ -185,7 +188,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         item.discountPrice = null;
       }
     });
-    this.checkoutForm.total = this.isNan(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0;
+    this.checkoutForm.total = NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0;
     this.itemDiscountAmount = null;
     this.cartDiscountAmount = null;
   }
@@ -257,7 +260,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   //PAYMENT METHODS
   async toggleForm(): Promise<void> {
-    if(this.isNan(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
+    if(NumberUtil.isNumber(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
       try {
         setTimeout(async () => {
           const paymentForm = document.querySelector("#payment-form");
@@ -344,7 +347,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.checkoutForm.cartItems.forEach(item => {
         item.dateProcessed = Timestamp.now();
         item.processedStatus = "NEW"
-        item.price = item.price && this.isNan(item.price)? item.price : 0;
+        item.price = item.price && NumberUtil.isNumber(item.price)? item.price : 0;
       })
 
       this.checkoutForm = await this.salesService.saveCheckoutForm(this.checkoutForm);
@@ -361,7 +364,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         await this.createUserAccount()
       }
 
-      if(this.isNan(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
+      if(NumberUtil.isNumber(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
         await this.stripeService.submitStripePayment(this.checkoutForm, this.elements)
       } else {
         this.router.navigate(['/checkout-success'], { queryParams: { savedForm: this.checkoutForm.id }});
@@ -384,14 +387,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       document.querySelector("#button-text").classList.remove("hidden");
     }
   }
-
-  public isNan(value){
-    if(Number.isNaN(value)){
-      return false
-    } else {
-      return true;
-    }
-   }
 
    ngOnDestroy(): void {
     this.ngUnsubscribe.next();
