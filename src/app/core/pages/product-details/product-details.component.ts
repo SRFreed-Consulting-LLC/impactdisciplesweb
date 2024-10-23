@@ -17,6 +17,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   cartItem: CartItem;
   public relatedProducts: ProductModel[] = [];
 
+  NumberUtil = NumberUtil
+
   private ngUnsubscribe = new Subject<void>();
 
   constructor(private route: ActivatedRoute, private productService: ProductService, public cartService: CartService) {}
