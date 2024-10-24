@@ -1,18 +1,29 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
 import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
 import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
 import { SeriesService } from 'impactdisciplescommon/src/services/data/series.service';
+import { Subject, takeUntil } from 'rxjs';
+
+export enum FilterType {
+  viewAll = 0,
+  viewBySeries = 1,
+  aToZ = 2,
+  priceLowToHigh = 3,
+  priceHighToLow = 4,
+  category = 5,
+  series = 6
+}
 
 @Component({
   selector: 'app-store',
   templateUrl: './store.component.html',
   styleUrls: ['./store.component.scss']
 })
-export class StoreComponent implements OnInit {
+export class StoreComponent implements OnInit, OnDestroy {
   public products: ProductModel[] = [];
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];
@@ -20,6 +31,17 @@ export class StoreComponent implements OnInit {
   public paginate: any = {};
   public pageNo: number = 1;
   public pageSize: number = 6;
+  public selectedFilter: FilterType;
+  public FILTER_TYPE = FilterType;
+  public filterOptions = [
+    { text: 'View All', value: FilterType.viewAll },
+    { text: 'View by Series', value: FilterType.viewBySeries },
+    { text: 'A-Z', value: FilterType.aToZ },
+    { text: 'Price Low to High', value: FilterType.priceLowToHigh },
+    { text: 'Price High to Low', value: FilterType.priceHighToLow }
+  ];
+
+  private ngUnsubscribe = new Subject<void>();
 
   constructor(
     private productService: ProductService,
@@ -30,22 +52,38 @@ export class StoreComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.pageNo = params['page'] ? params['page'] : this.pageNo;
-      this.loadProducts();
+    this.route.queryParams.subscribe(params => {
+      if (params['page']) {
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {}, 
+          queryParamsHandling: '', 
+          replaceUrl: true
+        });
+      }
     });
+    this.productService.streamAllByValue('isActive', true).subscribe((products) => {
+      this.products = products;
+
+      if(!this.showSeriesInMainView) {
+        this.setProducts(this.products)
+      } else {
+        this.filterProducts(FilterType.viewBySeries)
+      }
+    })
   }
 
-  loadProducts(): void {
-    this.productService.streamAllByValue('isActive', true).subscribe((products) => {
-      this.products = products.sort((a,b) => a.title.localeCompare(b.title));
-      this.viewBySeries();
-      this.paginate = this.getPager(this.products.length, Number(+this.pageNo), this.pageSize);
-      this.filteredProductItems = this.products.slice(this.paginate.startIndex, this.paginate.endIndex + 1)
+  setProducts(products: ProductModel[]) {
+    this.setPage(1)
+    this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params) => {
+      this.pageNo = params['page'] ? params['page'] : this.pageNo;
+      this.paginate = this.getPager(products.length, Number(+this.pageNo), this.pageSize);
+      this.filteredProductItems = products.slice(this.paginate.startIndex, this.paginate.endIndex + 1)
     })
   }
 
   searchProducts(searchTerm: string): void {
+    this.selectedFilter = null;
     const termLower = searchTerm.toLowerCase();
     this.filteredProductItems = this.products.filter(
       (product) =>
@@ -53,28 +91,51 @@ export class StoreComponent implements OnInit {
         product?.tags?.some((tag) => tag.tag.toLowerCase().includes(termLower))
     ).sort((a,b) => a.title.localeCompare(b.title));
     this.showSeriesInMainView = false;
+    this.setProducts(this.filteredProductItems);
+    
   }
 
-  filterProductsByCategory(category: TagModel): void {
-    this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === category.id).sort((a,b) => a.title.localeCompare(b.title));
+  filterProducts(filterType: FilterType, filterItem?: any) {
     this.showSeriesInMainView = false;
-  }
-
-  filterProductsBySeries(series: SeriesModel): void {
-    this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === series.id).sort((a,b) => a.title.localeCompare(b.title));
-    this.showSeriesInMainView = false;
-  }
-
-  viewAllProducts(): void {
-    this.filteredProductItems = [...this.products.sort((a,b) => a.title.localeCompare(b.title))];
-    this.showSeriesInMainView = false;
-  }
-
-  viewBySeries(): void {
-    this.seriesService.streamAll().subscribe((seriesItems) => {
-      this.seriesItems = seriesItems.sort((a, b) => a.order - b.order);
-    })
-    this.showSeriesInMainView = true;
+    switch(filterType) {
+      case FilterType.viewAll:
+        this.selectedFilter = FilterType.viewAll;
+        this.setProducts(this.products)
+        break;
+      case FilterType.viewBySeries:
+        this.selectedFilter = FilterType.viewBySeries;
+        this.seriesService.streamAll().subscribe((seriesItems) => {
+          this.seriesItems = seriesItems.sort((a, b) => a.order - b.order);
+        })
+        this.showSeriesInMainView = true;
+        break;
+      case FilterType.aToZ:
+        this.filteredProductItems = [...this.products.sort((a, b) => a.title.localeCompare(b.title))];
+        this.setProducts(this.filteredProductItems);
+        break;
+      case FilterType.priceLowToHigh:
+        this.filteredProductItems = [...this.products.sort((a, b) => {
+          if (a.cost == null) return -1;
+          if (b.cost == null) return 1;
+          return a.cost - b.cost;
+        })];
+        this.setProducts(this.filteredProductItems);
+        break;
+      case FilterType.priceHighToLow:
+        this.filteredProductItems = [...this.products.sort((a, b) => b.cost - a.cost)];
+        this.setProducts(this.filteredProductItems);
+        break;
+      case FilterType.category:
+        this.selectedFilter = null;
+        this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === filterItem.id).sort((a,b) => a.title.localeCompare(b.title));
+        this.setProducts(this.filteredProductItems);
+        break;
+      case FilterType.series:
+        this.selectedFilter = null;
+        this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === filterItem.id).sort((a,b) => a.title.localeCompare(b.title));
+        this.setProducts(this.filteredProductItems);
+        break;
+    }
   }
 
   setPage(page: number) {
@@ -137,4 +198,9 @@ export class StoreComponent implements OnInit {
     };
   }
 
+  ngOnDestroy(): void {
+    this.showSeriesInMainView = true;
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
 }

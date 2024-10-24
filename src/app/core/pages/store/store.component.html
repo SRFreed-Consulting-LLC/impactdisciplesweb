@@ -11,10 +11,10 @@
                 <div class="col-xl-12">
                   <div class="slider__content slider__content-4 pr-50">
                     <h5 class="store__header__pretitle">DISCIPLE-MAKING RESOURCES</h5>
-                    <h1 class="store__header__title w-50" (click)="viewBySeries()">STORE</h1>
+                    <h1 class="store__header__title w-50" (click)="filterProducts(FILTER_TYPE.viewBySeries)">STORE</h1>
                     <hr class="slider-hr">
                     <a href="/e-books" class="os-btn os-btn-white">FREE E-BOOKS<i class="fa fa-book ml-10"></i></a>
-                    <a (click)="filterProductsBySeries(seriesItems[0])" class="os-btn os-btn-white mr-10">DISCIPLE MAKING SERIES<i class="fa fa-book-open ml-10"></i></a>
+                    <a (click)="filterProducts(FILTER_TYPE.series, seriesItems[0])" class="os-btn os-btn-white mr-10">DISCIPLE MAKING SERIES<i class="fa fa-book-open ml-10"></i></a>
                   </div>
                 </div>
               </div>
@@ -26,9 +26,9 @@
         <div class="col-xl-3 col-lg-4">
           <app-store-sidebar 
             (searchEvent)="searchProducts($event)" 
-            (categoryFilterEvent)="filterProductsByCategory($event)" 
-            (seriesFilterEvent)="filterProductsBySeries($event)" 
-            (viewAllProductsEvents)="viewAllProducts()" 
+            (categoryFilterEvent)="filterProducts(FILTER_TYPE.category, $event)" 
+            (seriesFilterEvent)="filterProducts(FILTER_TYPE.series, $event)" 
+            (viewAllProductsEvents)="filterProducts(FILTER_TYPE.viewAll)" 
             [showSeriesInSidebar]="!showSeriesInMainView" 
             [seriesItems]="seriesItems"
           ></app-store-sidebar>
@@ -36,6 +36,21 @@
   
         <div class="col-xl-8 col-lg-8">
           <div class="blog__wrapper">
+
+            <div class="row mb-50">
+              <div class="d-flex justify-content-end">
+                <dx-select-box
+                  [(value)]="selectedFilter"
+                  [dataSource]="filterOptions"
+                  displayExpr="text"
+                  valueExpr="value"
+                  [width]="250"
+                  (onValueChanged)="filterProducts(selectedFilter)"
+                  placeholder="Select a filter"
+                ></dx-select-box>
+              </div>
+            </div>
+
             <div *ngIf="!showSeriesInMainView" class="row">
               <div *ngFor="let product of filteredProductItems" class="col-xl-4 col-lg-4 col-md-4">
                 <app-store-postbox-item [product]="product"></app-store-postbox-item>
@@ -46,11 +61,11 @@
               <h1>SHOP BY SERIES</h1>
               <div *ngFor="let series of seriesItems" class="series col-xl-6 col-lg-6 col-md-6">
                 <img [src]="series?.imageUrl?.url" alt="blog-1"/>
-                <dx-button class="impact-btn impact-btn-black-bg mt-10" (onClick)="filterProductsBySeries(series)">{{ series.name }}</dx-button>
+                <dx-button class="impact-btn impact-btn-black-bg mt-10" (onClick)="filterProducts(FILTER_TYPE.viewBySeries)">{{ series.name }}</dx-button>
               </div>
             </div>
   
-            <div class="row">
+            <div *ngIf="!showSeriesInMainView" class="row">
               <div class="col-xl-12">
                 <div class="shop-pagination-wrapper">
                   <app-pagination [data]="filteredProductItems" [paginate]="paginate" (setPage)="setPage($event)">
