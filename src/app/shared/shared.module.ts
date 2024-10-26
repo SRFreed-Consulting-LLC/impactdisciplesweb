@@ -20,6 +20,7 @@ import { PaginationComponent } from "./components/pagination/pagination.componen
 import { DiscipleMakingSummitBannerComponent } from './components/disciple-making-summit-banner/disciple-making-summit-banner.component';
 import { CategoryNamePipe } from "./utils/pipes/category-name.pipe";
 import { TimeFormatPipe } from "./utils/pipes/time-format.pipe";
+import { AnimateDirective } from "./utils/directives/animate.directive";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { TimeFormatPipe } from "./utils/pipes/time-format.pipe";
     CourseNamePipe,
     CategoryNamePipe,
     TimeFormatPipe,
-    DiscipleMakingSummitBannerComponent
+    DiscipleMakingSummitBannerComponent,
+    AnimateDirective
   ],
   imports: [
     CommonModule,
@@ -65,7 +67,8 @@ import { TimeFormatPipe } from "./utils/pipes/time-format.pipe";
     CourseNamePipe,
     CategoryNamePipe,
     TimeFormatPipe,
-    DiscipleMakingSummitBannerComponent
+    DiscipleMakingSummitBannerComponent,
+    AnimateDirective
   ]
 })
 export class SharedModule { }
