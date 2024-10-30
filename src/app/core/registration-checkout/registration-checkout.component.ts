@@ -222,7 +222,7 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
         newUser.role = Role.CUSTOMER;
 
         await this.customerService.add(newUser).then(async user => {
-          await this.authService.createAccount(user.email, this.password).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result) => {
+          await this.authService.createAccount(user.email, this.password).then((result) => {
             if (result.isOk) {
               this.toastrService.success('Success', 'Your account has been created.', {
                 timeOut: 10000,

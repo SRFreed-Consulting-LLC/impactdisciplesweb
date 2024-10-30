@@ -232,7 +232,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   async createUserAccount(){
     let user: CustomerModel = await this.customerService.createCustomerAccount(this.checkoutForm);
 
-    this.authService.createAccount(user.email, this.password).pipe(take(1)).subscribe((result) => {
+    this.authService.createAccount(user.email, this.password).then((result) => {
       if (result.isOk) {
         this.toastrService.success('Success', 'Your account has been created.', {
           timeOut: 10000,
