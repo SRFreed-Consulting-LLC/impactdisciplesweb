@@ -1,12 +1,21 @@
 @import '../../../../../assets/theme/scss/variables';
 
 .event-details {
+  &__row {
+    @media #{$xxs,$xs} {
+      flex-direction: column-reverse;
+    }
+  }
   &__left {
     img {
       width: 100%;
       height: auto;
       max-width: 100%;
       margin-bottom: 20px;
+      @media #{$xxs,$xs} {
+        position: absolute;
+        top: 150px;
+      }
     }
     .no-agenda {
       display: flex;
@@ -55,7 +64,11 @@
   &__right {
     padding: 0 50px;
     text-align: center;
-
+    @media #{$xxs,$xs} {
+      margin-top: 130px;
+      margin-bottom: 80px;
+      padding: 0 20px;
+    }
     &-subtitle {
       font-size: 18px;
       font-weight: 500;

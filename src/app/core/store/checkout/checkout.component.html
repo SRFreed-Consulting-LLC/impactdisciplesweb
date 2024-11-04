@@ -3,7 +3,7 @@
 <main class="checkout pb-50">
   <app-breadcrumb [currentPageName]="'Checkout'" [bgColor]="'#1F1F1F'" [previousLink]="'/shopping-cart'" [previousLinkName]="'Shopping Cart'" [isDark]="true"></app-breadcrumb>
 
-  <section class="checkout-area pb-70 mt-80">
+  <section class="checkout-area mt-80">
     <div class="container-xxl">
 
       <!-- checkout no items in cart block -->
@@ -16,7 +16,7 @@
 
       <ng-template #checkoutBlock>
         <div class="row">
-          <div *ngIf="isShippingView" class="col-lg-7">
+          <div *ngIf="isShippingView" class="col-lg-7 pb-70">
             <dx-form
               #shippingFormComponent
               [formData]="checkoutForm"
@@ -72,10 +72,10 @@
                 </div>
               </dxi-item>
             </dx-form>
-            <dx-button class="mt-20 f-right impact-btn impact-btn-black-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
+            <dx-button class="mt-20 f-right impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
           </div>
 
-          <div *ngIf="isBillingView" class="col-lg-7">
+          <div *ngIf="isBillingView" class="col-lg-7 pb-70">
             <div class="checkout__customer-info mb-50">
               <div class="checkout__customer-info-block customer">
                 <span>Customer</span>
@@ -105,7 +105,7 @@
               <dxi-item [colSpan]="6">
                 <div *dxTemplate><h4>Billing Address</h4></div>
               </dxi-item>
-              <dxi-item dataField="isShippingSameAsBilling" editorType="dxCheckBox" [label]="{ text: 'Is Billing Same As Shipping?', location: 'right' }"></dxi-item>
+              <dxi-item dataField="isShippingSameAsBilling" editorType="dxCheckBox" cssClass="checkbox" [label]="{ text: 'Is Billing Same As Shipping?', location: 'right' }"></dxi-item>
               <dxi-item itemType="empty" [colSpan]="5"></dxi-item>
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address1" [isRequired]="true" [colSpan]="6" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address2" [colSpan]="6" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
@@ -138,7 +138,7 @@
             </button>
           </div>
 
-          <div class="col-lg-5">
+          <div class="col-lg-5 pb-70">
             <div class="checkout__your-order mb-30">
               <h3>Your order</h3>
               <div class="coupon-info">
@@ -228,9 +228,9 @@
                   </div>
                 </div>
                 <div class="row order-total">
-                  <div class="col-lg-6 order-total__title">Order Total</div>
-                  <div class="col-lg-6 text-end order-total__amount" *ngIf="NumberUtil.isNumber(checkoutForm.total)"><strong>${{ checkoutForm?.total.toFixed(2) }}</strong></div>
-                  <div class="col-lg-6 text-end order-total__amount" *ngIf="!NumberUtil.isNumber(checkoutForm.total)"><strong>$ 0.00</strong></div>
+                  <div class="col-lg-6 col-sm-3 order-total__title">Order Total</div>
+                  <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="NumberUtil.isNumber(checkoutForm.total)"><strong>${{ checkoutForm?.total.toFixed(2) }}</strong></div>
+                  <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="!NumberUtil.isNumber(checkoutForm.total)"><strong>$ 0.00</strong></div>
                 </div>
               </div>
             </div>

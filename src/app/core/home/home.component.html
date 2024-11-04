@@ -14,9 +14,8 @@
 
     <!-- video -->
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-2"></div>
-        <div class="col-8">
+      <div class="row d-flex justify-content-center">
+        <div class="col-lg-8">
           <div *ngIf="!isPlaying" class="video__area-df mb-60" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap.jpg?alt=media&token=9db9c6f4-c852-4722-807e-5fa5d93f881a)">
             <div class="container">
               <div class="video__content text-center">
@@ -34,7 +33,6 @@
             <youtube-player [videoId]="'HxKSa24hF60'" [width]="1211.33" [height]="565" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player>
           </div>
         </div>
-        <div class="col-2"></div>
       </div>
     </div>
 

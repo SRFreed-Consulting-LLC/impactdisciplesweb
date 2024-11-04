@@ -18,7 +18,7 @@
             @media #{$sm}{
                 font-size: 45px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 font-size: 25px;
             }
         }
@@ -34,7 +34,7 @@
             @media #{$sm}{
                 font-size: 200px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 font-size: 100px;
             }
         }

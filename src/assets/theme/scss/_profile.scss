@@ -8,7 +8,7 @@
             padding-right: 40px;
         }
         &-thumb{
-            @media #{$sm, $xs}{
+            @media #{$sm, $xxs,$xs}{
                 margin-bottom: 20px;
             }
             & img{
@@ -40,7 +40,7 @@
             }
         }
         &-cart{
-            @media #{$sm, $xs}{
+            @media #{$sm, $xxs,$xs}{
                 margin-top: 25px;
             }
             & .cart-info{
@@ -144,7 +144,7 @@
             background-color: #fff;
             margin-bottom: 15px;
 
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 padding-left: 15px;
                 padding-right: 15px;
             }
@@ -176,7 +176,7 @@
         &-wrapper{
             padding: 0 70px;
 
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 padding-left: 15px;
                 padding-right: 15px;
             }
@@ -203,7 +203,7 @@
     &__edit{
         &-wrapper{
             padding: 40px 60px;
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 padding-left: 15px;
                 padding-right: 15px;
             }
@@ -264,7 +264,7 @@
             padding: 20px 70px;
             background-color: #fff;
             margin-bottom: 15px;
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 padding-left: 15px;
                 padding-right: 15px;
             }
@@ -317,12 +317,12 @@
     }
     &__list{
         padding: 35px 70px 5px;
-        @media #{$xs}{
+        @media #{$xxs,$xs}{
             padding-left: 15px;
             padding-right: 15px;
         }
         & .table{
-            @media #{$md, $sm, $xs}{
+            @media #{$md, $sm, $xxs,$xs}{
                 width: 600px;
             }
         }
@@ -390,7 +390,7 @@
             padding: 20px 70px;
             background-color: #fff;
             margin-bottom: 15px;
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 padding-left: 15px;
                 padding-right: 15px;
             }
@@ -420,7 +420,7 @@
         }
         &-wrapper{
             padding: 0 70px;
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 padding-left: 15px;
                 padding-right: 15px;
             }
@@ -446,7 +446,7 @@
     }
     &__form{
         padding: 35px 70px;
-        @media #{$xs}{
+        @media #{$xxs,$xs}{
             padding-left: 15px;
             padding-right: 15px;
         }

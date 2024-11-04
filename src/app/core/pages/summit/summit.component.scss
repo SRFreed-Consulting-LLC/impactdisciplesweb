@@ -7,17 +7,30 @@
   }
   &__header {
     height: 550px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    @media #{$xxs,$xs} {
+      height: 250px;
+      background-position: top;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
     &-button {
+      height: 100%;
       display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      margin-bottom: 50px;
+      justify-content: center;
+      align-items: end;
+      padding-bottom: 50px;
+      @media #{$xxs,$xs} {
+        padding-bottom: 20px;
+      }
       a {
-        font-size: 30px;
-        height: 80px;
-        align-items: center;
-        align-content: center;
-        border: 4px solid #fff;
+        @media #{$xxs,$xs} {
+          color: #000;
+          border-color: #000;
+          width: 100%;
+        }
       }
     }
   }
@@ -127,23 +140,37 @@
     flex-direction: column;
     align-items: center;
     margin: 0 30px;
+    @media #{$xxs,$xs} {
+      margin: 0px 10px;
+    }
 
     .number {
-      font-size: 4rem;
+      font-size: 70px; 
       font-weight: 800;
+      @media #{$xxs,$xs} {
+        font-size: 30px;
+      }
     }
 
     .label {
-      font-size: 1rem;
+      font-size: 16px;
       margin-top: 25px;
       font-weight: 600;
+      @media #{$xxs,$xs} {
+        font-size: 12px;
+        margin-top: 0px;
+      }
     }
   }
 
   .colon {
-    font-size: 4rem;
+    font-size: 70px;
     font-weight: bold;
     margin-bottom: 50px;
+    @media #{$xxs,$xs} {
+      font-size: 30px;
+      margin-bottom: 24px;
+    }
   }
 }
 
@@ -193,7 +220,7 @@ button.prev:hover, button.next:hover {
 
 @media (max-width: 768px) {
   .slide {
-    flex: 0 0 calc(100% / 2);
+    flex: 0 0 80%;
   }
   button.prev, button.next {
     font-size: 18px;

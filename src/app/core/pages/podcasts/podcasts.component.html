@@ -10,12 +10,12 @@
             <div class="row">
               <div class="col-xl-12">
                 <div class="slider__content slider__content-4 pr-50">
-                  <h5 animate="fadeInUp" class="podcasts__header__pretitle">FREE ONLINE RESOURCES</h5>
-                  <h1 animate="fadeInUpTwo" class="podcasts__header__title w-50">The Disciple-Making Church Podcast</h1>
+                  <h5 animate="fadeInUp" class="slider-pretitle">FREE ONLINE RESOURCES</h5>
+                  <h1 animate="fadeInUpTwo" class="slider-medium-title-white">The Disciple-Making Church Podcast</h1>
                   <hr animate="fadeInLeftToRight" class="slider-hr">
-                  <a animate="fadeInUpThree" [href]="webConfig.youtube" target="_blank" class="os-btn os-btn-white"><i class="fab fa-youtube mr-10"></i>YOUTUBE</a>
-                  <a animate="fadeInUpThree" [href]="webConfig.applePodCast" target="_blank" class="os-btn os-btn-white"><i class="fab fa-apple mr-10"></i>APPLE PODCASTS</a>
-                  <a animate="fadeInUpThree" [href]="webConfig.facebookLive" target="_blank" class="os-btn os-btn-white"><i class="fab fa-facebook-f mr-10"></i>FACEBOOK LIVE</a>
+                  <a animate="fadeInUpThree" [href]="webConfig.youtube" target="_blank" class="impact-btn impact-btn-white"><i class="fab fa-youtube mr-10"></i>YOUTUBE</a>
+                  <a animate="fadeInUpThree" [href]="webConfig.applePodCast" target="_blank" class="impact-btn impact-btn-white"><i class="fab fa-apple mr-10"></i>APPLE PODCASTS</a>
+                  <a animate="fadeInUpThree" [href]="webConfig.facebookLive" target="_blank" class="impact-btn impact-btn-white"><i class="fab fa-facebook-f mr-10"></i>FACEBOOK LIVE</a>
                 </div>
               </div>
             </div>
@@ -24,7 +24,7 @@
       </div>
     </section>
 
-    <div class="row mt-50">
+    <div class="row mt-50 podcasts__row">
       <div class="col-xl-3 col-lg-4">
         <app-podcast-sidebar [podcasts]="podcasts" (searchEvent)="searchPodcasts($event)" (clearFiltersEvent)="clearFilters()" (selectPodcast)="selectPodcast($event)"></app-podcast-sidebar>
       </div>
@@ -47,7 +47,7 @@
         </div>
         <div *ngIf="selectedPodcast && !this.isListView" class="podcasts__selected mt-50">
           <h1>{{ selectedPodcast?.title }}</h1>
-          <youtube-player *ngIf="selectedPodcast?.videoType == 'Youtube'" class="mt-20" [videoId]="selectedPodcast?.videoId" [width]="800" suggestedQuality="highres"></youtube-player>
+          <youtube-player *ngIf="selectedPodcast?.videoType == 'Youtube'" class="mt-20" [videoId]="selectedPodcast?.videoId" suggestedQuality="highres"></youtube-player>
         </div>
       </div>
     </div>

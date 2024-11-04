@@ -31,7 +31,7 @@
 
             }
             &.bottom{
-              @media #{$xs}{
+              @media #{$xxs,$xs}{
                 margin-top: 40px;
               }
               @media #{$sm}{
@@ -41,7 +41,7 @@
         }
     }
     &__header-right{
-      @media #{$xs}{
+      @media #{$xxs,$xs}{
         margin-top: 15px;
       }
         & .sort-wrapper{
@@ -581,7 +581,7 @@
             }
         }
         &-2{
-          @media #{$xs}{
+          @media #{$xxs,$xs}{
             margin-top: 15px;
           }
             & a{
@@ -629,7 +629,7 @@
               @media #{$sm}{
                 margin-top: 15px;
               }
-              @media #{$xs}{
+              @media #{$xxs,$xs}{
                 margin-top: 15px;
               }
                 & p{
@@ -758,7 +758,7 @@
             @media #{$sm}{
               padding: 0 25px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
               padding: 0px;
               text-align: left;
               margin-bottom: 10px;
@@ -964,7 +964,7 @@
           font-family: var(--vela-font-icon); }
         .owl-nav .owl-prev {
           left: -15px;
-          @media #{$xs} {
+          @media #{$xxs,$xs} {
             left: 0;
           }
         }
@@ -975,7 +975,7 @@
         }
         .owl-nav .owl-next {
           right: -15px;
-          @media #{$xs} {
+          @media #{$xxs,$xs} {
             right: 0;
           }
         }
@@ -1015,7 +1015,7 @@
       @media #{$sm}{
         margin-top: 40px;
       }
-      @media #{$xs}{
+      @media #{$xxs,$xs}{
         margin-top: 40px;
       }
         & h4{

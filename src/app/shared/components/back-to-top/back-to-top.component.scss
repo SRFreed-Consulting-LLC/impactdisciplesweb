@@ -1,0 +1,7 @@
+@import '../../../../assets/theme/scss/variables';
+
+.scroll-top {
+  @media #{$xxs,$xs} {
+    display: none !important;
+  }
+}

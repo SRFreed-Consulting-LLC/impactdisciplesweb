@@ -10,7 +10,7 @@
         margin: auto;
         text-align: center;
         width: 360px;
-        @media #{$xs}{
+        @media #{$xxs,$xs}{
             width: 300px;
         }
         &-thumb{

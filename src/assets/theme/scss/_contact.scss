@@ -70,7 +70,7 @@
         @media #{$sm}{
             margin-top: 50px;
         }
-        @media #{$xs}{
+        @media #{$xxs,$xs}{
             margin-top: 50px;
         }
         & h3{

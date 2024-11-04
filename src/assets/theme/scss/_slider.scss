@@ -130,7 +130,7 @@
         @media #{$sm}{
             height: 600px;
         }
-        @media #{$xs}{
+        @media #{$xxs,$xs}{
             height: 550px;
         }
         &-2{
@@ -147,7 +147,7 @@
             @media #{$sm}{
                 height: 600px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 height: 550px;
             }
         }
@@ -168,7 +168,7 @@
             @media #{$sm}{
                 height: 750px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 height: 700px;
             }
         }
@@ -186,7 +186,7 @@
             @media #{$sm}{
                 height: 600px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 height: 600px;
             }
         }
@@ -197,7 +197,7 @@
             line-height: 1.2;
             color: $black-2;
             margin-bottom: 14px;
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 font-size: 30px;
             }
         }
@@ -217,7 +217,7 @@
                 @media #{$sm}{
                     padding-right: 20px;
                 }
-                @media #{$xs}{
+                @media #{$xxs,$xs}{
                     padding-right: 0px;
                 }
             }
@@ -241,12 +241,12 @@
             @media #{$sm}{
                 padding-left: 30px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 padding-left: 20px;
             }
         }
         &-5{
-            @media #{$xs} {
+            @media #{$xxs,$xs} {
                 margin-top: 65px;
             }
             .meta{
@@ -270,7 +270,7 @@
                 @media #{$md} {
                     font-size: 50px;
                 }
-                @media #{$xs,$sm} {
+                @media #{$xxs,$xs,$sm} {
                     font-size: 40px;
                     line-height: 45px;
                 }
@@ -280,7 +280,7 @@
                 padding-right: 110px;
                 color: inherit;
                 margin-bottom: 35px;
-                @media #{$xs} {
+                @media #{$xxs,$xs} {
                     padding-right: 0;
                 }
             }
@@ -296,7 +296,7 @@
     @media #{$sm}{
         background-position: left;
     }
-    @media #{$xs}{
+    @media #{$xxs,$xs}{
         background-position: left;
     }
 }

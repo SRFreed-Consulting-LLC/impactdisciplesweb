@@ -6,7 +6,7 @@
     &__area{}
     &__slider{
         & .owl-nav{
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 display: none;
             }
             & div{
@@ -104,7 +104,7 @@
                 font-family: var(--vela-font-icon); }
               .owl-nav .owl-prev {
                 left: -15px;
-                @media #{$xs} {
+                @media #{$xxs,$xs} {
                     left: 0;
                   }
                 }
@@ -115,7 +115,7 @@
               }
               .owl-nav .owl-next {
                 right: -15px;
-                @media #{$xs} {
+                @media #{$xxs,$xs} {
                     right: 0;
                   }
                 }
@@ -169,7 +169,7 @@
                 font-family: var(--vela-font-icon); }
               .owl-nav .owl-prev {
                 left: -15px;
-                @media #{$xs} {
+                @media #{$xxs,$xs} {
                     left: 0;
                   }
                 }
@@ -180,7 +180,7 @@
               }
               .owl-nav .owl-next {
                 right: -15px;
-                @media #{$xs} {
+                @media #{$xxs,$xs} {
                     right: 0;
                   }
                 }
@@ -300,7 +300,7 @@
             text-align: center;
             background-color: $black-2;
             z-index: 2;
-            @media #{$xs} {
+            @media #{$xxs,$xs} {
                 padding: 20px 10px;
             }
         }
@@ -381,7 +381,7 @@
             @media #{$sm}{
                 font-size: 30px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 font-size: 24px;
             }
         }
@@ -468,7 +468,7 @@
             margin-top: 10px;
             float: left;
         }
-        @media #{$xs}{
+        @media #{$xxs,$xs}{
             margin-top: 10px;
             float: left;
         }
@@ -581,7 +581,7 @@
     &:hover{
         color: $theme-color;
     }
-    @media #{$xs}{
+    @media #{$xxs,$xs}{
        position: static;
     }
 }
@@ -594,7 +594,7 @@
 
 .latest-comments li.children {
     margin-left: 100px;
-    @media #{$xs}{
+    @media #{$xxs,$xs}{
         margin-left: 15px;
     }
 }

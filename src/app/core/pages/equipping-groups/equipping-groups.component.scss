@@ -3,27 +3,12 @@
 .equipping-groups {
   &__container {
     background-color: #ffffff;
-    padding: 20px;
   }
   &__header {
     height: 480px;
-    &__pretitle {
-      color: #ffcc00;
-      font-size: 20px;
-    }
-    &__title {
-      font-size: 50px;
-      font-weight: 600;
-      color: #fff;
-    }
-    .custom-hr {
-      width: 200px; 
-      border: 0;    
-      border-top: 6px solid $theme-color;  
-      opacity: 1;
-    }
   }
   &__help-items {
+    padding: 20px;
     .col {
       display: flex;
       flex-direction: column;
@@ -95,9 +80,20 @@
   }
   &__slider-container {
     height: 300px;
+    @media #{$xxs,$xs} {
+      height: 500px;
+    }
   }
   &__slider {
     padding: 0 50px;
+    @media #{$xxs,$xs} {
+      padding: 0 10px;
+    }
+    h2 {
+      @media #{$xxs,$xs} {
+        font-size: 25px;
+      }
+    }
   }
   &__header {
     height: inherit;

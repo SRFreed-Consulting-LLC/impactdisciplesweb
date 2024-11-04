@@ -11,9 +11,15 @@
   }
   .slider__height {
     height: 825px;
+    @media #{$xxs,$xs} {
+      height: 425px;
+    }
   }
   .banner__inner {
     margin-top: -300px;
+    @media #{$xxs,$xs} {
+      margin-top: 0;
+    }
   }
   .banner__inner::before {
     border: 1px solid #c2c1c1;
@@ -22,10 +28,12 @@
     &__title {
       position: absolute;
       top: 150px;
-      font-size: 120px;
       font-weight: 600;
       color: #fff;
       letter-spacing: 2px;
+      @media #{$xxs,$xs} {
+      text-align: center;
+      }
     }
   }
   .history-section {
@@ -125,12 +133,34 @@
   margin-bottom: 100px;
 }
 
+.timeline-img-col {
+  @media #{$xxs,$xs} {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 .timeline-item {
   position: relative;
+  &-left {
+    margin-right: 60px;
+    @media #{$xxs,$xs} {
+      margin-right: 0;
+    }
+  }
+  &-right {
+    margin-left: 60px;
+    @media #{$xxs,$xs} {
+      margin-left: 0;
+    }
+  }
+
 }
 
 .timeline-img {
   height: 300px;
+  position: relative;
+  z-index: 1;
 }
 
 .timeline-dot {
@@ -150,6 +180,9 @@
   padding: 20px;
   position: relative;
   text-align: left;
+  @media #{$xxs,$xs} {
+    text-align: center;
+  }
   p {
     font-size: 20px;
     font-family: 'Lato', sans-serif;

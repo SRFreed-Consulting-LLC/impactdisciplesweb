@@ -182,7 +182,7 @@
             @media #{$sm}{
                 margin-bottom: 30px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 margin-bottom: 30px;
             }
             & a{
@@ -199,7 +199,7 @@
         }
         &-3{
             & p{
-                @media #{$md,$sm,$xs}{
+                @media #{$md,$sm,$xxs,$xs}{
                     margin-bottom: 15px;
                 }
             }
@@ -212,7 +212,7 @@
         @media #{$sm}{
             float: left;
         }
-        @media #{$xs}{
+        @media #{$xxs,$xs}{
             float: left;
         }
         & ul{
@@ -227,7 +227,7 @@
                     margin-left: 0;
                     margin-right: 40px;
                 }
-                @media #{$xs}{
+                @media #{$xxs,$xs}{
                     margin-left: 0;
                     margin-right: 40px;
                 }
@@ -254,14 +254,14 @@
                 border: 1px solid #464646;
                 display: flex;
                 margin-bottom: 0;
-                @media #{$xs} {
+                @media #{$xxs,$xs} {
                     display: block;
                 }
                 & li{
                     display: inline-block;
                     width: 50%;
                     border-left: 1px solid #464646;
-                    @media #{$xs} {
+                    @media #{$xxs,$xs} {
                         border-bottom: 1px solid #464646;
                         border-left: 0;
                         width: 100%;
@@ -270,7 +270,7 @@
                         border-left: 0;
                     }
                     &:last-child{
-                        @media #{$xs} {
+                        @media #{$xxs,$xs} {
                             border-bottom: 0;
                         }
                     }
@@ -293,7 +293,7 @@
     }
     &__payment{
         text-align: right;
-        @media #{$xs,$sm} {
+        @media #{$xxs,$xs,$sm} {
             text-align: start;
         }
     }

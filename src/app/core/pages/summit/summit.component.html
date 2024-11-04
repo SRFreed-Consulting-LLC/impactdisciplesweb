@@ -4,24 +4,12 @@
 <div class="summit page-wrapper">
   <main class="grey-bg">
     <div class="summit__container container">
-      <!--SUMMIT HEADER - SWIPER-->
-      <section class="slider__area slider__area-4 p-relative">
-        <div class="slider-active swiper-container" #heroSliderContainer >
-          <div class="swiper-wrapper">
-            <div class="summit__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(' + summit?.imageUrl?.url + ')'">
-              <div class="container h-100 d-flex justify-content-center">
-                <div class="row">
-
-                    <div class="summit__header-button">
-                      <a  [routerLink]="['/event-details', summit?.id]" class="os-btn os-btn-white">REGISTER NOW</a>
-                    </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
+      <!--SUMMIT HEADER -->
+      <div class="summit__header" [style.backgroundImage]="'url(' + summit?.imageUrl?.url + ')'">
+        <div class="summit__header-button">
+          <a  [routerLink]="['/event-details', summit?.id]" class="impact-btn impact-btn-white">REGISTER NOW</a>
         </div>
-      </section>
+      </div>
 
       <!--SUMMIT INFO-->
       <section class="summit__info mb-30">

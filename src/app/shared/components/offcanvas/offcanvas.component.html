@@ -10,7 +10,7 @@
     <nav class="side-mobile-menu d-block d-lg-none mm-menu">
       <ul>
         <ng-container *ngFor="let menu of mobileMenuData; let i = index">
-          <li [ngClass]="'menu-item-has-children has-droupdown ' + (activeMenu === menu.title ? 'active' : '')">
+          <li *ngIf="menu.dropdownMenu" [ngClass]="'menu-item-has-children has-droupdown ' + (activeMenu === menu.title ? 'active' : '')">
             <a (click)="handleOpenMenu(menu.title)">{{ menu.title }}</a>
             <ul [ngClass]="'sub-menu ' + (activeMenu === menu.title ? 'active' : '')">
               <li *ngFor="let sub_m of menu.dropdownMenu; let index = index">

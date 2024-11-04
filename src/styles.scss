@@ -193,7 +193,21 @@ h1, h2, h3, h4, h5, h6, p {
       color: $white;
     }
 	}
-	&-black-bg{
+	&-primary-dark {
+		color: $black-2;
+		background-color: transparent;
+		border-color: $black-2;
+		&::after{
+			background-color: $black-2;
+		}
+		&:hover{
+			border-color: $black-2;
+		}
+    & span{
+      color: $black-2;
+    }
+	}
+	&-dark-bg{
 		color: $white;
 		background-color: $black-2;
 		border-color: $black-2;
@@ -207,7 +221,7 @@ h1, h2, h3, h4, h5, h6, p {
 			color: $white;
 		}
 	}
-	&-black-border{
+	&-dark-border{
 		color: $black-2;
 		background-color: $white;
 		border-color: $black-2;
@@ -216,6 +230,20 @@ h1, h2, h3, h4, h5, h6, p {
 		}
 		&:hover{
 			border-color: $theme-color;
+		}
+	}
+	&-black-bg{
+		color: $white;
+		background-color: $black;
+		border-color: $black;
+		&::after{
+			background-color: $theme-color;
+		}
+		&:hover{
+			border-color: $theme-color;
+		}
+		.dx-icon {
+			color: $white;
 		}
 	}
 	&-white{
@@ -227,6 +255,22 @@ h1, h2, h3, h4, h5, h6, p {
 			&::after{
 				background: $white;
 			}
+		}
+	}
+	&-white-bg{
+		color: $black-2;
+		background-color: $white;
+		border-color: $white;
+		&::after{
+			background-color: $black-2;
+			color: $white;
+		}
+		&:hover{
+			border-color: $black-2;
+			color: $white;
+		}
+		.dx-icon {
+			color: $black-2;
 		}
 	}
   &-white-primary {
@@ -304,7 +348,7 @@ h1, h2, h3, h4, h5, h6, p {
 			border-color: $theme-color;
 		}
 	}
-	&-black-bg{
+	&-dark-bg{
 		color: $white;
 		background-color: $black-2;
 		border-color: $black-2;
@@ -318,7 +362,7 @@ h1, h2, h3, h4, h5, h6, p {
 			color: $white;
 		}
 	}
-	&-black-border{
+	&-dark-border{
 		color: $black-2;
 		background-color: $white;
 		border-color: $black-2;
@@ -374,9 +418,78 @@ h1, h2, h3, h4, h5, h6, p {
   }
 }
 
+.slider-hr-solid {
+	width: 200px;
+	border: 0;
+	border-top: 6px solid $theme-color;
+	opacity: 1;
+}
+
 .solid-line {
 	border-top: 10px solid #ffcc00;
   opacity: 1;
+}
+
+
+
+//title 
+.slider-small-pretitle {
+	color: #ffcc00;
+	font-size: 20px;
+	@media #{$xxs,$xs} {
+		font-size: 14px;
+	}
+}
+
+.slider-pretitle {
+	color: #ffcc00;
+	font-size: 25px;
+	@media #{$xxs,$xs} {
+		font-size: 18px;
+	}
+}
+
+.slider-title {
+	font-size: 80px;
+	font-weight: 600;
+	@media #{$xxs,$xs} {
+		font-size: 60px;
+	}
+}
+
+.slider-medium-title {
+	font-size: 50px;
+	font-weight: 600;
+	@media #{$xxs,$xs} {
+		font-size: 30px;
+	}
+	&-white {
+		color: $white;
+		@media #{$xxs,$xs} {
+			font-size: 30px;
+		}
+	}
+}
+
+.slider-subtitle {
+	font-size: 16px;
+	@media #{$xxs,$xs} {
+		font-size: 14px;
+	}
+}
+
+.title-large {
+	font-size: 100px;
+	@media #{$xxs,$xs} {
+		font-size: 70px;
+	}
+}
+
+.title-xl {
+	font-size: 120px;
+	@media #{$xxs,$xs} {
+		font-size: 65px;
+	}
 }
 
 

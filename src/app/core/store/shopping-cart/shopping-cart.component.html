@@ -1,6 +1,6 @@
 <app-home-header></app-home-header>
 
-<main>
+<main class="pb-80">
 
   <app-breadcrumb [currentPageName]="'Shopping Cart'" [bgColor]="'#1F1F1F'" [previousLink]="'/store'" [previousLinkName]="'Store'" [isDark]="true"></app-breadcrumb>
 
@@ -67,18 +67,18 @@
                 </tfoot>
               </table>
             </div>
-            <div class="row align-items-center justify-content-between mt-50">
-              <div class="col-8">
+            <div class="row align-items-center justify-content-between">
+              <div class="col-lg-8 col-sm-12 mt-50">
                 <div>
                   <div class="coupon">
-                    <button (click)="cartService.clearCart()" class="impact-btn impact-btn-black-border" name="update_cart" type="submit">
+                    <button (click)="cartService.clearCart()" class="impact-btn impact-btn-dark-border" name="update_cart" type="submit">
                       Clear cart
                     </button>
                   </div>
                 </div>
               </div>
-              <div class="col-3">
-                <a class="impact-btn impact-btn-black-bg" routerLink="/checkout">Proceed to checkout</a>
+              <div class="col-lg-3 col-sm-12 mt-50">
+                <a class="impact-btn impact-btn-dark-bg" routerLink="/checkout">Proceed to checkout</a>
               </div>
             </div>
         </div>

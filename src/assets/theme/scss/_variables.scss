@@ -36,9 +36,10 @@ $black-soft-3: #757575;
 
 
 // Responsive Variables
+$xxs: 'only screen and (max-width: 320px)'; 
+$xs: 'only screen and (min-width: 321px) and (max-width: 575px)'; 
+$sm: 'only screen and (min-width: 576px) and (max-width: 767px)'; 
+$md: 'only screen and (min-width: 768px) and (max-width: 991px)';
+$lg: 'only screen and (min-width: 992px) and (max-width: 1199px)';
 $laptop: 'only screen and (min-width: 1200px) and (max-width: 1600px)';
-$lg : 'only screen and (min-width: 992px) and (max-width: 1199px)';
-$md:'only screen and (min-width: 768px) and (max-width: 991px)';
-$sm: 'only screen and (min-width: 576px) and (max-width: 767px)';
-$xs:'(max-width: 575px)';
 

@@ -11,24 +11,10 @@
   }
   &__header {
     height: 480px;
-    &__pretitle {
-      color: #ffcc00;
-      font-size: 25px;
-    }
-    &__title {
-      font-size: 80px;
-      font-weight: 600;
-    }
     &-button {
       background-color: $theme-color;
       color: #ffffff;
       font-size: 18px;
-    }
-    .custom-hr {
-      width: 200px; 
-      border: 0;    
-      border-top: 6px solid $theme-color;  
-      opacity: 1;
     }
   }
   &__overview {
@@ -88,8 +74,11 @@
       justify-content: space-between;
       background-color: #fff;
       margin: 50px 25px;
+      @media #{$xxs,$xs} {
+        height: 500px;
+      }
       .title {
-        font-size: 30px;
+        font-size: 28px;
         color: $theme-color;
         text-align: center;
       }
@@ -103,7 +92,6 @@
 
   &__large-title {
     h1 {
-      font-size: 100px;
       font-weight: 300;
       width: 100%;
       text-align: center;
@@ -113,6 +101,9 @@
         font-weight: 900;
         color: #fff;
         padding: 0 30px 15px 30px;
+        @media #{$xxs,$xs} {
+          padding: 0 15px 5px 15px;
+        }
       }
     }
   }
@@ -144,6 +135,9 @@
     &:hover{
       color: #fff;
     }
+    @media #{$xxs,$xs} {
+      font-size: 35px;
+    }
   }
   &__text {
     font-size: 14px;
@@ -153,15 +147,28 @@
   .banner {
     &__column {
       margin: 0 20px;
+      display: flex;
+      padding: 0;
     }
     &__item, &__column {
       width: 350px;
+      @media #{$xxs,$xs} {
+        width: 320px;
+      }
     }
     &__content {
       left: 0;
       z-index: 2; 
       color: inherit; 
       padding: 0 30px;
+    }
+    &__thumb {
+      img {
+        height: 350px;
+        @media #{$xxs,$xs} {
+          height: 320px;
+        }
+      }
     }
   }
   .banner__item {
@@ -192,9 +199,9 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+    padding: 30px;
     h1 {
       text-align: center;
-      font-size: 100px;
       font-weight: 900;
       letter-spacing: 20px;  
     }
@@ -207,8 +214,8 @@
   }
   &__right {
     text-align: right;
-    .os-btn::after {
-      background-color: #414141;
+    @media #{$xxs,$xs} {
+      margin-top: 20px;
     }
   }
 }

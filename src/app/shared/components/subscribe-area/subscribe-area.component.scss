@@ -25,6 +25,9 @@
     justify-content: center;
     form {
       width: 50%;
+      @media #{$xxs,$xs} {
+        width: 100%;
+      }
     }
     input {
       background: #201f1f;

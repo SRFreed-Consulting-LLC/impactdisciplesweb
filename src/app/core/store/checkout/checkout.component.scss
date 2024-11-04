@@ -1,6 +1,6 @@
 @import '../../../../assets/theme/scss/variables';
 
-.checkout {
+::ng-deep .checkout {
   &__customer-info {
     padding: 10px;
 	  border: 3px solid #eaedff;
@@ -9,12 +9,15 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px;
+      @media #{$xxs,$xs} {
+        flex-direction: column;
+      }
       .info {
         color: #000;
       }
       a {
-        text-decoration: underline;
-        cursor: pointer;
+        text-decoration: underline !important;
+        cursor: pointer !important;
       }
     }
     .customer {
@@ -37,6 +40,9 @@
       .order-total {
         font-size: 25px;
         border-bottom: none !important;
+        @media #{$xxs,$xs} {
+          font-size: 18px;
+        }
         &__amount {
           color: $theme-color;
         }
@@ -66,6 +72,20 @@
       }
     }
   }
-  
+  .checkbox {
+    .dx-field-item-label-text {
+      @media #{$xxs,$xs} {
+        overflow-wrap: break-word;
+        word-break: break-word;
+        white-space: normal;
+      }
+    }
+    .dx-field-item-content {
+      @media #{$xxs,$xs} {
+        width: fit-content;
+        flex-grow: 0 !important;
+      }
+    }
+  }
   
 }

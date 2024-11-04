@@ -7,9 +7,20 @@
   }
   &__slider-container {
     height: 300px;
+    @media #{$xxs,$xs} {
+      height: 500px;
+    }
   }
   &__slider {
     padding: 0 50px;
+    @media #{$xxs,$xs} {
+      padding: 0 10px;
+    }
+    h2 {
+      @media #{$xxs,$xs} {
+        font-size: 25px;
+      }
+    }
   }
   &__header {
     height: inherit;
@@ -24,6 +35,9 @@
   }
   .teams-list {
     padding: 0 100px;
+    @media #{$xxs,$xs} {
+      padding: 0;
+    }
     &__team {
       margin-bottom: 75px;
       padding: 0 25px;

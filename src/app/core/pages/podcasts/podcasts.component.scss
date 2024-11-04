@@ -17,6 +17,11 @@
       color: #fff;
     }
   }
+  &__row {
+    @media #{$xxs,$xs} {
+      flex-direction: column-reverse;
+    }
+  }
   &__selected{
     display: flex;
     flex-direction: column;

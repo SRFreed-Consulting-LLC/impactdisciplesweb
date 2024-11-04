@@ -75,13 +75,36 @@ export const mobileMenuData: MobileMenuModel[] = [
     ] 
   },
   { 
-    title: 'Resources', 
+    title: 'Training', 
     dropdownMenu: [
       { link: '/seminars', title: 'Seminars' },
       { link: '/equipping-groups', title: 'Equipping Groups' },
-      { link: '/coaching', title: 'Coaching with Impact' },
+      { link: '/coaching-with-impact', title: 'Coaching with Impact' },
       { link: '/lunch-and-learns', title: 'Lunch and Learns' }
     ] 
   },
-  { link: '/shop', title: 'Shop' }
+  { 
+    title: 'Free Resources', 
+    dropdownMenu: [
+      { link: '/e-books', title: 'E-Books' },
+      { link: '/podcasts', title: 'Podcasts' },
+      { link: '/blog', title: 'Blog' }
+    ] 
+  },
+  { 
+    title: 'Get Involved', 
+    dropdownMenu: [
+      { link: '/give', title: 'Give' },
+      { link: '/newsletter', title: 'Newsletter SignUp' },
+      { link: '/prayer-team', title: 'Join the Prayer Team' }
+    ] 
+  },
+  { 
+    title: 'Terms of Use', 
+    dropdownMenu: [
+      { link: '/terms', title: 'Terms' },
+      { link: '/private-policy', title: 'Private Policy' }
+    ] 
+  },
+  { link: '/store', title: 'Shop' }
 ]

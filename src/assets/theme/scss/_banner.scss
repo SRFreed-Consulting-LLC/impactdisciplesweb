@@ -6,7 +6,7 @@
     &__area{
         &-df{
             display: flex;
-            @media #{$lg,$md,$sm,$xs} {
+            @media #{$lg,$md,$sm,$xxs,$xs} {
                 display: block;
             }
         }
@@ -26,7 +26,7 @@
                 top: -15px;
                 left: -15px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 display: none;
             }
             @media #{$sm}{
@@ -39,7 +39,7 @@
         @media #{$sm}{
             margin-top: 30px;
         }
-        @media #{$xs}{
+        @media #{$xxs,$xs}{
             margin-top: 30px;
         }
     }
@@ -75,7 +75,7 @@
             position: relative;
             margin-right: 10px;
             width: 50%;
-            @media #{$lg,$md,$sm,$xs}{
+            @media #{$lg,$md,$sm,$xxs,$xs}{
                 width: 100%;
             }
             &:last-child{
@@ -98,7 +98,7 @@
                 }
                 & img{
                     width: 100%;
-                    @media #{$xs,$sm} {
+                    @media #{$xxs,$xs,$sm} {
                         height: 230px;
                     }
                 }
@@ -147,7 +147,7 @@
             @media #{$sm}{
                 left: 40px;
             }
-            @media #{$xs}{
+            @media #{$xxs,$xs}{
                 left: 15px;
             }
             &.banner__content-2-right{
@@ -161,7 +161,7 @@
                 @media #{$sm}{
                     left: 40px;
                 }
-                @media #{$xs}{
+                @media #{$xxs,$xs}{
                     left: 15px;
                 }
             }
@@ -178,7 +178,7 @@
                 @media #{$sm}{
                     margin-bottom: 25px;
                 }
-                @media #{$xs}{
+                @media #{$xxs,$xs}{
                     margin-bottom: 25px;
                 }
                 & a{
@@ -202,7 +202,7 @@
                 @media #{$sm}{
                     display: none;
                 }
-                @media #{$xs}{
+                @media #{$xxs,$xs}{
                     display: none;
                 }
             }
@@ -211,7 +211,7 @@
             left: 25px;
             &.banner__content-4-right{
                 left: 45px;
-                @media #{$xs}{
+                @media #{$xxs,$xs}{
                     left: 25px;
                 }
             }
@@ -249,7 +249,7 @@
     @media #{$sm}{
         padding-right: 0;
     }
-    @media #{$xs}{
+    @media #{$xxs,$xs}{
         padding-right: 0;
     }
 }
@@ -261,7 +261,7 @@
     @media #{$sm}{
         padding-left: 0;
     }
-    @media #{$xs}{
+    @media #{$xxs,$xs}{
         padding-left: 0;
     }
 }
@@ -297,7 +297,7 @@
             color: $white;
             margin-bottom: 0;
         }
-        @media #{$xs,$sm} {
+        @media #{$xxs,$xs,$sm} {
             padding: 0 30px;
         }
     }
@@ -322,7 +322,7 @@
         font-size: 40px;
         text-transform: uppercase;
         line-height: 48px;
-        @media #{$xs,$sm} {
+        @media #{$xxs,$xs,$sm} {
             font-size: 30px;
         }
     }
@@ -421,7 +421,7 @@
     font-family: var(--vela-font-icon); }
   .owl-nav .owl-prev {
     left: -15px;
-    @media #{$xs} {
+    @media #{$xxs,$xs} {
         left: 0;
       }
     }
@@ -432,7 +432,7 @@
   }
   .owl-nav .owl-next {
     right: -15px;
-    @media #{$xs} {
+    @media #{$xxs,$xs} {
         right: 0;
       }
     }
