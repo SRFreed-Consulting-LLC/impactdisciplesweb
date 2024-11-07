@@ -40,7 +40,7 @@
                     <h3>One-Time</h3>
                     <i class="large-icon fas fa-dollar-sign"></i>
                     <div class="buttons" [ngClass]="{'hidden': isFormVisible === 'oneTime'}">
-                      <button class="impact-btn impact-btn-primary mb-10" (click)="togglePaymentForm('oneTime')">SEND DONATION</button>
+                      <button class="impact-btn impact-btn-primary mb-10" (click)="window.open(environment.oneGiftUrl, '_blank')">SEND DONATION</button>
                     </div>
                     <div *ngIf="isFormVisible === 'oneTime'" class="payment-form" [ngClass]="{'active': isFormVisible === 'oneTime'}">
                       <!-- Stripe payment form for One-Time -->
@@ -52,7 +52,7 @@
                             [format]="{ type: 'currency', currency: 'USD', precision: 2 }"
                             placeholder="Enter amount">
                           </dx-number-box>
-                        </div>
+                        </div>https://buy.stripe.com/4gwcOI5sY1zq2JieUW
                         <form id="payment-form">
                           <div id="payment-element">
                             <!--Stripe.js injects the Payment Element-->
@@ -79,7 +79,7 @@
                     <h3>Monthly</h3>
                     <i class="large-icon fas fa-calendar-days"></i>
                     <div class="buttons" [ngClass]="{'hidden': isFormVisible === 'monthly'}">
-                      <button class="impact-btn impact-btn-primary mb-10" (click)="window.open('https://billing.stripe.com/p/login/test_6oEg0g8vh7vz5CoeUU', '_blank');">SEND DONATION</button>
+                      <button class="impact-btn impact-btn-primary mb-10" (click)="window.open(environment.monthlyGiftUrl, '_blank')">SEND DONATION</button>
                     </div>
                     <div *ngIf="isFormVisible === 'monthly'" class="payment-form" [ngClass]="{'active': isFormVisible === 'monthly'}">
                       <!-- Stripe payment form for Monthly -->

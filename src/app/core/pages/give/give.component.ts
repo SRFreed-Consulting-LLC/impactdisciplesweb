@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { ToastrService } from 'ngx-toastr';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
@@ -15,10 +15,11 @@ export class GiveComponent implements OnInit {
   isFormVisible: string = '';
   status: string = "REQUEST";
   elements;
-  items = [{ id: "xl-tshirt", amount: 1000 }];
   loading: boolean = false;
   oneTimeAmount: number = 0;
   monthlyAmount: number = 0;
+
+  public environment = environment;
 
   window = window;
 
@@ -50,12 +51,19 @@ export class GiveComponent implements OnInit {
           if (paymentForm) {
             paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
 
+            let request = {};
+            request['items'] = [{ id: "Gift", amount: this.oneTimeAmount }];
+            request['description'] = "One time gift";
+
+
             // Fetch client secret for Stripe payment
             const response = await fetch(environment.stripeURL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(this.items),
+              body: JSON.stringify(request),
             });
+
+            console.log(await response.json())
 
             if (!response.ok) {
               throw new Error('Failed to fetch client secret');
@@ -63,15 +71,19 @@ export class GiveComponent implements OnInit {
 
             const { clientSecret } = await response.json();
 
+            console.log(clientSecret)
+
             // Initialize Stripe Elements
-            this.elements = (await this.stripeService.getStripe()).elements({ clientSecret });
+            await this.stripeService.getStripe().then(stripe => {
+              this.elements = stripe.elements({ clientSecret });
 
-            const paymentElementOptions = {
-              layout: "tabs",
-            };
+              const paymentElementOptions = {
+                layout: "tabs",
+              };
 
-            const paymentElement = this.elements.create("payment", paymentElementOptions);
-            paymentElement.mount("#payment-element");
+              const paymentElement = this.elements.create("payment", paymentElementOptions);
+              paymentElement.mount("#payment-element");
+            })
 
             // Set loading to false once form is ready
             this.loading = false;

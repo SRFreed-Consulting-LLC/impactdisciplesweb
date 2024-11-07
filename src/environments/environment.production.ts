@@ -16,6 +16,8 @@ export const environment = {
   stripeCancelURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/cancel_payment_intent",
   shippingUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_shipping_rates",
   youtubeKeyUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_youtube_keys",
+  oneGiftUrl: 'https://buy.stripe.com/4gwcOI5sY1zq2JieUW',
+  monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',
   application: "web"
 };
 
