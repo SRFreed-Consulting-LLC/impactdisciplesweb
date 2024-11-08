@@ -14,10 +14,20 @@ export class PrayerTeamComponent {
   constructor(private prayerTeamSubscriptionService: PrayerTeamSubscriptionService, private toastrService: ToastrService){}
 
   handleFormSubmit() {
-    this.prayerTeamSubscriptionService.createPrayerTeamSubscription(this.prayerTeamSubscription.firstName, this.prayerTeamSubscription.lastName, this.prayerTeamSubscription.email).then(() => {
-      this.toastrService.success('Prayer Team Subscription added Successfully!');
-    }).then(() => {
-      this.prayerTeamSubscriptionService.sendConfirmationEmail(this.prayerTeamSubscription);
+    this.prayerTeamSubscriptionService.createPrayerTeamSubscription(this.prayerTeamSubscription.firstName, this.prayerTeamSubscription.lastName, this.prayerTeamSubscription.email).then(sub => {
+      if(sub){
+        this.toastrService.success('Prayer Team Subscription added Successfully!');
+
+        return sub;
+      } else {
+        this.toastrService.info('Your email is already a member of our Prayer Team!');
+
+        return null;
+      }
+    }).then(sub => {
+      if(sub){
+        this.prayerTeamSubscriptionService.sendConfirmationEmail(this.prayerTeamSubscription);
+      }
     });
   }
 }

@@ -15,10 +15,20 @@ export class SubscribeAreaComponent {
     private toastrService: ToastrService){}
 
   handleFormSubmit() {
-    this.subscriptionService.createNewsLetterSubscription(this.subscription.firstName, this.subscription.lastName, this.subscription.email).then(() => {
-      this.toastrService.success('Subscription added Successfully!');
-    }).then(() => {
-      this.subscriptionService.sendConfirmationEmail(this.subscription)
+    this.subscriptionService.createNewsLetterSubscription(this.subscription.firstName, this.subscription.lastName, this.subscription.email).then(sub => {
+      if(sub){
+        this.toastrService.success('Newletter Subscription added Successfully!');
+
+        return sub;
+      } else {
+        this.toastrService.info('Your email already receives of our Newletter!');
+
+        return null;
+      }
+    }).then(sub => {
+      if(sub){
+        this.subscriptionService.sendConfirmationEmail(this.subscription)
+      }
     });
   }
 }
