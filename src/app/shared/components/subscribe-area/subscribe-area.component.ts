@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Timestamp } from 'firebase/firestore';
 import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 import { ToastrService } from 'ngx-toastr';
@@ -12,13 +11,14 @@ import { ToastrService } from 'ngx-toastr';
 export class SubscribeAreaComponent {
   subscription: NewsletterSubscriptionModel = {... new NewsletterSubscriptionModel()};
 
-  constructor(private subscriptionService: NewsletterSubscriptionService, private toastrService: ToastrService){}
+  constructor(private subscriptionService: NewsletterSubscriptionService,
+    private toastrService: ToastrService){}
 
   handleFormSubmit() {
-    this.subscription.date = Timestamp.now();
-
-    this.subscriptionService.add(this.subscription).then(() => {
+    this.subscriptionService.createNewsLetterSubscription(this.subscription.firstName, this.subscription.lastName, this.subscription.email).then(() => {
       this.toastrService.success('Subscription added Successfully!');
-    })
+    }).then(() => {
+      this.subscriptionService.sendConfirmationEmail(this.subscription)
+    });
   }
 }

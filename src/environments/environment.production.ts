@@ -12,10 +12,12 @@ export const environment = {
   domain: 'https://impactdisciples-public.web.app',
   session_expires: 30,
   stripeKey: "pk_live_51IP8IBC4Pv6WfeJrsYMjRAmzFsA0L6kjBvQx8upqGHxuo3T0WI60u1isqXBz29SyfC27v3yB34sGUYu1pl7oU1Co00LY6lIrrW",
+  freeEbookUrl: "https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/EBooks%2FM-7-Journal.pdf?alt=media&token=50e3282f-6fa1-46aa-ad3a-a486e4024af1",
   stripeURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/create_payment_intent",
   stripeCancelURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/cancel_payment_intent",
   shippingUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_shipping_rates",
   youtubeKeyUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_youtube_keys",
+  unsubscribeUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/unsubscribe_from_email_list",
   oneGiftUrl: 'https://buy.stripe.com/4gwcOI5sY1zq2JieUW',
   monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',
   application: "web"

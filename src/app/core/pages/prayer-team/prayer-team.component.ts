@@ -14,9 +14,10 @@ export class PrayerTeamComponent {
   constructor(private prayerTeamSubscriptionService: PrayerTeamSubscriptionService, private toastrService: ToastrService){}
 
   handleFormSubmit() {
-
-    this.prayerTeamSubscriptionService.add(this.prayerTeamSubscription).then(() => {
+    this.prayerTeamSubscriptionService.createPrayerTeamSubscription(this.prayerTeamSubscription.firstName, this.prayerTeamSubscription.lastName, this.prayerTeamSubscription.email).then(() => {
       this.toastrService.success('Prayer Team Subscription added Successfully!');
-    })
+    }).then(() => {
+      this.prayerTeamSubscriptionService.sendConfirmationEmail(this.prayerTeamSubscription);
+    });
   }
 }
