@@ -9,7 +9,7 @@ export const environment = {
     appId: "1:562759240809:web:7d6fa117db35b887b6a6f8",
     measurementId: "G-KJL13HB8DV"
   },
-  domain: 'https://impactdisciples-public.web.app',
+  domain: 'https://impactdisciples.com',
   session_expires: 30,
   stripeKey: "pk_live_51IP8IBC4Pv6WfeJrsYMjRAmzFsA0L6kjBvQx8upqGHxuo3T0WI60u1isqXBz29SyfC27v3yB34sGUYu1pl7oU1Co00LY6lIrrW",
   freeEbookUrl: "https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/EBooks%2FM-7-Journal.pdf?alt=media&token=50e3282f-6fa1-46aa-ad3a-a486e4024af1",

@@ -167,7 +167,9 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
       if(this.checkoutForm.total > 0){
         this.submitStripePayment(savedForm);
       } else {
-        this.cancelStripeIntent();
+        this.cancelStripeIntent().then(() =>{
+          this.router.navigateByUrl("/registration-checkout-success?savedForm=" + savedForm.id);
+        });
       }
 
       this.setLoading(false);
