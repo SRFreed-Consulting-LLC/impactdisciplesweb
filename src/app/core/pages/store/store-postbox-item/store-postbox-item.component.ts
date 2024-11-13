@@ -23,7 +23,7 @@ export class StorePostboxItemComponent {
       price: NumberUtil.isNumber(this.product.cost)? this.product.cost : 0,
       img: this.product.imageUrl,
       isEvent: false,
-      isEBook: this.product.isEBook,
+      isEBook: this.product.isEBook ? this.product.isEBook : false,
       weight: this.product.weight,
       uom: this.product.uom,
       eBookUrl: this.product.eBookUrl? this.product.eBookUrl : null

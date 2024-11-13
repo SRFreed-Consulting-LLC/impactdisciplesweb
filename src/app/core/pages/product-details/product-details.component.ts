@@ -42,7 +42,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         price: NumberUtil.isNumber(product.cost)? product.cost : 0,
         img: product.imageUrl,
         isEvent: false,
-        isEBook: product.isEBook,
+        isEBook: product.isEBook ? product.isEBook : false,
         eBookUrl: product.eBookUrl?product.eBookUrl:null,
         weight: product.weight? product.weight: 0
       }

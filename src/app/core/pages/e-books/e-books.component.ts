@@ -41,7 +41,6 @@ export class EBooksComponent {
   loadProducts(): void {
     let queries: QueryParam[] = [
       new QueryParam('isEBook', WhereFilterOperandKeys.equal, true),
-      new QueryParam('isEBook', WhereFilterOperandKeys.equal, true)
     ]
 
     this.productService.queryAllByMultiValue(queries).then((products) => {
