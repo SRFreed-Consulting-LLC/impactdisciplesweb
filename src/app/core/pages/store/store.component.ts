@@ -56,8 +56,8 @@ export class StoreComponent implements OnInit, OnDestroy {
       if (params['page']) {
         this.router.navigate([], {
           relativeTo: this.route,
-          queryParams: {}, 
-          queryParamsHandling: '', 
+          queryParams: {},
+          queryParamsHandling: '',
           replaceUrl: true
         });
       }
@@ -92,7 +92,7 @@ export class StoreComponent implements OnInit, OnDestroy {
     ).sort((a,b) => a.title.localeCompare(b.title));
     this.showSeriesInMainView = false;
     this.setProducts(this.filteredProductItems);
-    
+
   }
 
   filterProducts(filterType: FilterType, filterItem?: any) {
@@ -127,12 +127,12 @@ export class StoreComponent implements OnInit, OnDestroy {
         break;
       case FilterType.category:
         this.selectedFilter = null;
-        this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === filterItem.id).sort((a,b) => a.title.localeCompare(b.title));
+        this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === filterItem.id).sort((a,b) => a.categoryOrder - b.categoryOrder);
         this.setProducts(this.filteredProductItems);
         break;
       case FilterType.series:
         this.selectedFilter = null;
-        this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === filterItem.id).sort((a,b) => a.title.localeCompare(b.title));
+        this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === filterItem.id).sort((a,b) => a.seriesOrder - b.seriesOrder);
         this.setProducts(this.filteredProductItems);
         break;
     }
