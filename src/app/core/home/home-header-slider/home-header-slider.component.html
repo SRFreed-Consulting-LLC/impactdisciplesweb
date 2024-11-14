@@ -1,7 +1,8 @@
 <section class="slider__area slider__area-2 p-relative pl-15 pr-15">
   <div class="slider-active swiper-container" #heroSliderContainer>
     <div class="swiper-wrapper">
-      <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fhome-header-1.jpg?alt=media&token=a0be193a-1e03-4c0f-bbd9-fed6084af9fc)'">
+      
+      <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(../../assets/home-header.jpg)'">
         <div class="container-fluid">
           <div class="row">
             <div class="col-xl-6 col-lg-7 col-md-10 col-sm-10 col-12">
@@ -9,12 +10,14 @@
                 <h2 animate="fadeInUp">Impact Discipleship Ministries</h2>
                 <hr animate="fadeInLeftToRight" class="slider-hr">
                 <p animate="fadeInUpTwo">We exist to inspire people and churches to be and build disciples of Jesus Christ.</p>
-                <a animate="fadeInUpThree" href="/events" class="impact-btn impact-btn-white-primary" (mouseenter)="pauseAutoplay()" (mouseleave)="resumeAutoplay()">Register For Event</a>
+                <!--TODO: create a state or service or something for getting the current summit event otherwise link to events page-->
+                <a target="_blank" animate="fadeInUpThree" href="/summit/2025" class="impact-btn impact-btn-white-primary" (mouseenter)="pauseAutoplay()" (mouseleave)="resumeAutoplay()">Register For Event</a>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <!--TODO: only show this slide if summit event is active-->
       <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fhome-header-2.PNG?alt=media&token=9f2866c3-5b8c-4cdc-9604-573c276fd7f9)'">
         <div class="container-fluid">
           <div class="row">
@@ -23,7 +26,7 @@
                 <h2 animate="fadeInUp">Disciple-Making Summit</h2>
                 <hr animate="fadeInLeftToRight" class="slider-hr">
                 <p animate="fadeInUpTwo">Join us at the Disciple-Making Summit and come together in community with hundreds of other disciple-makers to learn what it means to leave a legacy that lasts through multiplying disciples.</p>
-                <a animate="fadeInUpThree" href="/events" class="impact-btn impact-btn-white-primary"(mouseenter)="pauseAutoplay()" (mouseleave)="resumeAutoplay()">Register For Event</a>
+                <a animate="fadeInUpThree" href="/summit/2025" class="impact-btn impact-btn-white-primary"(mouseenter)="pauseAutoplay()" (mouseleave)="resumeAutoplay()">Register For Event</a>
               </div>
             </div>
           </div>
