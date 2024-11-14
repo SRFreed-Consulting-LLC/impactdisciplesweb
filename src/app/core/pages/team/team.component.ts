@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
 import { CoachService } from 'impactdisciplescommon/src/services/data/coach.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
@@ -19,8 +19,9 @@ export class TeamComponent implements OnInit, AfterViewInit {
   constructor(private coachService: CoachService){}
 
   ngOnInit(): void {
-    this.coaches$ = this.coachService.streamAllByValue('isActive', true)
-
+    this.coaches$ = this.coachService.streamAllByValue('isActive', true).pipe(
+      map((coaches) => coaches.sort((a, b) => a.sortOrder - b.sortOrder))
+    )
   }
 
   ngAfterViewInit() {
