@@ -20,7 +20,7 @@ export const environment = {
   unsubscribeUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/unsubscribe_from_email_list",
   oneGiftUrl: 'https://buy.stripe.com/4gwcOI5sY1zq2JieUW',
   monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',
-  shippingCarriers: ["se-1047624", "se-1047625"],
+  shippingCarriers: ["se-1047625"],
   application: "web"
 };
 
