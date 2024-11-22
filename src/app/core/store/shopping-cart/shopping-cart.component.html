@@ -6,12 +6,12 @@
 
   <section class="cart-area pt-100 pb-100">
     <div class="container">
-      <div *ngIf="shoppingCart.cartItems.length === 0" class="text-center pt-50">
+      <div *ngIf="shoppingCart?.cartItems?.length === 0" class="text-center pt-50">
         <h3>No Cart Items Found</h3>
         <a routerLink="/store" class="os-btn os-btn-black">Continue Shopping</a>
       </div>
 
-      <div *ngIf="shoppingCart.cartItems.length > 0" class="row">
+      <div *ngIf="shoppingCart?.cartItems?.length > 0" class="row">
         <div class="coupon-info">
           <form action="#">
             <p class="checkout-coupon d-flex align-items-center">
@@ -59,7 +59,11 @@
                       </div>
                     </td>
                     <td class="product-subtotal">
-                      <span class="amount" *ngIf="item.price">${{item.price? (item.price * item?.orderQuantity!).toFixed(2) : '0.00'}}</span>                   </td>
+                      <span *ngIf="item?.discountPrice === null || item?.discountPrice === undefined" class="amount">${{item.price? (item.price * item?.orderQuantity!).toFixed(2) : '0.00'}}</span>
+                      <div *ngIf="item?.discountPrice || item?.discountPrice === 0" class="d-flex justify-content-center">
+                        <span class="after-discount">${{ item?.discountPrice.toFixed(2) }}</span>
+                        <span class="before-discount">${{item.price? (item.price * item?.orderQuantity!).toFixed(2) : '0.00'}}</span>
+                      </div>                 </td>
                     <td class="product-remove">
                       <a (click)="removeCartProduct(item)" class="cursor-pointer">
                         <i class="fa fa-times"></i>
@@ -71,10 +75,13 @@
                   <tr *ngIf="this.shoppingCart.couponCode">
                     <td colspan="4"><strong>Discount:</strong></td>
                     <td colspan="2">
-                      <strong>
+                      <strong *ngIf="cartDiscountAmount">
                         <span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ cartDiscountAmount?.code }}</span>
                         <span *ngIf="cartDiscountAmount?.dollarsOff" class="discount-amount">- ${{ cartDiscountAmount.dollarsOff }}</span>
                         <span *ngIf="cartDiscountAmount?.percentOff" class="discount-amount">- {{ cartDiscountAmount.percentOff }}%</span>
+                      </strong>
+                      <strong *ngIf="itemDiscountAmount">
+                        <span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ itemDiscountAmount?.code }}</span>
                       </strong>
                     </td>
                   </tr>

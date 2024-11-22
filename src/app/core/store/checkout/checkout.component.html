@@ -72,7 +72,7 @@
                 </div>
               </dxi-item>
             </dx-form>
-            <dx-button class="mt-20 f-right impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
+            <dx-button class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
           </div>
 
           <div *ngIf="isBillingView" class="col-lg-7 pb-70">
@@ -152,11 +152,6 @@
                   <div class="col-lg-5">
                     {{ cartItem?.itemName }}
                     <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong>
-                    <div *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="coupon-text d-flex">
-                      <span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ itemDiscountAmount?.code }}</span>
-                      <span *ngIf="itemDiscountAmount?.dollarsOff" class="amount">- ${{ itemDiscountAmount.dollarsOff }}</span>
-                      <span *ngIf="itemDiscountAmount?.percentOff" class="amount">- {{ itemDiscountAmount.percentOff }}%</span>
-                    </div>
                   </div>
                   <div class="col-lg-5">
                     <div *ngIf="cartItem.isEvent">

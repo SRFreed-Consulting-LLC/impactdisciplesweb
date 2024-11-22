@@ -34,6 +34,8 @@ export class ShoppingCartComponent implements OnInit {
       total: NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
       totalBeforeDiscount: NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0
     }
+    this.resetCartItems();
+    console.log(this.shoppingCart)
   }
 
   applyCoupon() {
