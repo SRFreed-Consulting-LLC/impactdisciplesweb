@@ -76,18 +76,30 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private taxService: TaxRateService,
     private actions$: Actions,
     private router: Router
-  ) {}
+  ) {
+
+  }
 
   async ngOnInit(): Promise<void> {
     this.setView();
+    const shoppingCart = history.state.data;
+
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
-      total: NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
+      total: shoppingCart.total,
+      couponCode: shoppingCart.couponCode,
       totalBeforeDiscount: NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
       isShippingSameAsBilling: true,
       isNewsletter: true,
       billingAddress: { state: '', country: 'United States'},
       shippingAddress: { state: '' , country: 'United States'}
+    }
+    if(this.checkoutForm.couponCode) {
+      this.couponService.getAllByValue('code', this.checkoutForm.couponCode).then(coupons => {
+        if (coupons.length > 0 && coupons[0].isActive) {
+          this.cartDiscountAmount = coupons[0]
+        }
+      })
     }
 
     this.states = EnumHelper.getStateRoleTypesAsArray();
