@@ -216,7 +216,7 @@
                 </div>
                 <div class="row order-total">
                   <div class="col-lg-6 col-sm-3 order-total__title">Order Total</div>
-                  <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="NumberUtil.isNumber(checkoutForm.total)"><strong>${{ checkoutForm.total }}</strong></div>
+                  <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="NumberUtil.isNumber(checkoutForm.total)"><strong>{{ checkoutForm.total | currency}}</strong></div>
                   <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="!NumberUtil.isNumber(checkoutForm.total)"><strong>$ 0.00</strong></div>
                 </div>
               </div>

@@ -3,12 +3,7 @@ import { Router } from '@angular/router';
 import { Actions, ofActionDispatched } from '@ngxs/store';
 import { DxFormComponent } from 'devextreme-angular';
 import { Timestamp } from 'firebase/firestore';
-import { PHONE_TYPES } from 'impactdisciplescommon/src/lists/phone_types.enum';
-import { Role } from 'impactdisciplescommon/src/lists/roles.enum';
-import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
-import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
-import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
 import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
 import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
@@ -23,7 +18,7 @@ import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.s
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, take, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 
@@ -87,7 +82,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       total: shoppingCart.total,
-      couponCode: shoppingCart.couponCode,
+      couponCode: shoppingCart.couponCode? shoppingCart.couponCode : '',
       totalBeforeDiscount: NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
       isShippingSameAsBilling: true,
       isNewsletter: true,
@@ -288,6 +283,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         item.price = item.price && NumberUtil.isNumber(item.price)? item.price : 0;
       })
 
+      console.log(this.checkoutForm)
       this.checkoutForm = await this.salesService.saveCheckoutForm(this.checkoutForm);
 
       e.preventDefault();

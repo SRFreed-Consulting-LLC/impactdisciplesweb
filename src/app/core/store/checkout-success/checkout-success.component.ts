@@ -1,12 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
-import { WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
+
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { AffilliateSaleModel } from 'impactdisciplescommon/src/models/utils/affilliate-sale.model';
 import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { TaxRateSummary } from 'impactdisciplescommon/src/models/utils/tax-rate-summary.model';
 import { AffilliateSalesService } from 'impactdisciplescommon/src/services/data/affiliate-sales.service';
 import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
@@ -176,20 +175,25 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
     this.cartService.getCartProducts().forEach(product => {
       text += "<li><span>"
-      text += product.orderQuantity + "  x  " + product.itemName + " for $ " + (product.orderQuantity * product.price?product.price:0)
+      if(product.discountPrice) {
+        text += product.orderQuantity + "  x  " + product.itemName + " for $" + (product.orderQuantity * product.discountPrice? product.discountPrice:0).toFixed(2) + " (<span><s>" + product.price.toFixed(2)+"</s></span>)"
+      } else {
+        text += product.orderQuantity + "  x  " + product.itemName + " for $" + (product.orderQuantity * product.price? product.price:0).toFixed(2)
+      }
+
       if(product.isEBook){
-        text += "<a href='"+ product.eBookUrl.url+"' download>     DOWNLOAD</a>";
+        text += "<a href='"+ product.eBookUrl.url+"' download>     DOWNLOAD " + product.itemName + "</a>";
       }
       text += "</span></li>";
     })
     text +="</ul><br>"
 
     if(cart.couponCode) {
-      text += '<div>Subtotal: $' + cart.totalBeforeDiscount + '</div><br>'
+      text += '<div>Subtotal: $' + (cart.totalBeforeDiscount).toFixed(2) + '</div><br>'
       text += '<div>Applied Coupon: ' + cart.couponCode + '</div><br>';
-      text += '<div>Total: $' + cart.total + '</div><br>'
+      text += '<div>Total: $' + (cart.total).toFixed(2) + '</div><br>'
     } else {
-      text += '<div>Total: $' + cart.total + '</div><br>'
+      text += '<div>Total: $' + (cart.total).toFixed(2) + '</div><br>'
     }
 
     if(cart.receipt){

@@ -14,10 +14,15 @@
       <div *ngIf="shoppingCart?.cartItems?.length > 0" class="row">
         <div class="coupon-info">
           <form action="#">
-            <p class="checkout-coupon d-flex align-items-center">
-              <input class="mb-0" type="text" [(ngModel)]="couponCode" name="couponCode" placeholder="Coupon Code" />
-              <button class="os-btn os-btn-black ml-10" (click)="applyCoupon()">Apply</button>
-            </p>
+            <div class="row">
+              <div class="col-8"></div>
+              <div class="col-4">
+                <p class="checkout-coupon d-flex align-items-center">
+                  <input class="mb-0" type="text" [(ngModel)]="couponCode" name="couponCode" placeholder="Coupon Code" />
+                  <button class="os-btn os-btn-black ml-10" (click)="applyCoupon()">Apply</button>
+                </p>
+              </div>
+            </div>
           </form>
         </div>
         <div class="col-12">
