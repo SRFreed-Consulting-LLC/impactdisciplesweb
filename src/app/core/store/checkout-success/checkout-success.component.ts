@@ -188,6 +188,14 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     })
     text +="</ul><br>"
 
+    if(cart.estimatedTaxes){
+      text += '<div>Tax: $' + (cart.estimatedTaxes).toFixed(2) + '</div><br>'
+    }
+
+    if(cart.shippingRate){
+      text += '<div>Shipping: $' + (cart.shippingRate).toFixed(2) + '</div><br>'
+    }
+
     if(cart.couponCode) {
       text += '<div>Subtotal: $' + (cart.totalBeforeDiscount).toFixed(2) + '</div><br>'
       text += '<div>Applied Coupon: ' + cart.couponCode + '</div><br>';
