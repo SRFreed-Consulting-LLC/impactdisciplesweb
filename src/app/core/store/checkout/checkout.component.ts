@@ -12,7 +12,7 @@ import { CustomerService } from 'impactdisciplescommon/src/services/data/custome
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
 import { ShippingService } from 'impactdisciplescommon/src/services/data/shipping.service';
-import { TaxRateService } from 'impactdisciplescommon/src/services/data/tax-rate.service';
+import { TaxRateService } from 'impactdisciplescommon/src/services/utils/tax-rate.service';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';

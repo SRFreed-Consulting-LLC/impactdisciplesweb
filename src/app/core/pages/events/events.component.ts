@@ -28,6 +28,8 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
 
   eventsList: EventModel[] = [];
 
+  onlineEventsList: EventModel[];
+
   currentIndex: number = 0;
   visibleSlides: number = 4;
 
@@ -42,6 +44,11 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
       this.eventsList = events.filter(event => {
         const eventStartDate = new Date(event.startDate.toString());
         return eventStartDate >= currentDate;
+      });
+
+      this.onlineEventsList = events.filter(event => {
+        const eventStartDate = new Date(event.startDate.toString());
+        return eventStartDate >= currentDate && event.isOnline;
       });
     });
   }

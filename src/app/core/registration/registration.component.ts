@@ -71,6 +71,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
           forkJoin(coachObservables).subscribe((coaches) => {
             this.coaches = coaches;
+            this.coaches.sort((a,b) => a.sortOrder - b.sortOrder)
           });
         }
       }
