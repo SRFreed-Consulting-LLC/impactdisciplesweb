@@ -105,7 +105,7 @@
                       <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
                     </div>
                     <p *ngIf="event.description" class="events-list__content-description">{{ event.description }}</p>
-                    <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-primary">REGISTER NOW</a>
+                    <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-primary">GET DETAILS</a>
                   </div>
                 </a>
               </div>

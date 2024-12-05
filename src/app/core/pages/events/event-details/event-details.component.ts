@@ -21,6 +21,8 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   cartItem: CartItem;
   groupedAgendaItems: { monthYear: string; days: { date: Date; items: AgendaItem[] }[] }[] = [];
 
+  window = window;
+
   private ngUnsubscribe = new Subject<void>();
 
   constructor(private route: ActivatedRoute, private router: Router, private eventService: EventService, private cartService: CartService) {}
