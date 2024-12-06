@@ -7,6 +7,8 @@ import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model
 import { ConsultationSurveyService } from 'impactdisciplescommon/src/services/data/consultation-survey.service';
 import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
 import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
+import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
+import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 
 @Component({
   selector: 'app-consultation-survey',
@@ -31,6 +33,8 @@ export class ConsultationSurveyComponent implements OnInit {
     valueChangeEvent: 'keyup',
   };
 
+  public states: string[];
+
   constructor(private consultationSurveyService: ConsultationSurveyService,
     private emailService: EMailService,
     private webConfigService: WebConfigService,
@@ -38,7 +42,10 @@ export class ConsultationSurveyComponent implements OnInit {
 
   ngOnInit(): void {
     this.consultationSurveyForm = {... new ConsultationSurveyModel()};
+    this.consultationSurveyForm.location = {... new Address()};
     this.consultationSurveyForm.phone = {... new Phone()};
+
+    this.states = EnumHelper.getStateRoleTypesAsArray();
   }
 
   onSubmitForm() {

@@ -44,9 +44,25 @@
                   <dxi-validation-rule type="email" message="Email is invalid"></dxi-validation-rule>
                 </dxi-item>
                 <dxi-item dataField="churchName" [isRequired]="true" [label]="{ text: 'Church Name' }"></dxi-item>
-                <dxi-item dataField="country" [isRequired]="true" [label]="{ text: 'Country where church is located (Must be in U.S. for full consultation package)' }"></dxi-item>
+                <dxi-item dataField="location.country" [isRequired]="true" [label]="{ text: 'Country (Must be in U.S. for full consultation package)' }"></dxi-item>
+                <dxi-item itemType="group" [colCount]="6" [colSpan]="2">
+                  <dxi-item dataField="location.address1" [isRequired]="true" [label]="{ text: 'Address 1' }" [colSpan]="6"></dxi-item>
+                  <dxi-item dataField="location.address2" [label]="{ text: 'Address 2' }" [colSpan]="6"></dxi-item>
+                  <dxi-item dataField="location.city" [isRequired]="true" [label]="{ text: 'City' }" [colSpan]="3"></dxi-item>
+                  <dxi-item dataField="location.state" [isRequired]="true" [label]="{ text: 'State' }"  [colSpan]="2">
+                    <div *dxTemplate>
+                      <dx-select-box
+                        [searchEnabled]="true"
+                        [items]="states"
+                        [(value)]="consultationSurveyForm.location.state">
+                      </dx-select-box>
+                    </div>
+                  </dxi-item>
+                  <dxi-item dataField="location.zip" [isRequired]="true" [label]="{ text: 'Zip' }"  [colSpan]="1"></dxi-item>
+                </dxi-item>
                 <dxi-item
                   dataField="committment"
+                  [isRequired]="true"
                   editorType="dxRadioGroup"
                   [label]="{ text: 'How committed is the church to making disciples? (1 being not committed, 5 being very committed)' }"
                   [editorOptions]="{
@@ -56,6 +72,7 @@
                 ></dxi-item>
                 <dxi-item
                   dataField="readiness"
+                  [isRequired]="true"
                   editorType="dxRadioGroup"
                   [label]="{ text: 'How ready is the church\'s staff leadership to support changes in the church?' }"
                   [editorOptions]="{
