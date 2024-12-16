@@ -106,7 +106,7 @@ export class ProfileComponent implements OnInit{
 
     this.events = await this.eventService.getAll();
 
-    this.eventsRegistrantsDatasource$ = this.eventRegistrationService.streamAllByValue("email", this.loggedInUser.email).pipe(
+    this.eventsRegistrantsDatasource$ = this.eventRegistrationService.streamAllByValue("email", this.loggedInUser.email.toLowerCase()).pipe(
       map(
         (items) =>
           new DataSource({

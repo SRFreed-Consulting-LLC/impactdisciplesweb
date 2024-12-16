@@ -106,7 +106,7 @@ export class RegistrationCheckoutSuccessComponent implements AfterViewInit{
           registration.eventId = product.id;
           registration.firstName = attendee.firstName;
           registration.lastName = attendee.lastName;
-          registration.email = attendee.email;
+          registration.email = attendee.email.toLowerCase();
           registration.receipt = confirmationId;
           registration.registrationDate = Timestamp.now();
 

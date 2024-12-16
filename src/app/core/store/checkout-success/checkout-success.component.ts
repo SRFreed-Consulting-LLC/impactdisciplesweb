@@ -139,7 +139,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
         registration.eventId = event.id;
         registration.firstName = attendee.firstName;
         registration.lastName = attendee.lastName;
-        registration.email = attendee.email;
+        registration.email = attendee.email.toLowerCase();
         registration.receipt = confirmationId;
         registration.registrationDate = Timestamp.now();
 
