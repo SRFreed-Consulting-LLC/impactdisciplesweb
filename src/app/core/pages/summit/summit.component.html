@@ -5,26 +5,26 @@
   <main class="grey-bg">
     <div class="summit__container container">
       <!--SUMMIT HEADER -->
-      <div class="summit__header" [style.backgroundImage]="'url(' + summit?.imageUrl?.url + ')'">
-        <div class="summit__header-button">
-          <a  [routerLink]="['/event-details', summit?.id]" class="impact-btn impact-btn-white">REGISTER NOW</a>
-        </div>
+      <img class="summit__header" [src]="summit?.imageUrl?.url">
+
+      <div class="summit__register-button">
+        <a  [routerLink]="['/event-details', summit?.id]" class="impact-btn">REGISTER NOW</a>
       </div>
 
       <!--SUMMIT INFO-->
       <section class="summit__info mb-30">
         <div class="row summit__info-container">
-          <div class="col-xl-4 summit__info-text">
+          <div class="col-xl-4 col-md-4 summit__info-text">
             <i class="fa-solid fa-calendar-days"></i>
             {{ summit?.startDate?.toString() | date: 'MMMM d'}} - {{ summit?.endDate.toString() | date: 'MMMM d'}}, {{ summit?.startDate.toString() | date: 'yyyy'}}
           </div>
-          <div class="col-xl-4 summit__info-text">
+          <div class="col-xl-4 col-md-4 summit__info-text">
             <i class="fa-solid fa-location-dot"></i>
             <a [href]="'https://www.google.com/maps/search/?api=1&query=' + (summit?.location?.toString() | location: 'address' | async)" target="_blank">
               {{ summit?.location?.toString() | location: 'address' | async }}
             </a>
           </div>
-          <div class="col-xl-4 summit__info-text">
+          <div class="col-xl-4 col-md-4 summit__info-text">
             <i class="fa-solid fa-clock"></i>
               Check-In: {{ summit?.checkIn?.toString() | timeFormat }} | Start Time: {{ summit?.startDate.toString() | date: 'h:mm a' }}
           </div>
