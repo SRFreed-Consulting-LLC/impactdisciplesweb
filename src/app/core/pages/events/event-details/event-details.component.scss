@@ -2,8 +2,16 @@
 
 .event-details {
   &__row {
+    width: 100%;
     @media #{$xxs,$xs} {
       flex-direction: column-reverse;
+    }
+  }
+  .top-img {
+    display: none;
+    @media #{$xxs,$xs} {
+      display: flex;
+      width: 100%;
     }
   }
   &__left {
@@ -13,8 +21,7 @@
       max-width: 100%;
       margin-bottom: 20px;
       @media #{$xxs,$xs} {
-        position: absolute;
-        top: 150px;
+        display: none;
       }
     }
     .no-agenda {
@@ -65,9 +72,7 @@
     padding: 0 50px;
     text-align: center;
     @media #{$xxs,$xs} {
-      margin-top: 130px;
-      margin-bottom: 80px;
-      padding: 0 20px;
+      padding: 0 25px;
     }
     &-subtitle {
       font-size: 18px;
@@ -89,6 +94,13 @@
 
     .cart-page-total {
       text-align: left;
+    }
+  }
+  .right-col {
+    @media #{$xxs,$xs} {
+      margin-top: 25px;
+      margin-bottom: 80px;
+      padding: 0 20px;
     }
   }
 }

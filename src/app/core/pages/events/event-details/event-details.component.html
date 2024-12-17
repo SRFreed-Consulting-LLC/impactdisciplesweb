@@ -2,13 +2,12 @@
 
 <main class="event-details">
   <section class="pb-70 mt-60">
-    <div class="container">
+    <img class="top-img" [src]="event?.imageUrl?.url" alt="Summit">
       <div class="row event-details__row">
-
         <!-- event details - agenda -->
         <div class="col-lg-6">
           <div class="event-details__left">
-            <img [src]="event?.imageUrl?.url" alt="Summit">
+            <img class="left-img" [src]="event?.imageUrl?.url" alt="Summit">
 
             <ng-template #noAgenda class="your-order-table table-responsive">
               <h3>Agenda</h3>
@@ -45,7 +44,7 @@
         </div>
 
         <!-- event details - details -->
-        <div class="col-lg-6">
+        <div class="col-lg-6 right-col">
           <div class="row event-details__right">
 
             <h2>{{ event?.eventName }}</h2>
@@ -98,6 +97,6 @@
           </div>
         </div>
       </div>
-    </div>
+   
   </section>
 </main>
