@@ -1,6 +1,10 @@
 @import '../../../../../assets/theme/scss/variables';
 
 .event-details {
+  padding: 50px;
+  @media #{$xxs,$xs} {
+    padding: 0;
+  }
   &__row {
     width: 100%;
     @media #{$xxs,$xs} {
