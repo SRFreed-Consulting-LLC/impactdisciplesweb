@@ -110,7 +110,16 @@
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address1" [isRequired]="true" [colSpan]="6" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address2" [colSpan]="6" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.city" [isRequired]="true" [colSpan]="3" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.state" [isRequired]="true" [colSpan]="2" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }"></dxi-item>
+              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.state" [isRequired]="true" [colSpan]="2" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
+                <div *dxTemplate>
+                  <dx-select-box
+                    [searchEnabled]="true"
+                    [items]="states"
+                    [(value)]="checkoutForm.billingAddress.state">
+                  </dx-select-box>
+                </div>
+              </dxi-item>
+
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.zip" [isRequired]="true" [colSpan]="1" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
 
               <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.country" [colSpan]="3" [isRequired]="true" [label]="{ text: 'Country' }">
