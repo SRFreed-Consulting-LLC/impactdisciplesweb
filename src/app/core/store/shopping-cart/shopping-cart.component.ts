@@ -22,8 +22,8 @@ export class ShoppingCartComponent implements OnInit {
   NumberUtil = NumberUtil;
 
   constructor (
-    public cartService: CartService, 
-    private couponService: CouponService, 
+    public cartService: CartService,
+    private couponService: CouponService,
     private toastrService: ToastrService,
     private router: Router
   ) {}
@@ -37,60 +37,49 @@ export class ShoppingCartComponent implements OnInit {
     this.resetCartItems();
   }
 
-  applyCoupon() {
+  async applyCoupon() {
     this.resetCartItems();
 
     if (this.couponCode) {
-      this.couponService.getAllByValue('code', this.couponCode).then(coupons => {
-        if (coupons.length > 0 && coupons[0].isActive) {
-          let validCoupon = coupons[0];
+      let coupons: CouponModel[] = await this.couponService.getAllByValue('code', this.couponCode);
 
-          let total = 0; // Initialize the total for applicable items
+      if (coupons?.length > 0 && coupons[0]?.isActive) {
+        let validCoupon = coupons[0];
+        let total = 0; // Initialize the total for applicable items
+        let discount = 0; // Initialize the total for applicable items
 
-          let isValid: boolean = false;
+        let isValid: boolean = false;
 
-          if(validCoupon?.tags?.length > 0) {
-            this.shoppingCart.cartItems.forEach(item => {
-              let itemTotal = item.price? item.price * item.orderQuantity : 0; // Calculate total for each item
 
-              if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id))) {
-                isValid = true;
-                this.itemDiscountAmount = validCoupon;
-                if (validCoupon.percentOff) {
-                  item.discountPrice = item.price - ((item.price * validCoupon.percentOff) / 100);
-                } else if (validCoupon.dollarsOff) {
-                  item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
-                }
-                total+=(item.discountPrice * item.orderQuantity);
-              } else {
-                total+=itemTotal;
-              }
-            });
-          } else {
-            isValid = true;
-            this.cartDiscountAmount = validCoupon;
+        this.shoppingCart.cartItems.forEach(item => {
+          if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id)) || (!validCoupon?.tags || validCoupon?.tags?.length == 0)) {
+            this.itemDiscountAmount = validCoupon;
+
             if (validCoupon.percentOff) {
-              total += this.shoppingCart.total - ((this.shoppingCart.total * validCoupon.percentOff) / 100);
+              item.discountPrice = item.price - ((item.price * validCoupon.percentOff) / 100);
             } else if (validCoupon.dollarsOff) {
-              let discountAmount = Math.min(validCoupon.dollarsOff, this.shoppingCart.total);
-              total += this.shoppingCart.total - discountAmount;
+              item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
             }
+
+            discount+=item.discountPrice;
+
+            total+=(item.discountPrice * item.orderQuantity);
           }
+        });
 
+        if (isValid) {
+          this.shoppingCart.total = NumberUtil.isNumber(total)? total : 0;
+          this.shoppingCart.discount = NumberUtil.isNumber(discount)? discount : 0;
 
-          if (isValid) {
-            this.shoppingCart.total = NumberUtil.isNumber(total)? total : 0;
+          this.shoppingCart.couponCode = validCoupon.code;
 
-            this.shoppingCart.couponCode = validCoupon.code;
-
-            this.toastrService.success("Coupon applied successfully.", 'SUCCESS!')
-          } else {
-            this.toastrService.error("Coupon not valid for these items.", 'ERROR!')
-          }
+          this.toastrService.success("Coupon applied successfully.", 'SUCCESS!')
         } else {
-          this.toastrService.error("Invalid or inactive coupon.", 'ERROR!')
+          this.toastrService.error("Coupon not valid for these items.", 'ERROR!')
         }
-      })
+      } else {
+        this.toastrService.error("Invalid or inactive coupon.", 'ERROR!')
+      }
     } else {
       this.resetCartItems();
     }
