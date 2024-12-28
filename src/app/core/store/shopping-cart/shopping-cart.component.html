@@ -66,7 +66,7 @@
                     <td class="product-subtotal">
                       <span *ngIf="item?.discountPrice === null || item?.discountPrice === undefined" class="amount">${{item.price? (item.price * item?.orderQuantity!).toFixed(2) : '0.00'}}</span>
                       <div *ngIf="item?.discountPrice || item?.discountPrice === 0" class="d-flex justify-content-center">
-                        <span class="after-discount">${{ item?.discountPrice.toFixed(2) }}</span>
+                        <span class="after-discount">${{ ((item.price * item?.orderQuantity) - item?.discountPrice).toFixed(2)}}</span>
                         <span class="before-discount">${{item.price? (item.price * item?.orderQuantity!).toFixed(2) : '0.00'}}</span>
                       </div>                 </td>
                     <td class="product-remove">
