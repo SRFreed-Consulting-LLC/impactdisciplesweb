@@ -45,15 +45,13 @@ export class ShoppingCartComponent implements OnInit {
 
       if (coupons?.length > 0 && coupons[0]?.isActive) {
         let validCoupon = coupons[0];
-        let total = 0; // Initialize the total for applicable items
         let discount = 0; // Initialize the total for applicable items
 
         let isValid: boolean = false;
 
-
         this.shoppingCart.cartItems.forEach(item => {
-          if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id)) || (!validCoupon?.tags || validCoupon?.tags?.length == 0)) {
-            this.itemDiscountAmount = validCoupon;
+          if (validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id)) {
+            isValid = true;
 
             if (validCoupon.percentOff) {
               item.discountPrice = item.price - ((item.price * validCoupon.percentOff) / 100);
@@ -61,17 +59,28 @@ export class ShoppingCartComponent implements OnInit {
               item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
             }
 
-            discount+=item.discountPrice;
-
-            total+=(item.discountPrice * item.orderQuantity);
+            discount+=(item.price - item.discountPrice);
           }
         });
 
+        if(!validCoupon?.tags || validCoupon?.tags?.length == 0){
+          isValid = true;
+
+          if (validCoupon.percentOff) {
+            discount+=((this.shoppingCart.total * validCoupon.percentOff) / 100);
+          } else if (validCoupon.dollarsOff) {
+            discount+=validCoupon.dollarsOff;
+          }
+        }
+
         if (isValid) {
-          this.shoppingCart.total = NumberUtil.isNumber(total)? total : 0;
+          this.itemDiscountAmount = validCoupon;
+
           this.shoppingCart.discount = NumberUtil.isNumber(discount)? discount : 0;
 
           this.shoppingCart.couponCode = validCoupon.code;
+
+          this.shoppingCart.total =  Math.max(this.shoppingCart.total - this.shoppingCart.discount, 0)
 
           this.toastrService.success("Coupon applied successfully.", 'SUCCESS!')
         } else {
@@ -81,6 +90,8 @@ export class ShoppingCartComponent implements OnInit {
         this.toastrService.error("Invalid or inactive coupon.", 'ERROR!')
       }
     } else {
+      this.toastrService.warning("Please Enter a Coupon Code.", 'ERROR!')
+
       this.resetCartItems();
     }
   }
