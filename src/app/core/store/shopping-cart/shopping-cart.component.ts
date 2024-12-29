@@ -50,10 +50,10 @@ export class ShoppingCartComponent implements OnInit {
         let isValid: boolean = false;
 
         this.shoppingCart.cartItems.forEach(item => {
-    
+
           if (validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id)) {
             isValid = true;
-      
+
             if (validCoupon.percentOff) {
               item.discountPrice = item.price - ((item.price * validCoupon.percentOff) / 100);
             } else if (validCoupon.dollarsOff) {
@@ -66,6 +66,7 @@ export class ShoppingCartComponent implements OnInit {
 
         if(!validCoupon?.tags || validCoupon?.tags?.length == 0){
           isValid = true;
+
           if (validCoupon.percentOff) {
             discount+=((this.shoppingCart.total * validCoupon.percentOff) / 100);
           } else if (validCoupon.dollarsOff) {

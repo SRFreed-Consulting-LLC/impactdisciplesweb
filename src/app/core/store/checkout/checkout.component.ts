@@ -197,14 +197,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       try {
         setTimeout(async () => {
           const paymentForm = document.querySelector("#payment-form");
+
           if (paymentForm) {
             paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
 
             this.items = [];
 
             this.cartService.getCartProducts().forEach(product => {
-              if(product.price && product.price > 0){
-                this.items.push({id: product.id, amount: ((product?.discountPrice === null || product?.discountPrice === undefined ? product.price? product.price : 0 : product.discountPrice) * product.orderQuantity * 100)})
+              if(product.price > 0){
+                this.items.push({id: product.id, amount: product.price * 100});
               }
             })
 
@@ -216,10 +217,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               this.items.push({id: 'taxes', amount: this.checkoutForm.estimatedTaxes * 100})
             }
 
+            if(this.checkoutForm.discount && this.checkoutForm.discount > 0){
+              this.items.push({id: 'discount', amount: this.checkoutForm.discount * 100})
+            }
+
             let request = {};
             request['items'] = this.items;
             request['description'] = "Payment from " + this.checkoutForm.firstName + ' ' + this.checkoutForm.lastName;
 
+            console.log(request)
             // Fetch client secret for Stripe payment
             const response = await fetch(environment.stripeURL, {
               method: "POST",
