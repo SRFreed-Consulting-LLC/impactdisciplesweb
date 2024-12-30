@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 import { HomeHeaderSlider } from '../../../shared/utils/models/home-header-slider.model';
@@ -54,7 +54,11 @@ export class HomeHeaderSliderComponent {
 
   public swiperInstance: Swiper | undefined;
 
+  constructor(private cdr: ChangeDetectorRef){}
+
   ngAfterViewInit() {
+    this.cdr.detectChanges();
+
     if (this.heroSliderContainer) {
       this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
         slidesPerView: 1,
@@ -71,6 +75,7 @@ export class HomeHeaderSliderComponent {
           disableOnInteraction: false
         }
       })
+      console.log(this.swiperInstance)
     }
   }
 
