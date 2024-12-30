@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 import { HomeHeaderSlider } from '../../../shared/utils/models/home-header-slider.model';
@@ -9,7 +9,7 @@ import homeHeaderSlider from '../../../shared/utils/data/home-header-slider-data
   templateUrl: './home-header-slider.component.html',
   styleUrls: ['./home-header-slider.component.scss']
 })
-export class HomeHeaderSliderComponent implements AfterViewInit {
+export class HomeHeaderSliderComponent implements AfterViewInit, OnInit {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
 
 
@@ -56,8 +56,8 @@ export class HomeHeaderSliderComponent implements AfterViewInit {
 
   constructor(private cdr: ChangeDetectorRef){}
 
-  ngAfterViewInit() {
-    console.log('ngafter')
+  ngOnInit(): void {
+    console.log('ngoninit')
     this.cdr.detectChanges();
 
       this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
@@ -76,6 +76,28 @@ export class HomeHeaderSliderComponent implements AfterViewInit {
         }
       })
     console.log(this.swiperInstance)
+  }
+
+  ngAfterViewInit() {
+    // console.log('ngafter')
+    // this.cdr.detectChanges();
+
+    //   this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
+    //     slidesPerView: 1,
+    //     spaceBetween: 0,
+    //     loop: true,
+    //     effect : 'fade',
+    //     modules:[Pagination,EffectFade],
+    //     pagination: {
+    //       clickable: true,
+    //       el:'.tp-slider-dot-2'
+    //     },
+    //     autoplay: {
+    //       delay: 5000,
+    //       disableOnInteraction: false
+    //     }
+    //   })
+    // console.log(this.swiperInstance)
   }
 
   pauseAutoplay() {
