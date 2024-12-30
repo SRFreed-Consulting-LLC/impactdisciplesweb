@@ -57,6 +57,7 @@ export class HomeHeaderSliderComponent implements AfterViewInit {
   constructor(private cdr: ChangeDetectorRef){}
 
   ngAfterViewInit() {
+    console.log('ngafter')
     this.cdr.detectChanges();
 
       this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
@@ -74,7 +75,7 @@ export class HomeHeaderSliderComponent implements AfterViewInit {
           disableOnInteraction: false
         }
       })
-  
+    console.log(this.swiperInstance)
   }
 
   pauseAutoplay() {
