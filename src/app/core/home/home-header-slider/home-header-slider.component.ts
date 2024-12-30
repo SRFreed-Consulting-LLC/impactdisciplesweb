@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
@@ -53,21 +53,23 @@ export class HomeHeaderSliderComponent implements OnInit {
   public swiperInstance: Swiper | undefined;
 
   ngOnInit() {
-    this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
-      slidesPerView: 1,
-      spaceBetween: 0,
-      loop: true,
-      effect : 'fade',
-      modules:[Pagination,EffectFade],
-      pagination: {
-        clickable: true,
-        el:'.tp-slider-dot-2'
-      },
-      autoplay: {
-        delay: 5000,
-        disableOnInteraction: false
-      }
-    })
+    if (this.heroSliderContainer) {
+      this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        loop: true,
+        effect : 'fade',
+        modules:[Pagination,EffectFade],
+        pagination: {
+          clickable: true,
+          el:'.tp-slider-dot-2'
+        },
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false
+        }
+      })
+    }
   }
 
   pauseAutoplay() {
