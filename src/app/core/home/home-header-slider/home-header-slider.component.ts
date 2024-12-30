@@ -59,7 +59,6 @@ export class HomeHeaderSliderComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.cdr.detectChanges();
 
-    if (this.heroSliderContainer) {
       this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
         slidesPerView: 1,
         spaceBetween: 0,
@@ -75,8 +74,7 @@ export class HomeHeaderSliderComponent implements AfterViewInit {
           disableOnInteraction: false
         }
       })
-      console.log(this.swiperInstance)
-    }
+  
   }
 
   pauseAutoplay() {
