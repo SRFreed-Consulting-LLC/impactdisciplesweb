@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 import { HomeHeaderSlider } from '../../../shared/utils/models/home-header-slider.model';
@@ -9,7 +9,7 @@ import homeHeaderSlider from '../../../shared/utils/data/home-header-slider-data
   templateUrl: './home-header-slider.component.html',
   styleUrls: ['./home-header-slider.component.scss']
 })
-export class HomeHeaderSliderComponent {
+export class HomeHeaderSliderComponent implements AfterViewInit {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
 
 
