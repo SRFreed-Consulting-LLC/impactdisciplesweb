@@ -1,8 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
-import { HomeHeaderSlider } from '../../../shared/utils/models/home-header-slider.model';
-import homeHeaderSlider from '../../../shared/utils/data/home-header-slider-data';
 
 @Component({
   selector: 'app-home-header-slider',
@@ -10,7 +8,7 @@ import homeHeaderSlider from '../../../shared/utils/data/home-header-slider-data
   styleUrls: ['./home-header-slider.component.scss']
 })
 export class HomeHeaderSliderComponent implements AfterViewInit, OnInit {
-  @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
+  @ViewChild('heroSliderContainer') heroSliderContainer: ElementRef;
 
 
   public images: any[] = [
@@ -54,7 +52,9 @@ export class HomeHeaderSliderComponent implements AfterViewInit, OnInit {
 
   public swiperInstance: Swiper | undefined;
 
-  constructor(private cdr: ChangeDetectorRef){}
+  constructor(private cdr: ChangeDetectorRef){
+    console.log('Constructor triggered');
+  }
 
   ngOnInit(): void {
     console.log('ngoninit')
@@ -79,7 +79,7 @@ export class HomeHeaderSliderComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    // console.log('ngafter')
+    console.log('ngafter')
     // this.cdr.detectChanges();
 
     //   this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
