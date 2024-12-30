@@ -30,9 +30,12 @@
             "styles": [
               "node_modules/devextreme/dist/css/dx.light.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/swiper/swiper-bundle.min.css",
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/swiper/swiper-bundle.min.js"
+            ],
             "serviceWorker": false
           },
           "configurations": {
