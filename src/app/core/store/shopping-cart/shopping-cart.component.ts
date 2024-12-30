@@ -103,6 +103,7 @@ export class ShoppingCartComponent implements OnInit {
         item.discountPrice = null;
       }
     });
+    this.shoppingCart.discount = 0;
     this.shoppingCart.total = NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0;
     this.itemDiscountAmount = null;
     this.cartDiscountAmount = null;
