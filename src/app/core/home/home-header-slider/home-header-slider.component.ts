@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
@@ -7,8 +7,8 @@ import { EffectFade, Pagination } from 'swiper/modules';
   templateUrl: './home-header-slider.component.html',
   styleUrls: ['./home-header-slider.component.scss']
 })
-export class HomeHeaderSliderComponent implements AfterViewInit {
-  @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
+export class HomeHeaderSliderComponent implements OnInit {
+  @ViewChild('heroSliderContainer') heroSliderContainer: ElementRef;
 
 
   public images: any[] = [
@@ -52,24 +52,22 @@ export class HomeHeaderSliderComponent implements AfterViewInit {
 
   public swiperInstance: Swiper | undefined;
 
-  ngAfterViewInit() {
-    if (this.heroSliderContainer) {
-      this.swiperInstance = new Swiper('.slider-active', {
-        slidesPerView: 1,
-        spaceBetween: 0,
-        loop: true,
-        effect : 'fade',
-        modules:[Pagination,EffectFade],
-        pagination: {
-          clickable: true,
-          el:'.tp-slider-dot-2'
-        },
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false
-        }
-      })
-    }
+  ngOnInit() {
+    this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      loop: true,
+      effect : 'fade',
+      modules:[Pagination,EffectFade],
+      pagination: {
+        clickable: true,
+        el:'.tp-slider-dot-2'
+      },
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false
+      }
+    })
   }
 
   pauseAutoplay() {
