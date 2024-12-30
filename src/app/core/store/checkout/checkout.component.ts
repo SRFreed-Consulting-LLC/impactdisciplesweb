@@ -82,6 +82,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       total: shoppingCart.total,
+      discount: shoppingCart.discount,
       couponCode: shoppingCart.couponCode? shoppingCart.couponCode : '',
       totalBeforeDiscount: NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
       isShippingSameAsBilling: true,
@@ -203,27 +204,41 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
             this.items = [];
 
+            let description = "Payment from " + this.checkoutForm.firstName + ' ' + this.checkoutForm.lastName + '\n';
+
             this.cartService.getCartProducts().forEach(product => {
               if(product.price > 0){
-                this.items.push({id: product.id, amount: product.price * 100});
+                let price = product.price * product.orderQuantity;
+
+                description += product.itemName + " (" + product.orderQuantity + ")   ";
+                description += "$" + price.toFixed(2) + "\n";
+
+                this.items.push({id: product.id, name: product.itemName, amount: price * 100});
               }
             })
 
             if(this.checkoutForm.shippingRate && this.checkoutForm.shippingRate > 0){
+              description += "Shipping $" + this.checkoutForm.shippingRate.toFixed(2) + "\n";
+
               this.items.push({id: 'shipping', amount: this.checkoutForm.shippingRate * 100})
             }
 
             if(this.checkoutForm.estimatedTaxes && this.checkoutForm.estimatedTaxes > 0){
+              description += "Taxes $" + this.checkoutForm.estimatedTaxes.toFixed(2) + "\n";
+
               this.items.push({id: 'taxes', amount: this.checkoutForm.estimatedTaxes * 100})
             }
 
             if(this.checkoutForm.discount && this.checkoutForm.discount > 0){
-              this.items.push({id: 'discount', amount: this.checkoutForm.discount * 100})
+              description += "Discount (" + this.checkoutForm.couponCode+ ") -$" + this.checkoutForm.discount.toFixed(2) + "\n";
+
+              this.items.push({id: 'discount', amount: -this.checkoutForm.discount * 100})
             }
 
             let request = {};
             request['items'] = this.items;
-            request['description'] = "Payment from " + this.checkoutForm.firstName + ' ' + this.checkoutForm.lastName;
+            request['description'] = description;
+            request['receipt_email'] = this.checkoutForm.email;
 
             console.log(request)
             // Fetch client secret for Stripe payment

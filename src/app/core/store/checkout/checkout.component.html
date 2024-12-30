@@ -16,7 +16,7 @@
 
       <ng-template #checkoutBlock>
         <div class="row">
-          <div *ngIf="isShippingView" class="col-lg-7 pb-70">
+          <div *ngIf="isShippingView" class="col-lg-6 pb-70">
             <dx-form
               #shippingFormComponent
               [formData]="checkoutForm"
@@ -75,7 +75,7 @@
             <dx-button class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
           </div>
 
-          <div *ngIf="isBillingView" class="col-lg-7 pb-70">
+          <div *ngIf="isBillingView" class="col-lg-6 pb-70">
             <div class="checkout__customer-info mb-50">
               <div class="checkout__customer-info-block customer">
                 <span>Customer</span>
@@ -147,57 +147,48 @@
             </button>
           </div>
 
-          <div class="col-lg-5 pb-70">
+          <div class="col-lg-6 pb-70">
             <div class="checkout__your-order mb-30">
               <h3>Your order</h3>
 
               <div class="your-order-table mt-20">
                 <div class="row">
-                  <div class="col-lg-5">Item</div>
-                  <div class="col-lg-5"></div>
-                  <div class="col-lg-2 text-end">Total</div>
+                  <div class="col-lg-6"><b>Item</b></div>
+                  <div class="col-lg-4"></div>
+                  <div class="col-lg-2 text-end"><b>Total</b></div>
                 </div>
                 <div *ngFor="let cartItem of checkoutForm.cartItems" class="row">
-                  <div class="col-lg-5">
+                  <div class="col-lg-6">
                     {{ cartItem?.itemName }}
                     <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong>
                   </div>
-                  <div class="col-lg-5">
+                  <div class="col-lg-4">
                     <div *ngIf="cartItem.isEvent">
                       <div *ngFor="let attendee of cartItem.attendees">
                         {{ attendee.firstName }} {{ attendee.lastName }}
                       </div>
                     </div>
+                    <div *ngIf="!cartItem.isEvent">
+                      <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">${{ cartItem.price? (cartItem?.price).toFixed(2) : '0.00' }}</span>
+                      <span *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="after-discount">${{ (cartItem?.discountPrice).toFixed(2) }}</span>
+                    </div>
                   </div>
                   <div class="col-lg-2 text-end">
-                    <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">${{ cartItem.price? cartItem?.price.toFixed(2) : '0.00' }}</span>
-                    <div *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="d-flex justify-content-center">
-                      <span class="after-discount">${{ cartItem?.discountPrice.toFixed(2) }}</span>
-                      <span class="before-discount">${{ cartItem?.price.toFixed(2) }}</span>
-                    </div>
+                    <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">${{ cartItem.price? (cartItem?.price * cartItem?.orderQuantity).toFixed(2) : '0.00' }}</span>
+                    <span *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="amount after-discount" style="margin-right: 0px;">${{ (cartItem?.discountPrice * cartItem?.orderQuantity).toFixed(2) }}</span>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-lg-5">Subtotal</div>
-                  <div class="col-lg-5"></div>
+                  <div class="col-lg-6">Subtotal</div>
+                  <div class="col-lg-4"></div>
                   <div class="col-lg-2 text-end" *ngIf="NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> ${{ this.checkoutForm.totalBeforeDiscount.toFixed(2) }}</div>
                   <div class="col-lg-2 text-end" *ngIf="!NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> $ 0.00</div>
                 </div>
-                <div *ngIf="cartDiscountAmount" class="row">
-                  <div class="col-lg-5">Discount</div>
-                  <div class="col-lg-5"><span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ cartDiscountAmount?.code }}</span></div>
-                  <div class="col-lg-2 text-end">
-                    <strong>
-                      <span *ngIf="cartDiscountAmount?.dollarsOff" class="discount-amount">- ${{ cartDiscountAmount.dollarsOff }}</span>
-                      <span *ngIf="cartDiscountAmount?.percentOff" class="discount-amount">- {{ cartDiscountAmount.percentOff }}%</span>
-                    </strong>
-                  </div>
-                </div>
                 <div class="row">
-                  <div class="col-lg-5">Shipping</div>
-                  <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-5"></div>
+                  <div class="col-lg-6">Shipping</div>
+                  <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-4"></div>
                   <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-2 text-end">{{this.checkoutForm.shippingRate | currency}}</div>
-                  <div *ngIf="!this.checkoutForm.shippingRate" class="col-lg-7 text-end shipping-text">
+                  <div *ngIf="!this.checkoutForm.shippingRate" class="col-lg-6 text-end shipping-text">
                     <dx-load-indicator
                       class="button-indicator"
                       [visible]="showShippingSpinner">
@@ -208,10 +199,10 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-lg-5">Estimated Tax</div>
-                  <div *ngIf="this.checkoutForm.estimatedTaxes" class="col-lg-5"></div>
+                  <div class="col-lg-6">Estimated Tax</div>
+                  <div *ngIf="this.checkoutForm.estimatedTaxes" class="col-lg-4"></div>
                   <div *ngIf="this.checkoutForm.estimatedTaxes" class="col-lg-2 text-end">{{this.checkoutForm.estimatedTaxes | currency}}</div>
-                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state == 'Georgia'" class="col-lg-7 text-end shipping-text">
+                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state == 'Georgia'" class="col-lg-6 text-end shipping-text">
                     <dx-load-indicator
                       class="button-indicator"
                       [visible]="showEstimatedTaxesSpinner">
@@ -219,7 +210,7 @@
                     <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.estimatedTaxes != 0" class="dx-button-text">Calculated at Next Step</span>
                     <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.estimatedTaxes == 0" class="dx-button-text shipping-text">{{this.checkoutForm.estimatedTaxes | currency}}</span>
                   </div>
-                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state != 'Georgia'" class="col-lg-7 text-end shipping-text">
+                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state != 'Georgia'" class="col-lg-6 text-end shipping-text">
                     Only required if in Georgia
                   </div>
                 </div>

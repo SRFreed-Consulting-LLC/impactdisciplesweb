@@ -125,7 +125,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     cart.processed = true;
 
     if(products.length > 0) {
-      this.sendProductPurchaseSuccessEmail(cart);
+      //this.sendProductPurchaseSuccessEmail(cart);
       this.taxSummaryService.recordStateTaxesCollected(cart);
       this.cartService.clearCartNoConfirmation();
       this.salesService.update(cart.id, cart);
@@ -169,6 +169,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
   }
 
+  //NOT USED AS STRIPE SENDS EMAILS DIRECTLY IN PROD ONLY.
   sendProductPurchaseSuccessEmail(cart: CheckoutForm){
     let subject = 'Thank you for Your Purchase ';
     let text = '<div>You have purchased the following</div><br>';
