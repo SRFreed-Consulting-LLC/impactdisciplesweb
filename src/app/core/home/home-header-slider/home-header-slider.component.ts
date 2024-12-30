@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
@@ -7,8 +7,8 @@ import { EffectFade, Pagination } from 'swiper/modules';
   templateUrl: './home-header-slider.component.html',
   styleUrls: ['./home-header-slider.component.scss']
 })
-export class HomeHeaderSliderComponent implements AfterViewInit, OnInit {
-  @ViewChild('heroSliderContainer') heroSliderContainer: ElementRef;
+export class HomeHeaderSliderComponent implements AfterViewInit {
+  @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
 
 
   public images: any[] = [
@@ -52,15 +52,9 @@ export class HomeHeaderSliderComponent implements AfterViewInit, OnInit {
 
   public swiperInstance: Swiper | undefined;
 
-  constructor(private cdr: ChangeDetectorRef){
-    console.log('Constructor triggered');
-  }
-
-  ngOnInit(): void {
-    console.log('ngoninit')
-    this.cdr.detectChanges();
-
-      this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
+  ngAfterViewInit() {
+    if (this.heroSliderContainer) {
+      this.swiperInstance = new Swiper('.slider-active', {
         slidesPerView: 1,
         spaceBetween: 0,
         loop: true,
@@ -75,29 +69,7 @@ export class HomeHeaderSliderComponent implements AfterViewInit, OnInit {
           disableOnInteraction: false
         }
       })
-    console.log(this.swiperInstance)
-  }
-
-  ngAfterViewInit() {
-    console.log('ngafter')
-    // this.cdr.detectChanges();
-
-    //   this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
-    //     slidesPerView: 1,
-    //     spaceBetween: 0,
-    //     loop: true,
-    //     effect : 'fade',
-    //     modules:[Pagination,EffectFade],
-    //     pagination: {
-    //       clickable: true,
-    //       el:'.tp-slider-dot-2'
-    //     },
-    //     autoplay: {
-    //       delay: 5000,
-    //       disableOnInteraction: false
-    //     }
-    //   })
-    // console.log(this.swiperInstance)
+    }
   }
 
   pauseAutoplay() {
