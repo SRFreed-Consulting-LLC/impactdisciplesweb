@@ -56,7 +56,7 @@ export class HomeHeaderSliderComponent {
 
   ngAfterViewInit() {
     if (this.heroSliderContainer) {
-      this.swiperInstance = new Swiper('.slider-active', {
+      this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
         slidesPerView: 1,
         spaceBetween: 0,
         loop: true,
