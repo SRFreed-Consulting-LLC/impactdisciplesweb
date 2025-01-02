@@ -1,24 +1,33 @@
-<section class="slider__area slider__area-2 p-relative pl-15 pr-15">
-  <div class="slider-active swiper-container" #heroSliderContainer>
-    <div class="swiper-wrapper">
-
-      <div *ngFor="let data of images" class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url('+data.url+')'">
-        <div class="container-fluid">
-          <div class="row">
-            <div *ngIf="data.side == 'r'" class="col-xl-6 col-lg-5 col-md-2 col-sm-2 col-0"></div>
-            <div class="col-xl-6 col-lg-7 col-md-10 col-sm-10 col-12">
-              <div class="slider__content slider__content-3 pl-250" [class.slider__content-black]="true">
-                <h2 animate="fadeInUp">{{data.title}}</h2>
-                <hr animate="fadeInLeftToRight" class="slider-hr">
-                <p animate="fadeInUpTwo">{{data.text}}</p>
-                <!--TODO: create a state or service or something for getting the current summit event otherwise link to events page-->
-                <a target="_blank" animate="fadeInUpThree" href="/summit/2025" class="impact-btn impact-btn-white-primary" (mouseenter)="pauseAutoplay()" (mouseleave)="resumeAutoplay()">Register For Event</a>
-              </div>
+<div class="header-slider-container">
+  <dx-gallery
+    #gallery
+    id="gallery"
+    [dataSource]="images"
+    [slideshowDelay]="5000"
+    [loop]="true"
+    [showNavButtons]="false"
+    [showIndicator]="true"
+    [swipeEnabled]="true"
+    [animationDuration]="1000"
+  >
+  <div *dxTemplate="let galleryItem of 'item'">
+    <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url('+galleryItem.url+')'">
+      <div class="container-fluid">
+        <div class="row">
+          <div *ngIf="galleryItem.side == 'r'" class="col-xl-6 col-lg-5 col-md-2 col-sm-2 col-0"></div>
+          <div class="col-xl-6 col-lg-7 col-md-10 col-sm-10 col-12">
+            <div class="slider__content slider__content-3 pl-250" [class.slider__content-black]="true">
+              <h2 animate="fadeInUp">{{galleryItem.title}}</h2>
+              <hr animate="fadeInLeftToRight" class="slider-hr">
+              <p animate="fadeInUpTwo">{{galleryItem.text}}</p>
+              <!--TODO: create a state or service or something for getting the current summit event otherwise link to events page-->
+              <a target="_blank" animate="fadeInUpThree" href="/summit/2025" class="impact-btn impact-btn-white-primary">Register For Event</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="tp-slider-dot-2"></div>
   </div>
-</section>
+  </dx-gallery>
+</div>
+

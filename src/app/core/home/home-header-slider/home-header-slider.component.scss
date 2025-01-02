@@ -1,0 +1,24 @@
+@import '../../../../assets/theme/scss/variables';
+
+::ng-deep .header-slider-container {
+  .slider__content {
+    text-align: left;
+    white-space: break-spaces;
+  }
+  .dx-gallery-indicator {
+    bottom: 30px;
+  }
+  .dx-gallery-indicator-item, .dx-gallery-indicator-item-selected {
+    width: 20px;
+    height: 20px;
+  }
+  .dx-gallery-indicator-item {
+    border: $theme-color;
+  }
+  .dx-gallery-indicator-item-selected {
+    background: $theme-color;
+  }
+  .dx-state-focused.dx-gallery .dx-gallery-indicator-item-selected {
+    background: $theme-color;
+  }
+}

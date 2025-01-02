@@ -1,16 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import Swiper from 'swiper';
-import { EffectFade, Pagination } from 'swiper/modules';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-home-header-slider',
   templateUrl: './home-header-slider.component.html',
   styleUrls: ['./home-header-slider.component.scss']
 })
-export class HomeHeaderSliderComponent implements AfterViewInit {
-  @ViewChild('heroSliderContainer') heroSliderContainer: ElementRef;
-
-
+export class HomeHeaderSliderComponent {
   public images: any[] = [
     {
       url: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2F20240126-AS3A2182.jpg?alt=media&token=770452ad-6630-4447-bf79-3b8ba942c9ac',
@@ -49,41 +44,4 @@ export class HomeHeaderSliderComponent implements AfterViewInit {
       side: 'r'
     }
   ]
-
-  public swiperInstance: Swiper | undefined;
-
-  constructor(private cd: ChangeDetectorRef){}
-
-  ngAfterViewInit() {
-    this.cd.detectChanges();
-    if (this.heroSliderContainer) {
-      this.swiperInstance = new Swiper(this.heroSliderContainer.nativeElement, {
-        slidesPerView: 1,
-        spaceBetween: 0,
-        loop: true,
-        effect : 'fade',
-        modules:[Pagination,EffectFade],
-        pagination: {
-          clickable: true,
-          el:'.tp-slider-dot-2'
-        },
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false
-        }
-      })
-    }
-  }
-
-  pauseAutoplay() {
-    if (this.swiperInstance && this.swiperInstance.autoplay) {
-      this.swiperInstance.autoplay.stop();
-    }
-  }
-
-  resumeAutoplay() {
-    if (this.swiperInstance && this.swiperInstance.autoplay) {
-      this.swiperInstance.autoplay.start();
-    }
-  }
 }
