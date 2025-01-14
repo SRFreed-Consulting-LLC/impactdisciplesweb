@@ -50,7 +50,7 @@ const routes: Routes = [
   },
   {
     path: 'disciple-making-summit-2025',
-    component: RegistrationComponent
+    component: SummitComponent
   },
   {
     path: 'register',

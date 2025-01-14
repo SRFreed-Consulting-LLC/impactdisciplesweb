@@ -7,7 +7,7 @@
         <div class="col-lg-6">
           <div class="event-details__left">
             <img [src]="event?.imageUrl?.url" alt="Summit">
-            
+
             <h2>{{ event?.eventName }}</h2>
             <span class="event-details__right-subtitle">
               <span *ngIf="event?.startDate" class="date">{{ event.startDate.toString()| date: 'M/d' }} </span>
@@ -37,7 +37,7 @@
                 <dx-form #attendeeForms [formData]="attendee">
                   <dxi-item dataField="firstName" [isRequired]="true"></dxi-item>
                   <dxi-item dataField="lastName" [isRequired]="true"></dxi-item>
-                  <dxi-item dataField="email"></dxi-item>
+                  <dxi-item dataField="email" [isRequired]="true"></dxi-item>
                 </dx-form>
               </dxi-item>
             </dx-accordion>
