@@ -97,15 +97,31 @@ export class RegistrationCheckoutComponent implements OnInit, OnDestroy {
           if (paymentForm) {
             paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
 
+            this.items = [];
+
+            let description = "Payment from " + this.checkoutForm.firstName + ' ' + this.checkoutForm.lastName + '\n';
+
             this.cartService.getCartProducts().forEach(product => {
-              if(product.isEvent){
-                this.items.push({id: product.id, amount: (this.checkoutForm.total * 100)})
+              if(product.price > 0){
+                let price = product.price * product.orderQuantity;
+
+                description += product.itemName + " (" + product.orderQuantity + ")   ";
+                description += "$" + price.toFixed(2) + "\n";
+
+                this.items.push({id: product.id, name: product.itemName, amount: price * 100});
               }
             })
 
+            if(this.checkoutForm.discount && this.checkoutForm.discount > 0){
+              description += "Discount (" + this.checkoutForm.couponCode+ ") -$" + this.checkoutForm.discount.toFixed(2) + "\n";
+
+              this.items.push({id: 'discount', amount: -this.checkoutForm.discount * 100})
+            }
+
             let request = {};
             request['items'] = this.items;
-            request['description'] = "Payment from " + this.checkoutForm.firstName + ' ' + this.checkoutForm.lastName;
+            request['description'] = description;
+            request['receipt_email'] = this.checkoutForm.email;
 
             // Fetch client secret for Stripe payment
             const response = await fetch(environment.stripeURL, {
