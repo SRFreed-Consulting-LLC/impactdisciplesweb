@@ -43,7 +43,7 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
       this.dms = events.find(event => event.isSummit);
 
       this.eventsList = events.filter(event => {
-        const eventStartDate = new Date(event.startDate.toString());
+        const eventStartDate = new Date(event.endDate.toString());
         return eventStartDate >= currentDate && !event.isOnline;
       });
 
@@ -58,7 +58,7 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
       });
 
       this.onlineEventsList = events.filter(event => {
-        const eventStartDate = new Date(event.startDate.toString());
+        const eventStartDate = new Date(event.endDate.toString());
         return eventStartDate >= currentDate && event.isOnline;
       });
     });

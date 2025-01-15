@@ -34,13 +34,9 @@ import { PrayerTeamComponent } from './core/pages/prayer-team/prayer-team.compon
 import { StoreComponent } from './core/pages/store/store.component';
 import { TeamDetailsComponent } from './core/pages/team/team-details/team-details.component';
 import { BlogDetailsComponent } from './core/pages/blog-details/blog-details.component';
-import { RegistrationComponent } from './core/registration/registration.component';
-import { RegistrationCheckoutComponent } from './core/registration-checkout/registration-checkout.component';
-import { RegistrationCheckoutSuccessComponent } from './core/registration-checkout-success/registration-checkout-success.component';
 import { ProductDetailsComponent } from './core/pages/product-details/product-details.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
 import { SummitComponent } from './core/pages/summit/summit.component';
-import { RegistrationAttendeesComponent } from './core/registration-attendees/registration-attendees.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -51,22 +47,6 @@ const routes: Routes = [
   {
     path: 'disciple-making-summit-2025',
     component: SummitComponent
-  },
-  {
-    path: 'register',
-    component: RegistrationComponent
-  },
-  {
-    path: 'registration-attendees',
-    component: RegistrationAttendeesComponent
-  },
-  {
-    path: 'registration-checkout',
-    component: RegistrationCheckoutComponent
-  },
-  {
-    path: 'registration-checkout-success',
-    component: RegistrationCheckoutSuccessComponent
   },
   {
     path: 'events',

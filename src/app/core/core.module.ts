@@ -40,15 +40,11 @@ import { TeamDetailsComponent } from './pages/team/team-details/team-details.com
 import { BlogDetailsComponent } from './pages/blog-details/blog-details.component';
 import { BlogSidebarComponent } from './pages/blog/blog-sidebar/blog-sidebar.component';
 import { BlogPostboxItemComponent } from './pages/blog/blog-postbox-item/blog-postbox-item.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { RegistrationCheckoutComponent } from './registration-checkout/registration-checkout.component';
-import { RegistrationCheckoutSuccessComponent } from './registration-checkout-success/registration-checkout-success.component';
 import { StoreSidebarComponent } from './pages/store/store-sidebar/store-sidebar.component';
 import { StorePostboxItemComponent } from './pages/store/store-postbox-item/store-postbox-item.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SummitComponent } from "./pages/summit/summit.component";
-import { RegistrationAttendeesComponent } from "./registration-attendees/registration-attendees.component";
 import { PodcastSidebarComponent } from './pages/podcasts/podcast-sidebar/podcast-sidebar.component';
 import { PodcastPostboxItemComponent } from './pages/podcasts/podcast-postbox-item/podcast-postbox-item.component';
 
@@ -87,10 +83,6 @@ import { PodcastPostboxItemComponent } from './pages/podcasts/podcast-postbox-it
     BlogDetailsComponent,
     BlogSidebarComponent,
     BlogPostboxItemComponent,
-    RegistrationComponent,
-    RegistrationAttendeesComponent,
-    RegistrationCheckoutComponent,
-    RegistrationCheckoutSuccessComponent,
     StoreSidebarComponent,
     StorePostboxItemComponent,
     ProductDetailsComponent,
