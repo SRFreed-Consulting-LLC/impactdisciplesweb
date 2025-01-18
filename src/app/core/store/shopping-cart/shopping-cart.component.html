@@ -56,8 +56,8 @@
                     <td class="product-price">
                       <span *ngIf="item?.discountPrice === null || item?.discountPrice === undefined" class="amount">${{item.price? item.price.toFixed(2): '0.00'}}</span>
                       <div *ngIf="item?.discountPrice || item?.discountPrice === 0" class="d-flex justify-content-center">
-                        <span class="after-discount">${{item.discountPrice}}</span>
-                        <span class="before-discount">${{item.price}}</span>
+                        <span class="after-discount">${{item.discountPrice.toFixed(2)}}</span>
+                        <span class="before-discount">${{item.price.toFixed(2)}}</span>
                       </div>
                     </td>
                     <td class="product-quantity">
@@ -81,21 +81,35 @@
                   </tr>
                 </tbody>
                 <tfoot>
-                  <tr *ngIf="this.shoppingCart.couponCode">
-                    <td colspan="4"><strong>Discount:</strong></td>
+                  <tr>
+                    <td colspan="3"><strong>SubTotal:</strong></td>
+                    <td colspan="1"><strong></strong></td>
                     <td colspan="2">
-                      <strong *ngIf="cartDiscountAmount">
-                        <span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ cartDiscountAmount?.code }}</span>
-                        <span *ngIf="cartDiscountAmount?.dollarsOff" class="discount-amount">- ${{ cartDiscountAmount.dollarsOff }}</span>
-                        <span *ngIf="cartDiscountAmount?.percentOff" class="discount-amount">- {{ cartDiscountAmount.percentOff }}%</span>
-                      </strong>
-                      <strong *ngIf="itemDiscountAmount">
-                        <span class="code-text"><i class="dx-icon-tags tag-icon"></i>{{ itemDiscountAmount?.code }}</span>
+                      <strong>
+                        <span class="code-text">{{ shoppingCart.totalBeforeDiscount | currency}}</span>
                       </strong>
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="4"><strong>Cart Total:</strong></td>
+                    <td colspan="3">
+                      <strong>Discount:</strong>
+                    </td>
+                    <td colspan="1">
+                      <span *ngIf="cartDiscountAmount" class="code-text align-items-end">{{ cartDiscountAmount?.code }}</span>
+                      <span *ngIf="itemDiscountAmount" class="code-text align-items-end">{{ itemDiscountAmount?.code }}</span>
+                    </td>
+                    <td colspan="2">
+                      <strong *ngIf="cartDiscountAmount">
+                        <span *ngIf="cartDiscountAmount?.percentOff">- {{ cartDiscountAmount.percentOff }}%</span>
+                      </strong>
+                      <strong *ngIf="itemDiscountAmount">
+                        <span> - {{ shoppingCart.discount | currency}}</span>
+                      </strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3"><strong>Cart Total:</strong></td>
+                    <td colspan="1"><strong></strong></td>
                     <td colspan="2"><strong>${{ NumberUtil.isNumber(shoppingCart.total) ? shoppingCart.total.toFixed(2) : '0.00' }}</strong></td>
                   </tr>
                 </tfoot>

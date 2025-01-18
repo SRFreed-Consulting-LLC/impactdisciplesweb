@@ -10,6 +10,7 @@ import { AffilliateSalesService } from 'impactdisciplescommon/src/services/data/
 import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
+import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
 import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
@@ -24,10 +25,9 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 })
 export class CheckoutSuccessComponent implements AfterViewInit{
 
-  saleId: string;
-
   constructor(private stripeService: StripeService,
     public cartService: CartService,
+    private newsletterSubscriptionService: NewsletterSubscriptionService,
     private eventRegistrationService: EventRegistrationService,
     private emailService: EMailService,
     private eventService: EventService,
@@ -41,95 +41,78 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       "payment_intent_client_secret"
     );
 
-    this.saleId = new URLSearchParams(window.location.search).get(
-      "savedForm"
-    );
+    let checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
 
-    //clientSecret will exist if payment sent to Stripe
-    if (clientSecret) {
-      const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
-        return await stripe.retrievePaymentIntent(clientSecret);
-      })
+    //only process if checkoutForm exists
+    if(checkoutForm){
+      //clientSecret will exist if payment sent to Stripe
+      if (clientSecret) {
+        const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
+          return await stripe.retrievePaymentIntent(clientSecret);
+        })
 
-      switch (paymentIntent.status) {
-        case "succeeded":
-          await this.updateSale(paymentIntent).then(cart => {
-            if(!cart.processed){
-              this.confirmSale(paymentIntent.id, cart);
-            }
-          });
-          break;
-        case "processing":
-          this.showMessage("Your payment is processing.");
-          break;
-        case "requires_payment_method":
-          this.showMessage("Your payment was not successful, please try again.");
-          break;
-        default:
-          this.showMessage("Something went wrong.");
-          break;
-      }
-    } else {
-      await this.updateSale().then(cart => {
-        if(!cart.processed){
-          this.confirmSale(cart.couponCode, cart);
+        switch (paymentIntent.status) {
+          case "succeeded":
+            checkoutForm.paymentIntent = paymentIntent
+            checkoutForm.receipt = paymentIntent.id;
+
+            this.processSale(checkoutForm, paymentIntent);
+            break;
+          case "processing":
+            this.showMessage("Your payment is processing.");
+            break;
+          case "requires_payment_method":
+            this.showMessage("Your payment was not successful, please try again.");
+            break;
+          default:
+            this.showMessage("Something went wrong.");
+            break;
         }
-      });
+      } else {
+        checkoutForm.paymentIntent = null;
+        checkoutForm.receipt = 'COUPON';
+
+        this.processSale(checkoutForm);
+      }
     }
   }
 
-  showMessage(messageText) {
-    const messageContainer = document.querySelector("#payment-message");
-    messageContainer.textContent = messageText;
-  }
-
-  //record sale
-  async updateSale(paymentIntent?: PaymentIntent){
-    return await this.salesService.getById(this.saleId).then(async cart => {
-      cart.paymentIntent = paymentIntent? paymentIntent: null;
-      cart.receipt = paymentIntent?.id ? paymentIntent.id : ''
-
-      if(cart.couponCode){
-        let sale: AffilliateSaleModel = {... new AffilliateSaleModel()};
-        sale.code = cart.couponCode;
-        sale.date = Timestamp.now();
-        sale.email = cart.email;
-        sale.totalAfterDiscount = cart.total;
-        sale.totalBeforeDiscount = cart.totalBeforeDiscount;
-        sale.receipt = paymentIntent?.id ? paymentIntent.id : '';
-        await this.affiliateSaleService.add(sale);
-      }
-
-      cart.processed = false;
-
-      return await this.salesService.update(cart.id, cart);
-    })
-  }
-
-  confirmSale(confirmationId, cart: CheckoutForm){
-    let events: CartItem[] = [];
-    let products: CartItem[] = []
-
-    cart.cartItems.forEach(item => {
-      if(item.isEvent){
-        events.push(item)
-      } else {
-        products.push(item)
-      }
-    })
+  processSale(checkoutForm: CheckoutForm, paymentIntent?: PaymentIntent){
+    let events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
+    let products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
 
     if(events.length > 0){
-      this.registerUsers(confirmationId, cart, events)
+      this.registerUsers(paymentIntent.id, checkoutForm, events)
     }
-
-    cart.processed = true;
 
     if(products.length > 0) {
-      //this.sendProductPurchaseSuccessEmail(cart);
-      this.taxSummaryService.recordStateTaxesCollected(cart);
+      this.taxSummaryService.recordStateTaxesCollected(checkoutForm);
       this.cartService.clearCartNoConfirmation();
-      this.salesService.update(cart.id, cart);
     }
+
+    this.salesService.add(checkoutForm).then(checkoutForm => {
+      if(checkoutForm.isNewsletter){
+        this.newsletterSubscriptionService.createNewsLetterSubscription(checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email);
+      }
+
+      if(checkoutForm.couponCode){
+        this.recordAffiliateSale(checkoutForm, paymentIntent);
+      }
+
+      localStorage.removeItem('checkoutForm');
+    })
+
+  }
+
+  recordAffiliateSale(cart:CheckoutForm, paymentIntent?: PaymentIntent){
+    let sale: AffilliateSaleModel = {... new AffilliateSaleModel()};
+    sale.code = cart.couponCode;
+    sale.date = Timestamp.now();
+    sale.email = cart.email;
+    sale.totalAfterDiscount = cart.total;
+    sale.totalBeforeDiscount = cart.totalBeforeDiscount;
+    sale.receipt = paymentIntent?.id ? paymentIntent.id : '';
+    this.affiliateSaleService.add(sale);
   }
 
   registerUsers(confirmationId, cart: CheckoutForm, events: CartItem[]){
@@ -169,46 +152,8 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
   }
 
-  //NOT USED AS STRIPE SENDS EMAILS DIRECTLY IN PROD ONLY.
-  sendProductPurchaseSuccessEmail(cart: CheckoutForm){
-    let subject = 'Thank you for Your Purchase ';
-    let text = '<div>You have purchased the following</div><br>';
-
-    this.cartService.getCartProducts().forEach(product => {
-      text += "<li><span>"
-      if(product.discountPrice) {
-        text += product.orderQuantity + "  x  " + product.itemName + " for $" + (product.orderQuantity * product.discountPrice? product.discountPrice:0).toFixed(2) + " (<span><s>" + product.price.toFixed(2)+"</s></span>)"
-      } else {
-        text += product.orderQuantity + "  x  " + product.itemName + " for $" + (product.orderQuantity * product.price? product.price:0).toFixed(2)
-      }
-
-      if(product.isEBook){
-        text += "<a href='"+ product.eBookUrl.url+"' download>     DOWNLOAD " + product.itemName + "</a>";
-      }
-      text += "</span></li>";
-    })
-    text +="</ul><br>"
-
-    if(cart.estimatedTaxes){
-      text += '<div>Tax: $' + (cart.estimatedTaxes).toFixed(2) + '</div><br>'
-    }
-
-    if(cart.shippingRate){
-      text += '<div>Shipping: $' + (cart.shippingRate).toFixed(2) + '</div><br>'
-    }
-
-    if(cart.couponCode) {
-      text += '<div>Subtotal: $' + (cart.totalBeforeDiscount).toFixed(2) + '</div><br>'
-      text += '<div>Applied Coupon: ' + cart.couponCode + '</div><br>';
-      text += '<div>Total: $' + (cart.total).toFixed(2) + '</div><br>'
-    } else {
-      text += '<div>Total: $' + (cart.total).toFixed(2) + '</div><br>'
-    }
-
-    if(cart.receipt){
-      text += '<div>Confirmation Id: ' + cart.receipt + '<br>'
-    }
-
-    this.emailService.sendHtmlEmail(cart.email, subject, text);
+  showMessage(messageText) {
+    const messageContainer = document.querySelector("#payment-message");
+    messageContainer.textContent = messageText;
   }
 }

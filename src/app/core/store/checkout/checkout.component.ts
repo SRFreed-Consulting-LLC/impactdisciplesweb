@@ -9,7 +9,6 @@ import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model
 import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
 import { CouponService } from 'impactdisciplescommon/src/services/data/coupon.service';
 import { CustomerService } from 'impactdisciplescommon/src/services/data/customer.service';
-import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
 import { ShippingService } from 'impactdisciplescommon/src/services/data/shipping.service';
 import { TaxRateService } from 'impactdisciplescommon/src/services/utils/tax-rate.service';
@@ -67,16 +66,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private customerService: CustomerService,
     private toastrService: ToastrService,
-    private newsletterSubscriptionService: NewsletterSubscriptionService,
     private taxService: TaxRateService,
     private actions$: Actions,
-    private router: Router
-  ) {
-
-  }
+    private router: Router) {}
 
   async ngOnInit(): Promise<void> {
     this.setView();
+
     const shoppingCart = history.state.data;
 
     this.checkoutForm = {
@@ -90,6 +86,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       billingAddress: { state: '', country: 'United States'},
       shippingAddress: { state: '' , country: 'United States'}
     }
+
     if(this.checkoutForm.couponCode) {
       this.couponService.getAllByValue('code', this.checkoutForm.couponCode).then(coupons => {
         if (coupons.length > 0 && coupons[0].isActive) {
@@ -194,7 +191,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   //PAYMENT METHODS
   async toggleForm(): Promise<void> {
-    if(NumberUtil.isNumber(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
+    if(this.checkoutForm.total && NumberUtil.isNumber(this.checkoutForm.total) && this.checkoutForm.total > 0){
       try {
         setTimeout(async () => {
           const paymentForm = document.querySelector("#payment-form");
@@ -240,7 +237,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             request['description'] = description;
             request['receipt_email'] = this.checkoutForm.email;
 
-            console.log(request)
             // Fetch client secret for Stripe payment
             const response = await fetch(environment.stripeURL, {
               method: "POST",
@@ -304,16 +300,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         item.price = item.price && NumberUtil.isNumber(item.price)? item.price : 0;
       })
 
-      console.log(this.checkoutForm)
-      this.checkoutForm = await this.salesService.saveCheckoutForm(this.checkoutForm);
+      this.checkoutForm = this.salesService.saveCheckoutForm(this.checkoutForm);
 
       e.preventDefault();
 
       this.setLoading(true);
-
-      if(this.checkoutForm.isNewsletter){
-        await this.newsletterSubscriptionService.createNewsLetterSubscription(this.checkoutForm.firstName, this.checkoutForm.lastName, this.checkoutForm.email);
-      }
 
       if(this.checkoutForm.isCreateAccount){
         await this.createUserAccount()

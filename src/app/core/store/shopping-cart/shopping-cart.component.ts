@@ -45,43 +45,40 @@ export class ShoppingCartComponent implements OnInit {
 
       if (coupons?.length > 0 && coupons[0]?.isActive) {
         let validCoupon = coupons[0];
-        let discount = 0; // Initialize the total for applicable items
+        let total = 0; // Initialize the total for applicable items
+        let totalDiscount = 0; // Initialize the total for applicable items
 
         let isValid: boolean = false;
 
+        //set discount on items
         this.shoppingCart.cartItems.forEach(item => {
-
-          if (validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id)) {
+          if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id)) || (!validCoupon.tags || validCoupon.tags.length == 0)) {
             isValid = true;
 
-            if (validCoupon.percentOff) {
-              item.discountPrice = item.price - ((item.price * validCoupon.percentOff) / 100);
-            } else if (validCoupon.dollarsOff) {
-              item.discountPrice = Math.max(item.price - validCoupon.dollarsOff, 0);
-            }
+            item.discount = ((item.price * validCoupon.percentOff) / 100);
 
-            discount+=(item.price - item.discountPrice) * item.orderQuantity;
+            item.discountPrice = item.price - item.discount;
           }
         });
 
-        if(!validCoupon?.tags || validCoupon?.tags?.length == 0){
-          isValid = true;
+        //get totals for cart
+        this.shoppingCart.cartItems.forEach(item => {
+          total+=item.price * item.orderQuantity;
 
-          if (validCoupon.percentOff) {
-            discount+=((this.shoppingCart.total * validCoupon.percentOff) / 100);
-          } else if (validCoupon.dollarsOff) {
-            discount+=validCoupon.dollarsOff;
-          }
-        }
+          totalDiscount += item.discount * item.orderQuantity;
+        });
+
 
         if (isValid) {
           this.itemDiscountAmount = validCoupon;
 
-          this.shoppingCart.discount = NumberUtil.isNumber(discount)? discount : 0;
-
           this.shoppingCart.couponCode = validCoupon.code;
 
-          this.shoppingCart.total =  Math.max(this.shoppingCart.total - this.shoppingCart.discount, 0);
+          this.shoppingCart.discount = NumberUtil.isNumber(totalDiscount)? totalDiscount : 0;
+
+          this.shoppingCart.totalBeforeDiscount = NumberUtil.isNumber(total)? total : 0;
+
+          this.shoppingCart.total =  Math.max(this.shoppingCart.totalBeforeDiscount - this.shoppingCart.discount, 0);
 
           this.toastrService.success("Coupon applied successfully.", 'SUCCESS!')
         } else {
