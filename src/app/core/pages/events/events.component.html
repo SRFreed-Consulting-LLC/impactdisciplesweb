@@ -76,7 +76,7 @@
             </div>
           </div>
 
-          <div *ngIf="onlineEventsList.length > 0" class="row">
+          <div *ngIf="onlineEventsList && onlineEventsList.length > 0" class="row">
             <div class="col-xl-12">
               <div class="section__title-wrapper text-center mb-55">
                 <div class="section__title mb-10 mt-50">
@@ -88,7 +88,7 @@
           <!-- ONLINE EVENTS LIST -->
           <div class="row mb-3">
             <div class="col-xl-12">
-              <div *ngIf="onlineEventsList.length > 0" class="row events-list">
+              <div *ngIf="onlineEventsList && onlineEventsList.length > 0" class="row events-list">
                 <a *ngFor="let event of onlineEventsList" class="col-xl-4 col-lg-6 col-md-9 col-sm-12 events-list__event" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" >
                   <div class="events-list__event-image fix">
                     <a class="w-img">

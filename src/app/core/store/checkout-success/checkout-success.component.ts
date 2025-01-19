@@ -37,14 +37,15 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private toastrService: ToastrService){}
 
   async ngAfterViewInit() {
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
 
     let checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
 
     //only process if checkoutForm exists
     if(checkoutForm){
+      const clientSecret = new URLSearchParams(window.location.search).get(
+        "payment_intent_client_secret"
+      );
+
       //clientSecret will exist if payment sent to Stripe
       if (clientSecret) {
         const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
@@ -82,7 +83,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     let products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
 
     if(events.length > 0){
-      this.registerUsers(paymentIntent.id, checkoutForm, events)
+      this.registerUsers(paymentIntent? paymentIntent.id : checkoutForm.couponCode, events)
     }
 
     if(products.length > 0) {
@@ -115,7 +116,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     this.affiliateSaleService.add(sale);
   }
 
-  registerUsers(confirmationId, cart: CheckoutForm, events: CartItem[]){
+  registerUsers(confirmationId, events: CartItem[]){
     events.forEach(event => {
       event.attendees.forEach(async attendee => {
         let registration = {... new EventRegistrationModel()};

@@ -77,10 +77,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
-      total: shoppingCart.total,
-      discount: shoppingCart.discount? shoppingCart.discount : 0,
       couponCode: shoppingCart.couponCode? shoppingCart.couponCode : '',
-      totalBeforeDiscount: NumberUtil.isNumber(this.cartService.totalPriceQuantity().total)? this.cartService.totalPriceQuantity().total : 0,
       isShippingSameAsBilling: true,
       isNewsletter: true,
       billingAddress: { state: '', country: 'United States'},
@@ -94,6 +91,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         }
       })
     }
+
+    this.settleCart();
 
     this.states = EnumHelper.getStateRoleTypesAsArray();
     this.countries = EnumHelper.getCountryTypesAsArray()
@@ -140,8 +139,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
           promises.push(this.calculateShippingCost());
 
-          if(this.checkoutForm.shippingAddress.state == 'Georgia'){
+          if(this.checkoutForm.total > 0 && this.checkoutForm.shippingAddress.state == 'Georgia'){
             promises.push(this.calculateEstimatedTax());
+          } else {
+            this.checkoutForm.estimatedTaxes = 0;
           }
 
           Promise.all(promises).then(() => {
@@ -337,5 +338,24 @@ export class CheckoutComponent implements OnInit, OnDestroy {
    ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  private settleCart(){
+    let total = 0; // Initialize the total for applicable items
+    let totalDiscount = 0; // Initialize the total for applicable items
+
+    this.checkoutForm.cartItems.forEach(item => {
+      total += (item.price * item.orderQuantity);
+
+      totalDiscount += (item.discount * item.orderQuantity);
+    });
+
+    this.checkoutForm.discount = NumberUtil.isNumber(totalDiscount)? parseFloat(totalDiscount.toFixed(2)) : 0;
+
+    this.checkoutForm.totalBeforeDiscount = NumberUtil.isNumber(total)? total : 0;
+
+    this.checkoutForm.total =  Math.max(this.checkoutForm.totalBeforeDiscount - this.checkoutForm.discount, 0);
+
+    this.salesService.saveCheckoutForm(this.checkoutForm);
   }
 }

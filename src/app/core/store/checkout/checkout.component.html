@@ -169,20 +169,20 @@
                       </div>
                     </div>
                     <div *ngIf="!cartItem.isEvent">
-                      <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">${{ cartItem.price? (cartItem?.price).toFixed(2) : '0.00' }}</span>
-                      <span *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="after-discount">${{ (cartItem?.discountPrice).toFixed(2) }}</span>
+                      <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">{{ cartItem.price? (cartItem?.price | currency) : (0 | currency) }}</span>
+                      <span *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="after-discount">{{ (cartItem?.discountPrice) | currency }}</span>
                     </div>
                   </div>
                   <div class="col-lg-2 text-end">
-                    <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">${{ cartItem.price? (cartItem?.price * cartItem?.orderQuantity).toFixed(2) : '0.00' }}</span>
-                    <span *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="amount after-discount" style="margin-right: 0px;">${{ (cartItem?.discountPrice * cartItem?.orderQuantity).toFixed(2) }}</span>
+                    <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">{{ cartItem.price? ((cartItem?.price * cartItem?.orderQuantity) | currency) : (0 | currency) }}</span>
+                    <span *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="amount after-discount" style="margin-right: 0px;">{{ (cartItem?.discountPrice * cartItem?.orderQuantity) | currency }}</span>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-lg-6">Subtotal</div>
                   <div class="col-lg-4"></div>
-                  <div class="col-lg-2 text-end" *ngIf="NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> ${{ this.checkoutForm.totalBeforeDiscount.toFixed(2) }}</div>
-                  <div class="col-lg-2 text-end" *ngIf="!NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> $ 0.00</div>
+                  <div class="col-lg-2 text-end" *ngIf="NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> {{ (this.checkoutForm.totalBeforeDiscount - this.checkoutForm.discount) | currency }}</div>
+                  <div class="col-lg-2 text-end" *ngIf="!NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> (0 | currency)</div>
                 </div>
                 <div class="row">
                   <div class="col-lg-6">Shipping</div>
@@ -217,7 +217,7 @@
                 <div class="row order-total">
                   <div class="col-lg-6 col-sm-3 order-total__title">Order Total</div>
                   <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="NumberUtil.isNumber(checkoutForm.total)"><strong>{{ checkoutForm.total | currency}}</strong></div>
-                  <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="!NumberUtil.isNumber(checkoutForm.total)"><strong>$ 0.00</strong></div>
+                  <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="!NumberUtil.isNumber(checkoutForm.total)"><strong>(0 | currency)</strong></div>
                 </div>
               </div>
             </div>
