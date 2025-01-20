@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule, DxSelectBoxModule, DxLoadIndicatorModule, DxCheckBoxModule, DxTextBoxModule, DxLookupModule, DxLoadPanelModule, DxDataGridModule, DxPopupModule, DxGalleryModule } from "devextreme-angular";
+import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule, DxSelectBoxModule, DxLoadIndicatorModule, DxCheckBoxModule, DxTextBoxModule, DxLookupModule, DxLoadPanelModule, DxDataGridModule, DxPopupModule, DxGalleryModule, DxValidatorModule } from "devextreme-angular";
 import { SharedModule } from "../shared/shared.module";
 import { HomeHeaderComponent } from "./home/home-header/home-header.component";
 import { HomeComponent } from "./home/home.component";
@@ -102,6 +102,7 @@ import { PodcastPostboxItemComponent } from './pages/podcasts/podcast-postbox-it
     DxButtonModule,
     DxDataGridModule,
     DxFormModule,
+    DxValidatorModule,
     ImpactDisciplesModule,
     YouTubePlayerModule,
     DxDateBoxModule,

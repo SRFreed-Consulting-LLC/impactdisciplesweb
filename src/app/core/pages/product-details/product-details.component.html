@@ -49,7 +49,30 @@
                   </div>
                 </form>
               </div>
-
+              <div>
+                <div class="row mb-25">
+                  <div class="col-6" *ngIf="product?.sizes && product?.sizes.length > 0">
+                    <dx-select-box [dataSource]="product.sizes" [value]="this.cartItem.size" [label]="'Size'" (onSelectionChanged)="setSize($event)">
+                      <dx-validator #sizeValidator>
+                        <dxi-validation-rule
+                          type="required"
+                          message="Size is required">
+                        </dxi-validation-rule>
+                      </dx-validator>
+                    </dx-select-box>
+                  </div>
+                  <div class="col-6" *ngIf="product?.colors && product?.colors.length > 0">
+                    <dx-select-box [dataSource]="product.colors" [value]="this.cartItem.color" [label]="'Color'" (onSelectionChanged)="setColor($event)">
+                      <dx-validator #colorValidator>
+                        <dxi-validation-rule
+                          type="required"
+                          message="Color is required">
+                        </dxi-validation-rule>
+                      </dx-validator>
+                    </dx-select-box>
+                  </div>
+                </div>
+              </div>
               <div>
                 <div class="product__tag mb-25">
                   <span>Tags:</span>

@@ -142,7 +142,5 @@ export class ShoppingCartComponent implements OnInit {
     this.shoppingCart.totalBeforeDiscount = NumberUtil.isNumber(total)? total : 0;
 
     this.shoppingCart.total =  Math.max(this.shoppingCart.totalBeforeDiscount - this.shoppingCart.discount, 0);
-
-    console.log(this.shoppingCart);
   }
 }

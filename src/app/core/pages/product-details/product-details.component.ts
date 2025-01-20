@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DxValidatorComponent } from 'devextreme-angular';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
 import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
@@ -13,6 +14,9 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
   styleUrls: ['./product-details.component.scss']
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
+  @ViewChild('sizeValidator') sizeValidator: DxValidatorComponent;
+  @ViewChild('colorValidator') colorValidator: DxValidatorComponent;
+
   product: ProductModel;
   cartItem: CartItem;
   public relatedProducts: ProductModel[] = [];
@@ -66,8 +70,33 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  setSize(e) {
+    this.cartItem.size = e.selectedItem
+  }
+
+  setColor(e) {
+    this.cartItem.color = e.selectedItem
+  }
+
   addCartProduct() {
-    this.cartService.addCartProduct(this.cartItem)
+    let sizeValid = false;
+    let colorValid = false;
+
+    if(this.product.sizes && this.product.sizes.length > 0){
+      sizeValid = this.sizeValidator.instance.validate().isValid;
+    } else {
+      sizeValid = true;
+    }
+
+    if(this.product.colors && this.product.colors.length > 0){
+      colorValid = this.colorValidator.instance.validate().isValid;
+    } else {
+      colorValid = true;
+    }
+
+    if(sizeValid && colorValid){
+      this.cartService.addCartProduct(this.cartItem);
+    }
   }
 
   ngOnDestroy(): void {

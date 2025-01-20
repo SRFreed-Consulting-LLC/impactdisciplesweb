@@ -52,6 +52,10 @@
                           {{ attendee?.firstName }} {{ attendee?.lastName }}<span *ngIf="i !== item?.attendees?.length - 1">, </span>
                         </span>
                       </div>
+                      <div *ngIf="item.size || item.color">
+                          <span>{{ item?.size ? item.size : '' }} &nbsp;&nbsp;&nbsp;</span>
+                          <span>{{ item.color? item.color : '' }}</span>
+                      </div>
                     </td>
                     <td class="product-price">
                       <span *ngIf="item?.discountPrice === null || item?.discountPrice === undefined" class="amount">{{item.price? (item.price | currency): (0 | currency)}}</span>
