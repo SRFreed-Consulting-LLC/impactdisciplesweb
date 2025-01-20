@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
+import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
 
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
@@ -129,11 +130,16 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
         await this.eventService.getById(event.id).then(async event => {
           await this.eventRegistrationService.add(registration).then(registration => {
-            this.toastrService.success(registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
-              ' starting on ' + dateFromTimestamp(event.startDate)
-            );
-
-            this.sendRegistrationSuccessEmail(registration, event);
+            this.sendRegistrationSuccessEmail(registration, event).then(email => {
+              registration.receiptEmailId = email.id;
+              return registration;
+            }).then(registration => {
+              this.eventRegistrationService.update(registration.id, registration);
+            }).then(() => {
+              this.toastrService.success(registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
+                ' starting on ' + dateFromTimestamp(event.startDate)
+              );
+            });
           })
         })
 
@@ -142,7 +148,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     })
   }
 
-  sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel){
+  sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
     let form = {};
     form['firstName'] = registration.firstName;
     form['lastName'] = registration.lastName;
@@ -150,7 +156,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     form['eventName'] = event.eventName;
     form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
 
-    this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
+    return this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
   }
 
   showMessage(messageText) {
