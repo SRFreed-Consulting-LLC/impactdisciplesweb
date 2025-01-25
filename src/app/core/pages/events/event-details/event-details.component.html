@@ -56,7 +56,7 @@
             <p *ngIf="event?.description" class="events-list__content-description">{{ event.description }}</p>
             <a *ngIf="event?.isSummit" [routerLink]="['/summit', event?.startDate?.toString() | date: 'yyyy']">View More Details</a>
 
-            <div *ngIf="!event.isOnline">
+            <div *ngIf="event && !event.isOnline">
               <div class="mt-20 mb-30">
                 <h4>ADD TICKETS:</h4>
                 <div class="event-details__right-ticket-number">
@@ -69,10 +69,24 @@
               <h3>Tickets</h3>
               <dx-accordion *ngFor="let attendee of cartItem?.attendees; let i = index" [collapsible]="true" [multiple]="true" [selectedIndex]="0">
                 <dxi-item  title="Attendee {{ i + 1 }} *">
-                  <dx-form #attendeeForms [formData]="attendee">
+                  <dx-form #attendeeForms [formData]="attendee" class="mb-25">
                     <dxi-item dataField="firstName" [isRequired]="true"></dxi-item>
                     <dxi-item dataField="lastName" [isRequired]="true"></dxi-item>
-                    <dxi-item dataField="email" [isRequired]="true"></dxi-item>
+                    <dxi-item dataField="email">
+                      <dxi-validation-rule type="required" message="Email Address is required">
+                      </dxi-validation-rule>
+                      <dxi-validation-rule
+                        type="async"
+                        message="A Person with this email address has already registered!"
+                        [validationCallback]="alreadyRegisteredValidation">
+                      </dxi-validation-rule>
+                      <dxi-validation-rule
+                        [reevaluate]="false"
+                        type="async"
+                        message="Each email registered must be unique!"
+                        [validationCallback]="uniqueEmailValidation">
+                      </dxi-validation-rule>
+                    </dxi-item>
                   </dx-form>
                 </dxi-item>
               </dx-accordion>
@@ -86,7 +100,7 @@
                 <a class="os-btn"(click)="proceedToCheckout()">Add To Cart</a>
               </div>
             </div>
-            <div *ngIf="event.isOnline" class="row">
+            <div *ngIf="event && event.isOnline" class="row">
               <div class="col-6 mt-20 mb-30">
                 <button class="os-btn" style="line-height: 20px;" (click)="window.open(event.kajabiPurchaseURL)">Pay up front and Save</button>
               </div>

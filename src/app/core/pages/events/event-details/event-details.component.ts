@@ -1,3 +1,4 @@
+import { EventRegistrationService } from './../../../../../../impactdisciplescommon/src/services/data/event-registration.service';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
@@ -8,6 +9,7 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
+import { AsyncRule } from 'devextreme/common';
 
 @Component({
   selector: 'app-event-details',
@@ -25,10 +27,12 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private route: ActivatedRoute, private router: Router, private eventService: EventService, private cartService: CartService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private eventService: EventService, private cartService: CartService,
+    private eventRegistrationService: EventRegistrationService) {}
 
   ngOnInit(): void {
     const eventId = this.route.snapshot.paramMap.get('id');
+
     if (eventId) {
       this.eventService.streamById(eventId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((event) => {
         this.event = event;
@@ -73,12 +77,18 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   }
 
   proceedToCheckout() {
-    const isValid = this.attendeeForms.toArray().every(form => form.instance.validate().isValid);
+    let promises: Promise<any>[] = [];
 
-    if (isValid) {
-      this.cartService.addCartProduct(this.cartItem)
-      this.router.navigate(['/shopping-cart']);
-    }
+    this.attendeeForms.toArray().forEach(async form => {
+      promises.push(form.instance.validate().complete);
+    });
+
+    Promise.all(promises).then(results => {
+      if(results.every(result => result?.isValid)){
+        this.cartService.addCartProduct(this.cartItem);
+        this.router.navigate(['/shopping-cart']);
+      }
+    })
   }
 
   private groupAgendaItemsByMonthAndDate(agendaItems: AgendaItem[]) {
@@ -116,4 +126,29 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
+  alreadyRegisteredValidation: AsyncRule['validationCallback'] = ({ value, rule }) => {
+    return this.eventRegistrationService.getEventRegistration(value, this.event.id).then(registrant => {
+
+      if(registrant == null){
+        return true
+      } else {
+        return false;
+      }
+    })
+  };
+
+  uniqueEmailValidation: AsyncRule['validationCallback'] = ({ value }) => {
+    let emailaddresses: Map<string, number> = new Map<string, number>();
+
+    this.attendeeForms.toArray().forEach(async form => {
+      emailaddresses.set(form.formData['email'], 0);
+    });
+
+    if(emailaddresses.has(value)){
+      return Promise.resolve(false);
+    } else {
+      emailaddresses.set(value, 0)
+      return Promise.resolve(true);
+    }
+  };
 }
