@@ -126,10 +126,9 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  alreadyRegisteredValidation: AsyncRule['validationCallback'] = ({ value, rule }) => {
-    return this.eventRegistrationService.getEventRegistration(value, this.event.id).then(registrant => {
-
-      if(registrant == null){
+  alreadyRegisteredValidation: AsyncRule['validationCallback'] = ({ value }) => {
+    return this.eventRegistrationService.getEventRegistration(value, this.event.id).then(registrants => {
+      if(registrants.length == 0){
         return true
       } else {
         return false;

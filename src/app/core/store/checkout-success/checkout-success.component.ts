@@ -149,7 +149,6 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   }
 
   sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
-    console.log(event)
     let form = {};
     form['firstName'] = registration.firstName;
     form['lastName'] = registration.lastName;
