@@ -149,12 +149,13 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   }
 
   sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
+    console.log(event)
     let form = {};
     form['firstName'] = registration.firstName;
     form['lastName'] = registration.lastName;
     form['email'] = registration.email;
     form['eventName'] = event.eventName;
-    form['startDate'] = dateFromTimestamp(event.startDate as Timestamp).toDateString();
+    form['startDate'] = new Date(event.startDate as string).toLocaleDateString() + " at " + new Date(event.startDate as string).toLocaleTimeString();
 
     return this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
   }
