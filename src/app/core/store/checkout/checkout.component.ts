@@ -113,10 +113,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
-          phone: user.phone,
+          phone: (user  as CustomerModel).phone,
           // TODO: Need to change to use saved addresses in user account
-          billingAddress: user.billingAddress || null,
-          shippingAddress: this.checkoutForm.isShippingSameAsBilling ? user.billingAddress : null,
+          billingAddress: (user as CustomerModel).billingAddress || null,
+          shippingAddress: this.checkoutForm.isShippingSameAsBilling ? (user as CustomerModel).billingAddress : null,
           ...this.checkoutForm
         }
       }

@@ -35,13 +35,13 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
 
     if (eventId) {
       this.eventService.streamById(eventId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((event) => {
-        this.event = event;
+        this.event = event[0];
         this.cartItem = {
-          id: event.id,
-          itemName: event.eventName,
+          id: this.event.id,
+          itemName: this.event.eventName,
           orderQuantity: 1,
-          price: NumberUtil.isNumber(event.costInDollars)?event.costInDollars : 0,
-          img: event.imageUrl,
+          price: NumberUtil.isNumber(this.event.costInDollars)?this.event.costInDollars : 0,
+          img: this.event.imageUrl,
           isEBook: false,
           isEvent: true,
           attendees: [{ firstName: '', lastName: '', email: '' }]

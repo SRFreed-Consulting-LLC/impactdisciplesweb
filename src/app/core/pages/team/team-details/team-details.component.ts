@@ -20,7 +20,9 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     const teamId = this.route.snapshot.paramMap.get('id');
     if (teamId) {
       this.coachService.streamById(teamId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((coach) => {
-        this.teamMember = coach;
+        if(coach && coach.length == 1){
+          this.teamMember = coach[0];
+        }
       })
     }
   }

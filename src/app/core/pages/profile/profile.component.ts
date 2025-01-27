@@ -2,7 +2,6 @@ import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/
 import { Component, OnInit } from '@angular/core';
 import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
-import { AppUser } from 'impactdisciplescommon/src/models/admin/appuser.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
@@ -45,7 +44,7 @@ export class ProfileComponent implements OnInit{
   public organizations: OrganizationModel[];
 
   isLoggedIn = false;
-  loggedInUser: AppUser | CustomerModel;
+  loggedInUser: CustomerModel;
 
   phoneEditorOptions = {
     mask: '(X00) 000-0000',
@@ -72,7 +71,7 @@ export class ProfileComponent implements OnInit{
     this.phoneTypes = EnumHelper.getPhoneTypesAsArray();
 
     this.authService.getUser().subscribe(user => {
-      this.loggedInUser = user;
+      this.loggedInUser = user as CustomerModel;
 
       if(!this.loggedInUser.shippingAddress){
         this.loggedInUser.shippingAddress = {... new Address()}

@@ -38,17 +38,17 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
   private loadProductDetails(productId: string): void {
     this.productService.streamById(productId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((product) => {
-      this.product = product;
+      this.product = product[0];
       this.cartItem = {
-        id: product.id,
-        itemName: product.title,
+        id: this.product.id,
+        itemName: this.product.title,
         orderQuantity: 1,
-        price: NumberUtil.isNumber(product.cost)? product.cost : 0,
-        img: product.imageUrl,
+        price: NumberUtil.isNumber(this.product.cost)? this.product.cost : 0,
+        img: this.product.imageUrl,
         isEvent: false,
-        isEBook: product.isEBook ? product.isEBook : false,
-        eBookUrl: product.eBookUrl?product.eBookUrl:null,
-        weight: product.weight? product.weight: 0
+        isEBook: this.product.isEBook ? this.product.isEBook : false,
+        eBookUrl: this.product.eBookUrl ? this.product.eBookUrl:null,
+        weight: this.product.weight ? this.product.weight: 0
       }
 
       this.productService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((products) => {
