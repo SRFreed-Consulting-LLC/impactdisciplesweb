@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UtilsService } from 'src/app/theme/shared/services/utils.service';
-import { MobileMenuModel } from '../../utils/models/nav-menu.model';
-import { mobileMenuData } from '../../utils/data/nav-menu-data';
+import { MobileMenuModel } from '../../../../../impactdisciplescommon/src/models/utils/nav-menu.model';
+import { mobileMenuData } from '../../../../../impactdisciplescommon/src/services/data/nav-menu-data';
 
 @Component({
   selector: 'app-offcanvas',

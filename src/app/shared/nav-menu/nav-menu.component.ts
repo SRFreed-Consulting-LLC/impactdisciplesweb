@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IMenuType } from 'src/app/theme/shared/types/menu-d-t';
-import { MenuModel } from '../utils/models/nav-menu.model';
-import menuData from '../utils/data/nav-menu-data';
+import { MenuModel } from '../../../../impactdisciplescommon/src/models/utils/nav-menu.model';
+import menuData from '../../../../impactdisciplescommon/src/services/data/nav-menu-data';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 
 @Component({
