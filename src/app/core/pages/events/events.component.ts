@@ -28,6 +28,8 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
 
   eventsList: EventModel[] = [];
 
+  isSummitPosted: boolean = false;
+
   onlineEventsList: EventModel[];
 
   currentIndex: number = 0;
@@ -38,11 +40,13 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   constructor(private eventService: EventService, private router: Router){}
 
   ngOnInit(): void {
-    this.eventService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
+    this.eventService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe(async (events) => {
       let  currentDate = new Date();
       currentDate.setDate(new Date().getDate() -1);
 
       this.dms = events.find(event => event.isSummit);
+
+      this.isSummitPosted = await this.eventService.isSummitPosted();
 
       this.eventsList = events.filter(event => {
         const eventEndDate = new Date(event.endDate.toString());

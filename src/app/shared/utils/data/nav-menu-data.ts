@@ -2,109 +2,88 @@ import { MenuModel, MobileMenuModel } from "../models/nav-menu.model";
 
 
 const menuData: MenuModel[] = [
-  { link: '/', title: 'Home', hasDropdown: false },
-  { link: '/events', title: 'Events', hasDropdown: false },
-  { 
-    link: '/about', 
-    title: 'About Us', 
-    hasDropdown: true, 
+  { link: '/', title: 'Home', hasDropdown: false , visible: true},
+  { link: '/', title: 'Training', hasDropdown: true,
     dropdownItems: [
-      { link: '/team', title: 'Our Team' },
-      { link: '/contact', title: 'Contact' },
-      { link: '/history', title: 'History' }
-    ] 
+      { link: '/seminars', title: 'Seminars', visible: true },
+      { link: '/equipping-groups', title: 'Equipping Groups', visible: true },
+      { link: '/coaching-with-impact', title: 'Coaching with Impact', visible: true },
+      { link: '/lunch-and-learns', title: 'Lunch and Learns', visible: true },
+      { link: '/upcoming-training', title: 'Upcoming Training', visible: true }
+    ], visible: true
   },
-  { 
-    link: '/resources', 
-    title: 'Resources', 
-    hasDropdown: true, 
-    megamenu: true, 
+  { link: '/', title: 'Resources', hasDropdown: true,
     dropdownItems: [
-      { 
-        link: '/resources', 
-        title: 'Training', 
-        dropdownMenu: [
-          { link: '/seminars', title: 'Seminars' },
-          { link: '/equipping-groups', title: 'Equipping Groups' },
-          { link: '/coaching-with-impact', title: 'Coaching with Impact' },
-          { link: '/lunch-and-learns', title: 'Lunch and Learns' }
-        ] 
-      },
-      { 
-        link: '/resources', 
-        title: 'Free Resources', 
-        dropdownMenu: [
-          { link: '/e-books', title: 'E-Books' },
-          { link: '/podcasts', title: 'Podcasts' },
-          { link: '/blog', title: 'Blog' }
-        ] 
-      },
-      { 
-        link: '/resources', 
-        title: 'Get Involved', 
-        dropdownMenu: [
-          { link: '/give', title: 'Give' },
-          { link: '/newsletter', title: 'Newsletter SignUp' },
-          { link: '/prayer-team', title: 'Join the Prayer Team' }
-        ] 
-      },
-      { 
-        link: '/resources', 
-        title: 'Terms of Use', 
-        dropdownMenu: [
-          { link: '/terms', title: 'Terms' },
-          { link: '/private-policy', title: 'Private Policy' }
-        ] 
-      }
-    ]
+      { link: '/e-books', title: 'E-Books', visible: true },
+      { link: '/podcasts', title: 'Podcasts', visible: true },
+      { link: '/disciple-making-minute', title: 'Disciple Making Minute', visible: true },
+      { link: '/blog', title: 'Blog', visible: true }
+    ], visible: true
   },
-  { link: '/store', title: 'Shop', hasDropdown: false }
+  { link: '/', title: 'Events', hasDropdown: true,
+    dropdownItems: [
+      { link: '/summit/2025', title: 'Summit 2026', visible: 'check' },
+      { link: '/events', title: 'Upcoming Training', visible: true },
+    ], visible: true
+   },
+  { link: '/store', title: 'Store', hasDropdown: false , visible: true},
+  { link: '/give', title: 'Donate', hasDropdown: false , visible: true},
+  { link: '/team', title: 'Team', hasDropdown: true,
+    dropdownItems: [
+      { link: '/about', title: 'About Us', visible: true },
+      { link: '/contact', title: 'Contact', visible: true },
+      { link: '/history', title: 'History', visible: true },
+      { link: '/terms', title: 'Terms', visible: true },
+      { link: '/private-policy', title: 'Private Policy', visible: true }
+    ], visible: true
+  },
+
 ]
 
 export default menuData;
 
 export const mobileMenuData: MobileMenuModel[] = [
-  { link: '/', title: 'Home' },
-  { link: '/events', title: 'Events' },
-  { 
-    title: 'About Us', 
+  { link: '/', title: 'Home', visible: true },
+  { link: '/events', title: 'Events', visible: true },
+  {
+    title: 'About Us',
     dropdownMenu: [
-      { link: '/team', title: 'Our Team' },
-      { link: '/contact', title: 'Contact' },
-      { link: '/history', title: 'History' }
-    ] 
+      { link: '/team', title: 'Our Team', visible: true },
+      { link: '/contact', title: 'Contact', visible: true },
+      { link: '/history', title: 'History', visible: true }
+    ], visible: true
   },
-  { 
-    title: 'Training', 
+  {
+    title: 'Training',
     dropdownMenu: [
-      { link: '/seminars', title: 'Seminars' },
-      { link: '/equipping-groups', title: 'Equipping Groups' },
-      { link: '/coaching-with-impact', title: 'Coaching with Impact' },
-      { link: '/lunch-and-learns', title: 'Lunch and Learns' }
-    ] 
+      { link: '/seminars', title: 'Seminars', visible: true },
+      { link: '/equipping-groups', title: 'Equipping Groups', visible: true },
+      { link: '/coaching-with-impact', title: 'Coaching with Impact', visible: true },
+      { link: '/lunch-and-learns', title: 'Lunch and Learns', visible: true }
+    ], visible: true
   },
-  { 
-    title: 'Free Resources', 
+  {
+    title: 'Free Resources',
     dropdownMenu: [
-      { link: '/e-books', title: 'E-Books' },
-      { link: '/podcasts', title: 'Podcasts' },
-      { link: '/blog', title: 'Blog' }
-    ] 
+      { link: '/e-books', title: 'E-Books', visible: true },
+      { link: '/podcasts', title: 'Podcasts', visible: true },
+      { link: '/blog', title: 'Blog', visible: true }
+    ], visible: true
   },
-  { 
-    title: 'Get Involved', 
+  {
+    title: 'Get Involved',
     dropdownMenu: [
-      { link: '/give', title: 'Give' },
-      { link: '/newsletter', title: 'Newsletter SignUp' },
-      { link: '/prayer-team', title: 'Join the Prayer Team' }
-    ] 
+      { link: '/give', title: 'Give', visible: true },
+      { link: '/newsletter', title: 'Newsletter SignUp', visible: true },
+      { link: '/prayer-team', title: 'Join the Prayer Team', visible: true }
+    ], visible: true
   },
-  { 
-    title: 'Terms of Use', 
+  {
+    title: 'Terms of Use',
     dropdownMenu: [
-      { link: '/terms', title: 'Terms' },
-      { link: '/private-policy', title: 'Private Policy' }
-    ] 
+      { link: '/terms', title: 'Terms', visible: true },
+      { link: '/private-policy', title: 'Private Policy', visible: true }
+    ], visible: true
   },
-  { link: '/store', title: 'Shop' }
+  { link: '/store', title: 'Shop', visible: true }
 ]
