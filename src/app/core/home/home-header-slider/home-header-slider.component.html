@@ -12,7 +12,7 @@
     [animationDuration]="1000"
   >
   <div *dxTemplate="let galleryItem of 'item'">
-    <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url('+galleryItem.url+')'">
+    <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url('+galleryItem.image.url+')'">
       <div class="container-fluid">
         <div class="row">
           <div *ngIf="galleryItem.side == 'r'" class="col-xl-6 col-lg-5 col-md-2 col-sm-2 col-0"></div>
@@ -22,7 +22,7 @@
               <hr animate="fadeInLeftToRight" class="slider-hr">
               <p animate="fadeInUpTwo">{{galleryItem.text}}</p>
               <!--TODO: create a state or service or something for getting the current summit event otherwise link to events page-->
-              <a target="_blank" animate="fadeInUpThree" href="/summit/2025" class="impact-btn impact-btn-white-primary">Register For Event</a>
+              <a target="_blank" animate="fadeInUpThree" href="/events" class="impact-btn impact-btn-white-primary">Register For Event</a>
             </div>
           </div>
         </div>
