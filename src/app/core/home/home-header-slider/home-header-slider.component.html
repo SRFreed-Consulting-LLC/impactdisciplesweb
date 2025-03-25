@@ -22,7 +22,7 @@
               <hr animate="fadeInLeftToRight" class="slider-hr">
               <p animate="fadeInUpTwo">{{galleryItem.text}}</p>
               <!--TODO: create a state or service or something for getting the current summit event otherwise link to events page-->
-              <a target="_blank" animate="fadeInUpThree" href="/events" class="impact-btn impact-btn-white-primary">Register For Event</a>
+              <a target="_blank" animate="fadeInUpThree" [routerLink]="galleryItem.ctaDestination" class="impact-btn impact-btn-white-primary">{{galleryItem.ctaTitle}}</a>
             </div>
           </div>
         </div>
