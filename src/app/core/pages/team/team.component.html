@@ -54,24 +54,16 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-xl-12">
-                  <div class="row teams-list">
-                    <div *ngFor="let coach of coaches$ | async" class="col-xl-3 col-lg-4 col-md-6 col-sm-12 teams-list__team">
-                      <div class="teams-list__team-image fix">
-                        <a [routerLink]="['/team-details', coach.id]" class="w-img">
-                          <img class="transform" [src]="coach.photoUrl.url" [alt]="coach.firstName">
-                        </a>
-                      </div>
-
-                      <div class="teams-list__content">
-                        <h4><a [routerLink]="['/team-details', coach.id]">{{ coach.firstName }} {{ coach.lastName }}</a></h4>
-                        <div class="teams-list__meta">
-                            <span>{{ coach.title }}</span>
-                        </div>
-                        <a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-primary mt-10">Get to know {{ coach.firstName }}</a>
+                <div class="col-xl-4 card-deck" *ngFor="let coach of coaches$ | async">
+                    <div class="card">
+                      <img class="card-img-top" src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ coach.firstName }} {{ coach.lastName }}</h5>
+                        <p class="card-text">{{ coach.title }}</p>
+                        <p class="card-text"><small class="text-muted"> <a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-primary mt-10">Get to know {{ coach.firstName }}</a></small></p>
                       </div>
                     </div>
-                  </div>
+
                 </div>
               </div>
             </div>
