@@ -17,7 +17,7 @@ export class NavMenuComponent implements OnInit{
   constructor(private eventService: EventService){}
 
   async ngOnInit(): Promise<void> {
-    this.isSummitPosted = await this.eventService.isSummitPosted();
+    this.isSummitPosted = true;
 
     this.checkForSummit();
   }

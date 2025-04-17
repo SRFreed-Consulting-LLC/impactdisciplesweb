@@ -1,7 +1,15 @@
 <app-home-header></app-home-header>
 
+<div *ngIf="!summit" class="summit page-wrapper">
+  <main class="grey-bg">
+    <div class="summit__container container">
+      <!--SUMMIT HEADER -->
+      <img class="summit__header" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/DM%20SUMMIT%20WEB%20HEADER.png?alt=media&token=d702b822-7ddf-41ec-989f-e80e348e79b4">
+    </div>
+  </main>
+</div>
 <!-- SUMMITEQUIPPING GROUPS -->
-<div class="summit page-wrapper">
+<div *ngIf="summit" class="summit page-wrapper">
   <main class="grey-bg">
     <div class="summit__container container">
       <!--SUMMIT HEADER -->

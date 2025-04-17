@@ -54,19 +54,25 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-xl-4 card-deck" *ngFor="let coach of coaches$ | async">
-                    <div class="card">
-                      <img class="card-img-top" src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
-                      <div class="card-body">
-                        <h5 class="card-title">{{ coach.firstName }} {{ coach.lastName }}</h5>
-                        <p class="card-text">{{ coach.title }}</p>
-                        <p class="card-text"><small class="text-muted"> <a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-primary mt-10">Get to know {{ coach.firstName }}</a></small></p>
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-xl-4 card-deck" *ngFor="let coach of coaches$ | async">
+                      <div class="card mb-10">
+                        <img class="card-img-top" src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
+                        <div class="card-body ">
+                          <h5 class="card-title">{{ coach.firstName }} {{ coach.lastName }}</h5>
+                          <p class="card-text">{{ coach.title }}</p>
+                          <p class="card-text"><small class="text-muted"> <a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-primary mt-10">Get to know {{ coach.firstName }}</a></small></p>
+                        </div>
                       </div>
                     </div>
-
+                  </div>
                 </div>
+
+
               </div>
             </div>
+
           </section>
         </div>
       </div>
