@@ -179,9 +179,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   calculateShippingCost = async () => {
-    this.showShippingSpinner = true;
+    if(this.checkoutForm.totalBeforeDiscount < 100){
+      this.checkoutForm.isFreeShipping = false;
+      console.log(this.checkoutForm);
+      this.showShippingSpinner = true;
 
-    this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
+      this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
+    } else {
+      this.checkoutForm.isFreeShipping = true;
+      console.log("Free Shipping");
+    }
+
   }
 
   calculateEstimatedTax = async () => {

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-config.model';
+import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 
 @Component({
@@ -7,5 +9,13 @@ import { UtilsService } from 'src/app/theme/shared/services/utils.service';
   styleUrls: ['./equipping-groups.component.scss']
 })
 export class EquippingGroupsComponent  {
-  constructor(public utilsService: UtilsService) { }
+  public webConfig: WebConfigModel;
+
+  constructor(public utilsService: UtilsService, private webConfigService: WebConfigService) { }
+
+    async ngOnInit(): Promise<void> {
+      this.webConfig = await this.webConfigService.getAll().then(configs => {
+        return configs[0];
+      });
+    }
 }

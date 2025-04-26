@@ -11,7 +11,6 @@ import { EventsComponent } from './core/pages/events/events.component';
 import { TeamComponent } from './core/pages/team/team.component';
 import { EventDetailsComponent } from './core/pages/events/event-details/event-details.component';
 import { CheckoutSuccessComponent } from './core/store/checkout-success/checkout-success.component';
-import { HistoryComponent } from './core/pages/history/history.component';
 import { ContactComponent } from './core/pages/contact/contact.component';
 import { NewsletterComponent } from './core/pages/newsletter/newsletter.component';
 import { PrivatePolicyComponent } from './core/pages/private-policy/private-policy.component';
@@ -37,6 +36,7 @@ import { BlogDetailsComponent } from './core/pages/blog-details/blog-details.com
 import { ProductDetailsComponent } from './core/pages/product-details/product-details.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
 import { SummitComponent } from './core/pages/summit/summit.component';
+import { AboutUsComponent } from './core/pages/about-us/about-us.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -45,7 +45,7 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'disciple-making-summit-2025',
+    path: 'disciple-making-summit-2026',
     component: SummitComponent
   },
   {
@@ -65,8 +65,8 @@ const routes: Routes = [
     component: TeamDetailsComponent
   },
   {
-    path: 'history',
-    component: HistoryComponent
+    path: 'about-us',
+    component: AboutUsComponent
   },
   {
     path: 'contact',

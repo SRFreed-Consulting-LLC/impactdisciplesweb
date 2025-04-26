@@ -12,7 +12,6 @@ import { EventsComponent } from "./pages/events/events.component";
 import { TeamComponent } from "./pages/team/team.component";
 import { EventDetailsComponent } from "./pages/events/event-details/event-details.component";
 import { CheckoutSuccessComponent } from "./store/checkout-success/checkout-success.component";
-import { HistoryComponent } from "./pages/history/history.component";
 import { ContactComponent } from "./pages/contact/contact.component";
 import { NewsletterComponent } from "./pages/newsletter/newsletter.component";
 import { PrivatePolicyComponent } from "./pages/private-policy/private-policy.component";
@@ -47,6 +46,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { SummitComponent } from "./pages/summit/summit.component";
 import { PodcastSidebarComponent } from './pages/podcasts/podcast-sidebar/podcast-sidebar.component';
 import { PodcastPostboxItemComponent } from './pages/podcasts/podcast-postbox-item/podcast-postbox-item.component';
+import { AboutUsComponent } from "./pages/about-us/about-us.component";
 
 @NgModule({
   declarations: [
@@ -57,10 +57,10 @@ import { PodcastPostboxItemComponent } from './pages/podcasts/podcast-postbox-it
     EventsComponent,
     EventDetailsComponent,
     TeamComponent,
+    AboutUsComponent,
     ShoppingCartComponent,
     CheckoutComponent,
     CheckoutSuccessComponent,
-    HistoryComponent,
     ContactComponent,
     NewsletterComponent,
     PrivatePolicyComponent,
