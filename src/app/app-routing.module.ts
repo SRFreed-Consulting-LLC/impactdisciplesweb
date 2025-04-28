@@ -37,6 +37,8 @@ import { ProductDetailsComponent } from './core/pages/product-details/product-de
 import { ProfileComponent } from './core/pages/profile/profile.component';
 import { SummitComponent } from './core/pages/summit/summit.component';
 import { AboutUsComponent } from './core/pages/about-us/about-us.component';
+import { TestimonialsComponent } from './shared/components/testimonials/testimonials.component';
+import { CustomerReviewsComponent } from './core/pages/customer-reviews/customer-reviews.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -111,6 +113,10 @@ const routes: Routes = [
   {
     path: 'terms',
     component: TermsOfServiceComponent
+  },
+  {
+    path: 'customer-reviews',
+    component: CustomerReviewsComponent
   },
   {
     path: 'store',

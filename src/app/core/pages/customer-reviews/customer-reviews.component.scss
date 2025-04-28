@@ -1,0 +1,75 @@
+@import '../../../../assets/theme/scss/variables';
+
+.testimonial {
+  &__wrapper {
+    display: flex;
+    justify-content: center;
+    .swiper-pagination-bullets {
+      position: relative;
+    }
+  }
+  &__left-column {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #c9c9c9;
+    padding: 20px;
+  }
+  &__content {
+    @media #{$xxs,$xs} {
+      padding: 0 20px;
+    }
+  }
+  &__title {
+    font-size: 90px;
+    strong {
+      color: $theme-color;
+      font-size: 95px;
+    }
+  }
+  &__image {
+    img {
+      border-radius: 0;
+    }
+  }
+}
+
+.teams {
+  &__container {
+    background-color: #ffffff;
+  }
+  &__header {
+    height: inherit;
+    border: 10px solid $theme-color;
+    &-button {
+      border: 2px solid $theme-color;
+    }
+   .slide-right {
+    justify-content: end;
+    text-align: center;
+   }
+  }
+  .teams-list {
+    padding: 0 100px;
+    @media #{$xxs,$xs} {
+      padding: 0;
+    }
+    &__team {
+      margin-bottom: 75px;
+      padding: 0 25px;
+      &-image {
+        border-radius: 50%;
+        border: 2px solid $theme-color;
+        img {
+          position: relative;
+          bottom: -10px;
+        }
+      }
+    }
+    &__content {
+      h4 {
+        margin-top: 15px;
+      }
+    }
+  }
+}

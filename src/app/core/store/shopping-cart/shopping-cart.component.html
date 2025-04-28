@@ -58,10 +58,15 @@
                       </div>
                     </td>
                     <td class="product-price">
-                      <span *ngIf="item?.discountPrice === null || item?.discountPrice === undefined" class="amount">{{item.price? (item.price | currency): (0 | currency)}}</span>
-                      <div *ngIf="item?.discountPrice || item?.discountPrice === 0" class="d-flex justify-content-center">
+                      <span *ngIf="(item?.discountPrice === null || item?.discountPrice === undefined) && !item?.salePrice" class="amount">
+                        {{ item.salePrice? (item.salePrice | currency) : item.price? (item.price | currency): (0 | currency) }}
+                      </span>
+                      <div *ngIf="(item?.discountPrice || item?.discountPrice === 0) && item?.salePrice" class="d-flex justify-content-center">
                         <span class="after-discount">{{item.discountPrice | currency}}</span>
-                        <span class="before-discount">{{item.price | currency}}</span>
+                        <span class="before-discount">{{ item.salePrice? item.salePrice : item.price? (item.price | currency): (0 | currency) }}</span>
+                      </div>
+                      <div *ngIf="item?.salePrice" class="d-flex justify-content-center">
+                        <span class="after-discount">{{item.salePrice | currency}}</span>
                       </div>
                     </td>
                     <td class="product-quantity">
@@ -72,7 +77,9 @@
                       </div>
                     </td>
                     <td class="product-subtotal">
-                      <span *ngIf="item?.discountPrice === null || item?.discountPrice === undefined" class="amount">{{item.price? ((item.price * item?.orderQuantity!) | currency) : (0 | currency)}}</span>
+                      <span *ngIf="item?.discountPrice === null || item?.discountPrice === undefined" class="amount">
+                        {{item.salePrice? (item.salePrice * item?.orderQuantity | currency) : item.price? ((item.price * item?.orderQuantity!) | currency) : (0 | currency)}}
+                      </span>
                       <div *ngIf="item?.discountPrice || item?.discountPrice === 0" class="d-flex justify-content-center">
                         <span class="after-discount">{{ (item.discountPrice * item?.orderQuantity) | currency}}</span>
                         <span class="before-discount">{{item.price? ((item.price * item?.orderQuantity!) | currency) : (0 | currency)}}</span>

@@ -21,6 +21,7 @@ export class StorePostboxItemComponent {
       itemName: this.product.title,
       orderQuantity: 1,
       price: NumberUtil.isNumber(this.product.cost)? this.product.cost : 0,
+      salePrice: this.product.salePrice,
       img: this.product.imageUrl,
       isEvent: false,
       isEBook: this.product.isEBook ? this.product.isEBook : false,
