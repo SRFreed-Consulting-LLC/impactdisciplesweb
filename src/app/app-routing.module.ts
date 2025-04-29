@@ -147,11 +147,11 @@ const routes: Routes = [
     component: AccountComponent
   },
   {
-    path: 'blog',
+    path: 'disciple-making-minute',
     component: BlogComponent
   },
   {
-    path: 'blog-details/:id',
+    path: 'disciple-making-minute-details/:id',
     component: BlogDetailsComponent
   },
   {
