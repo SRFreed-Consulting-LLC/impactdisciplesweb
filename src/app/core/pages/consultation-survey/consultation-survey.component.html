@@ -1,26 +1,7 @@
 <app-home-header></app-home-header>
 
 <main class="consultation">
-  <section class="breadcrumb page__title p-relative d-flex align-items-center" [style.background-image]="'url()'">
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-12">
-          <div class="page__title-inner text-center">
-            <h1>Free Consultation Pre-Survey</h1>
-            <div class="page__title-breadcrumb">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb justify-content-center">
-                  <li class="breadcrumb-item">
-                    Please complete this initial survey. Once it is submitted, an Impact Consultant will contact you within 1-2 business days to schedule your free consultation.
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <app-breadcrumb [currentPageName]="'Consultation Survey'" [previousLinkName]="'Equipping Groups'" [previousLink]="'/equipping-groups'"></app-breadcrumb>
 
   <section class="consultation__area pb-100 mt-30">
     <div class="container">
