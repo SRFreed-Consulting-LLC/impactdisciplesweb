@@ -9,7 +9,7 @@ import { UtilsService } from 'src/app/theme/shared/services/utils.service';
   styleUrls: ['./equipping-groups.component.scss']
 })
 export class EquippingGroupsComponent  {
-  public webConfig: WebConfigModel;
+  public webConfig: WebConfigModel = new WebConfigModel();
 
   constructor(public utilsService: UtilsService, private webConfigService: WebConfigService) { }
 

@@ -18,7 +18,7 @@ export class SeminarsComponent implements OnInit {
 
   public impactDisciplesInfo = impactDisciplesInfo;
 
-  public webConfig: WebConfigModel;
+  public webConfig: WebConfigModel = new WebConfigModel();
   public consultationRequest: ConsultationRequestModel;
 
   constructor(public utilsService: UtilsService, private webConfigService: WebConfigService, private consultationRequestService: ConsultationRequestService,
