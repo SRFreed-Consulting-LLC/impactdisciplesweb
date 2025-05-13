@@ -1,13 +1,13 @@
 <div class="blog__item blog__border-bottom mb-30 pb-60">
   <div class="blog__content">
-      <h4>
-        <a [routerLink]="['/disciple-making-minute-details', blog?.id]">{{blog?.title}}</a>
-      </h4>
-      <div class="blog__meta" *>
-          <span *ngIf="blog?.category"><a [routerLink]="['/disciple-making-minute-details', blog?.id]">{{ (blog?.category | categoryName: 'blog') | async }} </a> / </span>
-          <span>{{blog?.date.toString() | date }}</span>
-      </div>
-      <p class="truncate" [innerHTML]="blog?.blogText"></p>
-      <a [routerLink]="['/disciple-making-minute-details', blog?.id]" class="impact-btn impact-btn-dark-bg">read more</a>
+    <div class="blog__header mb-15">
+      {{blog?.title}}
+    </div>
+
+
+    <div class="blog__date mb-15">
+      {{blog.date.valueOf()| date: 'MMMM d, y'}}
+    </div>
+    <div class="blog__text mb-15" [innerHTML]="blog?.blogText"></div>
   </div>
 </div>
