@@ -12,7 +12,7 @@ import { EMailService } from 'impactdisciplescommon/src/services/data/email.serv
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
-import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
+import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
 import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
@@ -32,7 +32,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private eventRegistrationService: EventRegistrationService,
     private emailService: EMailService,
     private eventService: EventService,
-    private salesService: SalesService,
+    private puchasesService: PurchasesService,
     private affiliateSaleService: AffilliateSalesService,
     private taxSummaryService: TaxRateSummaryService,
     private toastrService: ToastrService){}
@@ -92,7 +92,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       this.cartService.clearCartNoConfirmation();
     }
 
-    this.salesService.add(checkoutForm).then(checkoutForm => {
+    this.puchasesService.add(checkoutForm).then(checkoutForm => {
       if(checkoutForm.isNewsletter){
         this.newsletterSubscriptionService.createNewsLetterSubscription(checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email);
       }

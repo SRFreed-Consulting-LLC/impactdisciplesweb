@@ -19,7 +19,7 @@ import { EventRegistrationService } from 'impactdisciplescommon/src/services/dat
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { LocationService } from 'impactdisciplescommon/src/services/data/location.service';
 import { OrganizationService } from 'impactdisciplescommon/src/services/data/organization.service';
-import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
+import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
 
 @Component({
   selector: 'app-profile',
@@ -58,7 +58,7 @@ export class ProfileComponent implements OnInit{
   constructor(private authService: AuthService,
     private customerService: CustomerService,
     public tostrService: ToastrService,
-    private salesService: SalesService,
+    private purchaseService: PurchasesService,
     private eventRegistrationService: EventRegistrationService,
     private eventService: EventService,
     private locationsService: LocationService,
@@ -86,7 +86,7 @@ export class ProfileComponent implements OnInit{
       }
     });
 
-    this.salesDatasource$ = this.salesService.streamAllByValue("email", this.loggedInUser.email).pipe(
+    this.salesDatasource$ = this.purchaseService.streamAllByValue("email", this.loggedInUser.email).pipe(
       map(
         (items) =>
           new DataSource({

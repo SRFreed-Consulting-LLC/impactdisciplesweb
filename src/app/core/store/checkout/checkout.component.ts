@@ -1,3 +1,6 @@
+import { WebConfigModel } from './../../../../../impactdisciplescommon/src/models/utils/web-config.model';
+import { WebConfigService } from './../../../../../impactdisciplescommon/src/services/data/web-config.service';
+import { SalesService } from './../../../../../impactdisciplescommon/src/services/data/sales.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, ofActionDispatched } from '@ngxs/store';
@@ -9,7 +12,6 @@ import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model
 import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
 import { CouponService } from 'impactdisciplescommon/src/services/data/coupon.service';
 import { CustomerService } from 'impactdisciplescommon/src/services/data/customer.service';
-import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
 import { ShippingService } from 'impactdisciplescommon/src/services/data/shipping.service';
 import { TaxRateService } from 'impactdisciplescommon/src/services/utils/tax-rate.service';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
@@ -20,6 +22,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
+import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
+import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
 
 @Component({
   selector: 'app-checkout',
@@ -47,6 +51,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   states: string[];
   countries: string[];
 
+  sales: SaleModel[] = [];
+  webConfig: WebConfigModel;
+
   NumberUtil = NumberUtil;
 
   showEstimatedTaxesSpinner: boolean = false;
@@ -60,23 +67,39 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   constructor(
     public cartService: CartService,
     private stripeService: StripeService,
-    private salesService: SalesService,
+    private purchasesService: PurchasesService,
     private couponService: CouponService,
     private shippingService: ShippingService,
     private authService: AuthService,
     private customerService: CustomerService,
     private toastrService: ToastrService,
     private taxService: TaxRateService,
+    private salesService: SalesService,
+    private webConfigService: WebConfigService,
     private actions$: Actions,
     private router: Router) {}
 
   async ngOnInit(): Promise<void> {
     this.setView();
+    this.getActiveSales();
+    this.getWebConfig();
 
     const shoppingCart = history.state.data;
 
+    this.states = EnumHelper.getStateRoleTypesAsArray();
+    this.countries = EnumHelper.getCountryTypesAsArray()
+
+    this.actions$.pipe(
+      ofActionDispatched(UserAuthenticated),
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe(({ user }: UserAuthenticated) => {
+      this.loggedInUser = `${user.firstName} ${user.lastName}`
+      this.isLoggedIn = true
+    })
+
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
+      shippingDiscount: 0,
       couponCode: shoppingCart.couponCode? shoppingCart.couponCode : '',
       isShippingSameAsBilling: true,
       isNewsletter: true,
@@ -93,17 +116,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     this.settleCart();
-
-    this.states = EnumHelper.getStateRoleTypesAsArray();
-    this.countries = EnumHelper.getCountryTypesAsArray()
-
-    this.actions$.pipe(
-      ofActionDispatched(UserAuthenticated),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe(({ user }: UserAuthenticated) => {
-      this.loggedInUser = `${user.firstName} ${user.lastName}`
-      this.isLoggedIn = true
-    })
 
     this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
       if(user) {
@@ -122,6 +134,28 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  getActiveSales() {
+    this.salesService.getAllByValue("isActive", true).then(sales => {
+      let today = new Date();
+
+      sales.forEach(sale => {
+        let startDate = new Date(sale.startDate as string)
+        let endDate = new Date(sale.endDate as string)
+
+        if(startDate <= today && endDate >= today){
+          this.sales.push(sale);
+        }
+      })
+    })
+  }
+
+  getWebConfig(){
+    this.webConfigService.getAll().then(config => {
+      this.webConfig = config[0];
+    })
+  }
+
 
   setView(view?: string){
     switch(view) {
@@ -175,27 +209,42 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         });
       }
     })
-
   }
 
   calculateShippingCost = async () => {
-    if(this.checkoutForm.totalBeforeDiscount < 100){
-      this.checkoutForm.isFreeShipping = false;
-      console.log(this.checkoutForm);
-      this.showShippingSpinner = true;
+    this.showShippingSpinner = true;
 
-      this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
-    } else {
-      this.checkoutForm.isFreeShipping = true;
-      console.log("Free Shipping");
-    }
+    this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
 
+    this.evaluateShippingCost();
   }
 
   calculateEstimatedTax = async () => {
     this.showEstimatedTaxesSpinner = true;
 
     this.checkoutForm = await this.taxService.calculateTaxRate(this.checkoutForm);
+  }
+
+  evaluateShippingCost(){
+    if(this.checkoutForm.totalBeforeDiscount > this.webConfig.freeShippingAmount){
+      this.checkoutForm.shippingDiscount = this.checkoutForm.shippingRate;
+
+      this.checkoutForm.total -= this.checkoutForm.shippingDiscount;
+
+      this.checkoutForm.shippingDiscountReason = "Over $" + this.webConfig.freeShippingAmount;
+    } else {
+      this.sales.forEach(sale => {
+        if(sale.isShipping){
+          let shippingDiscount = sale.percentOff / 100 * this.checkoutForm.shippingRate;
+
+          this.checkoutForm.shippingDiscount = shippingDiscount;
+
+          this.checkoutForm.total -= this.checkoutForm.shippingDiscount;
+
+          this.checkoutForm.shippingDiscountReason = sale.percentOff + "% Off"
+        }
+      })
+    }
   }
 
   //PAYMENT METHODS
@@ -224,9 +273,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             })
 
             if(this.checkoutForm.shippingRate && this.checkoutForm.shippingRate > 0){
-              description += "Shipping $" + this.checkoutForm.shippingRate.toFixed(2) + "\n";
+              let rate = this.checkoutForm.shippingRate - (this.checkoutForm.shippingDiscount? this.checkoutForm.shippingDiscount : 0);
 
-              this.items.push({id: 'shipping', amount: this.checkoutForm.shippingRate * 100})
+              description += "Shipping $" + rate.toFixed(2) + "\n";
+
+              this.items.push({id: 'shipping', amount: rate * 100})
             }
 
             if(this.checkoutForm.estimatedTaxes && this.checkoutForm.estimatedTaxes > 0){
@@ -309,7 +360,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         item.price = item.price && NumberUtil.isNumber(item.price)? item.price : 0;
       })
 
-      this.checkoutForm = this.salesService.saveCheckoutForm(this.checkoutForm);
+      this.checkoutForm = this.purchasesService.saveCheckoutForm(this.checkoutForm);
 
       e.preventDefault();
 
@@ -362,8 +413,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.checkoutForm.totalBeforeDiscount = NumberUtil.isNumber(total)? total : 0;
 
-    this.checkoutForm.total =  Math.max(this.checkoutForm.totalBeforeDiscount - this.checkoutForm.discount, 0);
+    this.checkoutForm.total =  Math.max((this.checkoutForm.totalBeforeDiscount - this.checkoutForm.discount), 0);
 
-    this.salesService.saveCheckoutForm(this.checkoutForm);
+    this.purchasesService.saveCheckoutForm(this.checkoutForm);
   }
 }

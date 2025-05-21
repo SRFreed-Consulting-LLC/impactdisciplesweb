@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
 import { CouponService } from 'impactdisciplescommon/src/services/data/coupon.service';
-import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
+import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
 import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
@@ -24,7 +24,7 @@ export class ShoppingCartComponent implements OnInit {
 
   constructor (
     public cartService: CartService,
-    private salesService: SalesService,
+    private purchasesService: PurchasesService,
     private couponService: CouponService,
     private toastrService: ToastrService,
     private router: Router

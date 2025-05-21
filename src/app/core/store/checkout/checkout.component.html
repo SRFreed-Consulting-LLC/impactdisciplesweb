@@ -193,10 +193,14 @@
                       class="button-indicator"
                       [visible]="showShippingSpinner">
                     </dx-load-indicator>
-                    <span *ngIf="!showShippingSpinner && this.checkoutForm.shippingRate != 0 && !this.checkoutForm.isFreeShipping" class="dx-button-text">Calculated at Next Step</span>
-                    <span *ngIf="!showShippingSpinner && this.checkoutForm.shippingRate != 0 && this.checkoutForm.isFreeShipping" class="dx-button-text">Free</span>
+                    <span *ngIf="!showShippingSpinner && this.checkoutForm.shippingRate != 0" class="dx-button-text">Calculated at Next Step</span>
                     <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.shippingRate == 0" class="dx-button-text shipping-text">{{this.checkoutForm.shippingRate | currency}}</span>
                   </div>
+                </div>
+                <div class="row" *ngIf="this.checkoutForm.shippingDiscount > 0">
+                  <div class="col-lg-6">Shipping Discount</div>
+                  <div class="col-lg-4 text-end">{{this.checkoutForm.shippingDiscountReason}}</div>
+                  <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-2 text-end"> - {{this.checkoutForm.shippingDiscount | currency}}</div>
                 </div>
                 <div class="row">
                   <div class="col-lg-6">Estimated Tax</div>
