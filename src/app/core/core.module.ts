@@ -30,15 +30,13 @@ import { SeminarFormComponent } from "./pages/seminars/seminar-form/seminar-form
 import { FormsModule } from "@angular/forms";
 import { ConsultationSurveyComponent } from "./pages/consultation-survey/consultation-survey.component";
 import { StoreComponent } from './pages/store/store.component';
-import { BlogComponent } from './pages/blog/blog.component';
+import { BlogComponent } from './pages/dmms/dmm.component';
 import { PodcastsComponent } from './pages/podcasts/podcasts.component';
 import { EBooksComponent } from './pages/e-books/e-books.component';
 import { PrayerTeamComponent } from './pages/prayer-team/prayer-team.component';
 import { AccountComponent } from './pages/account/account.component';
 import { TeamDetailsComponent } from './pages/team/team-details/team-details.component';
-import { BlogDetailsComponent } from './pages/blog-details/blog-details.component';
-import { BlogSidebarComponent } from './pages/blog/blog-sidebar/blog-sidebar.component';
-import { BlogPostboxItemComponent } from './pages/blog/blog-postbox-item/blog-postbox-item.component';
+import { BlogPostboxItemComponent } from './pages/dmms/dmm-postbox-item/dmm-postbox-item.component';
 import { StoreSidebarComponent } from './pages/store/store-sidebar/store-sidebar.component';
 import { StorePostboxItemComponent } from './pages/store/store-postbox-item/store-postbox-item.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
@@ -81,8 +79,6 @@ import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-revi
     PrayerTeamComponent,
     AccountComponent,
     TeamDetailsComponent,
-    BlogDetailsComponent,
-    BlogSidebarComponent,
     BlogPostboxItemComponent,
     StoreSidebarComponent,
     StorePostboxItemComponent,

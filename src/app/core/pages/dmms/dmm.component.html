@@ -1,43 +1,28 @@
 <app-home-header></app-home-header>
 
 <main>
-
   <section class="blog__area pt-10 pb-100">
     <div class="container">
       <section class="slider__area slider__area-4 p-relative">
         <div class="slider-active swiper-container" #heroSliderContainer >
           <div class="swiper-wrapper">
             <div class="blog__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/DMM%2FDMM%20-%20Email%20Header.png?alt=media&token=2071bf6c-d7ce-41bb-a2a5-3d48cee8c754)'">
-              <!--<div class="row">
-                <div class="col-xl-12">
-                  <div class="slider__content slider__content-4 pr-50">
-                    <h5 animate="fadeInUp" class="slider-pretitle">FREE ONLINE RESOURCES</h5>
-                    <h1 animate="fadeInUpTwo" class="slider-medium-title-white">The Disciple-Making Minute</h1>
-                    <hr animate="fadeInLeftToRight" class="slider-hr">
-                    <a animate="fadeInUpThree" href="/e-books" class="impact-btn impact-btn-white">FREE E-BOOKS<i class="fa fa-book ml-10"></i></a>
-                    <a animate="fadeInUpThree" href="/podcasts" class="impact-btn impact-btn-white">PODCASTS<i class="fa fa-microphone ml-10"></i></a>
-                  </div>
-                </div>
-              </div>-->
             </div>
           </div>
         </div>
       </section>
       <div class="row mt-50">
-
-
         <div class="col-xl-9 col-lg-8">
           <div class="blog__wrapper">
             <div class="row">
-              <div *ngFor="let blog of filteredBlogs" class="col-xl-12 col-lg-12 col-md-12">
-                <app-blog-postbox-item [blog]="blog"></app-blog-postbox-item>
+              <div *ngFor="let blog of filteredDmms" class="col-xl-12 col-lg-12 col-md-12">
+                <app-dmm-postbox-item [blog]="blog"></app-dmm-postbox-item>
               </div>
             </div>
-
             <div class="row">
               <div class="col-xl-12">
                 <div class="shop-pagination-wrapper">
-                  <app-pagination [data]="filteredBlogs" [paginate]="paginate" (setPage)="setPage($event)"></app-pagination>
+                  <app-pagination [data]="filteredDmms" [paginate]="paginate" (setPage)="setPage($event)"></app-pagination>
                 </div>
               </div>
             </div>

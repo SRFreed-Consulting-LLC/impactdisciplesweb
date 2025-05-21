@@ -26,13 +26,12 @@ import { LunchAndLearnFormComponent } from './core/pages/lunch-and-learn/lunch-a
 import { SeminarFormComponent } from './core/pages/seminars/seminar-form/seminar-form.component';
 import { ConsultationSurveyComponent } from './core/pages/consultation-survey/consultation-survey.component';
 import { AccountComponent } from './core/pages/account/account.component';
-import { BlogComponent } from './core/pages/blog/blog.component';
+import { BlogComponent } from './core/pages/dmms/dmm.component';
 import { EBooksComponent } from './core/pages/e-books/e-books.component';
 import { PodcastsComponent } from './core/pages/podcasts/podcasts.component';
 import { PrayerTeamComponent } from './core/pages/prayer-team/prayer-team.component';
 import { StoreComponent } from './core/pages/store/store.component';
 import { TeamDetailsComponent } from './core/pages/team/team-details/team-details.component';
-import { BlogDetailsComponent } from './core/pages/blog-details/blog-details.component';
 import { ProductDetailsComponent } from './core/pages/product-details/product-details.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
 import { SummitComponent } from './core/pages/summit/summit.component';
@@ -149,10 +148,6 @@ const routes: Routes = [
   {
     path: 'disciple-making-minute',
     component: BlogComponent
-  },
-  {
-    path: 'disciple-making-minute-details/:id',
-    component: BlogDetailsComponent
   },
   {
     path: 'e-books',
