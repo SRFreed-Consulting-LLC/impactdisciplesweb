@@ -93,24 +93,19 @@ export class StoreComponent implements OnInit, OnDestroy {
         }
       })
     });
-
-
   }
 
 
   async getActiveSales() {
     return this.salesService.getAllByValue("isActive", true).then(sales => {
-
       let retval: SaleModel[] = [];
 
       let today = new Date();
 
       sales.forEach(sale => {
         let startDate = new Date(sale.startDate as string)
-        startDate.setHours(0, 1, 0, 0);
 
         let endDate = new Date(sale.endDate as string)
-        endDate.setHours(23, 59, 0, 0);
 
         if(startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime()){
           retval.push(sale);
@@ -138,9 +133,9 @@ export class StoreComponent implements OnInit, OnDestroy {
         product?.title?.toLowerCase().includes(termLower) ||
         product?.tags?.some((tag) => tag.tag.toLowerCase().includes(termLower))
     ).sort((a,b) => a.title.localeCompare(b.title));
+
     this.showSeriesInMainView = false;
     this.setProducts(this.filteredProductItems);
-
   }
 
   filterProducts(filterType: FilterType, filterItem?: any) {
