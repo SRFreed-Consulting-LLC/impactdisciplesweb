@@ -43,7 +43,7 @@ export class StoreComponent implements OnInit, OnDestroy {
     { text: 'Price High to Low', value: FilterType.priceHighToLow }
   ];
 
-  sales: SaleModel[] = [];
+
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -57,8 +57,6 @@ export class StoreComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.getActiveSales();
-
     this.route.queryParams.subscribe(params => {
       if (params['page']) {
         this.router.navigate([], {
@@ -69,44 +67,57 @@ export class StoreComponent implements OnInit, OnDestroy {
         });
       }
     });
-    this.productService.streamAllByValue('isActive', true).subscribe((products) => {
-      this.products = products;
 
-      let selectedSale: SaleModel;
+    this.getActiveSales().then(sales => {
+      this.productService.streamAllByValue('isActive', true).subscribe((products) => {
+        this.products = products;
 
-      this.sales.forEach(sale => {
-        if(sale.isProducts){
-          selectedSale = sale;
+        let selectedSale: SaleModel;
+
+        sales.forEach(sale => {
+          if(sale.isProducts){
+            selectedSale = sale;
+          }
+        })
+
+        if(selectedSale){
+          this.products.forEach(product => {
+            product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost)
+          })
+        }
+
+        if(!this.showSeriesInMainView) {
+          this.setProducts(this.products)
+        } else {
+          this.filterProducts(FilterType.viewBySeries)
         }
       })
+    });
 
-      if(selectedSale){
-        this.products.forEach(product => {
-          product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost)
-        })
-      }
 
-      if(!this.showSeriesInMainView) {
-        this.setProducts(this.products)
-      } else {
-        this.filterProducts(FilterType.viewBySeries)
-      }
-    })
   }
 
 
-  getActiveSales() {
-    this.salesService.getAllByValue("isActive", true).then(sales => {
+  async getActiveSales() {
+    return this.salesService.getAllByValue("isActive", true).then(sales => {
+
+      let retval: SaleModel[] = [];
+
       let today = new Date();
 
       sales.forEach(sale => {
         let startDate = new Date(sale.startDate as string)
-        let endDate = new Date(sale.endDate as string)
+        startDate.setHours(0, 1, 0, 0);
 
-        if(startDate <= today && endDate >= today){
-          this.sales.push(sale);
+        let endDate = new Date(sale.endDate as string)
+        endDate.setHours(23, 59, 0, 0);
+
+        if(startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime()){
+          retval.push(sale);
         }
       })
+
+      return retval;
     })
   }
 
