@@ -91,7 +91,11 @@
                 </dxi-item>
               </dx-accordion>
 
-              <div class="cart-page-total">
+              <div *ngIf="!total || total == 0" class="cart-page-total">
+                <a class="os-btn"(click)="signUpForEvent()">Sign UP</a>
+              </div>
+
+              <div *ngIf="total && total > 0" class="cart-page-total">
                 <h2>Cart totals</h2>
                 <ul class="mb-20">
                   <li>Ticket Price <span>${{ event?.costInDollars }}</span></li>

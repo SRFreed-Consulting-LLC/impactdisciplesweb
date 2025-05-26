@@ -195,21 +195,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  async createUserAccount(){
-    let user: CustomerModel = await this.customerService.createCustomerAccount(this.checkoutForm);
-
-    this.authService.createAccount(user.email, this.password).then((result) => {
-      if (result.isOk) {
-        this.toastrService.success('Success', 'Your account has been created.', {
-          timeOut: 10000,
-        });
-      } else {
-        this.toastrService.error('Error', 'There was an error creating your account: ' + result.message, {
-          timeOut: 10000,
-        });
-      }
-    })
-  }
 
   calculateShippingCost = async () => {
     this.showShippingSpinner = true;
@@ -365,10 +350,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       e.preventDefault();
 
       this.setLoading(true);
-
-      if(this.checkoutForm.isCreateAccount){
-        await this.createUserAccount()
-      }
 
       if(NumberUtil.isNumber(this.checkoutForm.total) && this.checkoutForm.total && this.checkoutForm.total > 0){
         await this.stripeService.submitStripePayment(this.checkoutForm, this.elements)

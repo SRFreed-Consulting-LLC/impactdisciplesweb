@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { EventRegistrationService } from './../../../../../../impactdisciplescommon/src/services/data/event-registration.service';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,6 +11,11 @@ import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { AsyncRule } from 'devextreme/common';
+import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
+import { Timestamp } from 'firebase/firestore';
+import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
+import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
+import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
 
 @Component({
   selector: 'app-event-details',
@@ -27,8 +33,14 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private route: ActivatedRoute, private router: Router, private eventService: EventService, private cartService: CartService,
-    private eventRegistrationService: EventRegistrationService) {}
+  constructor(private route: ActivatedRoute,
+    private router: Router,
+    private eventService: EventService,
+    private cartService: CartService,
+    private eventRegistrationService: EventRegistrationService,
+    private toastrService: ToastrService,
+    private emailService: EMailService
+  ) {}
 
   ngOnInit(): void {
     const eventId = this.route.snapshot.paramMap.get('id');
@@ -89,6 +101,60 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
         this.router.navigate(['/shopping-cart']);
       }
     })
+  }
+
+  signUpForEvent() {
+    let promises: Promise<any>[] = [];
+
+    this.attendeeForms.toArray().forEach(async form => {
+      promises.push(form.instance.validate().complete);
+    });
+
+    Promise.all(promises).then(results => {
+      if(results.every(result => result?.isValid)){
+        this.registerUsers();
+      }
+    })
+  }
+
+  registerUsers(){
+      this.attendeeForms.forEach(async attendee => {
+        let registration = {... new EventRegistrationModel()};
+        registration.eventId = this.event.id;
+        registration.firstName = attendee.formData['firstName'];
+        registration.lastName = attendee.formData['lastName'];
+        registration.email = attendee.formData['email'].toLowerCase();
+        registration.registrationDate = Timestamp.now();
+
+        await this.eventService.getById(this.event.id).then(async event => {
+          await this.eventRegistrationService.add(registration).then(registration => {
+            this.sendRegistrationSuccessEmail(registration, event).then(email => {
+              registration.receiptEmailId = email.id;
+              return registration;
+            }).then(registration => {
+              this.eventRegistrationService.update(registration.id, registration);
+            }).then(() => {
+              this.toastrService.success(registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
+                ' starting on ' + dateFromTimestamp(event.startDate)
+              );
+            });
+          })
+        })
+
+        this.cartService.clearCartNoConfirmation();
+      })
+
+  }
+
+  sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
+    let form = {};
+    form['firstName'] = registration.firstName;
+    form['lastName'] = registration.lastName;
+    form['email'] = registration.email;
+    form['eventName'] = event.eventName;
+    form['startDate'] = new Date(event.startDate as string).toLocaleDateString() + " at " + new Date(event.startDate as string).toLocaleTimeString();
+
+    return this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
   }
 
   private groupAgendaItemsByMonthAndDate(agendaItems: AgendaItem[]) {
