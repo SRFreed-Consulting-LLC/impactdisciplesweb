@@ -67,6 +67,13 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
         const eventStartDate = new Date(event.endDate.toString());
         return eventStartDate >= currentDate && event.isOnline;
       });
+
+      let datSorter = (a,b) => {
+        return new Date(a.startDate as string).getTime() - new Date(b.startDate as string).getTime()
+      };
+
+      this.eventsList.sort(datSorter);
+      this.onlineEventsList.sort(datSorter);
     });
   }
 
