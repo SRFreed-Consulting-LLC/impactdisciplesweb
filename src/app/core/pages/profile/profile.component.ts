@@ -66,7 +66,7 @@ export class ProfileComponent implements OnInit{
   ){}
 
   async ngOnInit(): Promise<void> {
-    this.states = EnumHelper.getStateRoleTypesAsArray();
+    this.states = EnumHelper.getStateTypesAsArray();
     this.countries = EnumHelper.getCountryTypesAsArray();
     this.phoneTypes = EnumHelper.getPhoneTypesAsArray();
 

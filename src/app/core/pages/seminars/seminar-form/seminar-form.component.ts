@@ -69,7 +69,7 @@ export class SeminarFormComponent implements OnInit {
       })
     );
 
-    this.states = EnumHelper.getStateRoleTypesAsArray();
+    this.states = EnumHelper.getStateTypesAsArray();
   }
 
   onSubmitForm() {

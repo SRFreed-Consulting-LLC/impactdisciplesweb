@@ -86,7 +86,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     const shoppingCart = history.state.data;
 
-    this.states = EnumHelper.getStateRoleTypesAsArray();
+    this.states = EnumHelper.getStateTypesAsArray();
     this.countries = EnumHelper.getCountryTypesAsArray()
 
     this.actions$.pipe(

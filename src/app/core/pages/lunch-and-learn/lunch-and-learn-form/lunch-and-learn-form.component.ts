@@ -40,7 +40,7 @@ export class LunchAndLearnFormComponent implements OnInit {
     this.lunchRequestForm.coordinatorPhone = {... new Phone()};
     this.lunchRequestForm.locationAddress = {... new Address()};
 
-    this.states = EnumHelper.getStateRoleTypesAsArray();
+    this.states = EnumHelper.getStateTypesAsArray();
   }
 
   onSubmitForm() {

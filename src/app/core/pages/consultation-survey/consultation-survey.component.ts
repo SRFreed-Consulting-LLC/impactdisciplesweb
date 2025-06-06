@@ -45,7 +45,7 @@ export class ConsultationSurveyComponent implements OnInit {
     this.consultationSurveyForm.location = {... new Address()};
     this.consultationSurveyForm.phone = {... new Phone()};
 
-    this.states = EnumHelper.getStateRoleTypesAsArray();
+    this.states = EnumHelper.getStateTypesAsArray();
   }
 
   onSubmitForm() {

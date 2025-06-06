@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PodCastModel } from 'impactdisciplescommon/src/models/domain/pod-cast-model';
+import { PodCastModel } from 'impactdisciplescommon/src/models/domain/pod-cast.model';
+
 
 @Component({
   selector: 'app-podcast-postbox-item',

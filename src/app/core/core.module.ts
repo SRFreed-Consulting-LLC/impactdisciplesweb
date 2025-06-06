@@ -46,6 +46,7 @@ import { PodcastSidebarComponent } from './pages/podcasts/podcast-sidebar/podcas
 import { PodcastPostboxItemComponent } from './pages/podcasts/podcast-postbox-item/podcast-postbox-item.component';
 import { AboutUsComponent } from "./pages/about-us/about-us.component";
 import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-reviews.component";
+import { MonthlyNewsletterComponent } from "./pages/monthly-newsletter/monthly-newsletter.component";
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-revi
     SummitComponent,
     PodcastSidebarComponent,
     PodcastPostboxItemComponent,
-    CustomerReviewsComponent
+    CustomerReviewsComponent,
+    MonthlyNewsletterComponent
   ],
   imports: [
     CommonModule,

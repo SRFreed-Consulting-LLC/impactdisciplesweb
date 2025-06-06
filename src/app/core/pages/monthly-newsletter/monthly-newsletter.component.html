@@ -1,0 +1,33 @@
+<app-home-header></app-home-header>
+
+<main>
+  <section class="blog__area pt-10 pb-100">
+    <div class="container">
+      <section class="slider__area slider__area-4 p-relative">
+        <div class="slider-active swiper-container" #heroSliderContainer >
+          <div class="swiper-wrapper">
+            <div class="blog__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Monthly-Newsletter%2Fmonthly_newsletter_header.png?alt=media&token=355c86bd-c9d3-400a-bb32-0e6eaa6acccd)'">
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="row mt-50">
+        <div class="col-xl-9 col-lg-8">
+          <div class="blog__wrapper">
+            <div class="row mb-3" style="border-bottom: 1px solid black;">
+              <div class="col-6"><h4>Date</h4></div>
+              <div class="col-6"><h4>Newsletter</h4></div>
+            </div>
+            <div class="row" *ngFor="let nl of newletters">
+              <div class="col-6"><h5>{{nl.date | date: 'MMM yyyy'}}</h5></div>
+              <div class="col-6"><h5><a href="{{nl.url}}" target="_blank" rel="noopener noreferrer" style="border-bottom: 1px solid black;">{{nl.title}}</a></h5></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<app-footer></app-footer>

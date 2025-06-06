@@ -1,7 +1,7 @@
 import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PodCastModel } from 'impactdisciplescommon/src/models/domain/pod-cast-model';
+import { PodCastModel } from 'impactdisciplescommon/src/models/domain/pod-cast.model';
 import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-config.model';
 import { PodCastService } from 'impactdisciplescommon/src/services/data/pod-cast.service';
 import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
