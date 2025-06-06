@@ -16,6 +16,12 @@ export class MonthlyNewsletterComponent implements OnInit {
   constructor(private newsletterService: MonthlyNewletterService) { }
 
   async ngOnInit() {
-    this.newletters = await this.newsletterService.getAll()
+    this.newletters = await this.newsletterService.getAll();
+
+    let datSorter = (a,b) => {
+      return new Date(a.date as string).getTime() - new Date(b.date as string).getTime()
+    };
+
+      this.newletters.sort(datSorter);
   }
 }
