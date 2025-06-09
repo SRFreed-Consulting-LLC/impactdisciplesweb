@@ -38,7 +38,6 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private toastrService: ToastrService){}
 
   async ngAfterViewInit() {
-
     let checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
 
     //only process if checkoutForm exists
@@ -71,8 +70,14 @@ export class CheckoutSuccessComponent implements AfterViewInit{
             break;
         }
       } else {
-        checkoutForm.paymentIntent = null;
-        checkoutForm.receipt = 'COUPON';
+        if(checkoutForm.couponCode){
+          checkoutForm.paymentIntent = null;
+          checkoutForm.receipt = 'COUPON';
+        } else {
+          checkoutForm.receipt = "FREE ONLY"
+        }
+
+        console.log(checkoutForm)
 
         this.processSale(checkoutForm);
       }
@@ -88,7 +93,9 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     }
 
     if(products.length > 0) {
-      this.taxSummaryService.recordStateTaxesCollected(checkoutForm);
+      if(checkoutForm.total > 0){
+        this.taxSummaryService.recordStateTaxesCollected(checkoutForm);
+      }
       this.cartService.clearCartNoConfirmation();
     }
 

@@ -11,7 +11,6 @@ import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model'
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
 import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
 import { CouponService } from 'impactdisciplescommon/src/services/data/coupon.service';
-import { CustomerService } from 'impactdisciplescommon/src/services/data/customer.service';
 import { ShippingService } from 'impactdisciplescommon/src/services/data/shipping.service';
 import { TaxRateService } from 'impactdisciplescommon/src/services/utils/tax-rate.service';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
@@ -24,6 +23,7 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
 import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
+import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
 
 @Component({
   selector: 'app-checkout',
@@ -56,6 +56,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   NumberUtil = NumberUtil;
 
+  totalShippingWeight: number = 0;
+
   showEstimatedTaxesSpinner: boolean = false;
   showShippingSpinner: boolean = false;
   isProcessingPanelVisible: boolean = false;
@@ -71,9 +73,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private couponService: CouponService,
     private shippingService: ShippingService,
     private authService: AuthService,
-    private customerService: CustomerService,
     private toastrService: ToastrService,
     private taxService: TaxRateService,
+    private emailService: EMailService,
     private salesService: SalesService,
     private webConfigService: WebConfigService,
     private actions$: Actions,
@@ -385,6 +387,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     let totalDiscount = 0; // Initialize the total for applicable items
 
     this.checkoutForm.cartItems.forEach(item => {
+      if(item.weight){
+        this.totalShippingWeight += item.weight
+      }
+
       total += (item.price * item.orderQuantity);
 
       totalDiscount += (item.discount * item.orderQuantity);
@@ -397,5 +403,55 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.checkoutForm.total =  Math.max((this.checkoutForm.totalBeforeDiscount - this.checkoutForm.discount), 0);
 
     this.purchasesService.saveCheckoutForm(this.checkoutForm);
+  }
+
+  submitRequest(){
+    this.purchasesService.saveCheckoutForm(this.checkoutForm);
+
+    this.sendProductPurchaseSuccessEmail(this.checkoutForm);
+
+    this.router.navigate(['/checkout-success'], { queryParams: { savedForm: this.checkoutForm.id }});
+  }
+
+  sendProductPurchaseSuccessEmail(cart: CheckoutForm){
+    let subject = 'Thank you for Your Purchase ';
+    let text = '<div>You have purchased the following</div><br>';
+
+    this.cartService.getCartProducts().forEach(product => {
+      text += "<li><span>"
+      if(product.discountPrice) {
+        text += product.orderQuantity + "  x  " + product.itemName + " for $" + (product.orderQuantity * product.discountPrice? product.discountPrice:0).toFixed(2) + " (<span><s>" + product.price.toFixed(2)+"</s></span>)"
+      } else {
+        text += product.orderQuantity + "  x  " + product.itemName + " for $" + (product.orderQuantity * product.price? product.price:0).toFixed(2)
+      }
+
+      if(product.isEBook){
+        text += "<a href='"+ product.eBookUrl.url+"' download>     DOWNLOAD " + product.itemName + "</a>";
+      }
+      text += "</span></li>";
+    })
+    text +="</ul><br>"
+
+    if(cart.estimatedTaxes){
+      text += '<div>Tax: $' + (cart.estimatedTaxes).toFixed(2) + '</div><br>'
+    }
+
+    if(cart.shippingRate){
+      text += '<div>Shipping: $' + (cart.shippingRate).toFixed(2) + '</div><br>'
+    }
+
+    if(cart.couponCode) {
+      text += '<div>Subtotal: $' + (cart.totalBeforeDiscount).toFixed(2) + '</div><br>'
+      text += '<div>Applied Coupon: ' + cart.couponCode + '</div><br>';
+      text += '<div>Total: $' + (cart.total).toFixed(2) + '</div><br>'
+    } else {
+      text += '<div>Total: $' + (cart.total).toFixed(2) + '</div><br>'
+    }
+
+    if(cart.receipt){
+      text += '<div>Confirmation Id: ' + cart.receipt + '<br>'
+    }
+
+    this.emailService.sendHtmlEmail(cart.email, subject, text);
   }
 }
