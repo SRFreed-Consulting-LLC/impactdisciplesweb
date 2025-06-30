@@ -12,7 +12,7 @@ const services: HomeServicesModel[] = [
   {
     id: 1,
     img: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-consultation.PNG?alt=media&token=ad3369ad-87ee-495c-8579-a04551bd6939',
-    title: "Trainining",
+    title: "Training",
     description: "Schedule your first consultation on us",
     link: '/equipping-groups'
   },
