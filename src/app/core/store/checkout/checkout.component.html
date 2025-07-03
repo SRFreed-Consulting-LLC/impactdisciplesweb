@@ -17,7 +17,7 @@
       <ng-template #checkoutBlock>
         <div class="row">
           <div *ngIf="isShippingView" class="col-lg-6 pb-70">
-            <div *ngIf="this.totalShippingWeight > 0 || this.checkoutForm.total > 0">
+            <div *ngIf="this.checkoutForm.total > 0">
               <dx-form
                 #shippingFormComponent
                 [formData]="checkoutForm"
@@ -64,7 +64,7 @@
               </dx-form>
               <dx-button class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
             </div>
-            <div *ngIf="this.totalShippingWeight == 0 || this.checkoutForm.total == 0">
+            <div *ngIf="this.checkoutForm.total == 0">
               <dx-form
                 #shippingFormComponent
                 [formData]="checkoutForm"
