@@ -20,7 +20,9 @@
               <hr animate="fadeInLeftToRight" class="slider-hr">
               <p animate="fadeInUpTwo">{{galleryItem.text}}</p>
               <!--TODO: create a state or service or something for getting the current summit event otherwise link to events page-->
-              <a target="" animate="fadeInUpThree" [routerLink]="galleryItem.ctaDestination" class="impact-btn impact-btn-white-primary">{{galleryItem.ctaTitle}}</a>
+
+              <a target="" *ngIf="galleryItem.ctaDestination != 'external'" animate="fadeInUpThree" [routerLink]="galleryItem.ctaDestination" class="impact-btn impact-btn-white-primary">{{galleryItem.ctaTitle}}</a>
+              <a target="none" *ngIf="galleryItem.ctaDestination == 'external'" animate="fadeInUpThree" [href]="galleryItem.ctaUrl" class="impact-btn impact-btn-white-primary">{{galleryItem.ctaTitle}}</a>
             </div>
         </div>
       </div>
