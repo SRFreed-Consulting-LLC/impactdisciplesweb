@@ -13,18 +13,15 @@
   >
   <div *dxTemplate="let galleryItem of 'item'">
     <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url('+galleryItem.image.url+')'">
-      <div class="container-fluid">
+      <div class="container-fluid" style="height: 100%;">
         <div class="row">
-          <div *ngIf="galleryItem.side == 'r'" class="col-xl-6 col-lg-5 col-md-2 col-sm-2 col-0"></div>
-          <div class="col-xl-6 col-lg-7 col-md-10 col-sm-10 col-12">
-            <div class="slider__content slider__content-3 pl-250" [class.slider__content-black]="true">
+            <div class="slider__content slider__content-3 {{galleryItem.side}}" [class.slider__content-black]="true" [ngStyle]="{'width.%': galleryItem.ctaWidth}">
               <h2 animate="fadeInUp">{{galleryItem.title}}</h2>
               <hr animate="fadeInLeftToRight" class="slider-hr">
               <p animate="fadeInUpTwo">{{galleryItem.text}}</p>
               <!--TODO: create a state or service or something for getting the current summit event otherwise link to events page-->
               <a target="" animate="fadeInUpThree" [routerLink]="galleryItem.ctaDestination" class="impact-btn impact-btn-white-primary">{{galleryItem.ctaTitle}}</a>
             </div>
-          </div>
         </div>
       </div>
     </div>

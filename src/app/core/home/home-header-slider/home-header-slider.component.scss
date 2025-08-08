@@ -21,4 +21,60 @@
   .dx-state-focused.dx-gallery .dx-gallery-indicator-item-selected {
     background: $theme-color;
   }
+
+  .tl {
+    position: absolute ;
+    left: 30px;
+    top: 30px;
+  }
+
+  .cl {
+    position: absolute ;
+    left: 30px;
+    top: 30%;
+  }
+
+  .bl {
+    position: absolute ;
+    left: 30px;
+    bottom: 30px;
+  }
+
+  .tc {
+    position: absolute ;
+    left: 30%;
+    top: 30px;
+  }
+
+  .cc {
+    position: absolute ;
+    left: 30%;
+    top: 30%;
+  }
+
+  .bc {
+    position: absolute ;
+    left: 30%;
+    bottom: 30px;
+  }
+
+  .tr {
+    position: absolute ;
+    right: 30px;
+    top: 30px;
+  }
+
+  .cr {
+    position: absolute ;
+    right: 30px;
+    top: 30%;
+  }
+
+  .br {
+    position: absolute ;
+    right: 30px;
+    bottom: 30px;
+  }
+
+
 }
