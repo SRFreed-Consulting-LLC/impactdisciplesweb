@@ -14,5 +14,7 @@ export class HomeHeaderSliderComponent implements OnInit{
 
   async ngOnInit() {
     this.images = await this.service.getAllByValue('isActive', true);
+
+    this.images.sort((a,b) => a.order - b.order);
   }
 }
