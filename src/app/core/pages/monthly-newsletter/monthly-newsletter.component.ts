@@ -19,7 +19,7 @@ export class MonthlyNewsletterComponent implements OnInit {
     this.newletters = await this.newsletterService.getAll();
 
     let datSorter = (a,b) => {
-      return new Date(a.date as string).getTime() - new Date(b.date as string).getTime()
+      return new Date(b.date as string).getTime() - new Date(a.date as string).getTime()
     };
 
       this.newletters.sort(datSorter);
