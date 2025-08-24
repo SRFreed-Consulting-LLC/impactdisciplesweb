@@ -36,7 +36,6 @@ import { ProductDetailsComponent } from './core/pages/product-details/product-de
 import { ProfileComponent } from './core/pages/profile/profile.component';
 import { SummitComponent } from './core/pages/summit/summit.component';
 import { AboutUsComponent } from './core/pages/about-us/about-us.component';
-import { TestimonialsComponent } from './shared/components/testimonials/testimonials.component';
 import { CustomerReviewsComponent } from './core/pages/customer-reviews/customer-reviews.component';
 import { MonthlyNewsletterComponent } from './core/pages/monthly-newsletter/monthly-newsletter.component';
 

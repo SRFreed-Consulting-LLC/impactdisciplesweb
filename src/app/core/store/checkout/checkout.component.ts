@@ -24,6 +24,7 @@ import { environment } from 'src/environments/environment';
 import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
 import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
 import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
+import { IClientAuthorizeCallbackData, ICreateOrderRequest, IPayPalConfig, IPurchaseUnit, ITransactionItem, IUnitAmount, IUnitBreakdown } from 'ngx-paypal';
 
 @Component({
   selector: 'app-checkout',
@@ -66,19 +67,22 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
+  public payPalConfig?: IPayPalConfig;
+
+  currency = 'USD';
+
+
   constructor(
     public cartService: CartService,
     private stripeService: StripeService,
     private purchasesService: PurchasesService,
     private couponService: CouponService,
     private shippingService: ShippingService,
-    private authService: AuthService,
     private toastrService: ToastrService,
     private taxService: TaxRateService,
     private emailService: EMailService,
     private salesService: SalesService,
     private webConfigService: WebConfigService,
-    private actions$: Actions,
     private router: Router) {}
 
   async ngOnInit(): Promise<void> {
@@ -90,14 +94,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.states = EnumHelper.getStateTypesAsArray();
     this.countries = EnumHelper.getCountryTypesAsArray()
-
-    this.actions$.pipe(
-      ofActionDispatched(UserAuthenticated),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe(({ user }: UserAuthenticated) => {
-      this.loggedInUser = `${user.firstName} ${user.lastName}`
-      this.isLoggedIn = true
-    })
 
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
@@ -118,23 +114,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     this.settleCart();
-
-    this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
-      if(user) {
-        this.isLoggedIn = true;
-        this.loggedInUser = `${user.firstName} ${user.lastName}`
-        this.checkoutForm = {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          phone: (user  as CustomerModel).phone,
-          // TODO: Need to change to use saved addresses in user account
-          billingAddress: (user as CustomerModel).billingAddress || null,
-          shippingAddress: this.checkoutForm.isShippingSameAsBilling ? (user as CustomerModel).billingAddress : null,
-          ...this.checkoutForm
-        }
-      }
-    });
   }
 
   getActiveSales() {
@@ -169,7 +148,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         if(this.shippingFormComponent.instance.validate().isValid) {
           this.isShippingView = false;
           this.isBillingView = true;
-          this.isSetupPanelVisible = true;
+          this.isSetupPanelVisible = false;
 
           let promises = [];
 
@@ -182,11 +161,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           }
 
           Promise.all(promises).then(() => {
-            this.stripeService.cancelStripeIntent(this.paymentIntent).then(() => {
-              this.showEstimatedTaxesSpinner = false;
-              this.showShippingSpinner = false;
-              this.toggleForm();
-            });
+            this.createPaypalConfig();
+
+            this.showEstimatedTaxesSpinner = false;
+            this.showShippingSpinner = false;
           })
         }
         break;
@@ -197,22 +175,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-
-  calculateShippingCost = async () => {
-    this.showShippingSpinner = true;
-
-    this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
-
-    this.evaluateShippingCost();
-  }
-
   calculateEstimatedTax = async () => {
     this.showEstimatedTaxesSpinner = true;
 
     this.checkoutForm = await this.taxService.calculateTaxRate(this.checkoutForm);
   }
 
-  evaluateShippingCost(){
+  calculateShippingCost = async () => {
+    this.showShippingSpinner = true;
+
+    this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
+
     if(this.checkoutForm.totalBeforeDiscount > this.webConfig.freeShippingAmount){
       this.checkoutForm.shippingDiscount = this.checkoutForm.shippingRate;
 
@@ -231,103 +204,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.checkoutForm.shippingDiscountReason = sale.percentOff + "% Off"
         }
       })
-    }
-  }
-
-  //PAYMENT METHODS
-  async toggleForm(): Promise<void> {
-    if(this.checkoutForm.total && NumberUtil.isNumber(this.checkoutForm.total) && this.checkoutForm.total > 0){
-      try {
-        setTimeout(async () => {
-          const paymentForm = document.querySelector("#payment-form");
-
-          if (paymentForm) {
-            paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
-
-            this.items = [];
-
-            let description = "Payment from " + this.checkoutForm.firstName + ' ' + this.checkoutForm.lastName + '\n';
-
-            this.cartService.getCartProducts().forEach(product => {
-              if(product.price > 0){
-                let price = product.price * product.orderQuantity;
-
-                description += product.itemName + " (" + product.orderQuantity + ")   ";
-                description += "$" + price.toFixed(2) + "\n";
-
-                this.items.push({id: product.id, name: product.itemName, amount: price * 100});
-              }
-            })
-
-            if(this.checkoutForm.shippingRate && this.checkoutForm.shippingRate > 0){
-              let rate = this.checkoutForm.shippingRate - (this.checkoutForm.shippingDiscount? this.checkoutForm.shippingDiscount : 0);
-
-              description += "Shipping $" + rate.toFixed(2) + "\n";
-
-              this.items.push({id: 'shipping', amount: rate * 100})
-            }
-
-            if(this.checkoutForm.estimatedTaxes && this.checkoutForm.estimatedTaxes > 0){
-              description += "Taxes $" + this.checkoutForm.estimatedTaxes.toFixed(2) + "\n";
-
-              this.items.push({id: 'taxes', amount: this.checkoutForm.estimatedTaxes * 100})
-            }
-
-            if(this.checkoutForm.discount && this.checkoutForm.discount > 0){
-              description += "Discount (" + this.checkoutForm.couponCode+ ") -$" + this.checkoutForm.discount.toFixed(2) + "\n";
-
-              this.items.push({id: 'discount', amount: -this.checkoutForm.discount * 100})
-            }
-
-            let request = {};
-            request['items'] = this.items;
-            request['description'] = description;
-            request['receipt_email'] = this.checkoutForm.email;
-
-            // Fetch client secret for Stripe payment
-            const response = await fetch(environment.stripeURL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(request),
-            })
-
-            if (!response.ok) {
-              throw new Error('Failed to fetch client secret: ' + JSON.stringify(response));
-            }
-
-            const { clientSecret, paymentIntent } = await response.json();
-
-            this.paymentIntent = paymentIntent;
-
-            // Initialize Stripe Elements
-            await this.stripeService.getStripe().then(stripe => {
-              this.elements = stripe.elements({ clientSecret });
-
-              const paymentElementOptions = {
-                layout: "tabs",
-              };
-
-              const paymentElement = this.elements.create("payment", paymentElementOptions);
-              paymentElement.mount("#payment-element");
-
-              this.isPayButtonVisible = true;
-              this.isSetupPanelVisible = false;
-            })
-          }
-        }, 0);  // Ensures form is rendered before Stripe is initialized
-
-      } catch (error) {
-        this.toastrService.error('Failed to load payment form. Please try again.', 'ERROR!')
-      }
-    } else {
-      const paymentForm = document.querySelector("#payment-form");
-
-      if(paymentForm){
-        paymentForm.remove();
-      }
-
-      this.isPayButtonVisible = true;
-      this.isSetupPanelVisible = false;
     }
   }
 
@@ -405,7 +281,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.purchasesService.saveCheckoutForm(this.checkoutForm);
   }
 
-  submitRequest(){
+  submitRequest(data?: IClientAuthorizeCallbackData){
+    this.checkoutForm.payPalReceipt = data;
+
+    this.checkoutForm.receipt = data.id;
+
     this.purchasesService.saveCheckoutForm(this.checkoutForm);
 
     this.sendProductPurchaseSuccessEmail(this.checkoutForm);
@@ -453,5 +333,91 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     this.emailService.sendHtmlEmail(cart.email, subject, text);
+  }
+
+  createPaypalConfig(){
+    let itemTotal = this.checkoutForm.cartItems.map(item => {
+      let p = item.discountPrice ? item.discountPrice : item.price;
+
+      return p * item.orderQuantity;
+    }).reduce((a,b) => a + b);
+
+    let itemUnitTotal: IUnitAmount = {
+      currency_code: this.currency,
+      value: itemTotal.toFixed(2).toString()
+    }
+
+    let shippingTotal: IUnitAmount = {
+      currency_code: this.currency,
+      value: this.checkoutForm.totalBeforeDiscount > this.webConfig.freeShippingAmount? '0': this.checkoutForm.shippingRate.toFixed(2).toString()
+    }
+
+    let taxesTotal: IUnitAmount = {
+      currency_code: this.currency,
+      value: this.checkoutForm.estimatedTaxes.toFixed(2).toString()
+    }
+
+   let breakdown: IUnitBreakdown = {
+      item_total: itemUnitTotal,
+      shipping: shippingTotal,
+      tax_total: taxesTotal
+   }
+
+    let amount: IUnitAmount = {
+      currency_code: this.currency,
+      value: this.checkoutForm.total.toString(),
+      breakdown: breakdown
+
+    }
+
+    let items: ITransactionItem[] = this.checkoutForm.cartItems.map(item => <ITransactionItem>{
+      name: item.itemName,
+      quantity: item.orderQuantity.toString(),
+      category: item.isEvent ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS',
+      unit_amount: {
+        currency_code: this.currency,
+        value: item.discountPrice ? item.discountPrice.toString() : item.price.toString()
+      },
+    })
+
+    this.payPalConfig = {
+      currency: this.currency,
+      clientId: 'AV50zoOW01VnMjSFor9aKf22aWVCz_p_3jsJIx0Co9j5GnaZenMZ3UXPRyxxOHPNAdRR97dHAKvSdiXS',
+      createOrderOnClient: (data) => <ICreateOrderRequest> {
+          intent: 'CAPTURE',
+          purchase_units: [
+            {
+              amount: amount,
+              items: items
+            }
+          ]
+        },
+        advanced: {
+          commit: 'true'
+        },
+        style: {
+          label: 'paypal',
+          layout: 'vertical'
+        },
+        onApprove: (data, actions) => {
+          console.log('onApprove - transaction was approved, but not authorized', data, actions);
+          actions.order.get().then(details => {
+            console.log('onApprove - you can get full order details inside onApprove: ', details);
+          });
+        },
+        onClientAuthorization: (data) => {
+          this.submitRequest(data);
+        },
+        onCancel: (data, actions) => {
+          console.log('OnCancel', data, actions);
+        },
+        onError: err => {
+          this.toastrService.error("There was an error processing the Paypal Transaction", err)
+          console.log('OnError', err);
+        },
+        onClick: (data, actions) => {
+          console.log('onClick', data, actions);
+        },
+    };
   }
 }

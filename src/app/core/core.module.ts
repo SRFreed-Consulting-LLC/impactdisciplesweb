@@ -47,6 +47,7 @@ import { PodcastPostboxItemComponent } from './pages/podcasts/podcast-postbox-it
 import { AboutUsComponent } from "./pages/about-us/about-us.component";
 import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-reviews.component";
 import { MonthlyNewsletterComponent } from "./pages/monthly-newsletter/monthly-newsletter.component";
+import { NgxPayPalModule } from "ngx-paypal";
 
 @NgModule({
   declarations: [
@@ -116,7 +117,8 @@ import { MonthlyNewsletterComponent } from "./pages/monthly-newsletter/monthly-n
     DxLoadIndicatorModule,
     DxCheckBoxModule,
     DxTextBoxModule,
-    DxGalleryModule
+    DxGalleryModule,
+    NgxPayPalModule
   ],
   exports: [
     HomeComponent,

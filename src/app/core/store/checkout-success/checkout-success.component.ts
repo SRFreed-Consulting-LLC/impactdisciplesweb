@@ -1,5 +1,4 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { PaymentIntent } from '@stripe/stripe-js';
 import { Timestamp } from 'firebase/firestore';
 import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
 
@@ -14,7 +13,6 @@ import { EventService } from 'impactdisciplescommon/src/services/data/event.serv
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
 import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
-import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
@@ -26,8 +24,7 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 })
 export class CheckoutSuccessComponent implements AfterViewInit{
 
-  constructor(private stripeService: StripeService,
-    public cartService: CartService,
+  constructor(public cartService: CartService,
     private newsletterSubscriptionService: NewsletterSubscriptionService,
     private eventRegistrationService: EventRegistrationService,
     private emailService: EMailService,
@@ -42,54 +39,23 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
     //only process if checkoutForm exists
     if(checkoutForm){
-      const clientSecret = new URLSearchParams(window.location.search).get(
-        "payment_intent_client_secret"
-      );
-
-      //clientSecret will exist if payment sent to Stripe
-      if (clientSecret) {
-        const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
-          return await stripe.retrievePaymentIntent(clientSecret);
-        })
-
-        switch (paymentIntent.status) {
-          case "succeeded":
-            checkoutForm.paymentIntent = paymentIntent
-            checkoutForm.receipt = paymentIntent.id;
-
-            this.processSale(checkoutForm, paymentIntent);
-            break;
-          case "processing":
-            this.showMessage("Your payment is processing.");
-            break;
-          case "requires_payment_method":
-            this.showMessage("Your payment was not successful, please try again.");
-            break;
-          default:
-            this.showMessage("Something went wrong.");
-            break;
-        }
-      } else {
+      if(!checkoutForm.payPalReceipt){
         if(checkoutForm.couponCode){
-          checkoutForm.paymentIntent = null;
           checkoutForm.receipt = 'COUPON';
         } else {
           checkoutForm.receipt = "FREE ONLY"
         }
-
-        console.log(checkoutForm)
-
-        this.processSale(checkoutForm);
       }
+      this.processSale(checkoutForm);
     }
   }
 
-  processSale(checkoutForm: CheckoutForm, paymentIntent?: PaymentIntent){
+  processSale(checkoutForm: CheckoutForm){
     let events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
     let products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
 
     if(events.length > 0){
-      this.registerUsers(paymentIntent? paymentIntent.id : checkoutForm.couponCode, events)
+      this.registerUsers(checkoutForm.payPalReceipt.id? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events)
     }
 
     if(products.length > 0) {
@@ -105,7 +71,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       }
 
       if(checkoutForm.couponCode){
-        this.recordAffiliateSale(checkoutForm, paymentIntent);
+        this.recordAffiliateSale(checkoutForm);
       }
 
       localStorage.removeItem('checkoutForm');
@@ -113,14 +79,14 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
   }
 
-  recordAffiliateSale(cart:CheckoutForm, paymentIntent?: PaymentIntent){
+  recordAffiliateSale(checkoutForm:CheckoutForm) {
     let sale: AffilliateSaleModel = {... new AffilliateSaleModel()};
-    sale.code = cart.couponCode;
+    sale.code = checkoutForm.couponCode;
     sale.date = Timestamp.now();
-    sale.email = cart.email;
-    sale.totalAfterDiscount = cart.total;
-    sale.totalBeforeDiscount = cart.totalBeforeDiscount;
-    sale.receipt = paymentIntent?.id ? paymentIntent.id : '';
+    sale.email = checkoutForm.email;
+    sale.totalAfterDiscount = checkoutForm.total;
+    sale.totalBeforeDiscount = checkoutForm.totalBeforeDiscount;
+    sale.receipt = checkoutForm.payPalReceipt.id ? checkoutForm.payPalReceipt.id : '';
     this.affiliateSaleService.add(sale);
   }
 
@@ -166,8 +132,4 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     return this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
   }
 
-  showMessage(messageText) {
-    const messageContainer = document.querySelector("#payment-message");
-    messageContainer.textContent = messageText;
-  }
 }

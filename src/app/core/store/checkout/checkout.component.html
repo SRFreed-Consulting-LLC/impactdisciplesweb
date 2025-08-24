@@ -89,7 +89,7 @@
             <div class="checkout__customer-info mb-50">
               <div class="checkout__customer-info-block customer">
                 <span>Customer</span>
-                <span class="info">{{ checkoutForm?.email }}</span>
+                <span class="info">{{ checkoutForm?.firstName + ' ' + checkoutForm.lastName}}</span>
                 <a (click)="setView('shipping')">Change</a>
               </div>
               <div class="checkout__customer-info-block">
@@ -105,56 +105,13 @@
                 <a (click)="setView('shipping')">Change</a>
               </div>
             </div>
-            <dx-form
-              #billingFormComponent
-              [formData]="checkoutForm"
-              [colCount]="6"
-              labelLocation="top"
-              [showColonAfterLabel]="false"
-            >
-              <dxi-item [colSpan]="6">
-                <div *dxTemplate><h4>Billing Address</h4></div>
-              </dxi-item>
-              <dxi-item dataField="isShippingSameAsBilling" editorType="dxCheckBox" cssClass="checkbox" [label]="{ text: 'Is Billing Same As Shipping?', location: 'right' }"></dxi-item>
-              <dxi-item itemType="empty" [colSpan]="5"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address1" [isRequired]="true" [colSpan]="6" [label]="{ text: 'Address' }" [editorOptions]="{ placeholder: 'Street Address' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.address2" [colSpan]="6" [label]="{ text: ' ' }" [editorOptions]="{ placeholder: 'Apartment, Suite, Unit, etc. ' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.city" [isRequired]="true" [colSpan]="3" [label]="{ text: 'City' }" [editorOptions]="{ placeholder: 'City' }"></dxi-item>
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.state" [isRequired]="true" [colSpan]="2" [label]="{ text: 'State' }" [editorOptions]="{ placeholder: 'State' }">
-                <div *dxTemplate>
-                  <dx-select-box
-                    [searchEnabled]="true"
-                    [items]="states"
-                    [(value)]="checkoutForm.billingAddress.state">
-                  </dx-select-box>
-                </div>
-              </dxi-item>
 
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.zip" [isRequired]="true" [colSpan]="1" [label]="{ text: 'Zip Code' }" [editorOptions]="{ placeholder: 'Zip Code' }"></dxi-item>
-
-              <dxi-item *ngIf="!checkoutForm?.isShippingSameAsBilling" dataField="billingAddress.country" [colSpan]="3" [isRequired]="true" [label]="{ text: 'Country' }">
-                <div *dxTemplate>
-                  <dx-select-box
-                    [searchEnabled]="true"
-                    [items]="countries"
-                    [(value)]="checkoutForm.billingAddress.country">
-                  </dx-select-box>
-                </div>
-              </dxi-item>
-            </dx-form>
             <!-- checkout payment -->
             <div class="payment-method mb-80">
-              <form id="payment-form">
-                <div id="payment-element">
-                  <!--Stripe.js injects the Payment Element-->
-                </div>
-                <div id="payment-message" class="hidden"></div>
-              </form>
+              <div class="col-12 mt-3 pt-3 paypal-background">
+                <ngx-paypal  *ngIf="!showEstimatedTaxesSpinner && !showShippingSpinner && checkoutForm.total > 0" [config]="payPalConfig"></ngx-paypal>
+              </div>
             </div>
-            <button id="submit" class="os-btn os-btn-black pay-button" (click)="handleSubmit($event)" *ngIf="isPayButtonVisible">
-              <div class="spinner hidden" id="spinner"></div>
-              <span id="button-text">Pay now</span>
-            </button>
           </div>
 
           <div class="col-lg-6 pb-70">
