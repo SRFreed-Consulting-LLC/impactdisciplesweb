@@ -46,7 +46,7 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'disciple-making-summit-2026',
+    path: 'disciple-making-summit-2026-preview',
     component: SummitComponent
   },
   {

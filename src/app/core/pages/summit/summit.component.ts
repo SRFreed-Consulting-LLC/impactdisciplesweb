@@ -57,7 +57,8 @@ export class SummitComponent implements OnInit, OnDestroy {
         }
 
       });
-      if(this.summit.agendaItems) {
+
+      if(this.summit?.agendaItems) {
         this.groupAgendaItemsByMonthAndDate(this.summit.agendaItems);
         const coachIds = Array.from(
           new Set(

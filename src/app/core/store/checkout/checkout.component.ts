@@ -365,7 +365,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     let amount: IUnitAmount = {
       currency_code: this.currency,
-      value: this.checkoutForm.total.toString(),
+      value: this.checkoutForm.total.toFixed(2).toString(),
       breakdown: breakdown
 
     }
@@ -376,7 +376,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       category: item.isEvent ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS',
       unit_amount: {
         currency_code: this.currency,
-        value: item.discountPrice ? item.discountPrice.toString() : item.price.toString()
+        value: item.discountPrice ? item.discountPrice.toFixed(2).toString() : item.price.toFixed(2).toString()
       },
     })
 
@@ -412,7 +412,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           console.log('OnCancel', data, actions);
         },
         onError: err => {
-          this.toastrService.error("There was an error processing the Paypal Transaction", err)
+          this.toastrService.error("There was an error processing the Paypal Transaction")
           console.log('OnError', err);
         },
         onClick: (data, actions) => {
