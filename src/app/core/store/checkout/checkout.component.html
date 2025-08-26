@@ -17,7 +17,7 @@
       <ng-template #checkoutBlock>
         <div class="row">
           <div *ngIf="isShippingView" class="col-lg-6 pb-70">
-            <div *ngIf="this.checkoutForm.total > 0">
+            <div>
               <dx-form
                 #shippingFormComponent
                 [formData]="checkoutForm"
@@ -109,7 +109,7 @@
             <!-- checkout payment -->
             <div class="payment-method mb-80">
               <div class="col-12 mt-3 pt-3 paypal-background">
-                <ngx-paypal  *ngIf="!showEstimatedTaxesSpinner && !showShippingSpinner && checkoutForm.total > 0" [config]="payPalConfig"></ngx-paypal>
+                <ngx-paypal  *ngIf="!showEstimatedTaxesSpinner && !showShippingSpinner && getOrderTotal() > 0" [config]="payPalConfig"></ngx-paypal>
               </div>
             </div>
           </div>
@@ -148,47 +148,50 @@
                 <div class="row">
                   <div class="col-lg-6">Subtotal</div>
                   <div class="col-lg-4"></div>
-                  <div class="col-lg-2 text-end" *ngIf="NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> {{ (this.checkoutForm.totalBeforeDiscount - this.checkoutForm.discount) | currency }}</div>
-                  <div class="col-lg-2 text-end" *ngIf="!NumberUtil.isNumber(this.checkoutForm.totalBeforeDiscount)"> (0 | currency)</div>
+                  <div class="col-lg-2 text-end"> {{ this.subtotal | currency }}</div>
+                </div>
+                <div class="row" *ngIf="this.totalDiscount > 0">
+                  <div class="col-lg-6">Discount</div>
+                  <div class="col-lg-4"></div>
+                  <div class="col-lg-2 text-end"> {{ this.totalDiscount | currency }}</div>
                 </div>
                 <div class="row">
                   <div class="col-lg-6">Shipping</div>
-                  <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-4"></div>
-                  <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-2 text-end">{{this.checkoutForm.shippingRate | currency}}</div>
-                  <div *ngIf="!this.checkoutForm.shippingRate" class="col-lg-6 text-end shipping-text">
+                  <div *ngIf="this.shippingRate > 0" class="col-lg-4"></div>
+                  <div *ngIf="this.shippingRate > 0" class="col-lg-2 text-end">{{this.shippingRate | currency}}</div>
+                  <div *ngIf="this.shippingRate == 0" class="col-lg-6 text-end shipping-text">
                     <dx-load-indicator
                       class="button-indicator"
                       [visible]="showShippingSpinner">
                     </dx-load-indicator>
-                    <span *ngIf="!showShippingSpinner && this.checkoutForm.shippingRate != 0" class="dx-button-text">Calculated at Next Step</span>
-                    <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.shippingRate == 0" class="dx-button-text shipping-text">{{this.checkoutForm.shippingRate | currency}}</span>
+                    <span *ngIf="!showShippingSpinner && this.shippingRate == 0" class="dx-button-text">Calculated at Next Step</span>
+                    <span *ngIf="!showShippingSpinner && this.shippingRate > 0" class="dx-button-text shipping-text">{{this.shippingRate | currency}}</span>
                   </div>
                 </div>
-                <div class="row" *ngIf="this.checkoutForm.shippingDiscount > 0">
+                <div class="row" *ngIf="this.shippingDiscount > 0">
                   <div class="col-lg-6">Shipping Discount</div>
-                  <div class="col-lg-4 text-end">{{this.checkoutForm.shippingDiscountReason}}</div>
-                  <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-2 text-end"> - {{this.checkoutForm.shippingDiscount | currency}}</div>
+                  <div class="col-lg-4 text-end">{{this.shippingDiscountReason}}</div>
+                  <div *ngIf="this.shippingRate" class="col-lg-2 text-end"> - {{this.shippingDiscount | currency}}</div>
                 </div>
                 <div class="row">
                   <div class="col-lg-6">Estimated Tax</div>
-                  <div *ngIf="this.checkoutForm.estimatedTaxes" class="col-lg-4"></div>
-                  <div *ngIf="this.checkoutForm.estimatedTaxes" class="col-lg-2 text-end">{{this.checkoutForm.estimatedTaxes | currency}}</div>
-                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state == 'Georgia'" class="col-lg-6 text-end shipping-text">
+                  <div *ngIf="this.estimatedTaxes > 0" class="col-lg-4"></div>
+                  <div *ngIf="this.estimatedTaxes > 0" class="col-lg-2 text-end">{{this.estimatedTaxes | currency}}</div>
+                  <div *ngIf="this.estimatedTaxes == 0 && this.checkoutForm.shippingAddress.state == 'Georgia'" class="col-lg-6 text-end shipping-text">
                     <dx-load-indicator
                       class="button-indicator"
                       [visible]="showEstimatedTaxesSpinner">
                     </dx-load-indicator>
-                    <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.estimatedTaxes != 0" class="dx-button-text">Calculated at Next Step</span>
-                    <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.estimatedTaxes == 0" class="dx-button-text shipping-text">{{this.checkoutForm.estimatedTaxes | currency}}</span>
+                    <span *ngIf="!showEstimatedTaxesSpinner && this.estimatedTaxes == 0" class="dx-button-text">Calculated at Next Step</span>
+                    <span *ngIf="!showEstimatedTaxesSpinner && this.estimatedTaxes > 0" class="dx-button-text shipping-text">{{this.estimatedTaxes | currency}}</span>
                   </div>
-                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state != 'Georgia'" class="col-lg-6 text-end shipping-text">
+                  <div *ngIf="!this.estimatedTaxes && this.checkoutForm.shippingAddress.state != 'Georgia'" class="col-lg-6 text-end shipping-text">
                     Only required if in Georgia
                   </div>
                 </div>
                 <div class="row order-total">
                   <div class="col-lg-6 col-sm-3 order-total__title">Order Total</div>
-                  <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="NumberUtil.isNumber(checkoutForm.total)"><strong>{{ checkoutForm.total | currency}}</strong></div>
-                  <div class="col-lg-6 col-sm-3 text-end order-total__amount" *ngIf="!NumberUtil.isNumber(checkoutForm.total)"><strong>(0 | currency)</strong></div>
+                  <div class="col-lg-6 col-sm-3 text-end order-total__amount"><strong>{{ getOrderTotal() | currency}}</strong></div>
                 </div>
               </div>
             </div>
@@ -198,18 +201,6 @@
     </div>
   </section>
 </main>
-
-<dx-load-panel
-    #loadPanel
-    shadingColor="rgba(0,0,0,0.4)"
-    [position]="{ of: '#checkoutBlock' }"
-    [visible]="isProcessingPanelVisible"
-    [message] = "'Please wait while payment is processed!'"
-    [showIndicator]="true"
-    [showPane]="true"
-    [shading]="true"
-    [hideOnOutsideClick]="false">
-</dx-load-panel>
 
 <dx-load-panel
     #loadPanel

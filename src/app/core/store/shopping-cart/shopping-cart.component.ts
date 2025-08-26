@@ -38,6 +38,18 @@ export class ShoppingCartComponent implements OnInit {
     this.resetCartItems();
   }
 
+  getCartSubtotal(){
+    return this.shoppingCart.cartItems.map(item => item.price * item.orderQuantity).reduce((a,b) => a + b);
+  }
+
+  getCartDiscount(){
+    return this.shoppingCart.cartItems.map(item => item.discount ? item.discount * item.orderQuantity : 0).reduce((a,b) => a + b)
+  }
+
+  getCartTotal(){
+    return this.getCartSubtotal() - this.getCartDiscount();
+  }
+
   async applyCoupon() {
     this.resetCartItems();
 
@@ -54,9 +66,11 @@ export class ShoppingCartComponent implements OnInit {
           if ((validCoupon?.tags?.length > 0 && validCoupon.tags.some(tag => tag.id === item.id)) || (!validCoupon.tags || validCoupon.tags.length == 0)) {
             isValid = true;
 
-            item.discount = parseFloat(((item.price * validCoupon.percentOff) / 100).toFixed(2));
+            if(!item.salePrice){
+              item.discount = parseFloat(((item.price * validCoupon.percentOff) / 100).toFixed(2));
 
-            item.discountPrice = item.price - item.discount;
+              item.discountPrice = item.price - item.discount;
+            }
           }
         });
 

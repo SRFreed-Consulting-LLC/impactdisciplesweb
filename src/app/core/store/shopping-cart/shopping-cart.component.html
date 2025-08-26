@@ -58,13 +58,9 @@
                       </div>
                     </td>
                     <td class="product-price">
-                      <span *ngIf="(item?.discountPrice === null || item?.discountPrice === undefined) && !item?.salePrice" class="amount">
-                        {{ item.salePrice? (item.salePrice | currency) : item.price? (item.price | currency): (0 | currency) }}
+                      <span *ngIf="!item?.salePrice" class="amount">
+                        {{ item.price? (item.price | currency): (0 | currency) }}
                       </span>
-                      <div *ngIf="(item?.discountPrice || item?.discountPrice === 0) && item?.salePrice" class="d-flex justify-content-center">
-                        <span class="after-discount">{{item.discountPrice | currency}}</span>
-                        <span class="before-discount">{{ item.salePrice? item.salePrice : item.price? (item.price | currency): (0 | currency) }}</span>
-                      </div>
                       <div *ngIf="item?.salePrice" class="d-flex justify-content-center">
                         <span class="after-discount">{{item.salePrice | currency}}</span>
                       </div>
@@ -97,7 +93,7 @@
                     <td colspan="1"><strong></strong></td>
                     <td colspan="2">
                       <strong>
-                        <span class="code-text">{{ shoppingCart.totalBeforeDiscount | currency}}</span>
+                        <span class="code-text">{{ getCartSubtotal() | currency}}</span>
                       </strong>
                     </td>
                   </tr>
@@ -113,15 +109,15 @@
                       <strong *ngIf="cartDiscountAmount">
                         <span *ngIf="cartDiscountAmount?.percentOff">- {{ cartDiscountAmount.percentOff }}%</span>
                       </strong>
-                      <strong *ngIf="itemDiscountAmount">
-                        <span> - {{ shoppingCart.discount | currency}}</span>
+                      <strong *ngIf="this.couponCode">
+                        <span> - {{ getCartDiscount() | currency}}</span>
                       </strong>
                     </td>
                   </tr>
                   <tr>
                     <td colspan="3"><strong>Cart Total:</strong></td>
                     <td colspan="1"><strong></strong></td>
-                    <td colspan="2"><strong>{{ NumberUtil.isNumber(shoppingCart.total) ? (shoppingCart.total | currency) : (0 | currency) }}</strong></td>
+                    <td colspan="2"><strong>{{getCartTotal() | currency }}</strong></td>
                   </tr>
                 </tfoot>
               </table>
