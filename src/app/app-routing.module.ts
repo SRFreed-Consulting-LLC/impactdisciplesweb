@@ -122,6 +122,11 @@ const routes: Routes = [
     component: StoreComponent
   },
   {
+    path: 'spanish-resources',
+    component: StoreComponent,
+    data: { catagory: 'Espanol Resources' }
+  },
+  {
     path: 'product-details/:id',
     component: ProductDetailsComponent
   },

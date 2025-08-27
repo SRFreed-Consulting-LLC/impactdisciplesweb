@@ -23,9 +23,9 @@
             <div class="product__modal-content product__modal-content-2">
               <h4><a [routerLink]="['/shop/shop-details', product?.id]">{{product?.title}}</a></h4>
               <div class="product__price-2 mb-25">
-                <h5 *ngIf="product.salePrice && product.salePrice > 0"><s>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</s></h5>
-                <h5 *ngIf="product.salePrice && product.salePrice > 0"><strong>ON SALE! ${{ product.salePrice? product.salePrice.toFixed(2) : '0.00' }}</strong></h5>
-                <h5 *ngIf="!product.salePrice"><span>${{product?.cost? product?.cost.toFixed(2) : 0}}</span></h5>
+                <h5 *ngIf="product?.salePrice && product?.salePrice > 0"><s>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</s></h5>
+                <h5 *ngIf="product?.salePrice && product?.salePrice > 0"><strong>ON SALE! ${{ product.salePrice? product?.salePrice.toFixed(2) : '0.00' }}</strong></h5>
+                <h5 *ngIf="!product?.salePrice"><span>${{product?.cost? product?.cost.toFixed(2) : 0}}</span></h5>
               </div>
 
 

@@ -33,6 +33,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     this.getActiveSales().then(sales => {
       this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
         const productId = params['id'];
+
         if (productId) {
           this.loadProductDetails(productId, sales);
         }
@@ -62,10 +63,14 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
   private loadProductDetails(productId: string, sales: SaleModel[]): void {
     this.productService.streamById(productId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((product) => {
+
       this.product = product[0];
 
+              console.log(product)
+
+
       this.cartItem = {
-        id: this.product.id,
+        id: this.product?.id,
         itemName: this.product.title,
         orderQuantity: 1,
         price: NumberUtil.isNumber(this.product.cost)? this.product.cost : 0,

@@ -23,21 +23,20 @@
         </div>
       </section>
       <div class="row mt-50 justify-content-between">
-        <div class="col-xl-3 col-lg-4">
-          <app-store-sidebar 
-            (searchEvent)="searchProducts($event)" 
-            (categoryFilterEvent)="filterProducts(FILTER_TYPE.category, $event)" 
-            (seriesFilterEvent)="filterProducts(FILTER_TYPE.series, $event)" 
-            (viewAllProductsEvents)="filterProducts(FILTER_TYPE.viewAll)" 
-            [showSeriesInSidebar]="!showSeriesInMainView" 
+        <div *ngIf="showSideBar" class="col-xl-3 col-lg-4">
+          <app-store-sidebar
+            (searchEvent)="searchProducts($event)"
+            (categoryFilterEvent)="filterProducts(FILTER_TYPE.category, $event)"
+            (seriesFilterEvent)="filterProducts(FILTER_TYPE.series, $event)"
+            (viewAllProductsEvents)="filterProducts(FILTER_TYPE.viewAll)"
+            [showSeriesInSidebar]="!showSeriesInMainView"
             [seriesItems]="seriesItems"
           ></app-store-sidebar>
         </div>
-  
+
         <div class="col-xl-8 col-lg-8">
           <div class="blog__wrapper">
-
-            <div class="row mb-50">
+            <div *ngIf="showSideBar" class="row mb-50">
               <div class="d-flex justify-content-end">
                 <dx-select-box
                   [(value)]="selectedFilter"
@@ -64,7 +63,7 @@
                 <dx-button class="impact-btn impact-btn-dark-bg mt-10" (onClick)="filterProducts(FILTER_TYPE.series, series)">{{ series.name }}</dx-button>
               </div>
             </div>
-  
+
             <div *ngIf="!showSeriesInMainView" class="row">
               <div class="col-xl-12">
                 <div class="shop-pagination-wrapper">

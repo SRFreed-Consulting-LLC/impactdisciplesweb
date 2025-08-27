@@ -1,6 +1,7 @@
 import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
 import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
@@ -30,6 +31,7 @@ export class StoreComponent implements OnInit, OnDestroy {
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];
   public showSeriesInMainView: boolean = true;
+  public showSideBar: boolean = true;
   public paginate: any = {};
   public pageNo: number = 1;
   public pageSize: number = 6;
@@ -56,43 +58,78 @@ export class StoreComponent implements OnInit, OnDestroy {
     private viewScroller: ViewportScroller
   ) {}
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      if (params['page']) {
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: {},
-          queryParamsHandling: '',
-          replaceUrl: true
-        });
-      }
-    });
+  async ngOnInit(): Promise<void> {
+    let sales : SaleModel[] = await this.getActiveSales();
 
-    this.getActiveSales().then(sales => {
-      this.productService.streamAllByValue('isActive', true).subscribe((products) => {
-        this.products = products;
+    this.route.data.subscribe(params => {
+      if( params['catagory']) {
+        this.showSideBar = false;
+        let qp: QueryParam[] = [];
+        qp.push(new QueryParam('isActive', WhereFilterOperandKeys.equal,true));
+        qp.push(new QueryParam('category', WhereFilterOperandKeys.equal, '18z0BtelKIKrwycvko9N'));
 
-        let selectedSale: SaleModel;
+        this.productService.queryAllStreamByMultiValue(qp).subscribe((products) => {
+          this.products = products;
 
-        sales.forEach(sale => {
-          if(sale.isProducts){
-            selectedSale = sale;
+          let selectedSale: SaleModel;
+
+          sales.forEach(sale => {
+            if(sale.isProducts){
+              selectedSale = sale;
+            }
+          })
+
+          if(selectedSale){
+            this.products.forEach(product => {
+              product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost)
+            })
+          }
+
+          if(!this.showSeriesInMainView) {
+            this.setProducts(this.products)
+          } else {
+            this.filterProducts(FilterType.viewAll)
           }
         })
+      } else {
+        console.log("getting by other")
+        this.route.queryParams.subscribe(params => {
+          if (params['page']) {
+            this.router.navigate([], {
+              relativeTo: this.route,
+              queryParams: {},
+              queryParamsHandling: '',
+              replaceUrl: true
+            });
+          }
+        });
 
-        if(selectedSale){
-          this.products.forEach(product => {
-            product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost)
+        this.productService.streamAllByValue('isActive', true).subscribe((products) => {
+          this.products = products;
+
+          let selectedSale: SaleModel;
+
+          sales.forEach(sale => {
+            if(sale.isProducts){
+              selectedSale = sale;
+            }
           })
-        }
 
-        if(!this.showSeriesInMainView) {
-          this.setProducts(this.products)
-        } else {
-          this.filterProducts(FilterType.viewBySeries)
-        }
-      })
-    });
+          if(selectedSale){
+            this.products.forEach(product => {
+              product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost)
+            })
+          }
+
+          if(!this.showSeriesInMainView) {
+            this.setProducts(this.products)
+          } else {
+            this.filterProducts(FilterType.viewBySeries)
+          }
+        })
+      }
+
+    })
   }
 
 
