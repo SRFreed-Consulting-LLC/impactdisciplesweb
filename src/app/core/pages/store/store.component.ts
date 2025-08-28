@@ -6,6 +6,7 @@ import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
 import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
 import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
+import { ProductCategoriesService } from 'impactdisciplescommon/src/services/data/product-categories.service';
 import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
 import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
 import { SeriesService } from 'impactdisciplescommon/src/services/data/series.service';
@@ -37,6 +38,7 @@ export class StoreComponent implements OnInit, OnDestroy {
   public pageSize: number = 6;
   public selectedFilter: FilterType;
   public FILTER_TYPE = FilterType;
+  public title;
   public filterOptions = [
     { text: 'View All', value: FilterType.viewAll },
     { text: 'View by Series', value: FilterType.viewBySeries },
@@ -55,18 +57,24 @@ export class StoreComponent implements OnInit, OnDestroy {
     private salesService: SalesService,
     private route: ActivatedRoute,
     private router: Router,
-    private viewScroller: ViewportScroller
+    private viewScroller: ViewportScroller,
+    private productCategoriesService: ProductCategoriesService
   ) {}
 
   async ngOnInit(): Promise<void> {
     let sales : SaleModel[] = await this.getActiveSales();
 
-    this.route.data.subscribe(params => {
+    this.route.data.subscribe(async params => {
       if( params['catagory']) {
         this.showSideBar = false;
+
+        this.title = 'Spanish Resources'
+
+        let hiddenCategory = await this.productCategoriesService.getAllByValue('tag', this.title)
+
         let qp: QueryParam[] = [];
         qp.push(new QueryParam('isActive', WhereFilterOperandKeys.equal,true));
-        qp.push(new QueryParam('category', WhereFilterOperandKeys.equal, '18z0BtelKIKrwycvko9N'));
+        qp.push(new QueryParam('category', WhereFilterOperandKeys.equal, hiddenCategory[0].id));
 
         this.productService.queryAllStreamByMultiValue(qp).subscribe((products) => {
           this.products = products;
@@ -91,8 +99,10 @@ export class StoreComponent implements OnInit, OnDestroy {
             this.filterProducts(FilterType.viewAll)
           }
         })
+
       } else {
-        console.log("getting by other")
+        this.title = 'Store'
+
         this.route.queryParams.subscribe(params => {
           if (params['page']) {
             this.router.navigate([], {
@@ -104,7 +114,11 @@ export class StoreComponent implements OnInit, OnDestroy {
           }
         });
 
-        this.productService.streamAllByValue('isActive', true).subscribe((products) => {
+        let qp: QueryParam[] = [];
+        qp.push(new QueryParam('isActive', WhereFilterOperandKeys.equal,true));
+        qp.push(new QueryParam('showInStore', WhereFilterOperandKeys.equal, true));
+
+        this.productService.queryAllStreamByMultiValue(qp).subscribe((products) => {
           this.products = products;
 
           let selectedSale: SaleModel;

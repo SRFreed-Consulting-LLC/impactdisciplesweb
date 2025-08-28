@@ -154,9 +154,5 @@ export class ShoppingCartComponent implements OnInit {
     });
 
     this.shoppingCart.discount = NumberUtil.isNumber(totalDiscount)? parseFloat(totalDiscount.toFixed(2)) : 0;
-
-    this.shoppingCart.totalBeforeDiscount = NumberUtil.isNumber(total)? total : 0;
-
-    this.shoppingCart.total =  Math.max(this.shoppingCart.totalBeforeDiscount - this.shoppingCart.discount, 0);
   }
 }

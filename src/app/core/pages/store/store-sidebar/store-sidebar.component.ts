@@ -32,7 +32,7 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
     ]).pipe(
       takeUntil(this.ngUnsubscribe),
       map(([products, categories]) =>
-        categories.map(category => {
+        categories.filter(cat => cat.showInStore).map(category => {
           const categoryProducts = products.filter(product => product.category === category.id).sort((a,b) => a.categoryOrder - b.categoryOrder);
 
           return {

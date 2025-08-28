@@ -8,7 +8,7 @@
       <section class="events__slider slider__area slider__area-4 p-relative">
         <div class="slider-active swiper-container" #heroSliderContainer>
           <div class="swiper-wrapper">
-            <div class="events__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa)'">
+            <div *ngIf="isSummitPosted" class="events__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa)'">
               <div class="row">
                 <div class="col-xl-12">
                   <div class="slider__content slider__content-4 pr-50">
@@ -53,7 +53,7 @@
           <div class="row">
             <div class="col-xl-12">
               <div class="row events-list">
-                <a *ngFor="let event of eventsList" class="col-xl-4 col-lg-6 col-md-9 col-sm-12 events-list__event" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" >
+                <a *ngFor="let event of eventsList" class="col-xl-4 col-lg-6 col-md-9 col-sm-12 events-list__event" [routerLink]="event.isSummit ? ['/summit/2026', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" >
                   <div class="events-list__event-image fix">
                     <a class="w-img">
                       <img class="transform" [src]="event.imageUrl.url" alt="blog" *ngIf="event.imageUrl">

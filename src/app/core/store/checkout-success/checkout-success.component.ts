@@ -84,8 +84,8 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     sale.code = checkoutForm.couponCode;
     sale.date = Timestamp.now();
     sale.email = checkoutForm.email;
-    sale.totalAfterDiscount = checkoutForm.total;
-    sale.totalBeforeDiscount = checkoutForm.totalBeforeDiscount;
+    sale.totalAfterDiscount = checkoutForm.total - checkoutForm.discount;
+    sale.totalBeforeDiscount = checkoutForm.total;
     sale.receipt = checkoutForm.payPalReceipt.id ? checkoutForm.payPalReceipt.id : '';
     this.affiliateSaleService.add(sale);
   }

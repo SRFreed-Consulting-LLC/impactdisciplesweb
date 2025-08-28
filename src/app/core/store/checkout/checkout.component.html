@@ -17,7 +17,7 @@
       <ng-template #checkoutBlock>
         <div class="row">
           <div *ngIf="isShippingView" class="col-lg-6 pb-70">
-            <div>
+            <div *ngIf="isShippingAddressNeeded()">
               <dx-form
                 #shippingFormComponent
                 [formData]="checkoutForm"
@@ -64,7 +64,7 @@
               </dx-form>
               <dx-button class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
             </div>
-            <div *ngIf="this.checkoutForm.total == 0">
+            <div *ngIf="!isShippingAddressNeeded()">
               <dx-form
                 #shippingFormComponent
                 [formData]="checkoutForm"
@@ -81,7 +81,8 @@
                 <dxi-item dataField="isNewsletter" editorType="dxCheckBox" [colSpan]="1" cssClass="checkbox" [label]="{ text: 'Sign up for our Newsletter to receive emails about our next Events!', location: 'right' }"></dxi-item>
                 <dxi-item [colSpan]="5" itemType="empty"></dxi-item>
               </dx-form>
-              <dx-button  class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="submitRequest()">Submit</dx-button>
+              <dx-button *ngIf="this.subtotal > 0"class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
+              <dx-button *ngIf="this.subtotal == 0" class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="submitRequest()">Submit</dx-button>
             </div>
           </div>
 

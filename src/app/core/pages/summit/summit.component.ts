@@ -43,11 +43,13 @@ export class SummitComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(async params => {
       let year = Number(params.get('year'));
       let query = [
-        new QueryParam('startDate', WhereFilterOperandKeys.more, new Date('1/1/' +(year))),
+        new QueryParam('startDate', WhereFilterOperandKeys.more, (year) + '-01-01'),
         new QueryParam('isSummit', WhereFilterOperandKeys.equal, true)
       ]
 
       this.summit = await this.eventService.queryAllByMultiValue(query).then(events => {
+        console.log(events)
+
         if(events && events.length == 1){
           return events[0]
         } else {

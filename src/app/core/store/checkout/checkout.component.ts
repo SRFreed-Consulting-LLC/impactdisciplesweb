@@ -166,8 +166,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.totalDiscount =  this.checkoutForm.cartItems.map(item => item.discount ? item.discount * item.orderQuantity : 0).reduce((a,b) => a+ b);
 
     this.totalShippingWeight = this.checkoutForm.cartItems.map(item => item.weight ? item.weight : 0).reduce((a,b) => a+ b);
+  }
 
-    this.purchasesService.saveCheckoutForm(this.checkoutForm);
+  isShippingAddressNeeded(){
+    let shippingNotRequired = this.checkoutForm.cartItems.map(item => item.isEBook || item.isEvent).every(Boolean)
+
+    return !shippingNotRequired
   }
 
   private createPaypalConfig(){
@@ -202,14 +206,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       value: this.estimatedTaxes.toFixed(2).toString()
     }
 
-   let breakdown: IUnitBreakdown = {
+    let breakdown: IUnitBreakdown = {
       item_total: itemUnitTotal,
       shipping: shippingTotal,
       shipping_discount: shippingDiscountTotal,
       tax_total: taxesTotal,
       discount: discountTotal
+    }
 
-   }
 
     let amount: IUnitAmount = {
       currency_code: this.currency,
@@ -220,12 +224,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     let items: ITransactionItem[] = this.checkoutForm.cartItems.map(item => <ITransactionItem>{
       name: item.itemName,
       quantity: item.orderQuantity.toString(),
-      category: item.isEvent ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS',
+      category: 'DIGITAL_GOODS',
       unit_amount: {
         currency_code: this.currency,
         value: (item.salePrice ? item.salePrice : item.price).toFixed(2).toString()
       },
     })
+
+    console.log(items)
 
     this.payPalConfig = {
       currency: this.currency,
@@ -240,11 +246,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           ]
         },
         advanced: {
-          commit: 'true'
+          commit: 'true',
         },
         style: {
           label: 'paypal',
-          layout: 'vertical'
+          layout: 'vertical',
+          color:'blue',
+          shape: 'rect',
         },
         onApprove: (data, actions) => {
           console.log('onApprove - transaction was approved, but not authorized', data, actions);
@@ -253,6 +261,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           });
         },
         onClientAuthorization: (data) => {
+          console.log(data)
+
           this.submitRequest(data);
         },
         onCancel: (data, actions) => {
@@ -341,6 +351,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.checkoutForm.shippingRate = this.shippingRate;
     this.checkoutForm.shippingDiscount = this.shippingDiscount;
 
+    if(this.checkoutForm.payPalReceipt){
+      if(this.checkoutForm.couponCode){
+        this.checkoutForm.receipt = 'COUPON';
+      } else {
+        this.checkoutForm.receipt = "FREE ONLY"
+      }
+    }
+
     this.checkoutForm.processedStatus = "NEW";
     this.checkoutForm.dateProcessed = Timestamp.now();
 
@@ -352,7 +370,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.checkoutForm.receipt = data.id;
 
-    this.purchasesService.saveCheckoutForm(this.checkoutForm);
+    localStorage.setItem('checkoutForm', JSON.stringify(this.checkoutForm));
+
+    this.purchasesService.add(this.checkoutForm);
 
     this.sendProductPurchaseSuccessEmail(this.checkoutForm);
 
