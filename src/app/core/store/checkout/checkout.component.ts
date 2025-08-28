@@ -25,6 +25,7 @@ import { PurchasesService } from 'impactdisciplescommon/src/services/data/purcha
 import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
 import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
 import { IClientAuthorizeCallbackData, ICreateOrderRequest, IPayPalConfig, IPurchaseUnit, ITransactionItem, IUnitAmount, IUnitBreakdown } from 'ngx-paypal';
+import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
 
 @Component({
   selector: 'app-checkout',
@@ -231,8 +232,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       },
     })
 
-    console.log(items)
-
     this.payPalConfig = {
       currency: this.currency,
       clientId: 'AV50zoOW01VnMjSFor9aKf22aWVCz_p_3jsJIx0Co9j5GnaZenMZ3UXPRyxxOHPNAdRR97dHAKvSdiXS',
@@ -380,44 +379,72 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   sendProductPurchaseSuccessEmail(cart: CheckoutForm){
-    let subject = 'Thank you for Your Purchase ';
-    let text = '<div>You have purchased the following</div><br>';
+    let USDollar = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
 
-    this.cartService.getCartProducts().forEach(product => {
-      text += "<li><span>"
-      if(product.discountPrice) {
-        text += product.orderQuantity + "  x  " + product.itemName + " for $" + (product.orderQuantity * product.discountPrice? product.discountPrice:0).toFixed(2) + " (<span><s>" + product.price.toFixed(2)+"</s></span>)"
+    let html = "<table style='width: 90%;'>";
+    html +="<tr><td></td><td style='text-align: left;'>PRODUCT</td><td style='text-align: right;'>PRICE</td><td style='text-align: right;'>DISCOUNT</td><td style='text-align: center;'>QUANTITY</td><td style='text-align: right;'>TOTAL</td><td style='text-align: left;'></td></tr>";
+
+    cart.cartItems.forEach(product => {
+      html+="<tr>"
+      html+="<td><img src='" +product.img.url+ "' alt='"+product.img.name+"' height='100px'></img></td>"
+      html+="<td style='text-align: left;'>" +product.itemName+ "</td>"
+      html+="<td style='text-align: right;'>" +USDollar.format(product.price)+ "</td>"
+
+      if(product.salePrice > 0 || product.discountPrice > 0){
+        html+="<td style='text-align: right;'>" + USDollar.format((product.price - (product.salePrice ? product.salePrice : product.discountPrice)))+ "</td>"
       } else {
-        text += product.orderQuantity + "  x  " + product.itemName + " for $" + (product.orderQuantity * product.price? product.price:0).toFixed(2)
+        html+="<td></td>"
       }
+
+      html+="<td style='text-align: center;'>" + product.orderQuantity+ "</td>"
+
+      html+="<td style='text-align: right;'>" + USDollar.format(product.orderQuantity * (product.salePrice? product.salePrice : product.discountPrice? product.discountPrice : product.price))+ "</td>"
 
       if(product.isEBook){
-        text += "<a href='"+ product.eBookUrl.url+"' download>     DOWNLOAD " + product.itemName + "</a>";
+        html += "<td style='text-align: left;'><a href='"+ product.eBookUrl.url+"' download>DOWNLOAD</a></td>";
       }
-      text += "</span></li>";
+      html+="</tr>"
     })
-    text +="</ul><br>"
 
-    if(this.estimatedTaxes > 0){
-      text += '<div>Tax: $' + (this.estimatedTaxes).toFixed(2) + '</div><br>'
+    let subtotal = cart.cartItems.map(item => item.price * item.orderQuantity).reduce((a,b)=> a + b);
+
+    html +="<tr><td></td><td></td><td></td><td></td><td>SUBTOTAL</td><td style='text-align: right;'><b>"+ USDollar.format(subtotal) +"</b></td><td></td></tr>";
+
+    if(cart.estimatedTaxes > 0){
+      html +="<tr><td></td><td></td><td></td><td></td><td>TAXES</td><td style='text-align: right;'><b> + "+ USDollar.format(cart.estimatedTaxes) +"</b></td><td></td></tr>";
     }
 
-    if(this.shippingRate > 0){
-      text += '<div>Shipping: $' + (this.shippingRate).toFixed(2) + '</div><br>'
+    if(cart.shippingRate > 0){
+      html +="<tr><td></td><td></td><td></td><td></td><td>SHIPPING</td><td style='text-align: right;'><b> + "+ USDollar.format(cart.shippingRate) +"</b></td><td></td></tr>";
     }
 
-    if(cart.couponCode) {
-      text += '<div>Subtotal: $' + this.subtotal.toFixed(2) + '</div><br>'
-      text += '<div>Applied Coupon: ' + cart.couponCode + '</div><br>';
-      text += '<div>Total: $' + this.getOrderTotal().toFixed(2) + '</div><br>'
-    } else {
-      text += '<div>Total: $' + cart.total.toFixed(2) + '</div><br>'
+    if(cart.shippingDiscount > 0){
+      html +="<tr><td></td><td></td><td></td><td></td><td>SHIPPINGDISCOUNT</td><td style='text-align: right;'><b> - "+ USDollar.format(cart.shippingDiscount) +"</b></td><td></td></tr>";
     }
+
+    if(cart.discount) {
+      html +="<tr><td></td><td></td><td></td><td></td><td>DISCOUNT</td><td style='text-align: right;'><b> - "+ USDollar.format(cart.discount) +"</b></td><td></td></tr>";
+    }
+
+    html +="<tr><td></td><td></td><td></td><td></td><td>TOTAL</td><td style='text-align: right;'><b> = "+ USDollar.format(this.getOrderTotal()) +"</b></td><td></td></tr>";
+
+    html+="</table>"
 
     if(cart.receipt){
-      text += '<div>Confirmation Id: ' + cart.receipt + '<br>'
+      html += '<div>Confirmation Id: <b>' + cart.receipt + '</b></div>'
     }
 
-    this.emailService.sendHtmlEmail(cart.email, subject, text);
+    let form = {};
+    form['firstName'] = cart.firstName;
+    form['lastName'] = cart.lastName;
+    form['email'] = cart.email;
+    form['product_list'] = html;
+
+
+    return this.emailService.sendHTMLEMailFromTemplate(cart.email, "Sales Receipt", form);
   }
+
 }

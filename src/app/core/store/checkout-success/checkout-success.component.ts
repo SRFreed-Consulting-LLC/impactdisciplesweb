@@ -1,7 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
 import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
-
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { AffilliateSaleModel } from 'impactdisciplescommon/src/models/utils/affilliate-sale.model';
@@ -11,7 +10,6 @@ import { EMailService } from 'impactdisciplescommon/src/services/data/email.serv
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
-import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
 import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { ToastrService } from 'ngx-toastr';
@@ -29,7 +27,6 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private eventRegistrationService: EventRegistrationService,
     private emailService: EMailService,
     private eventService: EventService,
-    private puchasesService: PurchasesService,
     private affiliateSaleService: AffilliateSalesService,
     private taxSummaryService: TaxRateSummaryService,
     private toastrService: ToastrService){}
