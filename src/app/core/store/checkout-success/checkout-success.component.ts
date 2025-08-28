@@ -37,20 +37,14 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   async ngAfterViewInit() {
     let checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
 
-    //only process if checkoutForm exists
-    if(checkoutForm){
-      if(!checkoutForm.payPalReceipt){
-        if(checkoutForm.couponCode){
-          checkoutForm.receipt = 'COUPON';
-        } else {
-          checkoutForm.receipt = "FREE ONLY"
-        }
-      }
-      this.processSale(checkoutForm);
+    if(checkoutForm.isNewsletter){
+      this.newsletterSubscriptionService.createNewsLetterSubscription(checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email);
     }
-  }
 
-  processSale(checkoutForm: CheckoutForm){
+    if(checkoutForm.couponCode){
+      this.recordAffiliateSale(checkoutForm);
+    }
+
     let events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
     let products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
 
@@ -65,18 +59,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       this.cartService.clearCartNoConfirmation();
     }
 
-    this.puchasesService.add(checkoutForm).then(checkoutForm => {
-      if(checkoutForm.isNewsletter){
-        this.newsletterSubscriptionService.createNewsLetterSubscription(checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email);
-      }
-
-      if(checkoutForm.couponCode){
-        this.recordAffiliateSale(checkoutForm);
-      }
-
-      localStorage.removeItem('checkoutForm');
-    })
-
+    localStorage.removeItem('checkoutForm');
   }
 
   recordAffiliateSale(checkoutForm:CheckoutForm) {
