@@ -22,5 +22,6 @@ export const environment = {
   monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',
   shippingCarriers: ["se-1047083"],
   taxApiKey: 'v9xXivDi5nP3vl5Ut0HpNwdZhWkIm9Tc',
+  payPalClientId: 'AV50zoOW01VnMjSFor9aKf22aWVCz_p_3jsJIx0Co9j5GnaZenMZ3UXPRyxxOHPNAdRR97dHAKvSdiXS',
   application: "web"
 };

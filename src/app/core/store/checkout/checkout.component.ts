@@ -3,29 +3,23 @@ import { WebConfigService } from './../../../../../impactdisciplescommon/src/ser
 import { SalesService } from './../../../../../impactdisciplescommon/src/services/data/sales.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions, ofActionDispatched } from '@ngxs/store';
 import { DxFormComponent } from 'devextreme-angular';
 import { Timestamp } from 'firebase/firestore';
-import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
 import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
-import { UserAuthenticated } from 'impactdisciplescommon/src/services/actions/authentication.actions';
 import { CouponService } from 'impactdisciplescommon/src/services/data/coupon.service';
 import { ShippingService } from 'impactdisciplescommon/src/services/data/shipping.service';
 import { TaxRateService } from 'impactdisciplescommon/src/services/utils/tax-rate.service';
-import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
-import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
 import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
 import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
 import { IClientAuthorizeCallbackData, ICreateOrderRequest, IPayPalConfig, IPurchaseUnit, ITransactionItem, IUnitAmount, IUnitBreakdown } from 'ngx-paypal';
-import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
 
 @Component({
   selector: 'app-checkout',
@@ -52,7 +46,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   NumberUtil = NumberUtil;
 
-  totalShippingWeight: number = 0;
 
   isSetupPanelVisible: boolean = false;
   showEstimatedTaxesSpinner: boolean = false;
@@ -64,16 +57,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   public payPalConfig?: IPayPalConfig;
 
   currency = 'USD';
-  subtotal: number = 0;
-  totalDiscount: number = 0;
-  estimatedTaxes: number = 0;
-  shippingRate: number = 0;
-  shippingDiscount: number = 0;
-  shippingDiscountReason: string ="";
 
   constructor(
     public cartService: CartService,
-    private stripeService: StripeService,
     private purchasesService: PurchasesService,
     private couponService: CouponService,
     private shippingService: ShippingService,
@@ -90,7 +76,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.getActiveSales();
     this.getCouponCode();
     this.getWebConfig();
-    this.settleCart();
   }
 
   setView(view?: string){
@@ -128,14 +113,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   calculateEstimatedTax = async () => {
-    if(this.getOrderTotal() > 0 && this.checkoutForm.shippingAddress.state == 'Georgia'){
+    if(this.calculateSubTotal() > 0 && this.checkoutForm.shippingAddress.state == 'Georgia'){
       this.showEstimatedTaxesSpinner = true;
 
       this.checkoutForm = await this.taxService.calculateTaxRate(this.checkoutForm);
-
-      this.estimatedTaxes = this.checkoutForm.estimatedTaxes;
     } else {
-      this.estimatedTaxes = 0;
+      this.checkoutForm.estimatedTaxes = 0;
     }
   }
 
@@ -144,29 +127,31 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
 
-    this.shippingRate =this.checkoutForm.shippingRate;
+    if(this.calculateSubTotal() > this.webConfig.freeShippingAmount){
+      this.checkoutForm.shippingDiscount = this.checkoutForm.shippingRate;
 
-    if(this.subtotal > this.webConfig.freeShippingAmount){
-      this.shippingDiscount = this.checkoutForm.shippingRate;
-
-      this.shippingDiscountReason = "Over $" + this.webConfig.freeShippingAmount;
+      this.checkoutForm.shippingDiscountReason = "Over $" + this.webConfig.freeShippingAmount;
     } else {
       this.sales.forEach(sale => {
         if(sale.isShipping){
-          this.shippingDiscount = sale.percentOff / 100 * this.checkoutForm.shippingRate;
+          this.checkoutForm.shippingDiscount = sale.percentOff / 100 * this.checkoutForm.shippingRate;
 
-          this.shippingDiscountReason = sale.percentOff + "% Off"
+          this.checkoutForm.shippingDiscountReason = sale.percentOff + "% Off"
         }
       })
     }
   }
 
-  private settleCart(){
-    this.subtotal =  this.checkoutForm.cartItems.map(item => item.price * item.orderQuantity).reduce((a,b) => a+ b);
+  calculateSubTotal(){
+    return this.checkoutForm.cartItems.map(item => (item.salePrice ? item.salePrice : item.price) * item.orderQuantity).reduce((a,b) => a+ b);
+  }
 
-    this.totalDiscount =  this.checkoutForm.cartItems.map(item => item.discount ? item.discount * item.orderQuantity : 0).reduce((a,b) => a+ b);
+  calculateTotalDiscount(){
+    return this.checkoutForm.cartItems.map(item => item.discount ? item.discount * item.orderQuantity : 0).reduce((a,b) => a+ b);
+  }
 
-    this.totalShippingWeight = this.checkoutForm.cartItems.map(item => item.weight ? item.weight : 0).reduce((a,b) => a+ b);
+  calculateOrderTotal(){
+    return this.calculateSubTotal() - this.calculateTotalDiscount() + this.checkoutForm.estimatedTaxes + this.checkoutForm.shippingRate - this.checkoutForm.shippingDiscount;
   }
 
   isShippingAddressNeeded(){
@@ -184,27 +169,27 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     let itemUnitTotal: IUnitAmount = {
       currency_code: this.currency,
-      value: itemTotal.toFixed(2).toString()
+      value: this.calculateSubTotal().toFixed(2).toString()
     }
 
     let discountTotal: IUnitAmount = {
       currency_code: this.currency,
-      value: this.totalDiscount?.toFixed(2).toString()
+      value: this.calculateTotalDiscount()?.toFixed(2).toString()
     }
 
     let shippingTotal: IUnitAmount = {
       currency_code: this.currency,
-      value: this.shippingRate.toFixed(2).toString()
+      value: this.checkoutForm.shippingRate.toFixed(2).toString()
     }
 
     let shippingDiscountTotal: IUnitAmount = {
       currency_code: this.currency,
-      value: (itemTotal > this.webConfig.freeShippingAmount ? this.shippingRate : 0).toFixed(2).toString()
+      value: (itemTotal > this.webConfig.freeShippingAmount ? this.checkoutForm.shippingRate : 0).toFixed(2).toString()
     }
 
     let taxesTotal: IUnitAmount = {
       currency_code: this.currency,
-      value: this.estimatedTaxes.toFixed(2).toString()
+      value: this.checkoutForm.estimatedTaxes?.toFixed(2).toString()
     }
 
     let breakdown: IUnitBreakdown = {
@@ -218,9 +203,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     let amount: IUnitAmount = {
       currency_code: this.currency,
-      value: this.getOrderTotal().toFixed(2).toString(),
+      value: this.calculateOrderTotal().toFixed(2).toString(),
       breakdown: breakdown
     }
+
+    console.log(amount)
 
     let items: ITransactionItem[] = this.checkoutForm.cartItems.map(item => <ITransactionItem>{
       name: item.itemName,
@@ -234,7 +221,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.payPalConfig = {
       currency: this.currency,
-      clientId: 'AV50zoOW01VnMjSFor9aKf22aWVCz_p_3jsJIx0Co9j5GnaZenMZ3UXPRyxxOHPNAdRR97dHAKvSdiXS',
+      clientId: environment.payPalClientId,
       createOrderOnClient: (data) => <ICreateOrderRequest> {
           intent: 'CAPTURE',
           purchase_units: [
@@ -320,10 +307,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     })
   }
 
-  getOrderTotal(){
-    return this.subtotal - this.totalDiscount + this.estimatedTaxes + this.shippingRate - this.shippingDiscount;
-  }
-
   setLoading(isLoading) {
     if (isLoading) {
       // Disable the button and show a spinner
@@ -344,11 +327,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   submitRequest(data?: IClientAuthorizeCallbackData){
     this.checkoutForm.payPalReceipt = data;
-    this.checkoutForm.total = this.subtotal;
-    this.checkoutForm.discount = this.totalDiscount;
-    this.checkoutForm.estimatedTaxes = this.estimatedTaxes;
-    this.checkoutForm.shippingRate = this.shippingRate;
-    this.checkoutForm.shippingDiscount = this.shippingDiscount;
+    this.checkoutForm.discount = this.calculateTotalDiscount()
+    this.checkoutForm.total = this.calculateSubTotal();
 
     if(this.checkoutForm.payPalReceipt){
       if(this.checkoutForm.couponCode){
@@ -425,11 +405,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       html +="<tr><td></td><td></td><td></td><td></td><td>SHIPPINGDISCOUNT</td><td style='text-align: right;'><b> - "+ USDollar.format(cart.shippingDiscount) +"</b></td><td></td></tr>";
     }
 
-    if(cart.discount) {
+    if(cart.discount > 0) {
       html +="<tr><td></td><td></td><td></td><td></td><td>DISCOUNT</td><td style='text-align: right;'><b> - "+ USDollar.format(cart.discount) +"</b></td><td></td></tr>";
     }
 
-    html +="<tr><td></td><td></td><td></td><td></td><td>TOTAL</td><td style='text-align: right;'><b> = "+ USDollar.format(this.getOrderTotal()) +"</b></td><td></td></tr>";
+    html +="<tr><td></td><td></td><td></td><td></td><td>TOTAL</td><td style='text-align: right;'><b> = "+ USDollar.format(this.calculateOrderTotal()) +"</b></td><td></td></tr>";
 
     html+="</table>"
 
