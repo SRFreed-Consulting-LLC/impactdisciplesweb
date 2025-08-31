@@ -21,8 +21,6 @@ export const environment = {
   oneGiftUrl: 'https://buy.stripe.com/4gwcOI5sY1zq2JieUW',
   monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',
   shippingCarriers: ["se-1047625"],
-  taxApiKey: 'v9xXivDi5nP3vl5Ut0HpNwdZhWkIm9Tc',
-  payPalClientId: 'AVHO6L2X_NF3_tqmBi1WFiVcLLuesCf1i--wCLj8UreQ04QEzsymXE9Jcyxb9HL4tZ_byMLhB2cDAEd1',
   application: "web"
 };
 

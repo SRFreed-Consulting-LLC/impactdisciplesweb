@@ -221,7 +221,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.payPalConfig = {
       currency: this.currency,
-      clientId: environment.payPalClientId,
+      clientId: this.webConfig.paypalClientId,
       createOrderOnClient: (data) => <ICreateOrderRequest> {
           intent: 'CAPTURE',
           purchase_units: [
