@@ -96,7 +96,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           promises.push(this.calculateEstimatedTax());
 
           Promise.all(promises).then(() => {
-            this.createPaypalConfig();
+            if(this.calculateOrderTotal() > 0){
+              this.createPaypalConfig();
+            } else {
+              console.log('no paypal needed');
+              this.submitRequest();
+            }
+
 
             this.showEstimatedTaxesSpinner = false;
             this.showShippingSpinner = false;
@@ -151,7 +157,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   calculateOrderTotal(){
-    return this.calculateSubTotal() - this.calculateTotalDiscount() + this.checkoutForm.estimatedTaxes + this.checkoutForm.shippingRate - this.checkoutForm.shippingDiscount;
+    let total = (isNaN(this.calculateSubTotal()) ? 0 : this.calculateSubTotal())
+      - (isNaN(this.calculateTotalDiscount()) ? 0 :  this.calculateTotalDiscount())
+      + (isNaN(this.checkoutForm.estimatedTaxes) ? 0 :  this.checkoutForm.estimatedTaxes)
+      + (isNaN(this.checkoutForm.shippingRate) ? 0 :  this.checkoutForm.shippingRate)
+      - (isNaN(this.checkoutForm.shippingDiscount) ? 0 :  this.checkoutForm.shippingDiscount);
+
+    return total
   }
 
   isShippingAddressNeeded(){
@@ -206,8 +218,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       value: this.calculateOrderTotal().toFixed(2).toString(),
       breakdown: breakdown
     }
-
-    console.log(amount)
 
     let items: ITransactionItem[] = this.checkoutForm.cartItems.map(item => <ITransactionItem>{
       name: item.itemName,
@@ -326,17 +336,18 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   submitRequest(data?: IClientAuthorizeCallbackData){
-    this.checkoutForm.payPalReceipt = data;
-    this.checkoutForm.discount = this.calculateTotalDiscount()
-    this.checkoutForm.total = this.calculateSubTotal();
-
-    if(this.checkoutForm.payPalReceipt){
+    if(data){
+      this.checkoutForm.payPalReceipt = data;
+      this.checkoutForm.receipt = data.id;
+    } else {
       if(this.checkoutForm.couponCode){
         this.checkoutForm.receipt = 'COUPON';
       } else {
         this.checkoutForm.receipt = "FREE ONLY"
       }
     }
+    this.checkoutForm.discount = this.calculateTotalDiscount()
+    this.checkoutForm.total = this.calculateSubTotal();
 
     this.checkoutForm.processedStatus = "NEW";
     this.checkoutForm.dateProcessed = Timestamp.now();
@@ -347,15 +358,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       item.price = item.price && NumberUtil.isNumber(item.price)? item.price : 0;
     })
 
-    this.checkoutForm.receipt = data.id;
+    this.purchasesService.add(this.checkoutForm).then(cart => {
+      localStorage.setItem('checkoutForm', JSON.stringify(this.checkoutForm));
 
-    localStorage.setItem('checkoutForm', JSON.stringify(this.checkoutForm));
+      this.sendProductPurchaseSuccessEmail(this.checkoutForm);
 
-    this.purchasesService.add(this.checkoutForm);
-
-    this.sendProductPurchaseSuccessEmail(this.checkoutForm);
-
-    this.router.navigate(['/checkout-success'], { queryParams: { savedForm: this.checkoutForm.id }});
+      this.router.navigate(['/checkout-success'], { queryParams: { savedForm: this.checkoutForm.id }});
+    })
   }
 
   sendProductPurchaseSuccessEmail(cart: CheckoutForm){

@@ -46,7 +46,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     let products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
 
     if(events.length > 0){
-      this.registerUsers(checkoutForm.payPalReceipt.id? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events)
+      this.registerUsers(checkoutForm.payPalReceipt?.id? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events)
     }
 
     if(products.length > 0) {
@@ -66,7 +66,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     sale.email = checkoutForm.email;
     sale.totalAfterDiscount = checkoutForm.total - checkoutForm.discount;
     sale.totalBeforeDiscount = checkoutForm.total;
-    sale.receipt = checkoutForm.payPalReceipt.id ? checkoutForm.payPalReceipt.id : '';
+    sale.receipt = checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : '';
     this.affiliateSaleService.add(sale);
   }
 

@@ -63,8 +63,8 @@
                   </dxi-item>
                 </dxi-item>
               </dx-form>
-              <dx-button class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
-              <dx-button *ngIf="this.calculateSubTotal() == 0" class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="submitRequest()">Submit</dx-button>
+              <dx-button *ngIf="this.calculateOrderTotal() > 0" class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
+              <dx-button *ngIf="this.calculateOrderTotal() == 0 && this.calculateOrderTotal() == 0" class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="submitRequest()">Submit</dx-button>
             </div>
           </div>
 
@@ -138,7 +138,7 @@
                   <div class="col-lg-4"></div>
                   <div class="col-lg-2 text-end"> {{ this.calculateTotalDiscount() | currency }}</div>
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="isShippingAddressNeeded()">
                   <div class="col-lg-6">Shipping</div>
                   <div *ngIf="this.checkoutForm.shippingRate > 0" class="col-lg-4"></div>
                   <div *ngIf="this.checkoutForm.shippingRate > 0" class="col-lg-2 text-end">{{this.checkoutForm.shippingRate | currency}}</div>
@@ -156,7 +156,7 @@
                   <div class="col-lg-4 text-end">{{this.checkoutForm.shippingDiscountReason}}</div>
                   <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-2 text-end"> - {{this.checkoutForm.shippingDiscount | currency}}</div>
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="isShippingAddressNeeded() && this.calculateSubTotal() > 0">
                   <div class="col-lg-6">Estimated Tax</div>
                   <div *ngIf="this.checkoutForm.estimatedTaxes > 0" class="col-lg-4"></div>
                   <div *ngIf="this.checkoutForm.estimatedTaxes > 0" class="col-lg-2 text-end">{{this.checkoutForm.estimatedTaxes | currency}}</div>
