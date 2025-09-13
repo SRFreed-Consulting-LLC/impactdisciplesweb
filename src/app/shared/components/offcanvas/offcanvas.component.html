@@ -18,8 +18,11 @@
               </li>
             </ul>
           </li>
-          <li *ngIf="!menu.dropdownMenu">
+          <li *ngIf="!menu.dropdownMenu && !menu.external">
             <a [routerLink]="menu.link">{{ menu.title }}</a>
+          </li>
+          <li *ngIf="!menu.dropdownMenu && menu.external">
+            <a [href]="menu.link">{{ menu.title }}</a>
           </li>
         </ng-container>
       </ul>
