@@ -40,7 +40,7 @@
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: end;
+    align-items: flex-end;
     margin: 10px 0;
     a {
       color: #000;
@@ -159,7 +159,7 @@
     }
 
     .number {
-      font-size: 70px; 
+      font-size: 70px;
       font-weight: 800;
       @media #{$xxs,$xs} {
         font-size: 30px;
