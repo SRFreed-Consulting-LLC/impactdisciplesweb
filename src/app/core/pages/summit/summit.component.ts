@@ -46,7 +46,7 @@ export class SummitComponent implements OnInit, OnDestroy {
       let query = [
         new QueryParam('startDate', WhereFilterOperandKeys.more, (year) + '-01-01'),
         new QueryParam('isSummit', WhereFilterOperandKeys.equal, true),
-        new QueryParam('isActive', WhereFilterOperandKeys.equal, false)
+        new QueryParam('isActive', WhereFilterOperandKeys.equal, true)
       ]
 
       this.summit = await this.eventService.queryAllByMultiValue(query).then(events => {
