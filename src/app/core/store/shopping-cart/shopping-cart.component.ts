@@ -99,10 +99,10 @@ export class ShoppingCartComponent implements OnInit {
         this.settleCart()
       } else {
         notify({
-          message: 'Coupon applied successfully.',
+          message: 'Coupon not valid for these items.',
           position: 'top',
           width: 600,
-          type: 'success'
+          type: 'error'
         });
       }
     } else {

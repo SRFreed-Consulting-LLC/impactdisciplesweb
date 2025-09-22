@@ -38,6 +38,7 @@ import { SummitComponent } from './core/pages/summit/summit.component';
 import { AboutUsComponent } from './core/pages/about-us/about-us.component';
 import { CustomerReviewsComponent } from './core/pages/customer-reviews/customer-reviews.component';
 import { MonthlyNewsletterComponent } from './core/pages/monthly-newsletter/monthly-newsletter.component';
+import { SummitPreviewComponent } from './core/pages/summit-preview/summit-preview.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -46,8 +47,8 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'disciple-making-summit-2026-preview',
-    component: SummitComponent
+    path: 'summit-preview/:year',
+    component: SummitPreviewComponent
   },
   {
     path: 'events',

@@ -48,6 +48,7 @@ import { AboutUsComponent } from "./pages/about-us/about-us.component";
 import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-reviews.component";
 import { MonthlyNewsletterComponent } from "./pages/monthly-newsletter/monthly-newsletter.component";
 import { NgxPayPalModule } from "ngx-paypal";
+import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.component";
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { NgxPayPalModule } from "ngx-paypal";
     ProductDetailsComponent,
     ProfileComponent,
     SummitComponent,
+    SummitPreviewComponent,
     PodcastSidebarComponent,
     PodcastPostboxItemComponent,
     CustomerReviewsComponent,

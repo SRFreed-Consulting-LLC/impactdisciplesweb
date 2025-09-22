@@ -9,19 +9,12 @@ import { forkJoin } from 'rxjs';
 import { CoachService } from 'impactdisciplescommon/src/services/data/coach.service';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 
-interface GroupedAgendaItem {
-  startDate: string;
-  endDate: string;
-  courses: string[];
-  nonCourses: string[];
-}
-
 @Component({
-  selector: 'app-summit',
-  templateUrl: './summit.component.html',
-  styleUrls: ['./summit.component.scss']
+  selector: 'app-summit-preview',
+  templateUrl: './summit-preview.component.html',
+  styleUrls: ['./summit-preview.component.scss']
 })
-export class SummitComponent implements OnInit, OnDestroy {
+export class SummitPreviewComponent implements OnInit, OnDestroy {
 
   summit: EventModel;
   coaches: CoachModel[] = [];
@@ -45,8 +38,7 @@ export class SummitComponent implements OnInit, OnDestroy {
 
       let query = [
         new QueryParam('startDate', WhereFilterOperandKeys.more, (year) + '-01-01'),
-        new QueryParam('isSummit', WhereFilterOperandKeys.equal, true),
-        new QueryParam('isActive', WhereFilterOperandKeys.equal, false)
+        new QueryParam('isSummit', WhereFilterOperandKeys.equal, true)
       ]
 
       this.summit = await this.eventService.queryAllByMultiValue(query).then(events => {
