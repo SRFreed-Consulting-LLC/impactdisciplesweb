@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup,Validators } from '@angular/forms';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'theme-blog-reply-form',
@@ -12,7 +12,7 @@ export class BlogReplyFormComponent {
   public blogReplyForm!: FormGroup;
   public formSubmitted = false;
 
-  constructor(private toastrService: ToastrService) { }
+  constructor() { }
 
   ngOnInit () {
     this.blogReplyForm = new FormGroup({
@@ -27,7 +27,13 @@ export class BlogReplyFormComponent {
     this.formSubmitted = true;
     if (this.blogReplyForm.valid) {
       console.log('blog-reply-form-value', this.blogReplyForm.value);
-      this.toastrService.success(`Message sent successfully`);
+
+      notify({
+        message: `Message sent successfully`,
+        position: 'top',
+        width: 600,
+        type: 'success'
+      });
 
       // Reset the form
       this.blogReplyForm.reset();

@@ -6,9 +6,7 @@ import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model'
 import { SeminarModel } from 'impactdisciplescommon/src/models/domain/seminar.model';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
 import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { ToastrService } from 'ngx-toastr';
 import { map, Observable } from 'rxjs';
-
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { CoachService } from 'impactdisciplescommon/src/services/data/coach.service';
@@ -16,6 +14,7 @@ import { EMailService } from 'impactdisciplescommon/src/services/data/email.serv
 import { LocationService } from 'impactdisciplescommon/src/services/data/location.service';
 import { SeminarService } from 'impactdisciplescommon/src/services/data/seminar.service';
 import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-seminar-form',
@@ -32,7 +31,6 @@ export class SeminarFormComponent implements OnInit {
     private seminarService: SeminarService,
     private webConfigService: WebConfigService,
     private emailService: EMailService,
-    private toastrService: ToastrService,
     private coachService: CoachService
   ){}
 
@@ -84,7 +82,13 @@ export class SeminarFormComponent implements OnInit {
         return config[0].adminEmailAddress;
       }).then (email => {
         this.seminarService.add(this.seminarForm).then((form) => {
-          this.toastrService.success("Seminar Request Form submitted Successfully!");
+          notify({
+            message: "Seminar Request Form submitted Successfully!",
+            position: 'top',
+            width: 600,
+            type: 'success'
+          });
+
           return form;
         }).then(form => {
           this.emailService.sendTemplateEmail(email, 'Seminar Template', form);

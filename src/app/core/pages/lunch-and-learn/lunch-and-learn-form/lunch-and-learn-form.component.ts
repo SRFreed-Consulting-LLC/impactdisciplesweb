@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
+import notify from 'devextreme/ui/notify';
 import { Timestamp } from 'firebase/firestore';
 import { LunchAndLearnModel } from 'impactdisciplescommon/src/models/domain/lunch-and-learn.model';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
@@ -9,7 +10,6 @@ import { LunchAndLearnService } from 'impactdisciplescommon/src/services/data/lu
 import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-lunch-and-learn-form',
@@ -31,8 +31,9 @@ export class LunchAndLearnFormComponent implements OnInit {
 
   public states: string[];
 
-  constructor(private lunchAndLearnService: LunchAndLearnService, private webConfigService: WebConfigService,
-    private emailService: EMailService, private toastrService: ToastrService
+  constructor(private lunchAndLearnService: LunchAndLearnService,
+    private webConfigService: WebConfigService,
+    private emailService: EMailService
   ){}
 
   ngOnInit(): void {
@@ -56,7 +57,12 @@ export class LunchAndLearnFormComponent implements OnInit {
         return config[0].adminEmailAddress;
       }).then (email => {
         this.lunchAndLearnService.add(this.lunchRequestForm).then((form) => {
-          this.toastrService.success("Lunch and Learn Request submited Successfully!");
+          notify({
+            message: "Lunch and Learn Request submited Successfully!",
+            position: 'top',
+            width: 600,
+            type: 'success'
+          });
           return form;
         }).then(form => {
           this.emailService.sendTemplateEmail(email, 'Lunch And Learn Template', form);

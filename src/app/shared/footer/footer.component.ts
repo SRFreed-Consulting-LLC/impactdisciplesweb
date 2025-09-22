@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import impactDisciplesInfo from '../utils/data/impact-disciples.data';
 import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
-import { ToastrService } from 'ngx-toastr';
 import { Timestamp } from 'firebase/firestore';
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-footer',
@@ -15,13 +15,18 @@ export class FooterComponent {
 
   subscription: NewsletterSubscriptionModel = {... new NewsletterSubscriptionModel()};
 
-  constructor(private subscriptionService: NewsletterSubscriptionService, private toastrService: ToastrService){}
+  constructor(private subscriptionService: NewsletterSubscriptionService){}
 
   handleFormSubmit() {
     this.subscription.date = Timestamp.now();
 
     this.subscriptionService.add(this.subscription).then(() => {
-      this.toastrService.success('Subscription added Successfully!');
+      notify({
+        message: 'Subscription added Successfully!',
+        position: 'top',
+        width: 600,
+        type: 'success'
+      });
     })
   }
 }

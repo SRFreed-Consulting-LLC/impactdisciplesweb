@@ -12,14 +12,13 @@ import { ShippingService } from 'impactdisciplescommon/src/services/data/shippin
 import { TaxRateService } from 'impactdisciplescommon/src/services/utils/tax-rate.service';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
-import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
-import { environment } from 'src/environments/environment';
 import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
 import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
 import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
 import { IClientAuthorizeCallbackData, ICreateOrderRequest, IPayPalConfig, IPurchaseUnit, ITransactionItem, IUnitAmount, IUnitBreakdown } from 'ngx-paypal';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-checkout',
@@ -63,7 +62,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private purchasesService: PurchasesService,
     private couponService: CouponService,
     private shippingService: ShippingService,
-    private toastrService: ToastrService,
     private taxService: TaxRateService,
     private emailService: EMailService,
     private salesService: SalesService,
@@ -265,7 +263,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           console.log('OnCancel', data, actions);
         },
         onError: err => {
-          this.toastrService.error("There was an error processing the Paypal Transaction")
+          notify({
+            message: "There was an error processing the Paypal Transaction",
+            position: 'top',
+            width: 600,
+            type: 'error'
+          });
           console.log('OnError', err);
         },
         onClick: (data, actions) => {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import notify from 'devextreme/ui/notify';
 import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
-import { ToastrService } from 'ngx-toastr';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
@@ -25,7 +25,6 @@ export class GiveComponent implements OnInit {
 
   constructor (
     private stripeService: StripeService,
-    private toastrService: ToastrService,
     public cartService: CartService
   ) {}
 
@@ -160,11 +159,26 @@ export class GiveComponent implements OnInit {
   // ------- UI helpers -------
   showMessage(messageText, type) {
     if(type ==='SUCCESS'){
-      this.toastrService.success(messageText, 'SUCCESS!')
+      notify({
+        message: messageText,
+        position: 'top',
+        width: 600,
+        type: 'success'
+      });
     } else if(type ==='INFO'){
-      this.toastrService.info(messageText)
+      notify({
+        message: messageText,
+        position: 'top',
+        width: 600,
+        type: 'info'
+      });
     } else if(type ==='ERROR'){
-      this.toastrService.error(messageText, 'ERROR!')
+      notify({
+        message: messageText,
+        position: 'top',
+        width: 600,
+        type: 'error'
+      });
     }
   }
 

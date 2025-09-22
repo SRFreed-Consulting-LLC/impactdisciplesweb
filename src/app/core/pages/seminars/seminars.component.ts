@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-config.model';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import { UtilsService } from 'src/app/theme/shared/services/utils.service';
-import { ToastrService } from 'ngx-toastr';
 import { Timestamp } from 'firebase/firestore';
 import { ConsultationRequestModel } from 'impactdisciplescommon/src/models/domain/consultation-request.model';
 import { ConsultationRequestService } from 'impactdisciplescommon/src/services/data/consultation-request.service';
 import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-seminars',
@@ -21,8 +21,9 @@ export class SeminarsComponent implements OnInit {
   public webConfig: WebConfigModel = new WebConfigModel();
   public consultationRequest: ConsultationRequestModel;
 
-  constructor(public utilsService: UtilsService, private webConfigService: WebConfigService, private consultationRequestService: ConsultationRequestService,
-    private toastrService: ToastrService
+  constructor(public utilsService: UtilsService,
+    private webConfigService: WebConfigService,
+    private consultationRequestService: ConsultationRequestService,
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -37,7 +38,12 @@ export class SeminarsComponent implements OnInit {
     this.consultationRequest.date = Timestamp.now();
 
     this.consultationRequestService.add(this.consultationRequest).then(() => {
-      this.toastrService.success('Consultation Request submitted Successfully!');
+      notify({
+        message: 'Consultation Request submitted Successfully!',
+        position: 'top',
+        width: 600,
+        type: 'success'
+      });
     })
   }
 

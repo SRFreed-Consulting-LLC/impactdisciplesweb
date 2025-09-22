@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import notify from 'devextreme/ui/notify';
 import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
 import { CouponService } from 'impactdisciplescommon/src/services/data/coupon.service';
 import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
-import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 
@@ -24,7 +24,6 @@ export class ShoppingCartComponent implements OnInit {
   constructor (
     public cartService: CartService,
     private couponService: CouponService,
-    private toastrService: ToastrService,
     private router: Router
   ) {}
 
@@ -82,17 +81,37 @@ export class ShoppingCartComponent implements OnInit {
 
           this.shoppingCart.couponPercent = validCoupon.percentOff;
 
-          this.toastrService.success("Coupon applied successfully.", 'SUCCESS!')
+          notify({
+            message: 'Coupon applied successfully.',
+            position: 'top',
+            width: 600,
+            type: 'success'
+          });
         } else {
-          this.toastrService.error("Coupon not valid for these items.", 'ERROR!')
+          notify({
+            message: 'Coupon not valid for these items.',
+            position: 'top',
+            width: 600,
+            type: 'error'
+          });
         }
 
         this.settleCart()
       } else {
-        this.toastrService.error("Invalid or inactive coupon.", 'ERROR!')
+        notify({
+          message: 'Coupon applied successfully.',
+          position: 'top',
+          width: 600,
+          type: 'success'
+        });
       }
     } else {
-      this.toastrService.warning("Please Enter a Coupon Code.", 'ERROR!')
+        notify({
+          message: "Please Enter a Coupon Code.",
+          position: 'top',
+          width: 600,
+          type: 'success'
+        });
 
       this.resetCartItems();
     }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
+import notify from 'devextreme/ui/notify';
 import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-subscribe-area',
@@ -11,17 +11,26 @@ import { ToastrService } from 'ngx-toastr';
 export class SubscribeAreaComponent {
   subscription: NewsletterSubscriptionModel = {... new NewsletterSubscriptionModel()};
 
-  constructor(private subscriptionService: NewsletterSubscriptionService,
-    private toastrService: ToastrService){}
+  constructor(private subscriptionService: NewsletterSubscriptionService){}
 
   handleFormSubmit() {
     this.subscriptionService.createNewsLetterSubscription(this.subscription.firstName, this.subscription.lastName, this.subscription.email).then(sub => {
       if(sub){
-        this.toastrService.success('Newletter Subscription added Successfully!');
+        notify({
+          message: 'Newletter Subscription added Successfully!',
+          position: 'top',
+          width: 600,
+          type: 'success'
+        });
 
         return sub;
       } else {
-        this.toastrService.info('Your email already receives of our Newletter!');
+        notify({
+          message: 'Newletter Subscription added Successfully!',
+          position: 'top',
+          width: 600,
+          type: 'success'
+        });
 
         return null;
       }

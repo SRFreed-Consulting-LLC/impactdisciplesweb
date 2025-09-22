@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup,Validators } from '@angular/forms';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'theme-contact-form',
@@ -11,7 +11,7 @@ export class ContactFormComponent {
   public contactForm!: FormGroup;
   public formSubmitted = false;
 
-  constructor(private toastrService: ToastrService) { }
+  constructor() { }
 
   ngOnInit () {
     this.contactForm = new FormGroup({
@@ -25,8 +25,12 @@ export class ContactFormComponent {
   onSubmit() {
     this.formSubmitted = true;
     if (this.contactForm.valid) {
-      console.log('contact-form-value', this.contactForm.value);
-      this.toastrService.success(`Message sent successfully`);
+      notify({
+        message: `Message sent successfully`,
+        position: 'top',
+        width: 600,
+        type: 'success'
+      });
 
       // Reset the form
       this.contactForm.reset();

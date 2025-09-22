@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { CartItem } from "../../../../../impactdisciplescommon/src/models/utils/cart.model";
-import { ToastrService } from "ngx-toastr";
+import notify from "devextreme/ui/notify";
 
 const state = {
   cart: JSON.parse(localStorage['cart'] || '[]')
@@ -12,7 +12,7 @@ const state = {
 export class CartService {
   public orderQuantity: number = 1;
 
-  constructor(private toastrService: ToastrService){}
+  constructor(){}
 
   public getCartProducts(): CartItem[] {
     return state.cart;
@@ -29,7 +29,14 @@ export class CartService {
         ...payload
       };
       state.cart.push(newItem);
-      this.toastrService.success(`${payload.itemName} added to cart`);
+
+      notify({
+        message: `${payload.itemName} added to cart`,
+        position: 'top',
+        width: 600,
+        type: 'success'
+      });
+
     } else {
       state.cart.map((item: CartItem) => {
         if (item.id === payload.id) {
@@ -38,7 +45,13 @@ export class CartService {
               this.orderQuantity !== 1
                 ? this.orderQuantity + item.orderQuantity
                 : item.orderQuantity + 1;
-            this.toastrService.success(`${this.orderQuantity} ${item.itemName} added to cart`);
+
+            notify({
+              message: `${this.orderQuantity} ${item.itemName} added to cart`,
+              position: 'top',
+              width: 600,
+              type: 'success'
+            });
           }
         }
         return { ...item };
@@ -90,7 +103,13 @@ export class CartService {
         if (typeof item.orderQuantity !== "undefined") {
           if (item.orderQuantity > 1) {
             item.orderQuantity = item.orderQuantity - 1;
-            this.toastrService.info(`Decrement Quantity For ${item.itemName}`);
+
+            notify({
+              message: `Decrement Quantity For ${item.itemName}`,
+              position: 'top',
+              width: 600,
+              type: 'info'
+            });
           }
         }
       }
@@ -103,7 +122,14 @@ export class CartService {
     state.cart = state.cart.filter(
       (p: CartItem) => p.id !== payload.id
     );
-    this.toastrService.error(`${payload.itemName} remove to cart`);
+
+    notify({
+      message: `${payload.itemName} remove to cart`,
+      position: 'top',
+      width: 600,
+      type: 'error'
+    });
+
     localStorage.setItem("cart", JSON.stringify(state.cart));
   };
 

@@ -1,4 +1,3 @@
-@import 'ngx-toastr/toastr';
 @import "swiper/css/bundle";
 @import './assets/theme/css/fontAwesome5Pro.css';
 @import './assets/theme/css/ionicons.min.css';
@@ -82,7 +81,7 @@ h1, h2, h3, h4, h5, h6, p {
 @keyframes fadeInLeftToRight {
   0% {
     clip-path: inset(0 100% 0 0);
-    opacity: 0; 
+    opacity: 0;
   }
   50% {
     opacity: 1;
@@ -93,19 +92,19 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .fadeInLeftToRight {
-  animation: fadeInLeftToRight 2s ease-out forwards; 
+  animation: fadeInLeftToRight 2s ease-out forwards;
 }
 
 @keyframes fadeInRightToLeft {
   0% {
-    clip-path: inset(0 0 0 100%); 
+    clip-path: inset(0 0 0 100%);
     opacity: 0;
   }
   50% {
     opacity: 1;
   }
   100% {
-    clip-path: inset(0 0 0 0); 
+    clip-path: inset(0 0 0 0);
   }
 }
 
@@ -131,7 +130,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .fadeInDown {
-  display: inline-block; 
+  display: inline-block;
   animation: fadeInDown 1s linear forwards;
 }
 
@@ -384,7 +383,7 @@ h1, h2, h3, h4, h5, h6, p {
   position: relative;
   width: 50%;
   opacity: .8;
-  
+
   &:before {
     position: absolute;
     top: 1px;
@@ -405,7 +404,7 @@ h1, h2, h3, h4, h5, h6, p {
   position: relative;
   width: 100%;
   opacity: .8;
-  
+
   &:before {
     position: absolute;
     top: 1px;
@@ -432,7 +431,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 
 
-//title 
+//title
 .slider-small-pretitle {
 	color: #ffcc00;
 	font-size: 20px;

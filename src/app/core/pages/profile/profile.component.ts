@@ -6,7 +6,6 @@ import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model'
 import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
 import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
-import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, map, Observable, take } from 'rxjs';
 import { LocationModel } from 'impactdisciplescommon/src/models/domain/location.model';
 import { OrganizationModel } from 'impactdisciplescommon/src/models/domain/organization.model';
@@ -20,6 +19,7 @@ import { EventService } from 'impactdisciplescommon/src/services/data/event.serv
 import { LocationService } from 'impactdisciplescommon/src/services/data/location.service';
 import { OrganizationService } from 'impactdisciplescommon/src/services/data/organization.service';
 import { PurchasesService } from 'impactdisciplescommon/src/services/data/purchases.service';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-profile',
@@ -57,7 +57,6 @@ export class ProfileComponent implements OnInit{
 
   constructor(private authService: AuthService,
     private customerService: CustomerService,
-    public tostrService: ToastrService,
     private purchaseService: PurchasesService,
     private eventRegistrationService: EventRegistrationService,
     private eventService: EventService,
@@ -126,7 +125,12 @@ export class ProfileComponent implements OnInit{
   save(){
     this.customerService.update(this.loggedInUser.id, this.loggedInUser).then(user => {
       this.authService.setUser(user).pipe(take(1)).subscribe(user => {
-        this.tostrService.success(`${user.firstName} ${user.lastName} saved!`)
+        notify({
+          message: `${user.firstName} ${user.lastName} saved!`,
+          position: 'top',
+          width: 600,
+          type: 'success'
+        });
       })
     });
   }

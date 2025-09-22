@@ -1,4 +1,3 @@
-import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit,  } from '@angular/core';
 import { ConsultationSurveyModel } from 'impactdisciplescommon/src/models/domain/consultation-survey.model';
 import { DxButtonTypes } from 'devextreme-angular/ui/button';
@@ -9,6 +8,7 @@ import { EMailService } from 'impactdisciplescommon/src/services/data/email.serv
 import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-consultation-survey',
@@ -37,8 +37,7 @@ export class ConsultationSurveyComponent implements OnInit {
 
   constructor(private consultationSurveyService: ConsultationSurveyService,
     private emailService: EMailService,
-    private webConfigService: WebConfigService,
-    private toastrService: ToastrService){}
+    private webConfigService: WebConfigService){}
 
   ngOnInit(): void {
     this.consultationSurveyForm = {... new ConsultationSurveyModel()};
@@ -56,7 +55,12 @@ export class ConsultationSurveyComponent implements OnInit {
       return config[0].adminEmailAddress;
     }).then (email => {
       this.consultationSurveyService.add(this.consultationSurveyForm).then((form) => {
-        this.toastrService.success("Consultation Survey submited Successfully!");
+        notify({
+          message: "Consultation Survey submited Successfully!",
+          position: 'top',
+          width: 600,
+          type: 'success'
+        });
         return form;
       }).then(form => {
         this.emailService.sendTemplateEmail(email, 'Consultation Survey Template', form);

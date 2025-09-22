@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { IProduct } from '../types/product-d-t';
+import notify from 'devextreme/ui/notify';
 
 const state = {
   cart_products: JSON.parse(localStorage['cart_products'] || '[]')
@@ -12,7 +12,7 @@ const state = {
 export class CartService {
   public orderQuantity: number = 1;
   public isCartOpen: boolean = false;
-  constructor(private toastrService: ToastrService) { }
+  constructor() { }
 
   public getCartProducts(): IProduct[] {
     return state.cart_products;
@@ -26,7 +26,12 @@ export class CartService {
   addCartProduct(payload: IProduct) {
     const isExist = state.cart_products.some((i: IProduct) => i.id === payload.id);
     if (payload.status === 'out-of-stock' || payload.quantity === 0) {
-      this.toastrService.error(`Out of stock ${payload.title}`);
+        notify({
+          message: `Out of stock ${payload.title}`,
+          position: 'top',
+          width: 600,
+          type: 'error'
+        });
     }
     else if (!isExist) {
       const newItem = {
@@ -34,7 +39,13 @@ export class CartService {
         orderQuantity: 1,
       };
       state.cart_products.push(newItem);
-      this.toastrService.success(`${payload.title} added to cart`);
+
+      notify({
+        message: `${payload.title} added to cart`,
+        position: 'top',
+        width: 600,
+        type: 'success'
+      });
     } else {
       state.cart_products.map((item: IProduct) => {
         if (item.id === payload.id) {
@@ -44,9 +55,20 @@ export class CartService {
                 this.orderQuantity !== 1
                   ? this.orderQuantity + item.orderQuantity
                   : item.orderQuantity + 1;
-              this.toastrService.success(`${this.orderQuantity} ${item.title} added to cart`);
+
+                notify({
+                  message: `${this.orderQuantity} ${item.title} added to cart`,
+                  position: 'top',
+                  width: 600,
+                  type: 'success'
+                });
             } else {
-              this.toastrService.success(`No more quantity available for this product!`);
+              notify({
+                message: `No more quantity available for this product!`,
+                position: 'top',
+                width: 600,
+                type: 'success'
+              });
               this.orderQuantity = 1;
             }
           }
@@ -104,7 +126,13 @@ export class CartService {
         if (typeof item.orderQuantity !== "undefined") {
           if (item.orderQuantity > 1) {
             item.orderQuantity = item.orderQuantity - 1;
-            this.toastrService.info(`Decrement Quantity For ${item.title}`);
+
+            notify({
+              message: `Decrement Quantity For ${item.title}`,
+              position: 'top',
+              width: 600,
+              type: 'info'
+            });
           }
         }
       }
@@ -118,7 +146,14 @@ export class CartService {
     state.cart_products = state.cart_products.filter(
       (p: IProduct) => p.id !== payload.id
     );
-    this.toastrService.error(`${payload.title} remove to cart`);
+
+    notify({
+      message: `${payload.title} remove to cart`,
+      position: 'top',
+      width: 600,
+      type: 'error'
+    });
+
     localStorage.setItem("cart_products", JSON.stringify(state.cart_products));
   };
 

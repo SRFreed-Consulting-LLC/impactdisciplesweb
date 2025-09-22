@@ -5,7 +5,6 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
-import { ToastrModule } from 'ngx-toastr';
 import { ImpactDisciplesModule } from 'impactdisciplescommon/src/impactdisciples.common.module';
 import { CoreModule } from './core/core.module';
 import { CookieService } from 'ngx-cookie-service';
@@ -23,7 +22,6 @@ import { NgxsModule } from '@ngxs/store';
     NgxsModule.forRoot([], { developmentMode: !environment.production }),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideFirestore(() => getFirestore()),
-    ToastrModule.forRoot(),
     CoreModule,
     SharedModule,
     ThemeSharedModule,

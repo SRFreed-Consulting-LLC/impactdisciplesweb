@@ -1,4 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core';
+import notify from 'devextreme/ui/notify';
 import { Timestamp } from 'firebase/firestore';
 import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
@@ -12,7 +13,6 @@ import { EventService } from 'impactdisciplescommon/src/services/data/event.serv
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
-import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 @Component({
@@ -28,8 +28,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private emailService: EMailService,
     private eventService: EventService,
     private affiliateSaleService: AffilliateSalesService,
-    private taxSummaryService: TaxRateSummaryService,
-    private toastrService: ToastrService){}
+    private taxSummaryService: TaxRateSummaryService){}
 
   async ngAfterViewInit() {
     let checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
@@ -89,9 +88,14 @@ export class CheckoutSuccessComponent implements AfterViewInit{
             }).then(registration => {
               this.eventRegistrationService.update(registration.id, registration);
             }).then(() => {
-              this.toastrService.success(registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
-                ' starting on ' + dateFromTimestamp(event.startDate)
-              );
+              notify({
+                message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
+                ' starting on ' + dateFromTimestamp(event.startDate),
+                position: 'top',
+                width: 600,
+                type: 'error'
+              });
+
             });
           })
         })

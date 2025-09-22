@@ -1,4 +1,3 @@
-import { ToastrService } from 'ngx-toastr';
 import { EventRegistrationService } from './../../../../../../impactdisciplescommon/src/services/data/event-registration.service';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +15,7 @@ import { Timestamp } from 'firebase/firestore';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
 import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   selector: 'app-event-details',
@@ -38,7 +38,6 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     private eventService: EventService,
     private cartService: CartService,
     private eventRegistrationService: EventRegistrationService,
-    private toastrService: ToastrService,
     private emailService: EMailService
   ) {}
 
@@ -134,9 +133,13 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
             }).then(registration => {
               this.eventRegistrationService.update(registration.id, registration);
             }).then(() => {
-              this.toastrService.success(registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
-                ' starting on ' + dateFromTimestamp(event.startDate)
-              );
+              notify({
+                message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
+                ' starting on ' + dateFromTimestamp(event.startDate),
+                position: 'top',
+                width: 600,
+                type: 'success'
+              });
             });
           })
         })
