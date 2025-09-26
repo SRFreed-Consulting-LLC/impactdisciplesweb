@@ -165,7 +165,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   isShippingAddressNeeded(){
-    let shippingNotRequired = this.checkoutForm.cartItems.map(item => item.isEBook || item.isEvent).every(Boolean)
+    let shippingNotRequired = this.checkoutForm.cartItems.map(item => item.isEBook || item.isEvent || item.isDigitalBook).every(Boolean)
 
     return !shippingNotRequired
   }
@@ -438,5 +438,4 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     return this.emailService.sendHTMLEMailFromTemplate(cart.email, "Sales Receipt", form);
   }
-
 }

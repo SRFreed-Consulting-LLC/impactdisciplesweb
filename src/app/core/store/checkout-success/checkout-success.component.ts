@@ -33,29 +33,38 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   async ngAfterViewInit() {
     let checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
 
-    if(checkoutForm.isNewsletter){
-      this.newsletterSubscriptionService.createNewsLetterSubscription(checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email);
-    }
-
-    if(checkoutForm.couponCode){
-      this.recordAffiliateSale(checkoutForm);
-    }
-
-    let events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
-    let products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
-
-    if(events.length > 0){
-      this.registerUsers(checkoutForm.payPalReceipt?.id? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events)
-    }
-
-    if(products.length > 0) {
-      if(checkoutForm.total > 0){
-        this.taxSummaryService.recordStateTaxesCollected(checkoutForm);
+    if(checkoutForm){
+      if(checkoutForm.isNewsletter){
+        this.newsletterSubscriptionService.createNewsLetterSubscription(checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email);
       }
-      this.cartService.clearCartNoConfirmation();
+
+      if(checkoutForm.couponCode){
+        this.recordAffiliateSale(checkoutForm);
+      }
+
+      let events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
+      let products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
+      let digitalBooks: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook);
+
+      if(digitalBooks.length > 0){
+        this.registerImpactUser(checkoutForm)
+      }
+
+      if(events.length > 0){
+        this.registerUsers(checkoutForm.payPalReceipt?.id? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events)
+      }
+
+      if(products.length > 0) {
+        if(checkoutForm.total > 0){
+          this.taxSummaryService.recordStateTaxesCollected(checkoutForm);
+        }
+        this.cartService.clearCartNoConfirmation();
+      }
+
+      localStorage.removeItem('checkoutForm');
     }
 
-    localStorage.removeItem('checkoutForm');
+
   }
 
   recordAffiliateSale(checkoutForm:CheckoutForm) {
@@ -114,6 +123,11 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     form['startDate'] = new Date(event.startDate as string).toLocaleDateString() + " at " + new Date(event.startDate as string).toLocaleTimeString();
 
     return this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
+  }
+
+  registerImpactUser(checkoutForm: CheckoutForm){
+    console.log("ebooks ordered", checkoutForm)
+
   }
 
 }

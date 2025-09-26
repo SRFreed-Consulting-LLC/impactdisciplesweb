@@ -25,6 +25,7 @@ export class StorePostboxItemComponent {
       img: this.product.imageUrl,
       isEvent: false,
       isEBook: this.product.isEBook ? this.product.isEBook : false,
+      isDigitalBook: this.product.isDigitalBook? this.product.isDigitalBook: false,
       weight: this.product.weight,
       uom: this.product.uom,
       eBookUrl: this.product.eBookUrl? this.product.eBookUrl : null

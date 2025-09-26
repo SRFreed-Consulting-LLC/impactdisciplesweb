@@ -55,6 +55,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           img: this.event.imageUrl,
           isEBook: false,
           isEvent: true,
+          isDigitalBook: false,
           attendees: [{ firstName: '', lastName: '', email: '' }]
         }
         if(this.event.agendaItems) {
