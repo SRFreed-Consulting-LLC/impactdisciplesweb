@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import notify from 'devextreme/ui/notify';
 import { Timestamp } from 'firebase/firestore';
+import { ImpactUserService } from 'impactdisciplescommon/src/books/services/impact-user.service';
 import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
@@ -25,6 +26,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   constructor(public cartService: CartService,
     private newsletterSubscriptionService: NewsletterSubscriptionService,
     private eventRegistrationService: EventRegistrationService,
+    private impactService: ImpactUserService,
     private emailService: EMailService,
     private eventService: EventService,
     private affiliateSaleService: AffilliateSalesService,
@@ -47,7 +49,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       let digitalBooks: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook);
 
       if(digitalBooks.length > 0){
-        this.registerImpactUser(checkoutForm)
+        this.impactService.registerImpactUser(checkoutForm)
       }
 
       if(events.length > 0){
@@ -124,10 +126,4 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
     return this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
   }
-
-  registerImpactUser(checkoutForm: CheckoutForm){
-    console.log("ebooks ordered", checkoutForm)
-
-  }
-
 }
