@@ -6,7 +6,6 @@
       </div>
       <ul>
         <li *ngIf="isLoggedIn"><a routerLink="/profile">Profile</a></li>
-        <li *ngIf="isLoggedIn"><a (click)="authService.logOut()">Logout</a></li>
         <li *ngIf="!isLoggedIn"><a [routerLink]="['/create-auth-form']">Create Account</a></li>
         <li *ngIf="!isLoggedIn"><a [routerLink]="['/capture-username-form']">Login</a></li>
       </ul>

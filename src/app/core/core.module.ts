@@ -21,7 +21,6 @@ import { SeminarsComponent } from "./pages/seminars/seminars.component";
 import { EquippingGroupsComponent } from "./pages/equipping-groups/equipping-groups.component";
 import { CoachingWithImpactComponent } from "./pages/coaching-with-impact/coaching-with-impact.component";
 import { LunchAndLearnComponent } from "./pages/lunch-and-learn/lunch-and-learn.component";
-import { ImpactDisciplesModule } from "../../../impactdisciplescommon/src/impactdisciples.common.module";
 import { YouTubePlayerModule } from '@angular/youtube-player';
 import { ShoppingCartComponent } from "./store/shopping-cart/shopping-cart.component";
 import { CheckoutComponent } from "./store/checkout/checkout.component";
@@ -40,7 +39,6 @@ import { BlogPostboxItemComponent } from './pages/dmms/dmm-postbox-item/dmm-post
 import { StoreSidebarComponent } from './pages/store/store-sidebar/store-sidebar.component';
 import { StorePostboxItemComponent } from './pages/store/store-postbox-item/store-postbox-item.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
-import { ProfileComponent } from './pages/profile/profile.component';
 import { SummitComponent } from "./pages/summit/summit.component";
 import { PodcastSidebarComponent } from './pages/podcasts/podcast-sidebar/podcast-sidebar.component';
 import { PodcastPostboxItemComponent } from './pages/podcasts/podcast-postbox-item/podcast-postbox-item.component';
@@ -86,7 +84,6 @@ import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.co
     StoreSidebarComponent,
     StorePostboxItemComponent,
     ProductDetailsComponent,
-    ProfileComponent,
     SummitComponent,
     SummitPreviewComponent,
     PodcastSidebarComponent,
@@ -106,7 +103,7 @@ import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.co
     DxDataGridModule,
     DxFormModule,
     DxValidatorModule,
-    ImpactDisciplesModule,
+
     YouTubePlayerModule,
     DxDateBoxModule,
     DxAutocompleteModule,

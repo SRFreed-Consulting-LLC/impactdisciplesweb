@@ -27,7 +27,6 @@ import { PrayerTeamComponent } from './core/pages/prayer-team/prayer-team.compon
 import { StoreComponent } from './core/pages/store/store.component';
 import { TeamDetailsComponent } from './core/pages/team/team-details/team-details.component';
 import { ProductDetailsComponent } from './core/pages/product-details/product-details.component';
-import { ProfileComponent } from './core/pages/profile/profile.component';
 import { SummitComponent } from './core/pages/summit/summit.component';
 import { AboutUsComponent } from './core/pages/about-us/about-us.component';
 import { CustomerReviewsComponent } from './core/pages/customer-reviews/customer-reviews.component';
@@ -168,11 +167,7 @@ const routes: Routes = [
   {
     path: 'summit/:year',
     component: SummitComponent
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent
-  },
+  }
 ];
 
 @NgModule({

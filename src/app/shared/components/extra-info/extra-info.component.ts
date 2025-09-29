@@ -1,7 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
-import { AuthService } from 'impactdisciplescommon/src/services/utils/auth.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, } from 'rxjs';
 
 @Component({
   selector: 'app-extra-info',
@@ -14,13 +13,8 @@ export class ExtraInfoComponent implements OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(public authService: AuthService) {
-    this.authService.getUser().pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
-      if(user) {
-        this.user = user as CustomerModel;
-        this.isLoggedIn = true;
-      }
-    });
+  constructor() {
+
   }
 
   ngOnDestroy(): void {

@@ -5,7 +5,6 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
-import { ImpactDisciplesModule } from 'impactdisciplescommon/src/impactdisciples.common.module';
 import { CoreModule } from './core/core.module';
 import { CookieService } from 'ngx-cookie-service';
 import { SharedModule } from './shared/shared.module';
@@ -24,8 +23,7 @@ import { NgxsModule } from '@ngxs/store';
     provideFirestore(() => getFirestore()),
     CoreModule,
     SharedModule,
-    ThemeSharedModule,
-    ImpactDisciplesModule
+    ThemeSharedModule
   ],
   providers: [
     CookieService
