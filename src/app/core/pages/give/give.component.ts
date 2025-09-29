@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import notify from 'devextreme/ui/notify';
-import { StripeService } from 'impactdisciplescommon/src/services/utils/stripe.service';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
+import { StripeService } from 'src/app/shared/utils/services/stripe.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
