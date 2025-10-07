@@ -1,0 +1,81 @@
+<div class="sessions"  style="margin: 25px;">
+  <div class="sessions__upcoming">
+    <div class="sessions__upcoming-title">Upcoming Sessions</div>
+    <div class="sessions__upcoming-wrapper">
+      <div *ngFor="let monthGroup of myCourses; let i = index" class="monthGroup"  [class.first-child]="i === 0">
+        <div *ngFor="let dayGroup of monthGroup.days" class="dayGroup">
+          <div *ngFor="let timeGroup of dayGroup.timeGroups"  class="timeGroup">
+            <div *ngFor="let session of timeGroup.items" class="sessions__upcoming-item session-item" (click)="viewCourse(session)">
+              <div class="date">
+                <div class="date__number">{{ session.item.startDate | date: 'dd' }}</div>
+                <div class="date__month">{{ session.item.startDate | date: 'MMMM' }}</div>
+              </div>
+              <div class="details">
+                <div class="details__title">{{ getCourseTitle(getCourse(session.item.course)) }}</div>
+                <div>{{ session.item.startDate | date: 'h:mm a' }} - {{ session.item.endDate | date: 'h:mm a' }}</div>
+                <div>{{ getRoomName(session.item.room) }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sessions__title">All Sessions</div>
+  <div *ngFor="let monthGroup of allCourses">
+    <div *ngFor="let dayGroup of monthGroup.days">
+      <dx-accordion
+        #accordion
+        [dataSource]="dayGroup.timeGroups"
+        [collapsible]="true"
+        [selectedItem]="[]"
+        [animationDuration]="300"
+        id="accordion-container"
+      >
+        <div *dxTemplate="let session of 'title'">
+          <div class="header">{{ session.date | date: 'EEEE h:mm a' }}</div>
+        </div>
+        <div *dxTemplate="let session of 'item'">
+          <div *ngFor="let course of session.items">
+            <div class="sessions__item" (click)="viewCourse(course)" [ngClass]="{ 'assigned-user': course.isAssignedToUser }" >
+              <div class="sessions__item-click">Click for more information</div>
+              <div class="sessions__item-title">{{ getCourseTitle(getCourse(course.item.course)) }}</div>
+              <div class="sessions__item-details">
+                <div class="sessions__item-details-item">
+                  <i class="fa-solid fa-calendar-day"></i>
+                    <span>{{ course.item.startDate | date: 'EEEE, MMMM d, y' }}</span>
+                </div>
+                <div class="sessions__item-details-item">
+                  <i class="fa-regular fa-clock"></i>
+                  <span>{{ course.item.startDate | date: 'h:mm a' }} - {{ course.item.endDate | date: 'h:mm a' }}</span>
+                </div>
+                <div class="sessions__item-details-item">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <span>{{ getRoomName(course.item.room) }}</span>
+                </div>
+                <div class="sessions__item-details-item">
+                  <i class="fa-solid fa-users"></i>
+                  <span>Capacity: {{viewCourseCapcaity(course.item.id)}} / {{ course.item.maxParticipants }}</span>
+                  <span *ngIf="viewCourseCapcaity(course.item.id) >= course.item.maxParticipants" style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;Full</span>
+                </div>
+                <div class="sessions__item-details-item">
+                  <div class="row">
+                    <div class="col-5 text-left"><i class="fa-solid fa-users"></i><span>Coaches:</span></div>
+                    <div class="col-12 alignText-start">
+                      <div class="row" *ngFor="let coach of course.item.coaches">
+                        <div class="col-2"></div>
+                        <div class="col-10 text-left">
+                          <span>{{ getCoachName(coach) }} - {{ getCoachTitle(coach) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </dx-accordion>
+    </div>
+  </div>
+</div>

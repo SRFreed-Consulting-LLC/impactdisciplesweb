@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule, DxSelectBoxModule, DxLoadIndicatorModule, DxCheckBoxModule, DxTextBoxModule, DxLookupModule, DxLoadPanelModule, DxDataGridModule, DxPopupModule, DxGalleryModule, DxValidatorModule } from "devextreme-angular";
+import { DxButtonModule, DxNumberBoxModule, DxAccordionModule, DxFormModule, DxDateBoxModule, DxAutocompleteModule, DxTextAreaModule, DxRadioGroupModule, DxSelectBoxModule, DxLoadIndicatorModule, DxCheckBoxModule, DxTextBoxModule, DxLookupModule, DxLoadPanelModule, DxDataGridModule, DxPopupModule, DxGalleryModule, DxValidatorModule, DxTabsModule } from "devextreme-angular";
 import { SharedModule } from "../shared/shared.module";
 import { HomeHeaderComponent } from "./home/home-header/home-header.component";
 import { HomeComponent } from "./home/home.component";
@@ -47,6 +47,10 @@ import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-revi
 import { MonthlyNewsletterComponent } from "./pages/monthly-newsletter/monthly-newsletter.component";
 import { NgxPayPalModule } from "ngx-paypal";
 import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.component";
+import { ScheduleComponent } from "./pages/schedule/schedule.component";
+import { BreakoutSessionsComponent } from "./pages/schedule/breakout-sessions/breakout-sessions.component";
+import { CourseModalComponent } from "./pages/schedule/course-modal/course-modal.component";
+import { MyScheduleComponent } from "./pages/schedule/my-schedule/my-schedule.component";
 
 @NgModule({
   declarations: [
@@ -89,7 +93,11 @@ import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.co
     PodcastSidebarComponent,
     PodcastPostboxItemComponent,
     CustomerReviewsComponent,
-    MonthlyNewsletterComponent
+    MonthlyNewsletterComponent,
+    ScheduleComponent,
+    BreakoutSessionsComponent,
+    CourseModalComponent,
+    MyScheduleComponent
   ],
   imports: [
     CommonModule,
@@ -103,7 +111,7 @@ import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.co
     DxDataGridModule,
     DxFormModule,
     DxValidatorModule,
-
+    DxTabsModule,
     YouTubePlayerModule,
     DxDateBoxModule,
     DxAutocompleteModule,
@@ -117,7 +125,7 @@ import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.co
     DxCheckBoxModule,
     DxTextBoxModule,
     DxGalleryModule,
-    NgxPayPalModule
+    NgxPayPalModule,
   ],
   exports: [
     HomeComponent,

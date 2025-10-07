@@ -1,0 +1,97 @@
+@import '../../../../../assets/styles/variables.scss';
+
+.course-popup-content {
+  text-align: center;
+  &__title {
+    font-weight: 900;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  &__details {
+    margin: 20px 0;
+    &-item {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      i {
+        margin-right: 20px;
+        color: #868686;
+        width: 20px;
+      }
+      span {
+        font-size: 13px;
+      }
+    }
+  }
+  &__button {
+    &-remove {
+      width: 100%;
+      color: #000;
+      background-color: #d1d1d1;
+    }
+    &-add {
+      width: 100%;
+      color: #ffffff;
+      background-color: $primary;
+    }
+  }
+  .coaches {
+    margin: 20px 0;
+    &__header {
+      text-align: left;
+      margin: 10px 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    &__wrapper {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+    }
+    .coach {
+      display: flex;
+      background-color: #ffffff;
+      border: 1px solid $border;
+      border-radius: 10px;
+      padding: 5px 20px 5px 5px;
+      align-items: center;
+
+      &__img {
+        margin-right: 20px;
+      }
+      &__details {
+        text-align: left;
+        .name {
+          font-weight: 700;
+          font-size: 12px;
+        }
+        .title {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .dx-popup-normal {
+  // .dx-popup-content {
+  //   background-color: #f3f3f375;
+  // }
+  .dx-popup-title.dx-toolbar {
+    background-color: $primary;
+    .dx-button-mode-text .dx-icon {
+      color: #fff;
+    }
+    .dx-toolbar-label>div {
+      color: #fff;
+    }
+  }
+}

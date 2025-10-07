@@ -15,6 +15,7 @@ import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/service
 import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-checkout-success',
@@ -123,7 +124,8 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     form['email'] = registration.email;
     form['eventName'] = event.eventName;
     form['startDate'] = new Date(event.startDate as string).toLocaleDateString() + " at " + new Date(event.startDate as string).toLocaleTimeString();
+    form['editRegistration'] = "To Register for break out sessions, click <a href='"+environment.domain+"/events/" + event.id + "/registrations/" +registration.id +"'>here</a>"
 
-    return this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
+    return this.emailService.sendHTMLEMailFromTemplate(registration.email, event.emailTemplate, form);
   }
 }

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MonthlyNewsletterModel } from 'impactdisciplescommon/src/models/domain/monthly-newsletter.model';
 import { MonthlyNewletterService } from 'impactdisciplescommon/src/services/data/monthly-newsletter.service';
-import { NewsletterService } from 'impactdisciplescommon/src/services/data/newletter.service';
-import { map } from 'rxjs';
+
 
 @Component({
   selector: 'app-monthly-newsletter',

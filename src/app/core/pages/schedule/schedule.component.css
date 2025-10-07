@@ -1,0 +1,12 @@
+.frame {
+  height: 85vh;
+  width: 50vw;
+  overflow-y: none;
+  justify-content: left;
+  align-items: center;
+}
+
+#withIconAndText{
+  position: absolute;
+  top: 30px;
+}

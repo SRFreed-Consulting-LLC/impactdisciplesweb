@@ -1,0 +1,57 @@
+<dx-popup
+  [showTitle]="true"
+  [dragEnabled]="false"
+  [visible]="isVisible$ | async"
+  [width]="'50%'"
+  [height]="'75%'"
+  cssClass="course-popup"
+  [showCloseButton]="true"
+  (onHiding)="onCancel()">
+
+  <div class="course-popup-content" *ngIf="isVisible$ | async">
+    <div class="course-popup-content__title">{{ courseItem?.title }}</div>
+    <div class="course-popup-content__details">
+      <div class="course-popup-content__details-item">
+        <i class="fa-solid fa-calendar-day"></i>
+        <span>{{ customAgendaItem?.item.startDate | date: 'EEEE, MMMM d, y' }}</span>
+      </div>
+      <div class="course-popup-content__details-item">
+        <i class="fa-regular fa-clock"></i>
+        <span>{{ customAgendaItem?.item.startDate | date: 'h:mm a' }} - {{ customAgendaItem?.item.endDate | date: 'h:mm a' }}</span>
+      </div>
+      <div class="course-popup-content__details-item">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>{{ getRoomName(customAgendaItem?.item.room) }}</span>
+      </div>
+      <div class="course-popup-content__details-item">
+        <i class="fa-solid fa-users"></i>
+        <span>Capacity: {{ getCapacity() }} / {{ customAgendaItem?.item.maxParticipants }}</span>
+        <span *ngIf="getCapacity() >= customAgendaItem?.item.maxParticipants" style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;Full</span>
+      </div>
+    </div>
+    <dx-button *ngIf="!customAgendaItem?.isAssignedToUser" class="course-popup-content__button-add" [text]="'Sign up'" (onClick)="addCourse(customAgendaItem.item)"></dx-button>
+    <dx-button *ngIf="customAgendaItem?.isAssignedToUser" class="course-popup-content__button-remove" [text]="'Remove'" (onClick)="removeCourse(customAgendaItem.item)"></dx-button>
+    <div class="coaches">
+      <div class="coaches__header">Speakers</div>
+      <div class="coaches__wrapper">
+        <div
+          *ngFor="let coach of customAgendaItem?.item.coaches"
+          class="coach"
+        >
+          <div class="coach__img">
+            <img class="transform" [src]="getCoachImg(coach)" [alt]="getCoachName(coach)" width="40">
+          </div>
+          <div class="coach__details">
+            <div class="name">{{ getCoachName(coach) }}</div>
+            <div class="title">{{ getCoachTitle(coach) }}</div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="course-popup-content__description">
+      {{ courseItem.longDescription || courseItem.shortDescription }}
+    </div>
+  </div>
+
+</dx-popup>

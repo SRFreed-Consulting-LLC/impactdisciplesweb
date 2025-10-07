@@ -1,0 +1,259 @@
+<div class="schedule" style="margin: 25px;">
+  <div class="schedule__days" *ngIf="event?.agendaItems">
+    <div class="schedule__tabs">
+      <ng-container *ngFor="let monthGroup of fullSchedule">
+        <ng-container *ngFor="let dayGroup of monthGroup.days">
+          <button
+            class="schedule__tabs-tab"
+            [ngClass]="{ 'active': activeDay?.date === dayGroup.date }"
+            (click)="setActiveDay(dayGroup)">
+            <div class="weekday">{{ dayGroup.date | date: 'EEE' }}</div>
+            <div class="schedule__tabs-tab-date">
+              <div class="month">{{ dayGroup.date | date: 'MMM' }}</div>
+              <div class="number">{{ dayGroup.date | date: 'd' }}</div>
+            </div>
+          </button>
+        </ng-container>
+
+      </ng-container>
+    </div>
+
+    <div class="schedule__day" *ngIf="activeDay">
+      <div *ngFor="let timeGroup of activeDay.timeGroups">
+        <div *ngIf="timeGroup.items.length > 1" class="breakout" (click)="onNavigateToBreakouts(timeGroup)">
+          <div class="breakout__date">
+            <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
+            <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
+          </div>
+          <div class="breakout__details">
+            <div class="title">BREAKOUT SESSIONS</div>
+            <div *ngIf="!isAnyItemAssignedInGroup(timeGroup)" class="subtitle">You are not currently signed up for a Breakout Session in this time slot. Click to view available sessions.</div>
+            <div *ngIf="isAnyItemAssignedInGroup(timeGroup)">
+              <div *ngFor="let breakout of timeGroup.items">
+                <div *ngIf="breakout.isAssignedToUser" class="course">
+                  <div class="course__title">{{ getCourseTitle(getCourse(breakout.item.course)) }}</div>
+                  <div class="course__room">Room: {{ getRoomName(breakout.item.room) }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="breakout__icon">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+        <div *ngIf="timeGroup.items.length === 1" class="agenda-item">
+          <div class="agenda-item__date">
+            <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
+            <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
+          </div>
+
+          <div class="agenda-item__details"  [ngClass]="{'main-item': !timeGroup.items[0].item.isCourse && !timeGroup.items[0].item.isFoodBreak }">
+            <div *ngIf="!timeGroup.items[0].item.isCourse" class="title">{{ timeGroup.items[0].item.text }}</div>
+            <div class="room">Room: {{ getRoomName(timeGroup.items[0].item.room) }}</div>
+
+            <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length == 1">
+              <b>Coach:</b> {{ getCoachName(timeGroup.items[0].item.coaches[0]) }}
+            </div>
+            <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length > 1">
+              <b>Coaches:</b> {{ getCoachList(timeGroup.items[0].item.coaches) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+    <!-- Display agenda items for the selected day -->
+    <!-- <div class="schedule__day" *ngIf="activeDay">
+      <div *ngFor="let timeGroup of activeDay.timeGroups">
+        <div *ngIf="timeGroup.items.length > 1" class="breakout">
+          <div *ngIf="!isAnyItemAssignedInGroup(timeGroup)" class="breakout__assigned-course" (click)="onNavigateToBreakouts()">
+            <div class="breakout__noData-date">
+              <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
+              <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
+            </div>
+            <div class="breakout__noData-details">
+              <div class="title">BREAKOUT SESSIONS</div>
+              <div class="subtitle">You are not currently signed up for a Breakout Session. Click to view available sessions.</div>
+            </div>
+            <div class="breakout__noData-icon">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+          <div *ngFor="let breakout of timeGroup.items">
+            <div *ngIf="breakout.isAssignedToUser" class="breakout__assigned-course">
+              <div class="breakout__assigned-course-remove">
+                <i class="fas fa-times" (click)="removeCourse(breakout.item, timeGroup)"></i>
+              </div>
+              <div class="breakout__assigned-course-date">
+                <div>{{ breakout.item.startDate | date: 'h:mm a' }}</div>
+                <div>{{ breakout.item.endDate | date: 'h:mm a' }}</div>
+              </div>
+              <div class="breakout__assigned-course-details">
+                <div class="title">{{ getCourseTitle(getCourseById(breakout.item.course)) }}</div>
+                <div class="room">Room: {{ getRoomName(breakout.item.room) }}</div>
+                <div class="coach" *ngIf="breakout.item.coaches && breakout.item.coaches.length == 1">
+                  <b>Coach:</b> {{ getCoachName(breakout.item.coaches[0]) }}
+                </div>
+                <div class="coach" *ngIf="breakout.item.coaches && breakout.item.coaches.length > 1">
+                  <b>Coaches:</b> {{ getCoachList(breakout.item.coaches) }}
+                </div>
+                <div class="bottom-row">
+                  <div>
+                    <div class="capacity" *ngIf="breakout.item.maxParticipants > 0">Capacity: {{ breakout.item.maxParticipants }}</div>
+                  </div>
+                  <i class="fas fa-eye" (click)="viewCourse(breakout)"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="timeGroup.items.length === 1" class="agenda-item">
+          <div class="agenda-item__date">
+            <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
+            <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
+          </div>
+
+          <div class="agenda-item__details"  [ngClass]="{'main-item': !timeGroup.items[0].item.isCourse && timeGroup.items[0].item.coaches?.length > 0}">
+            <div *ngIf="!timeGroup.items[0].item.isCourse" class="title">{{ timeGroup.items[0].item.text }}</div>
+            <div class="room">Room: {{ getRoomName(timeGroup.items[0].item.room) }}</div>
+
+            <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length == 1">
+              <b>Coach:</b> {{ getCoachName(timeGroup.items[0].item.coaches[0]) }}
+            </div>
+            <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length > 1">
+              <b>Coaches:</b> {{ getCoachList(timeGroup.items[0].item.coaches) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
+    <!-- <div class="schedule__day-agenda" *ngIf="activeDay">
+      <div *ngFor="let timeGroup of activeDay.timeGroups">
+        <div *ngIf="timeGroup.items.length > 1">
+          <div *ngIf="timeGroup.items[0].isAssignedToUser" class="agenda-item">
+            <div *ngIf="timeGroup.items[0].item.isCourse" class="course-button">
+              <div>
+                <i class="fas fa-times" (click)="removeCourse(timeGroup.items[0].item, timeGroup)"></i>
+              </div>
+            </div>
+            <div class="agenda-item__date">
+              <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
+              <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
+            </div>
+
+            <div class="agenda-item__details">
+              <div *ngIf="timeGroup.items[0].item.isCourse" class="title">{{ getCourseTitle(getCourseById(timeGroup.items[0].item.course)) }}</div>
+              <div class="room">Room: {{ getRoomName(timeGroup.items[0].item.room) }}</div>
+
+              <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length == 1">
+                <b>Coach:</b> {{ getCoachName(timeGroup.items[0].item.coaches[0]) }}
+              </div>
+              <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length > 1">
+                <b>Coaches:</b> {{ getCoachList(timeGroup.items[0].item.coaches) }}
+              </div>
+              <div class="bottom-row">
+                <div>
+                  <div class="capacity" *ngIf="timeGroup.items[0].item.maxParticipants > 0">Capacity: {{ timeGroup.items[0].item.maxParticipants }}</div>
+                </div>
+                <i class="fas fa-eye" (click)="viewCourse(timeGroup.items[0])"></i>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!timeGroup.items[0].isAssignedToUser" class="breakout">
+            <div class="breakout__date">
+              <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
+              <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
+            </div>
+            <div class="breakout__details">
+              <div class="breakout__title">BREAKOUT SESSIONS</div>
+              <div class="breakout__desc">You are not currently signed up for a Breakout Session. Click to view available sessions.</div>
+            </div>
+            <div class="breakout__icon">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="timeGroup.items.length === 1" class="agenda-item">
+          <div class="agenda-item__date">
+            <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
+            <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
+          </div>
+          <div class="agenda-item__details" [ngClass]="{'main-item': !timeGroup.items[0].item.isCourse && timeGroup.items[0].item.coaches?.length > 0}">
+            <div class="title">{{ timeGroup.items[0].item.text }}</div>
+            <div class="room">Room: {{ getRoomName(timeGroup.items[0].item.room) }}</div>
+
+            <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length == 1">
+              <b>Coach:</b> {{ getCoachName(timeGroup.items[0].item.coaches[0]) }}
+            </div>
+            <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length > 1">
+              <b>Coaches:</b> {{ getCoachList(timeGroup.items[0].item.coaches) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
+
+
+
+
+
+
+
+    <!-- <div class="schedule__day-agenda" *ngIf="activeDay">
+      <div *ngFor="let timeGroup of activeDay.timeGroups">
+        <div
+          *ngFor="let agendaItem of timeGroup.items"
+          class="agenda-item"
+          [ngClass]="{'course': agendaItem.item.isCourse, 'session': !agendaItem.item.isCourse, 'assignedCourse':  agendaItem.isAssignedToUser}"
+        >
+          <div *ngIf="agendaItem.item.isCourse" class="course-button">
+            <ng-container *ngIf="isUserAssignedToItem(agendaItem)">
+              <i class="fas fa-times" (click)="removeCourse(agendaItem.item, timeGroup)"></i>
+            </ng-container>
+            <ng-container *ngIf="!isUserAssignedToItem(agendaItem) && isAnyItemAssignedInGroup(timeGroup)">
+              <i></i>
+            </ng-container>
+            <ng-container *ngIf="!isAnyItemAssignedInGroup(timeGroup)">
+              <i class="far fa-square-plus" (click)="addCourse(agendaItem.item, timeGroup)"></i>
+            </ng-container>
+          </div>
+          <div class="agenda-item__date">
+            <div>{{ agendaItem.item.startDate | date: 'h:mm a' }}</div>
+            <div>{{ agendaItem.item.endDate | date: 'h:mm a' }}</div>
+          </div>
+
+          <div class="agenda-item__details"  [ngClass]="{'main-item': !agendaItem.item.isCourse && agendaItem.item.coaches?.length > 0}">
+            <div *ngIf="agendaItem.item.isCourse" class="title">{{ getCourseTitle(getCourseById(agendaItem.item.course)) }}</div>
+            <div *ngIf="!agendaItem.item.isCourse" class="title">{{ agendaItem.item.text }}</div>
+            <div class="room">Room: {{ getRoomName(agendaItem.item.room) }}</div>
+
+            <div class="coach" *ngIf="agendaItem.item.coaches && agendaItem.item.coaches.length == 1">
+              <b>Coach:</b> {{ getCoachName(agendaItem.item.coaches[0]) }}
+            </div>
+            <div class="coach" *ngIf="agendaItem.item.coaches && agendaItem.item.coaches.length > 1">
+              <b>Coaches:</b> {{ getCoachList(agendaItem.item.coaches) }}
+            </div>
+            <div *ngIf="agendaItem.item.isCourse" class="bottom-row">
+              <div>
+                <div class="capacity" *ngIf="agendaItem.item.maxParticipants > 0">Capacity: {{ agendaItem.item.maxParticipants }}</div>
+              </div>
+              <i class="fas fa-eye" (click)="viewCourse(agendaItem)"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+

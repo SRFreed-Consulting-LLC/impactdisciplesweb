@@ -32,6 +32,7 @@ import { AboutUsComponent } from './core/pages/about-us/about-us.component';
 import { CustomerReviewsComponent } from './core/pages/customer-reviews/customer-reviews.component';
 import { MonthlyNewsletterComponent } from './core/pages/monthly-newsletter/monthly-newsletter.component';
 import { SummitPreviewComponent } from './core/pages/summit-preview/summit-preview.component';
+import { ScheduleComponent } from './core/pages/schedule/schedule.component';
 
 //TODO: Clean this up...sort routes into respective modules
 const routes: Routes = [
@@ -50,6 +51,10 @@ const routes: Routes = [
   {
     path: 'event-details/:id',
     component: EventDetailsComponent
+  },
+  {
+    path: 'events/:event-id/registrations/:registration-id',
+    component: ScheduleComponent
   },
   {
     path: 'team',
