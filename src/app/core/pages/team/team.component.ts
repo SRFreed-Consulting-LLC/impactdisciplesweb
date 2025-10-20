@@ -14,14 +14,16 @@ export class TeamComponent implements OnInit, AfterViewInit {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
 
-  coaches$: Observable<CoachModel[]>;
+  coaches: CoachModel[];
 
   constructor(private coachService: CoachService){}
 
-  ngOnInit(): void {
-    this.coaches$ = this.coachService.streamAllByValue('isActive', true).pipe(
-      map((coaches) => coaches.sort((a, b) => a.sortOrder - b.sortOrder))
-    )
+  async ngOnInit(): Promise<void> {
+    this.coaches = await this.coachService.getAllByValue('isActive', true).then( coaches => {
+      coaches.sort((a, b) => a.teamPageSortOrder - b.teamPageSortOrder)
+      return coaches;
+    })
+
   }
 
   ngAfterViewInit() {
