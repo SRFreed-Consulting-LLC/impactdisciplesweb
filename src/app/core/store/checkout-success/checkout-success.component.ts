@@ -1,7 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import notify from 'devextreme/ui/notify';
 import { Timestamp } from 'firebase/firestore';
-import { ImpactUserService } from 'impactdisciplescommon/src/books/services/impact-user.service';
 import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
@@ -14,6 +13,7 @@ import { EventService } from 'impactdisciplescommon/src/services/data/event.serv
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
+import { ImpactUserService } from 'impactdisciplespwacommon/src/services/impact-user.service';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 
