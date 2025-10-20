@@ -54,7 +54,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       }
 
       if(events.length > 0){
-        this.registerUsers(checkoutForm.payPalReceipt?.id? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events)
+        this.registerEventUsers(checkoutForm.payPalReceipt?.id? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events)
       }
 
       if(products.length > 0) {
@@ -81,7 +81,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     this.affiliateSaleService.add(sale);
   }
 
-  registerUsers(confirmationId, events: CartItem[]){
+  registerEventUsers(confirmationId, events: CartItem[]){
     events.forEach(event => {
       event.attendees.forEach(async attendee => {
         let registration = {... new EventRegistrationModel()};
@@ -127,5 +127,9 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     form['editRegistration'] = "To Register for break out sessions, click <a href='"+environment.domain+"/events/" + event.id + "/registrations/" +registration.id +"'>here</a>"
 
     return this.emailService.sendHTMLEMailFromTemplate(registration.email, event.emailTemplate, form);
+  }
+
+  sendLibraryaDownloadEmail(){
+
   }
 }

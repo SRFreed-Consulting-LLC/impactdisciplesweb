@@ -118,6 +118,9 @@
                     <div class="teams-list__meta">
                       <span>{{ coach.title }}</span>
                     </div>
+                    <div *ngIf="coach.url">
+                      <a href="{{coach.url}}" class="coach-link">Link to page</a>
+                    </div>
                   </div>
                 </div>
               </div>
