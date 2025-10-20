@@ -2,9 +2,7 @@
 
 .sessions {
   height: 85vh;
-  width: 86vw;
   overflow-y: scroll;
-  padding: 10px;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -62,7 +60,6 @@
       min-height: 130px;
       min-width: 130px;
       max-width: 130px;
-      padding: 10px;
 
       .date {
         &__number {

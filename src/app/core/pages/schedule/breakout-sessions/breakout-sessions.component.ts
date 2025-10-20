@@ -92,7 +92,8 @@ export class BreakoutSessionsComponent {
   }
 
   viewCourse(item: any) {
-    if(item.item.isBreakout){
+    console.log(item)
+    if(item.item.isCourse){
       if(this.viewCourseCapcaity(item.item.id) < item.item.maxParticipants){
         let course: CourseModel = this.getCourse(item.item.course);
         this.store.dispatch(new ShowCourseModal(item, course, this.currentUser, this.event));

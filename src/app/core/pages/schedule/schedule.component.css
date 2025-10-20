@@ -1,6 +1,6 @@
 .frame {
   height: 85vh;
-  width: 50vw;
+  width: 100%;
   overflow-y: none;
   justify-content: left;
   align-items: center;

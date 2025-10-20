@@ -1,51 +1,66 @@
 <app-home-header></app-home-header>
 <div *ngIf="visible" style="margin-left: 125px; margin-right: 125px;">
-  <dx-tabs
-    #withIconAndText
-    [width]="'100%'"
-    [selectedIndex]="0"
-    [showNavButtons]="true"
-    [dataSource]="tabs"
-    [(selectedIndex)]="selectedIndex"
-    (onItemClick)="selectTab($event)"
-    [stylingMode]="'primary'"
-    [iconPosition]="'start'">
-  </dx-tabs>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8">
+        <div class="row">
+          <div class="col-12">
+            <dx-tabs
+              #withIconAndText
+              [width]="'100%'"
+              [selectedIndex]="0"
+              [showNavButtons]="true"
+              [dataSource]="tabs"
+              [(selectedIndex)]="selectedIndex"
+              (onItemClick)="selectTab($event)"
+              [stylingMode]="'primary'"
+              [iconPosition]="'start'">
+            </dx-tabs>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <ng-template [ngIf]="selectedTab == 'My Schedule'">
+              <app-my-schedule
+                [event]="event"
+                [fullSchedule]="fullSchedule"
+                [activeDay]="activeDay"
+                (navigateToBreakouts)="selectBreakoutTab()"
+                [currentUser]="currentUser"
+                [courses]="coursesList"
+                [coaches]="coachesList"
+                [rooms]="roomsList"
+              ></app-my-schedule>
+            </ng-template>
 
-  <div class="frame">
-    <ng-template [ngIf]="selectedTab == 'My Schedule'">
-      <app-my-schedule
-        [event]="event"
-        [fullSchedule]="fullSchedule"
-        [activeDay]="activeDay"
-        (navigateToBreakouts)="selectBreakoutTab()"
-        [currentUser]="currentUser"
-        [courses]="coursesList"
-        [coaches]="coachesList"
-        [rooms]="roomsList"
-      ></app-my-schedule>
-    </ng-template>
+            <ng-template [ngIf]="selectedTab == 'Breakout Sessions'">
+              <app-breakout-sessions
+                [myCourses]="myCourses"
+                [allCourses]="allCourses"
+                [currentUser]="currentUser"
+                [event]="event"
+                [courses]="coursesList"
+                [coaches]="coachesList"
+                [rooms]="roomsList">
+              </app-breakout-sessions>
+            </ng-template>
+          </div>
 
-    <ng-template [ngIf]="selectedTab == 'Breakout Sessions'">
-      <app-breakout-sessions
-        [myCourses]="myCourses"
-        [allCourses]="allCourses"
-        [currentUser]="currentUser"
-        [event]="event"
-        [courses]="coursesList"
-        [coaches]="coachesList"
-        [rooms]="roomsList">
-      </app-breakout-sessions>
-    </ng-template>
+        </div>
+
+
+        <app-course-modal
+          [allCourses]="allCourses"
+          [courses]="coursesList"
+          [coaches]="coachesList"
+          [rooms]="roomsList">
+        </app-course-modal>
+      </div>
+      <div class="col-2"></div>
+    </div>
 
   </div>
 
-  <app-course-modal
-    [allCourses]="allCourses"
-    [courses]="coursesList"
-    [coaches]="coachesList"
-    [rooms]="roomsList">
-  </app-course-modal>
-</div>
+
 
 <app-footer></app-footer>
