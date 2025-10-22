@@ -83,16 +83,19 @@
               </p>
             </div>
             <div class="col-xl-5 col-lg-5 mt-80">
-              <div class="video__area-df" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fsummit-thumbnail.jpg?alt=media&token=8335d0ec-6702-46b3-b2c4-bbe53ef83ce1)">
+              <div *ngIf="!isPlaying" class="video__area-df mb-60" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fsummit-thumbnail.jpg?alt=media&token=8335d0ec-6702-46b3-b2c4-bbe53ef83ce1)">
                 <div class="container">
                   <div class="video__content text-center">
-                    <div class="video__button mb-30">
-                      <a (click)="utilsService.playVideo('tUZtYD6621E')" class="cursor-pointer">
+                    <div class="video__button mb-60">
+                      <a (click)="playVideo()" class="cursor-pointer">
                         <i class="fas fa-play"></i>
                       </a>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div *ngIf="isPlaying" id="video-overlay"  class="mb-60">
+                <youtube-player [videoId]="'tUZtYD6621E'" [width]="458" [height]="224" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player>
               </div>
             </div>
           </div>
