@@ -106,7 +106,7 @@
     margin-bottom: 20px;
     background-color: rgba(91, 189, 255, 0.5607843137);
     &-click {
-      font-size: 10px;
+      font-size: 14px;
       font-style: italic;
       color: #343434;
       padding: 10px;
@@ -114,12 +114,12 @@
       border-radius: 10px 10px 0 0;
     }
     &-title {
-      font-size: 12px;
+      font-size: 14px;
       font-weight: 700;
       padding: 10px 10px 0 10px;
     }
     &-details {
-      padding: 10px;
+      padding: 14px;
       &-item {
         display: flex;
         align-items: center;
@@ -129,10 +129,10 @@
           margin-right: 10px;
           color: #343434;
           width: 20px;
-          font-size: 13px;
+          font-size: 14px;
         }
         span {
-          font-size: 10px;
+          font-size: 14px;
         }
       }
     }

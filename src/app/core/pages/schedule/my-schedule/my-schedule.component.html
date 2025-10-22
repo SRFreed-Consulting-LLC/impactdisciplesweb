@@ -32,7 +32,7 @@
               <div *ngFor="let breakout of timeGroup.items">
                 <div *ngIf="breakout.isAssignedToUser" class="course">
                   <div class="course__title">{{ getCourseTitle(getCourse(breakout.item.course)) }}</div>
-                  <div class="course__room">Room: {{ getRoomName(breakout.item.room) }}</div>
+                  <div class="course__room" *ngIf="breakout.item.room">Room: {{ getRoomName(breakout.item.room) }}</div>
                 </div>
               </div>
             </div>
@@ -49,13 +49,13 @@
 
           <div class="agenda-item__details"  [ngClass]="{'main-item': !timeGroup.items[0].item.isCourse && !timeGroup.items[0].item.isFoodBreak }">
             <div *ngIf="!timeGroup.items[0].item.isCourse" class="title">{{ timeGroup.items[0].item.text }}</div>
-            <div class="room">Room: {{ getRoomName(timeGroup.items[0].item.room) }}</div>
+            <div class="room" *ngIf="timeGroup.items[0].item.room">Room: {{ getRoomName(timeGroup.items[0].item.room) }}</div>
 
             <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length == 1">
-              <b>Coach:</b> {{ getCoachName(timeGroup.items[0].item.coaches[0]) }}
+              <b>Speaker:</b> {{ getCoachName(timeGroup.items[0].item.coaches[0]) }}
             </div>
             <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length > 1">
-              <b>Coaches:</b> {{ getCoachList(timeGroup.items[0].item.coaches) }}
+              <b>Speakers:</b> {{ getCoachList(timeGroup.items[0].item.coaches) }}
             </div>
           </div>
         </div>

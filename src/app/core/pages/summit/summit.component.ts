@@ -34,6 +34,7 @@ export class SummitComponent implements OnInit, OnDestroy {
   public minutes: number = 0;
   public seconds: number = 0;
 
+  isPlaying = false;
 
   private intervalId: any;
 
@@ -142,6 +143,10 @@ export class SummitComponent implements OnInit, OnDestroy {
           items: groupedByMonthYear[monthYear][date],
         })),
     }));
+  }
+
+  playVideo(){
+    this.isPlaying = true;
   }
 
   ngOnDestroy(): void {
