@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { AfterViewInit, Component } from '@angular/core';
 import notify from 'devextreme/ui/notify';
 import { Timestamp } from 'firebase/firestore';
@@ -105,7 +106,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
                 ' starting on ' + dateFromTimestamp(event.startDate),
                 position: 'top',
                 width: 600,
-                type: 'error'
+                type: 'success'
               });
 
             });
@@ -118,13 +119,19 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   }
 
   sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
+    let timeOptions = {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    };
+
     let form = {};
     form['firstName'] = registration.firstName;
     form['lastName'] = registration.lastName;
     form['email'] = registration.email;
     form['eventName'] = event.eventName;
-    form['startDate'] = new Date(event.startDate as string).toLocaleDateString() + " at " + new Date(event.startDate as string).toLocaleTimeString();
-    form['editRegistration'] = "To Register for break out sessions, click <a href='"+environment.domain+"/events/" + event.id + "/registrations/" +registration.id +"'>here</a>"
+    form['startDate'] = new Date(event.startDate as string).toLocaleDateString() + " at " + formatDate(event.startDate as string, 'shortTime', 'en-US');
+    form['editRegistration'] = "<a href='"+environment.domain+"/events/" + event.id + "/registrations/" +registration.id +"'>Register for Breakout</a>"
 
     return this.emailService.sendHTMLEMailFromTemplate(registration.email, event.emailTemplate, form);
   }
