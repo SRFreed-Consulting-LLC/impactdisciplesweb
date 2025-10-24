@@ -18,6 +18,7 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 export class ProductDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('sizeValidator') sizeValidator: DxValidatorComponent;
   @ViewChild('colorValidator') colorValidator: DxValidatorComponent;
+  @ViewChild('languageValidator') languageValidator: DxValidatorComponent;
 
   product: ProductModel;
   cartItem: CartItem;
@@ -123,9 +124,14 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     this.cartItem.color = e.selectedItem
   }
 
+  setLanguage(e) {
+    this.cartItem.language = e.selectedItem
+  }
+
   addCartProduct() {
     let sizeValid = false;
     let colorValid = false;
+    let languageValid = false;
 
     if(this.product.sizes && this.product.sizes.length > 0){
       sizeValid = this.sizeValidator.instance.validate().isValid;
@@ -139,7 +145,13 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       colorValid = true;
     }
 
-    if(sizeValid && colorValid){
+    if(this.product.languages && this.product.languages.length > 0){
+      languageValid = this.languageValidator.instance.validate().isValid;
+    } else {
+      languageValid = true;
+    }
+
+    if(sizeValid && colorValid && languageValid){
       this.cartService.addCartProduct(this.cartItem);
     }
   }
