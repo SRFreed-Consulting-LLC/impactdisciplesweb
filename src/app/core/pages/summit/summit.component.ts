@@ -51,8 +51,6 @@ export class SummitComponent implements OnInit, OnDestroy {
       ]
 
       this.summit = await this.eventService.queryAllByMultiValue(query).then(events => {
-        console.log(events)
-
         if(events && events.length == 1){
           return events[0]
         } else {

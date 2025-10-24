@@ -70,7 +70,6 @@ export class GiveComponent implements OnInit {
 
             const { clientSecret } = await response.json();
 
-            console.log(clientSecret)
 
             // Initialize Stripe Elements
             await this.stripeService.getStripe().then(stripe => {

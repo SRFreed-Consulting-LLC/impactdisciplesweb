@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../shared/services/cart.service';
 
 @Component({
@@ -16,7 +15,7 @@ export class CheckoutComponent {
   public couponCode: string = '';
   public payment_name: string = '';
 
-  constructor(public cartService: CartService,private toastrService: ToastrService) { }
+  constructor(public cartService: CartService) { }
 
   handleOpenLogin() {
     this.isOpenLogin = !this.isOpenLogin;
@@ -36,7 +35,6 @@ export class CheckoutComponent {
 
 
   handleCouponSubmit() {
-    console.log(this.couponCode);
     // Add coupon code handling logic here
     if (this.couponCode) {
       // logic here
@@ -77,8 +75,6 @@ export class CheckoutComponent {
     this.formSubmitted = true;
     if (this.checkoutForm.valid) {
       console.log('checkout-form-value', this.checkoutForm.value);
-      this.toastrService.success(`Order successfully`);
-
       // Reset the form
       this.checkoutForm.reset();
       this.formSubmitted = false; // Reset formSubmitted to false

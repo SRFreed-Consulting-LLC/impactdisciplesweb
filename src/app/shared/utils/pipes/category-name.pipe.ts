@@ -17,7 +17,6 @@ export class CategoryNamePipe implements PipeTransform {
         break;
       case 'blog':
         return this.blogCategoriesService.getById(id).then(item => {
-          console.log(item.tag)
           return item.tag
         })
         break;

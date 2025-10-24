@@ -63,11 +63,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
   private loadProductDetails(productId: string, sales: SaleModel[]): void {
     this.productService.streamById(productId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((product) => {
-
       this.product = product[0];
-
-              console.log(product)
-
 
       this.cartItem = {
         id: this.product?.id,

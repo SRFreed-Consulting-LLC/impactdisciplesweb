@@ -57,8 +57,6 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
         this.coachesList = coachesList;
         this.roomsList = roomsList
         this.selectedTimegroup = timeGroup;
-
-        console.log(allCourses)
         this.isVisible$.next(true);
       })
     }
