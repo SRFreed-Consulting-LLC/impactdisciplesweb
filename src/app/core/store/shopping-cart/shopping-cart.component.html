@@ -52,7 +52,8 @@
                           {{ attendee?.firstName }} {{ attendee?.lastName }}<span *ngIf="i !== item?.attendees?.length - 1">, </span>
                         </span>
                       </div>
-                      <div *ngIf="item.size || item.color">
+                      <div *ngIf="item.size || item.color || item.language">
+                          <span>{{ item.language? item.language : '' }} &nbsp;&nbsp;&nbsp;</span>
                           <span>{{ item?.size ? item.size : '' }} &nbsp;&nbsp;&nbsp;</span>
                           <span>{{ item.color? item.color : '' }}</span>
                       </div>

@@ -119,12 +119,6 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   }
 
   sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
-    let timeOptions = {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
-    };
-
     let form = {};
     form['firstName'] = registration.firstName;
     form['lastName'] = registration.lastName;
@@ -136,7 +130,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     return this.emailService.sendHTMLEMailFromTemplate(registration.email, event.emailTemplate, form);
   }
 
-  sendLibraryaDownloadEmail(){
+  sendLibraryDownloadEmail(){
 
   }
 }

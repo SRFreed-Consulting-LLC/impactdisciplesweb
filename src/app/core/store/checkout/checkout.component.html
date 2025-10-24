@@ -109,8 +109,9 @@
                 </div>
                 <div *ngFor="let cartItem of checkoutForm.cartItems" class="row">
                   <div class="col-lg-6">
-                    {{ cartItem?.itemName }}
+                    {{ cartItem?.itemName }}  <span *ngIf="cartItem.language"> - {{cartItem.language}}</span>
                     <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong>
+
                   </div>
                   <div class="col-lg-4">
                     <div *ngIf="cartItem.isEvent">
