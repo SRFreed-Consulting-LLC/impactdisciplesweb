@@ -124,7 +124,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     form['lastName'] = registration.lastName;
     form['email'] = registration.email;
     form['eventName'] = event.eventName;
-    form['startDate'] = new Date(event.startDate as string).toLocaleDateString() + " at " + formatDate(event.startDate as string, 'shortTime', 'en-US');
+    form['startDate'] = formatDate(event.startDate as string, 'longDate', 'en-us') + " at " + formatDate(event.startDate as string, 'shortTime', 'en-US');
     form['editRegistration'] = "<a href='"+environment.domain+"/events/" + event.id + "/registrations/" +registration.id +"'>Register for Breakout</a>"
 
     return this.emailService.sendHTMLEMailFromTemplate(registration.email, event.emailTemplate, form);
