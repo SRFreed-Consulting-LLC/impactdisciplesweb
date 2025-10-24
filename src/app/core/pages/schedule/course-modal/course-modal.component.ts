@@ -50,11 +50,14 @@ export class CourseModalComponent implements OnInit, OnDestroy {
     this.actions$.pipe(
       ofActionDispatched(ShowCourseModal),
       takeUntil(this.ngUnsubscribe)
-    ).subscribe(({ customAgendaItem, course, currentUser, event }: ShowCourseModal) => {
+    ).subscribe(({ customAgendaItem, course, currentUser, event, allCourses, coachesList, roomsList }: ShowCourseModal) => {
       this.customAgendaItem = customAgendaItem;
       this.courseItem = course;
-      this.currentUser = currentUser
-      this.event = event
+      this.currentUser = currentUser;
+      this.event = event;
+      this.allCourses = allCourses;
+      this.coachesList = coachesList;
+      this.roomsList = roomsList;
       this.isVisible$.next(true);
     })
   }

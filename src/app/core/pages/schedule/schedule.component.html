@@ -1,62 +1,71 @@
 <app-home-header></app-home-header>
-<div *ngIf="visible" style="margin-left: 125px; margin-right: 125px;">
+<div *ngIf="visible" style="text-align: center; width: 98vw;">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-2"></div>
-      <div class="col-8">
+      <div class="col-md-6 col-sm-12 mx-auto">
         <div class="row">
           <div class="col-12">
-            <dx-tabs
-              #withIconAndText
-              [width]="'100%'"
-              [selectedIndex]="0"
-              [showNavButtons]="true"
-              [dataSource]="tabs"
-              [(selectedIndex)]="selectedIndex"
-              (onItemClick)="selectTab($event)"
-              [stylingMode]="'primary'"
-              [iconPosition]="'start'">
-            </dx-tabs>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <ng-template [ngIf]="selectedTab == 'My Schedule'">
-              <app-my-schedule
-                [event]="event"
-                [fullSchedule]="fullSchedule"
-                [activeDay]="activeDay"
-                (navigateToBreakouts)="selectBreakoutTab()"
-                [currentUser]="currentUser"
-                [courses]="coursesList"
-                [coaches]="coachesList"
-                [rooms]="roomsList"
-              ></app-my-schedule>
-            </ng-template>
+            <div class="schedule" style="margin-top: 20px;">
+              <div class="schedule__days" *ngIf="event?.agendaItems">
+                <ng-container *ngFor="let monthGroup of fullSchedule">
+                  <ng-container *ngFor="let activeDay of monthGroup.days">
+                    <div class="schedule__day" *ngIf="activeDay">
+                      <div class="schedule__tabs-tab">
+                        <div class="weekday">{{ activeDay.date | date: 'EEEE' }} {{ activeDay.date | date: 'MMM' }} {{ activeDay.date | date: 'd' }}</div>
+                      </div>
+                      <div *ngFor="let timeGroup of activeDay.timeGroups">
+                        <div *ngIf="timeGroup.items.length > 1" class="breakout" (click)="onNavigateToBreakouts(timeGroup)">
+                          <div class="breakout__date">
+                            <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
+                            <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
+                          </div>
+                          <div class="breakout__details">
+                            <div class="title">BREAKOUT SESSIONS</div>
+                            <div *ngIf="!isAnyItemAssignedInGroup(timeGroup)" class="subtitle">You are not currently signed up for a Breakout Session in this time slot. Click to view available sessions.</div>
+                            <div *ngIf="isAnyItemAssignedInGroup(timeGroup)">
+                              <div *ngFor="let breakout of timeGroup.items">
+                                <div *ngIf="breakout.isAssignedToUser" class="course">
+                                  <div class="course__title">{{ getCourseTitle(getCourse(breakout.item.course)) }}</div>
+                                  <div class="course__room" *ngIf="breakout.item.room">Room: {{ getRoomName(breakout.item.room) }}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="breakout__icon">
+                            <i class="fas fa-chevron-right"></i>
+                          </div>
+                        </div>
+                        <div *ngIf="timeGroup.items.length === 1" class="agenda-item">
+                          <div class="agenda-item__date">
+                            <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
+                            <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
+                          </div>
 
-            <ng-template [ngIf]="selectedTab == 'Breakout Sessions'">
-              <app-breakout-sessions
-                [myCourses]="myCourses"
-                [allCourses]="allCourses"
-                [currentUser]="currentUser"
-                [event]="event"
-                [courses]="coursesList"
-                [coaches]="coachesList"
-                [rooms]="roomsList">
-              </app-breakout-sessions>
-            </ng-template>
+                          <div class="agenda-item__details"  [ngClass]="{'main-item': !timeGroup.items[0].item.isCourse && !timeGroup.items[0].item.isFoodBreak }">
+                            <div *ngIf="!timeGroup.items[0].item.isCourse" class="title">{{ timeGroup.items[0].item.text }}</div>
+                            <div class="room" *ngIf="timeGroup.items[0].item.room">Room: {{ getRoomName(timeGroup.items[0].item.room) }}</div>
+
+                            <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length == 1">
+                              <b>Speaker:</b> {{ getCoachName(timeGroup.items[0].item.coaches[0]) }}
+                            </div>
+                            <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length > 1">
+                              <b>Speakers:</b> {{ getCoachList(timeGroup.items[0].item.coaches) }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
           </div>
-
         </div>
-
-
-        <app-course-modal
-          [allCourses]="allCourses"
-          [courses]="coursesList"
-          [coaches]="coachesList"
-          [rooms]="roomsList">
-        </app-course-modal>
       </div>
-      <div class="col-2"></div>
     </div>
   </div>
+</div>
+
+<app-breakout-sessions>
+</app-breakout-sessions>
 

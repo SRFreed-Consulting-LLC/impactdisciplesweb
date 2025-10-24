@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Actions, ofActionDispatched, Store } from '@ngxs/store';
 import { CourseModel } from 'impactdisciplescommon/src/models/domain/course.model';
 import { TrainingRoomModel } from 'impactdisciplescommon/src/models/domain/training-room.model';
 import { ShowCourseModal } from '../course-modal/course-modal.actions';
@@ -8,30 +8,60 @@ import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model'
 import { confirm } from 'devextreme/ui/dialog';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
-import { LocationService } from 'impactdisciplescommon/src/services/data/location.service';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
-import { ScheduleModel } from 'impactdisciplescommon/src/models/utils/schedule.model';
+import { ScheduleModel, TimeGroupsModel } from 'impactdisciplescommon/src/models/utils/schedule.model';
 import { ScheduleService } from 'impactdisciplescommon/src/services/utils/schedule.service';
 import notify from 'devextreme/ui/notify';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BreakoutSessionModal } from './breakout-sessions-modal.actions';
+import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
+import { ResetSchedule } from '../schedule.actions';
+import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-breakout-sessions',
   templateUrl: './breakout-sessions.component.html',
   styleUrls: ['./breakout-sessions.component.scss']
 })
-export class BreakoutSessionsComponent {
-  @Input() allCourses: ScheduleModel[];
-  @Input() myCourses: ScheduleModel[];
-  @Input() currentUser: CustomerModel | EventRegistrationModel;
-  @Input() event: EventModel;
-  @Input('courses') coursesList: CourseModel[] = [];
-  @Input('coaches') coachesList: CoachModel[] = [];
-  @Input('rooms') roomsList: TrainingRoomModel[] = [];
+export class BreakoutSessionsComponent implements OnInit, OnDestroy{
+  allCourses: ScheduleModel[];
+  myCourses: ScheduleModel[];
+  currentUser: CustomerModel | EventRegistrationModel;
+  event: EventModel;
+  coursesList: CourseModel[] = [];
+  coachesList: CoachModel[] = [];
+  roomsList: TrainingRoomModel[] = [];
+  selectedTimegroup: TimeGroupsModel;
 
-  constructor(private locationService: LocationService,
+  public isVisible$ = new BehaviorSubject<boolean>(false);
+  private ngUnsubscribe = new Subject<void>();
+
+  constructor(private actions$: Actions,
     private store: Store,
+    private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService,
     private eventService: EventService) { }
+
+    async ngOnInit(): Promise<void> {
+
+      this.actions$.pipe(
+        ofActionDispatched(BreakoutSessionModal),
+        takeUntil(this.ngUnsubscribe)
+      ).subscribe(({ allCourses, myCourses, currentUser, event, coursesList, coachesList, roomsList, timeGroup }: BreakoutSessionModal) => {
+        this.allCourses = allCourses;
+        this.myCourses = myCourses;
+        this.currentUser = currentUser;
+        this.event = event;
+        this.coursesList = coursesList;
+        this.coachesList = coachesList;
+        this.roomsList = roomsList
+        this.selectedTimegroup = timeGroup;
+
+        console.log(allCourses)
+        this.isVisible$.next(true);
+      })
+    }
 
   getCourse(id: string){
     let course: CourseModel = this.coursesList.find(course => course.id == id);
@@ -92,11 +122,10 @@ export class BreakoutSessionsComponent {
   }
 
   viewCourse(item: any) {
-    console.log(item)
     if(item.item.isCourse){
       if(this.viewCourseCapcaity(item.item.id) < item.item.maxParticipants){
         let course: CourseModel = this.getCourse(item.item.course);
-        this.store.dispatch(new ShowCourseModal(item, course, this.currentUser, this.event));
+        this.store.dispatch(new ShowCourseModal(item, course, this.currentUser, this.event, this.allCourses, this.coachesList, this.roomsList));
       } else {
         confirm('<i>This session is currently Full. Would you like to be added to the "Wait List"?</i>', 'Session is Full').then(async (dialogResult) => {
           if (dialogResult) {
@@ -117,7 +146,8 @@ export class BreakoutSessionsComponent {
                 notify({
                   message: 'You have been successfully added to the waitList!',
                   position: 'top',
-                  type: 'success'
+                  type: 'success',
+                  displayTime: 5000
                 });
               });
             })
@@ -130,7 +160,93 @@ export class BreakoutSessionsComponent {
     }
   }
 
+  addCourse(course: AgendaItem) {
+    const conflictingCourse = this.allCourses
+      .flatMap(group => group.days)
+      .flatMap(day => day.timeGroups)
+      .flatMap(timeGroup => timeGroup.items)
+      .find(item =>
+        item.isAssignedToUser &&
+        new Date(item.item.startDate).getTime() === new Date(course.startDate).getTime() &&
+        item.item.course !== course.course
+      );
+
+    if (conflictingCourse) {
+      confirm('<i>You are already assigned to a course at this time. Would you like to remove that course and add the new one?</i>', 'Confirm').then((dialogResult) => {
+        if (dialogResult) {
+          this.eventRegistrationService
+          .unregisterForTrainingSession(this.currentUser.email, conflictingCourse.item.id, this.event.id)
+          .then(() => {
+            this.eventRegistrationService
+              .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
+              .then(() => {
+                this.store.dispatch(new ResetSchedule());
+                this.isVisible$.next(false);
+                notify({
+                  message: "You have been successfully registered for '" + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US'),
+                  position: 'top',
+                  type: 'success',
+                  displayTime: 5000
+                });
+              });
+          });
+        }
+      });
+    } else {
+      // Directly add the course if no conflict
+      this.eventRegistrationService
+        .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
+        .then(() => {
+          this.store.dispatch(new ResetSchedule());
+          this.isVisible$.next(false);
+
+          notify({
+            message: "You have been successfully registered for '" + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US'),
+            position: 'top',
+            type: 'success',
+            displayTime: 5000
+          });
+        });
+    }
+  }
+
+  removeCourse(course: AgendaItem) {
+    confirm('<i>Are you sure you want to remove this course from your schedule?</i>', 'Confirm').then((dialogResult) => {
+      if (dialogResult) {
+        this.eventRegistrationService
+        .unregisterForTrainingSession(this.currentUser.email, course.id, this.event.id)
+        .then(() => {
+          this.store.dispatch(new ResetSchedule());
+          this.isVisible$.next(false)
+
+          notify({
+            message: "You have been successfully removed from '" + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US'),
+            position: 'top',
+            type: 'success',
+            displayTime: 5000
+          })
+
+        });
+      }
+    });
+  }
+
+  onCancel(){
+    this.isVisible$.next(false);
+  }
+
   viewCourseCapcaity(item: any) {
     return this.scheduleService.traininlist.get(item)?.length || 0;
+  }
+
+resizePopup() {
+  var viewportWidth = window.innerWidth;
+  var popupWidth = viewportWidth < 768 ? '100%' : '50%';
+  return popupWidth
+}
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

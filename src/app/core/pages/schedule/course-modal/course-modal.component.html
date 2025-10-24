@@ -34,17 +34,13 @@
     <div class="coaches">
       <div class="coaches__header">Speakers</div>
       <div class="coaches__wrapper">
-        <div
-          *ngFor="let coach of customAgendaItem?.item.coaches"
-          class="coach"
-        >
+        <div *ngFor="let coach of customAgendaItem?.item.coaches" class="coach">
           <div class="coach__img">
             <img class="transform" [src]="getCoachImg(coach)" [alt]="getCoachName(coach)" width="40">
           </div>
           <div class="coach__details">
             <div class="name">{{ getCoachName(coach) }}</div>
             <div class="title">{{ getCoachTitle(coach) }}</div>
-
           </div>
         </div>
       </div>

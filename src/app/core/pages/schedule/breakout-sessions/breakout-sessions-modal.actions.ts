@@ -4,17 +4,18 @@ import { EventRegistrationModel } from "impactdisciplescommon/src/models/domain/
 import { EventModel } from "impactdisciplescommon/src/models/domain/event.model";
 import { TrainingRoomModel } from "impactdisciplescommon/src/models/domain/training-room.model";
 import { CustomerModel } from "impactdisciplescommon/src/models/domain/utils/customer.model";
-import { ScheduleModel } from "impactdisciplescommon/src/models/utils/schedule.model";
+import { ScheduleModel, TimeGroupsModel } from "impactdisciplescommon/src/models/utils/schedule.model";
 
-export class ShowCourseModal {
-  static readonly type = '[COURSE MODAL] Show Course Modal';
+export class BreakoutSessionModal {
+  static readonly type = '[Breakout Sessions MODAL] Show Breakout Sessions Modal';
   constructor(
-    public customAgendaItem: any,
-    public course: CourseModel,
+    public allCourses: ScheduleModel[],
+    public myCourses: ScheduleModel[],
     public currentUser: CustomerModel | EventRegistrationModel,
     public event: EventModel,
-    public allCourses: ScheduleModel[],
+    public coursesList: CourseModel[],
     public coachesList: CoachModel[],
-    public roomsList: TrainingRoomModel[]
+    public roomsList: TrainingRoomModel[],
+    public timeGroup: TimeGroupsModel
   ){}
 }

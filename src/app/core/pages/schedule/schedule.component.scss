@@ -1,4 +1,17 @@
-@import '../../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/variables.scss';
+
+.frame {
+  height: 85vh;
+  width: 100%;
+  overflow-y: none;
+  justify-content: left;
+  align-items: center;
+}
+
+#withIconAndText{
+  position: absolute;
+  top: 30px;
+}
 
 .schedule {
   height: 85vh;
@@ -18,14 +31,16 @@
     &-tab {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 50%;
+      align-items: left;
+      text-align: left;
+      width: 100%;
       border: none;
       background: none;
       background-color: #fff;
       cursor: pointer;
-      color: #333;
+      background-color: #0b277bed;
+      border-radius: 10px;
+      color: #f1f1f1;
       padding: 0.5rem 0;
       min-width: 80px;
       border-bottom: 2px solid transparent;
@@ -49,9 +64,12 @@
       }
 
       .weekday {
-        font-size: 16px;
-        font-weight: 600;
-        letter-spacing: 1px;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        padding: 15px;
       }
 
     }
@@ -59,7 +77,7 @@
 
   &__day {
     margin-top: 1rem;
-    height: 75vh;
+    margin-bottom: 1rem;
     width: 100%;
     overflow-y: scroll;
     justify-content: left;
@@ -81,7 +99,7 @@
         font-size: 11px;
         letter-spacing: 1px;
         color: #777777;
-        text-align: center;
+        text-align: left;
       }
       &__details {
         font-size: 12px;
@@ -117,8 +135,7 @@
         border-right: 1px solid $border;
         font-size: 11px;
         letter-spacing: 1px;
-        color: #777777;
-        text-align: center;
+        text-align: left;
       }
       &__details {
         font-size: 12px;
@@ -131,9 +148,7 @@
         }
       }
       .main-item {
-        background-color: #0b277bed;
         border-radius: 10px;
-        color: #f1f1f1;
       }
     }
   }
@@ -220,3 +235,4 @@
 button:focus {
   outline: none !important;
 }
+

@@ -50,7 +50,6 @@ import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.co
 import { ScheduleComponent } from "./pages/schedule/schedule.component";
 import { BreakoutSessionsComponent } from "./pages/schedule/breakout-sessions/breakout-sessions.component";
 import { CourseModalComponent } from "./pages/schedule/course-modal/course-modal.component";
-import { MyScheduleComponent } from "./pages/schedule/my-schedule/my-schedule.component";
 
 @NgModule({
   declarations: [
@@ -97,7 +96,6 @@ import { MyScheduleComponent } from "./pages/schedule/my-schedule/my-schedule.co
     ScheduleComponent,
     BreakoutSessionsComponent,
     CourseModalComponent,
-    MyScheduleComponent
   ],
   imports: [
     CommonModule,
