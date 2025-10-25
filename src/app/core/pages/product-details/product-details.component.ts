@@ -68,16 +68,16 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
       this.cartItem = {
         id: this.product?.id,
-        itemName: this.product.title,
+        itemName: this.product?.title,
         orderQuantity: 1,
-        price: NumberUtil.isNumber(this.product.cost)? this.product.cost : 0,
-        salePrice: NumberUtil.isNumber(this.product.salePrice)? this.product.salePrice : 0,
-        img: this.product.imageUrl,
+        price: NumberUtil.isNumber(this.product?.cost)? this?.product.cost : 0,
+        salePrice: NumberUtil.isNumber(this.product?.salePrice)? this.product?.salePrice : 0,
+        img: this.product?.imageUrl,
         isEvent: false,
-        isEBook: this.product.isEBook ? this.product.isEBook : false,
-        isDigitalBook: this.product.isDigitalBook? this.product.isDigitalBook: false,
-        eBookUrl: this.product.eBookUrl ? this.product.eBookUrl:null,
-        weight: this.product.weight ? this.product.weight: 0
+        isEBook: this.product?.isEBook ? this.product?.isEBook : false,
+        isDigitalBook: this.product?.isDigitalBook? this.product?.isDigitalBook: false,
+        eBookUrl: this.product?.eBookUrl ? this.product?.eBookUrl:null,
+        weight: this.product?.weight ? this.product?.weight: 0
       }
 
       this.checkProductForSale(sales);

@@ -18,7 +18,7 @@ export class StorePostboxItemComponent {
   addCartProduct() {
     this.cartItem = {
       id: this.product.id,
-      itemName: this.product.title,
+      itemName: this.product?.title,
       orderQuantity: 1,
       price: NumberUtil.isNumber(this.product.cost)? this.product.cost : 0,
       salePrice: this.product.salePrice,
