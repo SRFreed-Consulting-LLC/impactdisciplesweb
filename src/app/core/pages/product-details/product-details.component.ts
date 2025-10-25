@@ -76,6 +76,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         isEvent: false,
         isEBook: this.product?.isEBook ? this.product?.isEBook : false,
         isDigitalBook: this.product?.isDigitalBook? this.product?.isDigitalBook: false,
+        digitalBookId: this.product?.digitalBookId? this.product?.digitalBookId : '',
         eBookUrl: this.product?.eBookUrl ? this.product?.eBookUrl:null,
         weight: this.product?.weight ? this.product?.weight: 0
       }
