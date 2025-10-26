@@ -371,6 +371,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   sendProductPurchaseSuccessEmail(cart: CheckoutForm){
+    let ebooksPurchased = false;
     let USDollar = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -397,6 +398,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
       if(product.isEBook){
         html += "<td style='text-align: left;'><a href='"+ product.eBookUrl.url+"' download>DOWNLOAD</a></td>";
+      }
+
+      if(product.isDigitalBook){
+        ebooksPurchased = true;
+        html += "<td style='text-align: left;'>See install instuctions below!</td>";
       }
       html+="</tr>"
     })
@@ -427,6 +433,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     if(cart.receipt){
       html += '<div>Confirmation Id: <b>' + cart.receipt + '</b></div>'
+    }
+
+    if(ebooksPurchased){
+      html += '<br><div><b>If you purchased an item from our Digital Library, instuctions for setting up the Library on your preferred Device can be found <a href="https://library.impactdisciples.com/install-instructions">here</a>!</b></div>'
+      html += '<br><div>(For easy installation, it is best to open this email on your preferred Device and click the link!)</div>'
     }
 
     let form = {};
