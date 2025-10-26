@@ -21,3 +21,10 @@
   }
 }
 
+:host ::ng-deep youtube-player iframe,
+:host ::ng-deep youtube-player-placeholder {
+  width: 100% !important; /* Makes the player take the full width of its parent */
+  height: auto !important; /* Adjusts height proportionally to maintain aspect ratio */
+  aspect-ratio: 16/9; /* Ensures a standard 16:9 aspect ratio for videos */
+}
+

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { IMenuType } from 'src/app/theme/shared/types/menu-d-t';
 import { MenuModel } from '../../../../impactdisciplescommon/src/models/utils/nav-menu.model';
 import menuData from '../../../../impactdisciplescommon/src/services/data/nav-menu-data';
-import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -14,7 +13,7 @@ export class NavMenuComponent implements OnInit{
 
   isSummitPosted: boolean = false;
 
-  constructor(private eventService: EventService){}
+  constructor(){}
 
   async ngOnInit(): Promise<void> {
     this.isSummitPosted = true;
