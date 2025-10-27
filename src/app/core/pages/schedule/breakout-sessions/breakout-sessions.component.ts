@@ -5,7 +5,7 @@ import { TrainingRoomModel } from 'impactdisciplescommon/src/models/domain/train
 import { ShowCourseModal } from '../course-modal/course-modal.actions';
 import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
-import { confirm } from 'devextreme/ui/dialog';
+import { alert, confirm } from 'devextreme/ui/dialog';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
@@ -140,14 +140,10 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
 
               this.event = e;
 
-              this.eventService.update(e.id, e).then(e => {
-                notify({
-                  message: 'You have been successfully added to the waitList!',
-                  position: 'top',
-                  type: 'success',
-                  displayTime: 5000
-                });
-              });
+              alert('<i>You have been successfully added to the waitList</i>', 'Registration Success').then(() => {
+                this.store.dispatch(new ResetSchedule());
+                this.isVisible$.next(false);
+              })
             })
 
             //add user to wait list
@@ -178,14 +174,10 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
             this.eventRegistrationService
               .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
               .then(() => {
-                this.store.dispatch(new ResetSchedule());
-                this.isVisible$.next(false);
-                notify({
-                  message: "You have been successfully registered for '" + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US'),
-                  position: 'top',
-                  type: 'success',
-                  displayTime: 5000
-                });
+                alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
+                  this.store.dispatch(new ResetSchedule());
+                  this.isVisible$.next(false);
+                })
               });
           });
         }
@@ -195,15 +187,10 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
       this.eventRegistrationService
         .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
-          this.store.dispatch(new ResetSchedule());
-          this.isVisible$.next(false);
-
-          notify({
-            message: "You have been successfully registered for '" + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US'),
-            position: 'top',
-            type: 'success',
-            displayTime: 5000
-          });
+          alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
+            this.store.dispatch(new ResetSchedule());
+            this.isVisible$.next(false);
+          })
         });
     }
   }
@@ -214,14 +201,9 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
         this.eventRegistrationService
         .unregisterForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
-          this.store.dispatch(new ResetSchedule());
-          this.isVisible$.next(false)
-
-          notify({
-            message: "You have been successfully removed from '" + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US'),
-            position: 'top',
-            type: 'success',
-            displayTime: 5000
+          alert('<i>You have been successfully removed from ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Removed').then(() => {
+            this.store.dispatch(new ResetSchedule());
+            this.isVisible$.next(false);
           })
 
         });
