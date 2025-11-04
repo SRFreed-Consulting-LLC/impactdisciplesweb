@@ -122,7 +122,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     let form = {};
     form['firstName'] = registration.firstName;
     form['lastName'] = registration.lastName;
-    form['email'] = registration.email;
+    form['email'] = registration.email?.toLowerCase();
     form['eventName'] = event.eventName;
     form['startDate'] = formatDate(event.startDate as string, 'longDate', 'en-us') + " at " + formatDate(event.startDate as string, 'shortTime', 'en-US');
     form['editRegistration'] = "<a href='"+environment.domain+"/events/" + event.id + "/registrations/" +registration.id +"'>Register for Breakout</a>"
