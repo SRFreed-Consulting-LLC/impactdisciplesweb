@@ -28,7 +28,8 @@ export class StorePostboxItemComponent {
       isDigitalBook: this.product.isDigitalBook? this.product.isDigitalBook: false,
       weight: this.product.weight,
       uom: this.product.uom,
-      eBookUrl: this.product.eBookUrl? this.product.eBookUrl : null
+      eBookUrl: this.product.eBookUrl? this.product.eBookUrl : null,
+      followUpEmailId: this.product.sendFollowUpEmail && this.product.followUpEmailId ? this.product.followUpEmailId : ''
     }
     this.cartService.addCartProduct(this.cartItem)
   }

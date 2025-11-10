@@ -65,6 +65,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   private loadProductDetails(productId: string, sales: SaleModel[]): void {
     this.productService.streamById(productId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((product) => {
       this.product = product[0];
+      console.log('adding product',)
 
       this.cartItem = {
         id: this.product?.id,
@@ -78,7 +79,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         isDigitalBook: this.product?.isDigitalBook? this.product?.isDigitalBook: false,
         digitalBookId: this.product?.digitalBookId? this.product?.digitalBookId : '',
         eBookUrl: this.product?.eBookUrl ? this.product?.eBookUrl:null,
-        weight: this.product?.weight ? this.product?.weight: 0
+        weight: this.product?.weight ? this.product?.weight: 0,
+        followUpEmailId: this.product.sendFollowUpEmail && this.product.followUpEmailId ? this.product.followUpEmailId : ''
       }
 
       this.checkProductForSale(sales);

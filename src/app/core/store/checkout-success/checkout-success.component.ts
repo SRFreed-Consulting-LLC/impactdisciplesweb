@@ -50,6 +50,9 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       let products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
       let digitalBooks: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook);
 
+      let followUpEmails: CartItem[] = checkoutForm.cartItems.filter(item => item.followUpEmailId);
+
+
       if(digitalBooks.length > 0){
         this.impactService.registerImpactUser(checkoutForm)
       }
@@ -63,6 +66,10 @@ export class CheckoutSuccessComponent implements AfterViewInit{
           this.taxSummaryService.recordStateTaxesCollected(checkoutForm);
         }
         this.cartService.clearCartNoConfirmation();
+      }
+
+      if(followUpEmails.length > 0) {
+        this.sendProductFollowUpEmail(checkoutForm, followUpEmails);
       }
 
       localStorage.removeItem('checkoutForm');
@@ -128,6 +135,19 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     form['editRegistration'] = "<a href='"+environment.domain+"/events/" + event.id + "/registrations/" +registration.id +"'>Register for Breakout</a>"
 
     return this.emailService.sendHTMLEMailFromTemplate(registration.email, event.emailTemplate, form);
+  }
+
+  sendProductFollowUpEmail(checkoutForm:CheckoutForm, followUpEmails: CartItem[]) {
+    followUpEmails.forEach(followUp => {
+
+      console.log('checkoutForm', checkoutForm)
+      let form = {};
+      form['firstName'] = checkoutForm.firstName;
+      form['lastName'] = checkoutForm.lastName;
+      form['email'] = checkoutForm.email?.toLowerCase();
+
+      this.emailService.sendHTMLEMailByIdFromTemplate(checkoutForm.email, followUp.followUpEmailId, form);
+    })
   }
 
   sendLibraryDownloadEmail(){
