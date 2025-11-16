@@ -11,6 +11,14 @@ import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 export class HomeHeaderComponent {
   public sticky: boolean = true;
   public impactDisciplesInfo = impactDisciplesInfo;
+  
+  @HostListener('window:scroll') onscroll() {
+    if (window.scrollY > 80) {
+      this.sticky = true;
+    } else {
+      this.sticky = false;
+    }
+  }
 
   constructor(public cartService: CartService, public utilsService: UtilsService,) { }
 

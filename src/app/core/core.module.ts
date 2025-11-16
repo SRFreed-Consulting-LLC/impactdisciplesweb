@@ -102,7 +102,7 @@ import { CourseModalComponent } from "./pages/schedule/course-modal/course-modal
     FormsModule,
     RouterModule,
     SharedModule,
-    ThemeSharedModule,
+
     DxNumberBoxModule,
     DxAccordionModule,
     DxButtonModule,

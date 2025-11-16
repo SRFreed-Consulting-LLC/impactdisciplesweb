@@ -1,109 +1,141 @@
 <app-home-header></app-home-header>
+<div class="equipping-groups">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fhome-header.jpg?alt=media&token=4a6de836-e6fc-4c12-9e2a-e8c063ffdcc3'"
+    [pretitle]="'ONLINE EQUIPPING GROUPS'"
+    [title]="'The Making of a Disciple-Making Pastor'"
+    [buttonLink]="'/events'"
+    [buttonText]="'Enroll in a Group'"
+    [buttonLink2]="'https://impact-discipleship-ministries.mykajabi.com/login'"
+    [buttonText2]="'Go to Pastor Portal'"
+  ></app-header>
+  <div class="equipping-groups__key-words">
+    <div class="item" style="background-color: #ffcc006e;">
+      <i class="fa-regular fa-lightbulb"></i>
+      <h5>New Ideas</h5>
+    </div>
+    <div class="item" style="background-color: #ffcc007a;">
+      <i class="fa-regular fa-map"></i>
+      <h5>Planning</h5>
+    </div>
+    <div class="item" style="background-color: #ffcc0087;">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <h5>Research</h5>
+    </div>
+    <div class="item" style="background-color: #ffcc00ad;">
+      <i class="fa-solid fa-circle-nodes"></i>
+      <h5>Networking</h5>
+    </div>
+    <div class="item" style="background-color: #ffcc00de;">
+      <i class="fa-solid fa-pen-ruler"></i>
+      <h5>Brainstorming</h5>
+    </div>
+    <div class="item" style="background-color: #ffcc00eb;">
+      <i class="fa-solid fa-bullseye"></i>
+      <h5>Strategizing</h5>
+    </div>
+    <div class="item" style="background-color: #ffcc00f7;">
+      <i class="fa-solid fa-briefcase"></i>
+      <h5>Preparing</h5>
+    </div>
+    <div class="item" style="background-color: #ffcc00;">
+      <i class="fa-solid fa-network-wired"></i>
+      <h5>Connecting</h5>
+    </div>
+  </div>
+  <div class="equipping-groups__about">
+    <h1 animate="fadeInUp">What is Online Equipping? Do I need it?</h1>
+    <div class="content">
+      <div class="content__left">
+        <h5>EQUIPPING BASICS</h5>
+        <p>Our online pastor’s equipping groups consist of bi-weekly content developed over 30 years of “on-the-job” discipleship work. It consists of reading, video training, tailored projects, and online meetings with your trainer and peer group.</p>
+        <h5>COST</h5>
+        <p>We offer 2 options to pay for this service:</p>
+        <div>
+          <h6>Save with Full Payment: ${{webConfig.equippingGroupTotalCost}}</h6>
+          <p><i>One‑time payment for all 7 weeks of live, interactive Zoom sessions plus bonus materials.</i></p>
+        </div>
+        <div>
+          <h6>4 Month Plan: ${{webConfig.equippingGroupPaymentCost}}/month</h6>
+          <p><i>Join the 7‑week live Zoom equipping series on a 4‑month billing plan.</i></p>
+        </div>
+        <a href="/consultation-survey" class="impact-btn mt-30">Get Started</a>
+      </div>
+      <div class="content__right">
+        <h5>Pastors, are you ready to lead with greater purpose and clarity?</h5>
+
+        <div class="mt-10">
+          Enrolling in <b>The Making of a Disciple‑Making Pastor</b> equipping group could be one of the most transformative steps in your ministry. Rooted in 30 years of real‑life disciple‑making experience, this seven‑week online Zoom training will equip you with a practical, Christ‑centered strategy to align your leadership and ministry with the mission of making disciples.
+        </div>
+        <div class="mt-10">
+          It all begins with you—deepening your personal and spiritual growth to build a ministry that truly impacts your church and community. If you want to make and multiply disciples in your ministry, deciding to enroll in this group could be life‑changing.
+        </div>
+        <div class="mt-10">
+          <h5>What You’ll Experiences</h5>
+          <ul>
+            <li class="mb-5">* <b>Seven live weekly Zoom sessions</b> led by veteran pastors</li>
+            <li class="mb-5">* <b>Personalized coaching</b> to develop your disciple‑making skills</li>
+            <li class="mb-5">* <b>Six crucial priorities</b> every Disciple‑Making Pastor must master</li>
+            <li class="mb-5">* <b>Practical tools and resources</b> grounded in decades of experience</li>
+            <li class="mb-5">* <b>Join us today</b> and take the first step toward leading your congregation into a movement of multiplying disciples!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="equipping-groups__approach">
+    <div class="content">
+      <h4 animate="fadeInUp" class="content__title mb-10">OUR APPROACH TO <strong>EQUIPPING</strong></h4>
+      <p animate="fadeInUpTwo">
+        Many pastors today have not been personally discipled and lack disciple-making training in their theological education. Our course seeks to address this gap by providing pastors with the tools to become influential disciple-making leaders in their churches.
+        <br>
+        Drawing on over 30 years of “on-the-job” disciple-making experience, we offer a strategic and intentional process for pastors seeking to lead their congregations toward becoming movements of multiplication. The course covers six crucial priorities of Disciple-Making Pastors, modeled after Jesus’ approach to disciple-making.
+        <br>
+        The course consists of seven online sessions where pastors meet with a group of twelve peers to discuss the strategic content developed by our team. Pastors will receive personalized coaching and accountability throughout the course to help them develop the necessary skills to fulfill Jesus’ mission of making disciples.
+        <br>
+        As a pastor, the course creator, Ken Adams, knows firsthand the challenges of leading a church to become a Disciple-Making Movement. He is committed to sharing the most important things he has learned about this ministry to help pastors progress as Disciple-Making Pastors.
+        <br>
+        Join us in “The Making of a Disciple-Making Pastor” group and take the first step towards leading your congregation to fulfill the mission of making disciples.
+      </p>
+    </div>
+    <div class="video">
+      <div
+        *ngIf="!isPlaying"
+        class="video__container"
+        style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fequipping-groups-video-thumbnail.jpg?alt=media&token=0ec9cf6f-4f57-4f1d-9367-166cc84f581b)"
+      >
+        <div class="container">
+          <div class="video__content text-center">
+            <div class="video__button">
+              <a (click)="playVideo()" class="cursor-pointer">
+                <i class="fas fa-play"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isPlaying" class="video__container">
+        <div class="video__player-wrapper">
+          <youtube-player
+            [videoId]="'8uM1IOQY9kc'"
+            [playerVars]="{ autoplay: 1 }"
+            class="video__player"
+          ></youtube-player>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-consulation-banner></app-consulation-banner>
+</div>
 
 <!-- EQUIPPING GROUPS -->
-<div class="equipping-groups page-wrapper">
+<!-- <div class="equipping-groups page-wrapper">
   <main class="grey-bg">
-    <div class="equipping-groups__container container">
-      <!--EQUIPPING GROUPS HEADER - SWIPER-->
-      <section class="slider__area slider__area-4 p-relative">
-        <div class="slider-active swiper-container" #heroSliderContainer >
-          <div class="swiper-wrapper">
-            <div class="equipping-groups__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fequipping-groups-header.PNG?alt=media&token=ba04f91d-d669-4e96-91b6-9f5d452d989a)'">
-              <div class="container">
-                <div class="row justify-content-end">
-                  <div class="col-xl-7 col-lg-6 col-md-8 col-sm-10 col-12">
-                    <div class="slider__content slider__content-4 pr-50">
-                      <h5 animate="fadeInUp" class="slider-small-pretitle">ONLINE EQUIPPING GROUPS FOR PASTORS</h5>
-                      <h1 animate="fadeInUpTwo" class="slider-medium-title-white">The Making of a Disciple-Making Pastor</h1>
-                      <hr animate="fadeInLeftToRight" class="slider-hr">
-                      <a animate="fadeInUpThree" href="/events" class="impact-btn impact-btn-white">Enroll in a Group</a>
-                      <a animate="fadeInUpThree" href="https://impact-discipleship-ministries.mykajabi.com/login" target="_blank" class="impact-btn impact-btn-white">Go to Pastor Portal</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div class="equipping-groups__container container"> -->
 
-      <section class="equipping-groups__help-items mt-20">
-        <div class="row">
-          <div class="col" style="background-color: #ffcc006e;">
-            <i class="fa-regular fa-lightbulb"></i>
-            <h5>New Ideas</h5>
-          </div>
-          <div class="col" style="background-color: #ffcc007a;">
-            <i class="fa-regular fa-map"></i>
-            <h5>Planning</h5>
-          </div>
-          <div class="col" style="background-color: #ffcc0087;">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <h5>Research</h5>
-          </div>
-          <div class="col" style="background-color: #ffcc00ad;">
-            <i class="fa-solid fa-circle-nodes"></i>
-            <h5>Networking</h5>
-          </div>
-          <div class="col" style="background-color: #ffcc00de;">
-            <i class="fa-solid fa-pen-ruler"></i>
-            <h5>Brainstorming</h5>
-          </div>
-          <div class="col" style="background-color: #ffcc00eb;">
-            <i class="fa-solid fa-bullseye"></i>
-            <h5>Strategizing</h5>
-          </div>
-          <div class="col" style="background-color: #ffcc00f7;">
-            <i class="fa-solid fa-briefcase"></i>
-            <h5>Preparing</h5>
-          </div>
-          <div class="col" style="background-color: #ffcc00;">
-            <i class="fa-solid fa-network-wired"></i>
-            <h5>Connecting</h5>
-          </div>
-        </div>
-      </section>
-
-      <section class="equipping-groups__online-equipping mt-80">
-        <h1 animate="fadeInUp" class="text-center mb-40">What is Online Equipping? Do I need it?</h1>
-        <div class="row justify-content-center">
-          <div class="col-xl-4 left">
-            <h5>EQUIPPING BASICS</h5>
-            <p>Our online pastor’s equipping groups consist of bi-weekly content developed over 30 years of “on-the-job” discipleship work. It consists of reading, video training, tailored projects, and online meetings with your trainer and peer group.</p>
-            <h5>COST</h5>
-            <p>We offer 2 options to pay for this service:</p>
-            <div>
-              <h6>Save with Full Payment: ${{webConfig.equippingGroupTotalCost}}</h6>
-              <p><i>One‑time payment for all 7 weeks of live, interactive Zoom sessions plus bonus materials.</i></p>
-            </div>
-            <div>
-              <h6>4 Month Plan: ${{webConfig.equippingGroupPaymentCost}}/month</h6>
-              <p><i>Join the 7‑week live Zoom equipping series on a 4‑month billing plan.</i></p>
-            </div>
-            <a href="/consultation-survey" class="os-btn mt-30">Get Started</a>
-          </div>
-          <div class="col-xl-7 right">
-              <h5>Pastors, are you ready to lead with greater purpose and clarity?</h5>
-
-              <div class="mt-10">
-                Enrolling in <b>The Making of a Disciple‑Making Pastor</b> equipping group could be one of the most transformative steps in your ministry. Rooted in 30 years of real‑life disciple‑making experience, this seven‑week online Zoom training will equip you with a practical, Christ‑centered strategy to align your leadership and ministry with the mission of making disciples.
-              </div>
-              <div class="mt-10">
-                It all begins with you—deepening your personal and spiritual growth to build a ministry that truly impacts your church and community. If you want to make and multiply disciples in your ministry, deciding to enroll in this group could be life‑changing.
-              </div>
-              <div class="mt-10">
-                <h5>What You’ll Experiences</h5>
-                <ul>
-                  <li class="mb-5">* <b>Seven live weekly Zoom sessions</b> led by veteran pastors</li>
-                  <li class="mb-5">* <b>Personalized coaching</b> to develop your disciple‑making skills</li>
-                  <li class="mb-5">* <b>Six crucial priorities</b> every Disciple‑Making Pastor must master</li>
-                  <li class="mb-5">* <b>Practical tools and resources</b> grounded in decades of experience</li>
-                  <li class="mb-5">* <b>Join us today</b> and take the first step toward leading your congregation into a movement of multiplying disciples!</li>
-                </ul>
-              </div>
-            </div>
-        </div>
-      </section>
+<!--
+  
 
       <div class="banner__area-2 mt-80">
         <div class="container-fluid p-0">
@@ -163,6 +195,6 @@
 
     </div>
   </main>
-</div>
+</div> -->
 
 <app-footer></app-footer>

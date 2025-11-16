@@ -17,6 +17,7 @@ export class PodcastsComponent implements OnInit, OnDestroy {
   filteredPodcasts: PodCastModel[] = [];
   selectedPodcast: PodCastModel;
   isListView: boolean = false;
+  isPlaying: boolean = false;
   public webConfig: WebConfigModel;
   public pageSize: number = 6;
   public paginate: any = {};
@@ -39,6 +40,10 @@ export class PodcastsComponent implements OnInit, OnDestroy {
     this.webConfigService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe(configs => {
      this.webConfig = configs[0];
     });
+  }
+
+  playVideo(){
+    this.isPlaying = true;
   }
 
   loadPodcasts(): void {

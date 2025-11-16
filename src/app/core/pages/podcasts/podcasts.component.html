@@ -1,57 +1,39 @@
 <app-home-header></app-home-header>
 
-<main class="grey-bg podcasts">
-  <div class="podcasts__container container">
-    <!--PODCASTS HEADER - SWIPER-->
-    <section class="slider__area slider__area-4 p-relative">
-      <div class="slider-active swiper-container" #heroSliderContainer >
-        <div class="swiper-wrapper">
-          <div class="podcasts__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fpodcasts-header.PNG?alt=media&token=1c584f7d-abc1-44b9-8eab-6d88792d2eaa)'">
-            <div class="row">
-              <div class="col-xl-12">
-                <div class="slider__content slider__content-4 pr-50">
-                  <h5 animate="fadeInUp" class="slider-pretitle">FREE ONLINE RESOURCES</h5>
-                  <h1 animate="fadeInUpTwo" class="slider-medium-title-white">The Disciple-Making Church Podcast</h1>
-                  <hr animate="fadeInLeftToRight" class="slider-hr">
-                  <a animate="fadeInUpThree" [href]="webConfig.youtube" target="_blank" class="impact-btn impact-btn-white"><i class="fab fa-youtube mr-10"></i>YOUTUBE</a>
-                  <a animate="fadeInUpThree" [href]="webConfig.applePodCast" target="_blank" class="impact-btn impact-btn-white"><i class="fab fa-apple mr-10"></i>APPLE PODCASTS</a>
-                  <a animate="fadeInUpThree" [href]="webConfig.facebookLive" target="_blank" class="impact-btn impact-btn-white"><i class="fab fa-facebook-f mr-10"></i>FACEBOOK LIVE</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="podcasts">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fpodcasts-header.PNG?alt=media&token=1c584f7d-abc1-44b9-8eab-6d88792d2eaa'"
+    [pretitle]="'FREE ONLINE RESOURCES'"
+    [title]="'The Disciple-Making Church Podcast'"
+    [showHr]="true"
+    [buttonText]="'YOUTUBE'"
+    [buttonIcon]="'fab fa-youtube'"
+    [buttonLink]="webConfig.youtube"
+    [buttonText2]="'APPLE PODCASTS'"
+    [buttonIcon2]="'fab fa-apple'"
+    [buttonLink2]="webConfig.applePodCast"
+    [buttonText3]="'FACEBOOK LIVE'"
+    [buttonIcon3]="'fab fa-facebook-f'"
+    [buttonLink3]="webConfig.facebookLive"
+  ></app-header>
+  <div class="podcasts__container">
+    <app-podcast-sidebar [podcasts]="podcasts" (searchEvent)="searchPodcasts($event)" (clearFiltersEvent)="clearFilters()" (selectPodcast)="selectPodcast($event)"></app-podcast-sidebar>
+    <div *ngIf="isListView" class="podcasts__container-list">
+      <div *ngFor="let podcast of filteredPodcasts">
+        <app-podcast-postbox-item [podcast]="podcast" (selectPodcast)="selectPodcast($event)"></app-podcast-postbox-item>
       </div>
-    </section>
-
-    <div class="row mt-50 podcasts__row">
-      <div class="col-xl-3 col-lg-4">
-        <app-podcast-sidebar [podcasts]="podcasts" (searchEvent)="searchPodcasts($event)" (clearFiltersEvent)="clearFilters()" (selectPodcast)="selectPodcast($event)"></app-podcast-sidebar>
-      </div>
-
-      <div class="col-xl-9 col-lg-8">
-        <div *ngIf="isListView" class="podcasts__wrapper">
-          <div class="row">
-            <div *ngFor="let podcast of filteredPodcasts" class="col-xl-6 col-lg-6 col-md-6">
-              <app-podcast-postbox-item [podcast]="podcast" (selectPodcast)="selectPodcast($event)"></app-podcast-postbox-item>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-xl-12">
-              <div class="shop-pagination-wrapper">
-                <app-pagination [data]="filteredPodcasts" [paginate]="paginate" (setPage)="setPage($event)"></app-pagination>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="selectedPodcast && !this.isListView" class="podcasts__selected mt-50">
-          <h1>{{ selectedPodcast?.title }}</h1>
-          <youtube-player *ngIf="selectedPodcast?.videoType == 'Youtube'" class="mt-20" [videoId]="selectedPodcast?.videoId" suggestedQuality="highres"></youtube-player>
-        </div>
+    </div>
+    <div *ngIf="selectedPodcast && !this.isListView" class="podcasts__container-selected">
+      <h1>{{ selectedPodcast?.title }}</h1>
+      <div class="video-wrapper">
+        <youtube-player
+          *ngIf="selectedPodcast?.videoType == 'Youtube'"
+          [videoId]="selectedPodcast?.videoId"
+          suggestedQuality="highres">
+        </youtube-player>
       </div>
     </div>
   </div>
-</main>
+</div>
 
 <app-footer></app-footer>

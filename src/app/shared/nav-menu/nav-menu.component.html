@@ -1,32 +1,26 @@
 <nav>
   <ul>
-    <li *ngFor="let item of menuItems; let index = index" [ngClass]="getMenuClasses(item)">
-      <ng-container *ngIf="item.visible">
-        <ng-container *ngIf="item.external">
-          <a [href]="item.link" target="_blank" *ngIf="item.highlight" style="color: rgb(4, 0, 255);">{{ item.title }}</a>
-          <a [href]="item.link" target="_blank" *ngIf="!item.highlight">{{ item.title }}</a>
-        </ng-container>
-        <ng-container *ngIf="!item.external">
-          <a [routerLink]="item.link" *ngIf="item.highlight" style="color: rgb(4, 0, 255);">{{ item.title }}</a>
-          <a [routerLink]="item.link" *ngIf="!item.highlight">{{ item.title }}</a>
-        </ng-container>
-      </ng-container>
+    <li *ngFor="let item of menuItems; let index = index" [ngClass]="getMenuClasses(item)" >
+      <a [routerLink]="item.link" *ngIf="item.visible && !item.external">{{ item.title }}</a>
+      <a [href]="item.link" target="_blank" *ngIf="item.visible && item.external" style="color: #4b92fe;">{{ item.title }}</a>
 
       <ul *ngIf="item.hasDropdown && !item.megamenu" class="submenu transition-3">
         <li *ngFor="let menu of item.dropdownItems; let index = index">
-          <ng-container *ngIf="menu.visible">
-            <ng-container *ngIf="menu.external">
-              <a [href]="menu.link" target="_blank" *ngIf="menu.highlight" style="color: rgb(4, 0, 255);">{{ menu.title }}</a>
-              <a [href]="menu.link" target="_blank" *ngIf="!menu.highlight">{{ menu.title }}</a>
-            </ng-container>
-            <ng-container *ngIf="!menu.external">
-              <a [routerLink]="menu.link" *ngIf="menu.highlight" style="color: rgb(4, 0, 255);">{{ menu.title }}</a>
-              <a [routerLink]="menu.link" *ngIf="!menu.highlight">{{ menu.title }}</a>
-            </ng-container>
-          </ng-container>
+          <a [routerLink]="menu.link" *ngIf="menu.visible && !menu.external">{{ menu.title }}</a>
+          <a [href]="menu.link" target="_blank" *ngIf="menu.visible && menu.external" style="color: #4b92fe;">{{ menu.title }}</a>
         </li>
       </ul>
 
+      <ul *ngIf="item.hasDropdown && item.megamenu" class="submenu transition-3" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap-light.PNG?alt=media&token=8801ee61-cd27-47a4-970b-285916eb22af)'">
+        <li *ngFor="let m_mnu of item.dropdownItems; let index = index" class="has-dropdown">
+          <a [routerLink]="m_mnu.link" *ngIf="item.visible">{{ m_mnu.title }}</a>
+          <ul>
+            <li *ngFor="let m of m_mnu.dropdownMenu; let index = index">
+              <a [routerLink]="m.link" *ngIf="m.visible">{{ m.title }}</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </li>
   </ul>
 </nav>

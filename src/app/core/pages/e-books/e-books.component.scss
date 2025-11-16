@@ -1,44 +1,41 @@
 @import '../../../../assets/theme/scss/variables';
 
-.store {
+::ng-deep .e-books {
   &__container {
-    background-color: #ffffff;
-    padding: 20px;
-  }
-  &__header {
-    height: 480px;
-    &__pretitle {
-      color: #ffcc00;
-      font-size: 20px;
-    }
-    &__title {
-      font-size: 50px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-    }
-  }
-  &__intro-text {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-  }
-  .custom-hr {
-    width: 200px;
-    border: 0;
-    border-top: 6px solid $theme-color;
-    opacity: 1;
-  }
-  .series {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 25px 0;
-    img {
-      height: 200px;
+    padding: 50px;
+
+    @media #{$xxs,$xs} {
+      flex-direction: column;
+      padding: 10px;
+    }
+    &-content {
+      display: flex;
+      flex-direction: column;
+    }
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 0 25px 0 50px;
+      padding: 25px 50px;
+      background: #fff;
+      align-items: stretch;
+      @media #{$xxs,$xs} {
+        gap: 15px;
+        margin: 10px 0 0 0;
+        padding: 0; 
+        justify-content: center;
+      }
+    }
+    &-pagination {
+      margin: 20px 50px;
+      @media #{$xxs,$xs} {
+        margin: 20px 5px;
+      }
+      li {
+        background-color: #ffffff;
+      }
     }
   }
 }

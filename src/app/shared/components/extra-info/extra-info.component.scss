@@ -1,3 +1,7 @@
+.extra-info-items {
+  display: flex;
+  flex-direction: column;
+}
 .extra-title {
   border-bottom: 1px solid #e1e1e1 !important;
   h5 {

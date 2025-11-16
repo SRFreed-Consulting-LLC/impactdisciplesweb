@@ -1,30 +1,78 @@
 @import '../../../assets/theme/scss/variables';
 
-.story {
-  &__title {
-    color: $black;
-    font-size: 36px;
+.video {
+  display: flex;
+  gap: 50px;
+  margin: 20px 0;
+  padding: 50px;
+  background-color: #1c1c1c;
+  align-items: center;
 
-    strong {
+  @media #{$xxs}, #{$xs} {
+    padding: 20px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__title {
+    display: inline-block;
+    white-space: nowrap;
+    margin-right: 40px;
+    @media #{$xxs}, #{$xs} {
+      margin-right: 0;
+    }
+
+    h1 {
+      font-weight: 900;
+      font-size: 100px;
       color: $theme-color;
+       display: inline;
+      white-space: nowrap; 
+
+      @media #{$xxs}, #{$xs} {
+        font-size: 40px;
+      }
+      @media #{$md} {
+        font-size: 60px;
+      }
+    }
+
+    p {
+      font-size: 16px;
+      display: block;
+      white-space: normal;
+      width: 100%;
+
+      @media #{$xxs}, #{$xs} {
+        font-size: 11px;
+      }
     }
   }
 
-  &__text-area {
-    margin: 25px;
-    padding: 20px;
-    flex-direction: column;
+  &__container {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+
+    @media #{$xxs}, #{$xs} {
+      width: 100%;
+    }
   }
 
-  .impact-btn-primary {
-    width: 50%;
+  &__player-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__player-wrapper youtube-player {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 }
-
-:host ::ng-deep youtube-player iframe,
-:host ::ng-deep youtube-player-placeholder {
-  width: 100% !important; /* Makes the player take the full width of its parent */
-  height: auto !important; /* Adjusts height proportionally to maintain aspect ratio */
-  aspect-ratio: 16/9; /* Ensures a standard 16:9 aspect ratio for videos */
-}
-

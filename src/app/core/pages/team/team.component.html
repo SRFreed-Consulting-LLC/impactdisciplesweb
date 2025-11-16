@@ -1,13 +1,41 @@
 <app-home-header></app-home-header>
 
+<div class="team">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fteam-header.PNG?alt=media&token=96b45f4e-2a72-4068-944a-ae188c4f3090'"
+    [title]="'Recieve A Free Consultation'"
+    [description]="'Your first consultation is on us. Fill out a brief survey and one of our consultants will contact you shortly!'"
+    [buttonLink]="'/consultation-survey'"
+    [buttonText]="'Get My Free Consultation'"
+  ></app-header>
+  <div class="team__options">
+    <div class="item"><a [routerLink]="['/about-us']">About Us</a></div>
+    <div class="item item-middle"><a [routerLink]="['/customer-reviews']">Customer Reviews</a></div>
+    <div class="item"><a [routerLink]="['/contact']">Contact Us</a></div>
+  </div>
+  <div class="team__meet">
+    <h2>MEET THE TEAM</h2>
+    <div class="team__meet-items">
+      <div class="item" *ngFor="let coach of coaches">
+        <img src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
+        <div class="item__content">
+          <h5>{{ coach.firstName }} {{ coach.lastName }}</h5>
+          <p>{{ coach.title }}</p>
+          <p><a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-primary-border">Get to know {{ coach.firstName }}</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- TEAM -->
-<div class="page-wrapper teams">
+<!-- <div class="page-wrapper teams">
   <main class="grey-bg">
     <div class="container teams__container">
       <div class="row">
-        <div class="col-12">
+        <div class="col-12"> -->
           <!-- TEAM HEADER - SWIPER-->
-          <section class="slider__area slider__area-4 p-relative teams__slider">
+          <!-- <section class="slider__area slider__area-4 p-relative teams__slider">
             <div class="slider-active swiper-container teams__slider-container" #heroSliderContainer >
               <div class="swiper-wrapper">
                 <div class="single-slider single-slider-2 slider__height-4 d-flex align-items-center swiper-slide teams__header" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fconsultation-banner.PNG?alt=media&token=9c57db12-b8c7-4c12-948c-f4b1b67755f8)'">
@@ -39,10 +67,10 @@
               </div>
               <div class="tp-slider-dot tp-swiper-dot"></div>
             </div>
-          </section>
+          </section> -->
 
           <!-- TEAM - MEET THE TEAM -->
-          <section class="blog__area pb-70">
+          <!-- <section class="blog__area pb-70">
             <div class="container">
               <div class="row">
                 <div class="col-xl-10">
@@ -56,7 +84,7 @@
               <div class="row">
                 <div class="col-10">
                   <div class="row">
-                    <div class="col-xl-4 card-deck" *ngFor="let coach of coaches">
+                    <div class="col-xl-4 card-deck" *ngFor="let coach of coaches$ | async">
                       <div class="card mb-10">
                         <img class="card-img-top" src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
                         <div class="card-body">
@@ -95,6 +123,6 @@
       </div>
     </div>
   </main>
-</div>
+</div> -->
 
 <app-footer></app-footer>

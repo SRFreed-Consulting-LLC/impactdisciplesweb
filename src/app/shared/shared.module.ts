@@ -21,6 +21,8 @@ import { DiscipleMakingSummitBannerComponent } from './components/disciple-makin
 import { CategoryNamePipe } from "./utils/pipes/category-name.pipe";
 import { TimeFormatPipe } from "./utils/pipes/time-format.pipe";
 import { AnimateDirective } from "./utils/directives/animate.directive";
+import { ConsulationBannerComponent } from "./components/consulation-banner/consulation-banner.component";
+import { HeaderComponent } from "./components/header/header.component";
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { AnimateDirective } from "./utils/directives/animate.directive";
     CategoryNamePipe,
     TimeFormatPipe,
     DiscipleMakingSummitBannerComponent,
-    AnimateDirective
+    AnimateDirective,
+    ConsulationBannerComponent,
+    HeaderComponent
   ],
   imports: [
     CommonModule,
@@ -68,7 +72,9 @@ import { AnimateDirective } from "./utils/directives/animate.directive";
     CategoryNamePipe,
     TimeFormatPipe,
     DiscipleMakingSummitBannerComponent,
-    AnimateDirective
+    AnimateDirective,
+    ConsulationBannerComponent,
+    HeaderComponent
   ]
 })
 export class SharedModule { }

@@ -1,12 +1,10 @@
 import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
 import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
 import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
-import { ProductCategoriesService } from 'impactdisciplescommon/src/services/data/product-categories.service';
 import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
 import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
 import { SeriesService } from 'impactdisciplescommon/src/services/data/series.service';
@@ -32,13 +30,11 @@ export class StoreComponent implements OnInit, OnDestroy {
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];
   public showSeriesInMainView: boolean = true;
-  public showSideBar: boolean = true;
   public paginate: any = {};
   public pageNo: number = 1;
-  public pageSize: number = 6;
+  public pageSize: number = 10;
   public selectedFilter: FilterType;
   public FILTER_TYPE = FilterType;
-  public title;
   public filterOptions = [
     { text: 'View All', value: FilterType.viewAll },
     { text: 'View by Series', value: FilterType.viewBySeries },
@@ -57,93 +53,46 @@ export class StoreComponent implements OnInit, OnDestroy {
     private salesService: SalesService,
     private route: ActivatedRoute,
     private router: Router,
-    private viewScroller: ViewportScroller,
-    private productCategoriesService: ProductCategoriesService
+    private viewScroller: ViewportScroller
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    let sales : SaleModel[] = await this.getActiveSales();
-
-    this.route.data.subscribe(async params => {
-      if( params['catagory']) {
-        this.showSideBar = false;
-
-        this.title = 'Spanish Resources'
-
-        let hiddenCategory = await this.productCategoriesService.getAllByValue('tag', this.title)
-
-        let qp: QueryParam[] = [];
-        qp.push(new QueryParam('isActive', WhereFilterOperandKeys.equal,true));
-        qp.push(new QueryParam('category', WhereFilterOperandKeys.equal, hiddenCategory[0].id));
-
-        this.productService.queryAllStreamByMultiValue(qp).subscribe((products) => {
-          this.products = products;
-
-          let selectedSale: SaleModel;
-
-          sales.forEach(sale => {
-            if(sale.isProducts){
-              selectedSale = sale;
-            }
-          })
-
-          if(selectedSale){
-            this.products.forEach(product => {
-              product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost)
-            })
-          }
-
-          if(!this.showSeriesInMainView) {
-            this.setProducts(this.products)
-          } else {
-            this.filterProducts(FilterType.viewAll)
-          }
-        })
-
-      } else {
-        this.title = 'Store'
-
-        this.route.queryParams.subscribe(params => {
-          if (params['page']) {
-            this.router.navigate([], {
-              relativeTo: this.route,
-              queryParams: {},
-              queryParamsHandling: '',
-              replaceUrl: true
-            });
-          }
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['page']) {
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {},
+          queryParamsHandling: '',
+          replaceUrl: true
         });
+      }
+    });
 
-        let qp: QueryParam[] = [];
-        qp.push(new QueryParam('isActive', WhereFilterOperandKeys.equal,true));
-        qp.push(new QueryParam('showInStore', WhereFilterOperandKeys.equal, true));
+    this.getActiveSales().then(sales => {
+      this.productService.streamAllByValue('isActive', true).subscribe((products) => {
+        this.products = products;
 
-        this.productService.queryAllStreamByMultiValue(qp).subscribe((products) => {
-          this.products = products;
+        let selectedSale: SaleModel;
 
-          let selectedSale: SaleModel;
-
-          sales.forEach(sale => {
-            if(sale.isProducts){
-              selectedSale = sale;
-            }
-          })
-
-          if(selectedSale){
-            this.products.forEach(product => {
-              product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost)
-            })
-          }
-
-          if(!this.showSeriesInMainView) {
-            this.setProducts(this.products)
-          } else {
-            this.filterProducts(FilterType.viewBySeries)
+        sales.forEach(sale => {
+          if(sale.isProducts){
+            selectedSale = sale;
           }
         })
-      }
 
-    })
+        if(selectedSale){
+          this.products.forEach(product => {
+            product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost)
+          })
+        }
+
+        if(!this.showSeriesInMainView) {
+          this.setProducts(this.products)
+        } else {
+          this.filterProducts(FilterType.viewBySeries)
+        }
+      })
+    });
   }
 
 
@@ -167,6 +116,24 @@ export class StoreComponent implements OnInit, OnDestroy {
     })
   }
 
+   viewAllProducts(): void {
+    this.filteredProductItems = [...this.products];
+    this.paginate = this.getPager(this.filteredProductItems.length, Number(+this.pageNo), this.pageSize);
+    this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+  }
+
+  filterProductsByCategory(category: TagModel): void {
+    this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === category.id);
+    this.paginate = this.getPager(this.filteredProductItems.length, Number(+this.pageNo), this.pageSize);
+    this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+  }
+
+  showFreeItems(): void {
+    this.filteredProductItems = this.products.filter((storeItem) => storeItem.cost === 0);
+    this.paginate = this.getPager(this.filteredProductItems.length, Number(+this.pageNo), this.pageSize);
+    this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+  }
+
   setProducts(products: ProductModel[]) {
     this.setPage(1)
     this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params) => {
@@ -174,6 +141,10 @@ export class StoreComponent implements OnInit, OnDestroy {
       this.paginate = this.getPager(products.length, Number(+this.pageNo), this.pageSize);
       this.filteredProductItems = products.slice(this.paginate.startIndex, this.paginate.endIndex + 1)
     })
+  }
+
+  showDiscipleMakingSeries(): void {
+
   }
 
   searchProducts(searchTerm: string): void {

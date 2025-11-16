@@ -13,6 +13,10 @@
     color: $white;
     font-size: 70px;
     font-weight: 600;
+    @media #{$xxs} {
+      font-size: 42px;
+      padding: 0;
+    }
   }
 
   &__description {

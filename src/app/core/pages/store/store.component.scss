@@ -1,44 +1,134 @@
 @import '../../../../assets/theme/scss/variables';
 
-.store {
+::ng-deep .store {
   &__container {
-    background-color: #ffffff;
-    padding: 20px;
-  }
-  &__header {
-    height: 480px;
-    &__pretitle {
-      color: #ffcc00;
-      font-size: 20px;
-    }
-    &__title {
-      font-size: 50px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-    }
-  }
-  &__intro-text {
-    display: -webkit-box;
-    -webkit-line-clamp: 3; 
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-  }
-  .custom-hr {
-    width: 200px; 
-    border: 0;    
-    border-top: 6px solid $theme-color;  
-    opacity: 1;
-  }
-  .series {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 25px 0;
-    img {
-      height: 200px;
+    padding: 50px;
+
+    @media #{$xxs,$xs} {
+      flex-direction: column;
+      padding: 10px;
+    }
+    &-content {
+      display: flex;
+      flex-direction: column;
+    }
+    &-filter {
+      width: 250px;
+      margin: 0 0 25px 25px;
+      @media #{$xxs,$xs} {
+        margin: 20px 0;
+        width: 100%;
+      }
+    }
+    &-views {
+      margin-left: 25px;
+      padding: 25px 50px;
+      background: #fff;
+      @media #{$xxs,$xs} {
+        margin: 0;
+        padding: 0;
+      }
+      .products {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        background: #fff;
+        align-items: stretch;
+        @media #{$xxs,$xs} {
+          gap: 15px;
+          margin: 10px 0 0 0;
+          padding: 0; 
+          justify-content: center;
+        }
+      }
+      .series {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 0;
+        h1 {
+          @media #{$xxs,$xs} {  
+            font-size: 25px;
+            text-align: center;
+          }
+        }
+        &__list {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          row-gap: 100px;
+          column-gap: 50px;
+          @media #{$xxs,$xs} {  
+            row-gap: 30px;
+            column-gap: 0;
+          }
+          &-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            img {
+              height: 300px;
+              margin-bottom: 25px;
+              @media #{$xxs,$xs} {  
+                height: 95px;
+              }
+            }
+          }
+        }
+      }
+    }
+    &-pagination {
+      margin: 20px 50px;
+      @media #{$xxs,$xs} {
+        margin: 20px 5px;
+      }
+      li {
+        background-color: #ffffff;
+      }
     }
   }
 }
+
+// .store {
+//   &__container {
+//     background-color: #ffffff;
+//     padding: 20px;
+//   }
+//   &__header {
+//     height: 480px;
+//     &__pretitle {
+//       color: #ffcc00;
+//       font-size: 20px;
+//     }
+//     &__title {
+//       font-size: 50px;
+//       font-weight: 600;
+//       color: #fff;
+//       cursor: pointer;
+//     }
+//   }
+//   &__intro-text {
+//     display: -webkit-box;
+//     -webkit-line-clamp: 3; 
+//     -webkit-box-orient: vertical;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     white-space: normal;
+//   }
+//   .custom-hr {
+//     width: 200px; 
+//     border: 0;    
+//     border-top: 6px solid $theme-color;  
+//     opacity: 1;
+//   }
+//   .series {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     margin: 25px 0;
+//     img {
+//       height: 200px;
+//     }
+//   }
+// }

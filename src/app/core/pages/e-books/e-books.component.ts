@@ -21,7 +21,7 @@ export class EBooksComponent {
   public showSeriesInMainView: boolean = false;
   public paginate: any = {};
   public pageNo: number = 1;
-  public pageSize: number = 6;
+  public pageSize: number = 10;
 
   constructor(
     private productService: ProductService,
@@ -45,7 +45,6 @@ export class EBooksComponent {
 
     this.productService.queryAllByMultiValue(queries).then((products) => {
       this.products = products;
-      //this.viewBySeries();
       this.paginate = this.getPager(this.products.length, Number(+this.pageNo), this.pageSize);
       this.filteredProductItems = this.products.slice(this.paginate.startIndex, this.paginate.endIndex + 1)
     })
@@ -56,31 +55,31 @@ export class EBooksComponent {
     this.filteredProductItems = this.products.filter(
       (product) =>
         product?.title?.toLowerCase().includes(termLower) ||
-        product?.tags?.some((tag) => tag.tag.toLowerCase().includes(termLower))
+        product?.tags?.some((tag) => tag.tag.toLowerCase().includes(termLower)) 
     );
     this.showSeriesInMainView = false;
   }
 
   filterProductsByCategory(category: TagModel): void {
     this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === category.id);
-    this.showSeriesInMainView = false;
-  }
-
-  filterProductsBySeries(series: SeriesModel): void {
-    this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === series.id);
-    this.showSeriesInMainView = false;
+    this.paginate = this.getPager(this.filteredProductItems.length, Number(+this.pageNo), this.pageSize);
+    this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
   }
 
   viewAllProducts(): void {
     this.filteredProductItems = [...this.products];
-    this.showSeriesInMainView = false;
+    this.paginate = this.getPager(this.filteredProductItems.length, Number(+this.pageNo), this.pageSize);
+    this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
   }
 
-  viewBySeries(): void {
-    this.seriesService.streamAll().subscribe((seriesItems) => {
-      this.seriesItems = seriesItems.sort((a, b) => a.order - b.order);
-    })
-    this.showSeriesInMainView = true;
+  showFreeItems(): void {
+    this.filteredProductItems = this.products.filter((storeItem) => storeItem.cost === 0);
+    this.paginate = this.getPager(this.filteredProductItems.length, Number(+this.pageNo), this.pageSize);
+    this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+  }
+
+  showDiscipleMakingSeries(): void {
+
   }
 
   setPage(page: number) {

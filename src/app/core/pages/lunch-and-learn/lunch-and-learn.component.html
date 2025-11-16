@@ -1,90 +1,60 @@
 <app-home-header></app-home-header>
-
-<!-- LUNCH AND LEARN -->
-<div class="lunch page-wrapper">
-  <main class="grey-bg">
-    <div class="lunch__container container">
-      <!--LUNCH AND LEARN HEADER - SWIPER-->
-      <section class="slider__area slider__area-4 p-relative">
-        <div class="slider-active swiper-container" #heroSliderContainer >
-          <div class="swiper-wrapper">
-            <div class="lunch__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Flunch-and-learn-header.jpg?alt=media&token=a55dce17-1644-4807-8824-32327b2c9dc3)'">
-              <div class="container">
-                <div class="row justify-content-end text-end">
-                  <div class="col-xl-8 col-lg-7 col-md-9 col-sm-11 col-12">
-                    <div class="slider__content slider__content-4 pr-50">
-                      <h5 animate="fadeInUp" class="slider-pretitle">DISCIPLE-MAKING CHURCH</h5>
-                      <h1 animate="fadeInUpTwo" class="slider-title">Lunch & Learns</h1>
-                      <hr animate="fadeInRightToLeft" class="slider-hr-solid float-right">
-                      <p animate="fadeInUpThree" class="slider-subtitle">Structure your church to make and multiply disciples with the Disciple Making Church strategy. We come to <strong>you</strong> and give you a <strong>free</strong> overview of a proven strategy to multiply disciples through your ministry.</p>
-                      <a animate="fadeInUpFour" href="/lunch-and-learn-form" class="impact-btn impact-btn-primary">Request to Book a Lunch and Learn</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!--LUNCH AND LEARN - OVERVIEW-->
-      <section class="mt-80">
-        <div class="container custom-container">
-          <div class="lunch__overview row justify-content-center">
-            <div class="col-xl-8">
-              <div class="section__title-wrapper text-center mb-55">
-                <div class="section__title mb-10 mt-50">
-                  <h2 animate="fadeInUp">OVERVIEW</h2>
-                </div>
-                <div animate="fadeInUpTwo" class="section__sub-title">
-                  <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples. One of the best ways we do that is by providing training and resources for churches who need help implementing a proven strategy to grow their ministries.</p>
-                  <br>
-                  <p>Let us join you for lunch and give you more information on how we can come alongside you to help your church multiply disciples.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!--LUNCH AND LEARN - WHAT YOU GET-->
-          <div class="lunch__description banner__inner p-relative z-index-1 pt-50 mb-80">
-            <div class="row justify-content-center align-items-center">
-              <div class="lunch__description__text-area col-xl-5 col-lg-5 d-flex z-index-1">
-                <div class="lunch__description__title mb-10">
-                  <h4 animate="fadeInUp">WHAT YOU <strong> GET</strong></h4>
-                  <hr animate="fadeInLeftToRight" class="custom-hr">
-                </div>
-                <ul class="custom-bullets">
-                  <li animate="fadeInUpTwo">Meet and Greet with Our Team</li>
-                  <li animate="fadeInUpThree">An Overview of Our Strategy and Resources</li>
-                  <li animate="fadeInUpFour">Follow-up Support</li>
-                </ul>
-              </div>
-              <div class="col-xl-5 col-lg-5">
-                <div *ngIf="!isPlaying" class="video__area-df mb-60" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Flunch-and-learn-thumbnail.jpg?alt=media&token=88186f35-4e15-4ba1-b115-e02c613b513d)">
-                  <div class="container">
-                    <div class="video__content text-center">
-                      <div class="video__button mb-60">
-                        <a (click)="playVideo()" class="cursor-pointer">
-                          <i class="fas fa-play"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div *ngIf="isPlaying" id="video-overlay"  class="mb-60">
-                  <youtube-player [videoId]="'HxKSa24hF60'" [width]="450" [height]="250" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player>
-                </div>
-              </div>
-            </div>
-          </div>
-
-      
-
-        </div>
-      </section>
+<div class="lunch">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Flunchlearn-header.png?alt=media&token=557bdabf-9daa-4475-80a6-a9f6410d4d74'"
+    [pretitle]="'DISCIPLE-MAKING CHURCH'"
+    [title]="'Lunch & Learns'"
+    [description]="'Structure your church to make and multiply disciples with the Disciple Making Church strategy. We come to you and give you a free overview of a proven strategy to multiply disciples through your ministry.'"
+    [buttonText]="'Request to Book a Lunch and Learn'"
+    [buttonLink]="'/lunch-and-learn-form'"
+  ></app-header>
+  <div class="lunch__overview">
+    <h2 animate="fadeInUp">OVERVIEW</h2>
+    <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples. One of the best ways we do that is by providing training and resources for churches who need help implementing a proven strategy to grow their ministries.
+    Let us join you for lunch and give you more information on how we can come alongside you to help your church multiply disciples.</p>
+  </div>
+  <hr animate="fadeInLeftToRight" class="solid-line mt-60 mb-60">
+  <div class="lunch__offers">
+    <div class="content">
+      <h1>WHAT YOU <strong> GET</strong></h1>
+      <hr animate="fadeInLeftToRight" class="slider-hr slider-hr-w60 slider-hr-thick">
+      <ul class="custom-bullets">
+        <li animate="fadeInUpTwo">Meet and Greet with Our Team</li>
+        <li animate="fadeInUpThree">An Overview of Our Strategy and Resources</li>
+        <li animate="fadeInUpFour">Follow-up Support</li>
+      </ul>
     </div>
 
-  </main>
+    <div class="video">
+      <div
+        *ngIf="!isPlaying"
+        class="video__container"
+        style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Flunch-and-learn-thumbnail.jpg?alt=media&token=88186f35-4e15-4ba1-b115-e02c613b513d)"
+      >
+        <div class="container">
+          <div class="video__content text-center">
+            <div class="video__button">
+              <a (click)="playVideo()" class="cursor-pointer">
+                <i class="fas fa-play"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isPlaying" class="video__container">
+        <div class="video__player-wrapper">
+          <youtube-player
+            [videoId]="'HxKSa24hF60'"
+            [playerVars]="{ autoplay: 1 }"
+            class="video__player"
+          ></youtube-player>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
 
 <app-footer></app-footer>

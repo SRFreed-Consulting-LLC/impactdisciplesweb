@@ -613,7 +613,7 @@
 	width: 100%;
     font-size: 14px;
     &::placeholder{
-        color: $body-text-color;
+        color: #848b8a;
     }
     &:focus{
         border-color: $theme-color;
@@ -629,7 +629,7 @@
     font-size: 14px;
     resize: none;
     &::placeholder{
-        color: $body-text-color;
+        color: #848b8a;
     }
     &:focus{
         border-color: $theme-color;

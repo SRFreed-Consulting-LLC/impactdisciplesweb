@@ -1,131 +1,52 @@
 <app-home-header></app-home-header>
 
-<div class="events page-wrapper">
-  <main class="grey-bg">
-    <div class="events__container container">
-
-      <!-- EVENTS HEADER - SWIPER -->
-      <section class="events__slider slider__area slider__area-4 p-relative">
-        <div class="slider-active swiper-container" #heroSliderContainer>
-          <div class="swiper-wrapper">
-            <div *ngIf="isSummitPosted" class="events__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa)'">
-              <div class="row">
-                <div class="col-xl-12">
-                  <div class="slider__content slider__content-4 pr-50">
-                    <h5 animate="fadeInUp" class="events__header__pretitle">JOIN US FOR OUR ANNUAL EVENT</h5>
-                    <h1 animate="fadeInUpTwo" class="events__header__title w-100">Disciple-Making Summit</h1>
-                    <hr animate="fadeInLeftToRight" class="slider-hr">
-                    <a animate="fadeInUpThree" [routerLink]="['/event-details', dms?.id]" class="os-btn os-btn-white"><i class="fas fa-right-to-bracket mr-10"></i>REGISTER NOW</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="events__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-1.PNG?alt=media&token=0129c367-83ed-49ff-8dc0-b5516642fc51)'">
-              <div class="row">
-                <div class="col-xl-12">
-                  <div class="slider__content slider__content-4 pr-50">
-                    <h5 animate="fadeInUp" class="events__header__pretitle">BROUGHT TO YOU BY</h5>
-                    <h1 animate="fadeInUpTwo" class="events__header__title w-100">Impact Disciples Events</h1>
-                    <hr animate="fadeInLeftToRight" class="slider-hr">
-                    <a animate="fadeInUpThree" href="/contact" class="os-btn os-btn-white"><i class="fas fa-circle-question mr-10"></i>QUESTIONS?</a>
-                  </div>
-                </div>
-              </div>
-            </div>
+<div class="events">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa'"
+    [pretitle]="'JOIN US FOR OUR ANNUAL EVENT'"
+    [title]="'Disciple-Making Summit'"
+    [buttonText]="'REGISTER NOW'"
+    [buttonLink]="['/event-details', dms?.id]"
+  ></app-header>
+  <div class="events__intro"></div>
+  <div class="events__person">
+    <h2>In Person Events</h2>
+    <div class="events__person-list">
+      <a class="events__person-item" *ngFor="let event of eventsList" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
+        <img [src]="event.imageUrl.url" alt="blog" *ngIf="event.imageUrl">
+        <div class="content">
+          <h4><a>{{ event.eventName }}</a></h4>
+          <div class="content__details">
+            <span *ngIf="event.startDate">{{ event.startDate.toString()| date: 'M/d' }} </span>
+            <span *ngIf="event.endDate">- {{ event.endDate.toString() | date: 'M/d' }} </span>
+            <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
           </div>
-          <div class="tp-slider-dot tp-swiper-dot"></div>
+          <p *ngIf="event.description" class="content__description">{{ event.description }}</p>
+          <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin impact-btn-white">REGISTER NOW</a>
         </div>
-      </section>
-
-      <!--EVENTS CONTAINER-->
-      <section>
-        <div class="container custom-container events__container">
-          <div class="row">
-            <div class="col-xl-12">
-              <div class="section__title-wrapper text-center mb-55">
-                <div class="section__title mb-10 mt-50">
-                  <h2>In Person Events</h2>
-                </div>
-              </div>
-            </div>
+      </a>
+    </div>
+  </div>
+  <div *ngIf="onlineEventsList && onlineEventsList.length > 0" class="events__online">
+    <h2>Online Events</h2>
+    <div class="events__online-list">
+      <a class="events__online-item" *ngFor="let event of eventsList" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
+        <img [src]="event.imageUrl.url" alt="blog" *ngIf="event.imageUrl">
+        <div class="content">
+          <h4><a>{{ event.eventName }}</a></h4>
+          <div class="content__details">
+            <span *ngIf="event.startDate">{{ event.startDate.toString()| date: 'M/d' }} </span>
+            <span *ngIf="event.endDate">- {{ event.endDate.toString() | date: 'M/d' }} </span>
+            <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
           </div>
-          <!-- EVENTS LIST -->
-          <div class="row">
-            <div class="col-xl-12">
-              <div class="row events-list">
-                <a *ngFor="let event of eventsList" class="col-xl-4 col-lg-6 col-md-9 col-sm-12 events-list__event" [routerLink]="event.isSummit ? ['/summit/2026', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" >
-                  <div class="events-list__event-image fix">
-                    <a class="w-img">
-                      <img class="transform" [src]="event.imageUrl.url" alt="blog" *ngIf="event.imageUrl">
-                    </a>
-                  </div>
-
-                  <div class="events-list__content">
-
-                    <h4><a>{{ event.eventName }}</a></h4>
-                    <div class="events-list__meta">
-                      <span *ngIf="event.startDate">{{ event.startDate.toString()| date: 'M/d' }} </span>
-                      <span *ngIf="event.endDate">- {{ event.endDate.toString() | date: 'M/d' }} </span>
-                      <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
-                    </div>
-                    <p *ngIf="event.description" class="events-list__content-description">{{ event.description }}</p>
-                    <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-primary">REGISTER NOW</a>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="onlineEventsList && onlineEventsList.length > 0" class="row">
-            <div class="col-xl-12">
-              <div class="section__title-wrapper text-center mb-55">
-                <div class="section__title mb-10 mt-50">
-                  <h2>Online Events</h2>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- ONLINE EVENTS LIST -->
-          <div class="row mb-3">
-            <div class="col-xl-12">
-              <div *ngIf="onlineEventsList && onlineEventsList.length > 0" class="row events-list">
-                <a *ngFor="let event of onlineEventsList" class="col-xl-4 col-lg-6 col-md-9 col-sm-12 events-list__event" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" >
-                  <div class="events-list__event-image fix">
-                    <a class="w-img">
-                      <img class="transform" [src]="event.imageUrl.url" alt="blog" *ngIf="event.imageUrl">
-                    </a>
-                  </div>
-
-                  <div class="events-list__content">
-
-                    <h4><a>{{ event.eventName }}</a></h4>
-                    <div class="events-list__meta">
-                      <span *ngIf="event.startDate">{{ event.startDate.toString()| date: 'M/d' }} </span>
-                      <span *ngIf="event.endDate">- {{ event.endDate.toString() | date: 'M/d' }} </span>
-                      <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
-                    </div>
-                    <p *ngIf="event.description" class="events-list__content-description">{{ event.description }}</p>
-                    <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-primary">GET DETAILS</a>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
+          <p *ngIf="event.description" class="content__description">{{ event.description }}</p>
+          <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin impact-btn-white">REGISTER NOW</a>
         </div>
-      </section>
-
-
-
-      <!--DISCIPLE MAKING SUMMIT-->
-      <div id="DMS" *ngIf="isSummitPosted">
-        <app-disciple-making-summit-banner [large]="true"></app-disciple-making-summit-banner>
-      </div>
+      </a>
     </div>
-    <div class="mt-30">
-      <app-subscribe-area></app-subscribe-area>
-    </div>
-  </main>
+  </div>
+  <app-disciple-making-summit-banner *ngIf="isSummitPosted"></app-disciple-making-summit-banner>
+  <app-subscribe-area></app-subscribe-area>
 </div>
-
 
 <app-footer></app-footer>

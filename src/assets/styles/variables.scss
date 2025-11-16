@@ -1,3 +1,26 @@
+// Font Family
+$pop: 'Poppins', sans-serif;
+
+//Base Colors
+$white: #ffffff;
+$primary-dark: #1c1c1c;
+
+//Impact Colors
+$theme-color: #ffcc00;
+$event: #4b92fe;
+
+// Responsive Variables
+$xxs: 'only screen and (max-width: 320px)'; 
+$xs: 'only screen and (min-width: 321px) and (max-width: 575px)'; 
+$sm: 'only screen and (min-width: 576px) and (max-width: 767px)'; 
+$md: 'only screen and (min-width: 768px) and (max-width: 991px)';
+$lg: 'only screen and (min-width: 992px) and (max-width: 1199px)';
+$laptop: 'only screen and (min-width: 1200px) and (max-width: 1600px)';
+
+
+
+
+//DELETE
 $primary: #0b277b;
 $secondary: #3176d6;
 

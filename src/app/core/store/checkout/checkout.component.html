@@ -1,6 +1,6 @@
 <app-home-header></app-home-header>
 
-<main class="checkout pb-50">
+<div class="checkout pb-50">
   <app-breadcrumb [currentPageName]="'Checkout'" [bgColor]="'#1F1F1F'" [previousLink]="'/shopping-cart'" [previousLinkName]="'Shopping Cart'" [isDark]="true"></app-breadcrumb>
 
   <section class="checkout-area mt-80">
@@ -63,7 +63,7 @@
                   </dxi-item>
                 </dxi-item>
               </dx-form>
-              <dx-button *ngIf="this.calculateOrderTotal() > 0" class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="setView('billing')">Continue to Billing</dx-button>
+              <dx-button *ngIf="this.calculateOrderTotal() > 0" class="mt-20 impact-btn impact-btn-dark" (onClick)="setView('billing')">Continue to Billing</dx-button>
               <dx-button *ngIf="this.calculateOrderTotal() == 0 && this.calculateOrderTotal() == 0" class="mt-20 impact-btn impact-btn-dark-bg" (onClick)="submitRequest()">Submit</dx-button>
             </div>
           </div>
@@ -72,7 +72,11 @@
             <div class="checkout__customer-info mb-50">
               <div class="checkout__customer-info-block customer">
                 <span>Customer</span>
-                <span class="info">{{ checkoutForm?.firstName + ' ' + checkoutForm.lastName}} - ({{ checkoutForm.email}}) - ({{checkoutForm.phone.number}})</span>
+                <div class="customer-details">
+                  <span>{{ checkoutForm?.firstName + ' ' + checkoutForm.lastName}}</span>
+                  <span>{{ checkoutForm.email}}</span>
+                  <span>{{checkoutForm.phone.number}}</span>
+                </div>
                 <a (click)="setView('shipping')">Change</a>
               </div>
               <div *ngIf="isShippingAddressNeeded()" class="checkout__customer-info-block">
@@ -184,16 +188,18 @@
       </ng-template>
     </div>
   </section>
-</main>
+</div>
 
 <dx-load-panel
-    #loadPanel
-    shadingColor="rgba(0,0,0,0.4)"
-    [position]="{ of: '#checkoutBlock' }"
-    [visible]="isSetupPanelVisible"
-    [message] = "'Please wait while setting up payment!'"
-    [showIndicator]="true"
-    [showPane]="true"
-    [shading]="true"
-    [hideOnOutsideClick]="false">
+  #loadPanel
+  shadingColor="rgba(0,0,0,0.4)"
+  [position]="{ of: '#checkoutBlock' }"
+  [visible]="isSetupPanelVisible"
+  [message] = "'Please wait while setting up payment!'"
+  [showIndicator]="true"
+  [showPane]="true"
+  [shading]="true"
+  [hideOnOutsideClick]="false">
 </dx-load-panel>
+
+<app-footer></app-footer>

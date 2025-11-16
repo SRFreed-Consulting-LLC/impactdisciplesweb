@@ -1,112 +1,146 @@
 <app-home-header></app-home-header>
 
-<!-- SEMINARS -->
-<div class="seminars page-wrapper">
-  <main class="grey-bg">
-    <div class="seminars__container container">
-      <!--SEMINARS HEADER - SWIPER-->
-      <section class="slider__area slider__area-4 p-relative">
-        <div class="slider-active swiper-container" #heroSliderContainer >
-          <div class="swiper-wrapper">
-            <div class="seminars__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fseminar-header.PNG?alt=media&token=ff0a80af-49fb-4d0d-b5c6-26aff5c8309a)'">
-              <div class="container">
-                <div class="row">
-                  <div class="col-xl-7 col-lg-6 col-md-8 col-sm-10 col-12">
-                    <div class="slider__content slider__content-4 pr-50">
-                      <h5 animate="fadeInUp" class="slider-pretitle">DISCIPLE-MAKING CHURCH</h5>
-                      <h1 animate="fadeInUpTwo" class="slider-title">Seminars</h1>
-                      <hr animate="fadeInLeftToRight" class="slider-hr-solid">
-                      <p animate="fadeInUpThree" class="slider-subtitle">Structure your church to make and multiply disciples with the Disciple-Making Church strategy. We come to <strong>you</strong> and train your staff to implement a proven strategy to grow your ministry.</p>
-                      <a animate="fadeInUpFour" href="/seminar-form" class="impact-btn impact-btn-primary">Book a Seminar</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+<div class="seminars">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fseminars-header.PNG?alt=media&token=a3d6bae8-00d0-43d3-ae8e-8ab356ce1cfc'"
+    [pretitle]="'Disciple-Making Church'"
+    [title]="'Seminars'"
+    [description]="'Structure your church to make and multiply disciples with the Disciple-Making Church strategy. We come to you and train your staff to implement a proven strategy to grow your ministry.'"
+    [buttonLink]="'/team'"
+    [buttonText]="'Book a Seminar'"
+  ></app-header>
+  <div class="seminars__overview">
+    <h2 animate="fadeInUp">OVERVIEW</h2>
+    <p animate="fadeInUpTwo">Impact Discipleship Ministries exists to inspire people and churches to be and build disciples. One of the best ways we do that is by providing training seminars to churches that need help implementing a proven strategy to grow their ministry. Our team comes to you and facilitates a half-day training seminar where you will learn the mission, model, and methods you need to multiply disciples. Read more about how our seminars can help you below.</p>
+    <br>
+    <p animate="fadeInUpTwo">Read more details below on our Disciple-Making Church Seminar below. Before you begin, you might consider one of our <a>free consultations</a> from our Impact team to introduce our ministry and assess if our Seminar is right for you.</p>
+  </div>
+  <div class="seminars__prices">
+    <div class="item">
+      <div class="title">IN PERSON, LIVE</div>
+      <div class="price">${{webConfig.inpersonSeminarCost}}</div>
+      <ul class="custom-bullets">
+        <li class="perks">Experienced Trainer</li>
+        <li class="perks">A Proven Church Multiplication Strategy</li>
+        <li class="perks">Tools + Resources for Multiplication</li>
+        <li class="perks">Follow-up Support</li>
+      </ul>
+      <a href="/seminar-form" class="impact-btn impact-btn-primary-border">GET STARTED</a>
+    </div>
+    <div class="item">
+      <div class="title">ONLINE VIDEO TRAINING</div>
+      <div class="price">${{webConfig.onlineSeminarCost}}</div>
+      <ul class="custom-bullets">
+        <li class="perks">Experienced Trainer (Recordings)</li>
+        <li class="perks">A Proven Church Multiplication Strategy</li>
+        <li class="perks">Tools + Resources for Multiplication</li>
+        <li class="perks">Contact us for Follow-up Support</li>
+      </ul> 
+      <a href="/store" class="impact-btn impact-btn-primary-border">GET STARTED</a>
+    </div>
+  </div>
+  <div class="seminars__offers">
+    <div class="content">
+      <h1>WHAT YOU <strong> GET</strong></h1>
+      <hr animate="fadeInLeftToRight" class="slider-hr slider-hr-w60 slider-hr-thick">
+      <ul class="custom-bullets">
+        <li animate="fadeInUpTwo">Experienced Trainer</li>
+        <li animate="fadeInUpThree">A Proven Church Multiplication Strategy</li>
+        <li animate="fadeInUpFour">Tools + Resources for Multiplication</li>
+        <li animate="fadeInUpFive">Follow-up Support</li>
+      </ul>
+    </div>
+
+    <div class="video">
+      <div
+        *ngIf="!isPlaying"
+        class="video__container"
+        style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-video-thumbnail.png?alt=media&token=9fb83005-f1c7-4973-884c-98436560271b)"
+      >
+        <div class="container">
+          <div class="video__content text-center">
+            <div class="video__button">
+              <a (click)="playVideo()" class="cursor-pointer">
+                <i class="fas fa-play"></i>
+              </a>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="mt-80">
-        <div class="container custom-container">
-          <div class="seminars__overview row justify-content-center">
-            <div class="col-xl-8">
-              <div class="section__title-wrapper text-center mb-55">
-                <div class="section__title mb-10 mt-50">
-                  <h2 animate="fadeInUp">OVERVIEW</h2>
-                </div>
-                <div class="section__sub-title">
-                  <p animate="fadeInUpTwo">Impact Discipleship Ministries exists to inspire people and churches to be and build disciples. One of the best ways we do that is by providing training seminars to churches that need help implementing a proven strategy to grow their ministry. Our team comes to you and facilitates a half-day training seminar where you will learn the mission, model, and methods you need to multiply disciples. Read more about how our seminars can help you below.</p>
-                  <br>
-                  <p animate="fadeInUpTwo">Read more details below on our Disciple-Making Church Seminar below. Before you begin, you might consider one of our <a>free consultations</a> from our Impact team to introduce our ministry and assess if our Seminar is right for you.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div *ngIf="isPlaying" class="video__container">
+        <div class="video__player-wrapper">
+          <youtube-player
+            [videoId]="'Civbm8KNXhE'"
+            [playerVars]="{ autoplay: 1 }"
+            class="video__player"
+          ></youtube-player>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr animate="fadeInLeftToRight" class="solid-line mt-60 mb-60">
+  <div class="seminars__missions">
+    <h1 class="main-title">Approved Plan for <br><strong animate="fadeInDown">Growing</strong> Your Church</h1>
+    <div class="content">
+      <div class="content__item">
+        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-mission.PNG?alt=media&token=1163d382-936e-4625-8995-9dda8986e751'" alt="banner" />
+        <div class="details">
+          <div class="details__title">The Mission:</div>
+          <div class="details__description">The first portion of our seminar revolves around defining the mission Jesus left for us in the Great Commission: to make disciples. What is a disciple, and why do we need to make them?</div>
+        </div>
+      </div>
+      <div class="content__item">
+        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-model.PNG?alt=media&token=aee4f0a7-ce6d-40e3-9905-10e851008dd3'" alt="banner" />
+        <div class="details">
+          <div class="details__title">The Model:</div>
+          <div class="details__description">The second portion of our seminar points us toward the perfect model for disciple-makers: Jesus. We look at how He modeled disciple-making for His own disciples in His own ministry.</div>
+        </div>
+      </div>
+      <div class="content__item">
+        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-method.PNG?alt=media&token=87bb6f25-226b-4cd5-b681-d002be26f94c'" alt="banner" />
+        <div class="details">
+          <div class="details__title">The Method:</div>
+          <div class="details__description">The final portion of our seminar shows you the methods Jesus used to multiply disciples during His ministry on Earth and ensured that they would continue to multiply once He left.</div>
+        </div>
+      </div>
+      <div class="content__item">
+        <img [src]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-takeaway.PNG?alt=media&token=2fc66e00-43c3-42e1-90b9-70c346d63da7'" alt="banner" />
+        <div class="details">
+          <div class="details__title">The Takeaways:</div>
+          <div class="details__description">You’ll walk away with a full understanding of the target, strategy, environments, and leadership development needed to create a sustainable disciple making ministry in your church.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="seminars__form">
+    <div class="content" [style.background-image]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fyellow-world-banner.PNG?alt=media&token=a2f4b0e2-dacb-4101-b6f6-8de82c5de4dc)'">
+      <div class="content__details">
+        <p class="title">START TODAY</p>
+        <p class="description">
+          Is your current discipleship plan working? Are your small groups producing results? Are disciples being reproduced? Are leaders trained and equipped to multiply more disciples?
+          You want to see your church actively growing. We can help you accomplish all of these things and more. Let’s get started together!
+        </p>
+      </div>
+      <div class="content__form">
+        <dx-form [formData]="consultationRequest" [colCount]="2">
+          <dxi-item dataField="firstName" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'First Name' }"></dxi-item>
+          <dxi-item dataField="lastName" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Last Name' }"></dxi-item>
+          <dxi-item dataField="email" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Email' }" [colSpan]="2"></dxi-item>
+          <dxi-item dataField="message" editorType="dxTextArea" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Message' }" [colSpan]="2"></dxi-item>
+        </dx-form>
+        <button class="impact-btn mt-30" (click)="handleFormSubmit()">GET MY FREE CONSULTATION</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-          <div class="seminars__prices-row row mt-80 pb-50">
-            <!--TODO: style this title better-->
-            <!-- <div class="seminars__prices-row-title section__title mb-40">
-              <h2>PRICING</h2>
-            </div> -->
-            <div class="seminars__prices-row__box col-xl-4 col-md-6 col-sm-9">
-              <div class="title">IN PERSON, LIVE</div>
-              <div class="price">${{webConfig.inpersonSeminarCost}}</div>
-              <ul class="custom-bullets">
-                <li class="perks">Experienced Trainer</li>
-                <li class="perks">A Proven Church Multiplication Strategy</li>
-                <li class="perks">Tools + Resources for Multiplication</li>
-                <li class="perks">Follow-up Support</li>
-              </ul>
-              <a href="/seminar-form" class="os-btn">GET STARTED</a>
-            </div>
-            <div class="seminars__prices-row__box col-xl-4 col-md-6 col-sm-9">
-              <div class="title">ONLINE VIDEO TRAINING</div>
-              <div class="price">${{webConfig.onlineSeminarCost}}</div>
-              <ul class="custom-bullets">
-                <li class="perks">Experienced Trainer (Recordings)</li>
-                <li class="perks">A Proven Church Multiplication Strategy</li>
-                <li class="perks">Tools + Resources for Multiplication</li>
-                <li class="perks">Contact us for Follow-up Support</li>
-              </ul>
-              <!--TODO: link to store item-->
-              <a href="/store" class="os-btn">GET STARTED</a>
-            </div>
-          </div>
-
-          <div class="seminars__description banner__inner p-relative z-index-1 pt-50">
-            <div class="row justify-content-center align-items-center">
-              <div class="seminars__description__text-area col-xl-5 col-lg-5 d-flex z-index-1">
-                <div class="seminars__description__title mb-10">
-                  <h4 animate="fadeInUp">WHAT YOU <strong> GET</strong></h4>
-                  <hr animate="fadeInLeftToRight" class="custom-hr">
-                </div>
-                <ul class="custom-bullets">
-                  <li animate="fadeInUpTwo">Experienced Trainer</li>
-                  <li animate="fadeInUpThree">A Proven Church Multiplication Strategy</li>
-                  <li animate="fadeInUpFour">Tools + Resources for Multiplication</li>
-                  <li animate="fadeInUpFive">Follow-up Support</li>
-                </ul>
-              </div>
-              <div class="col-xl-5 col-lg-5">
-                <div *ngIf="!isPlaying" class="video__area-df mb-60" style="width: 100%; background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-video-thumbnail.png?alt=media&token=9fb83005-f1c7-4973-884c-98436560271b)">
-                  <div class="container">
-                    <div class="video__content text-center">
-                      <div class="video__button mb-60">
-                        <a (click)="playVideo()" class="cursor-pointer">
-                          <i class="fas fa-play"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div *ngIf="isPlaying" id="video-overlay"  class="mb-60">
-                  <youtube-player [videoId]="'Civbm8KNXhE'" [width]="443" [height]="250" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player>
-                </div>
-              </div>
-            </div>
-          </div>
-
+<!-- SEMINARS -->
+<!-- <div class="seminars page-wrapper">
+  <main class="grey-bg">
+    <div class="seminars__container container"> -->
+<!--
+   
           <hr animate="fadeInLeftToRight" class="solid-line mt-60 mb-60">
 
           <div class="seminars__large-title">
@@ -203,6 +237,6 @@
       </div>
     </section>
   </main>
-</div>
+</div> -->
 
 <app-footer></app-footer>

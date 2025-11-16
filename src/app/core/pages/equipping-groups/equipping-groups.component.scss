@@ -1,105 +1,237 @@
 @import '../../../../assets/theme/scss/variables';
 
 .equipping-groups {
-  &__container {
-    background-color: #ffffff;
-  }
-  &__header {
-    height: 480px;
-  }
-  &__help-items {
-    padding: 20px;
-    .col {
+  &__key-words {
+    display: grid;
+    justify-content: center;
+    padding: 50px;
+    gap: 15px;
+    grid-template-columns: repeat(8, 1fr);
+    .item {
+      aspect-ratio: 1 / 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      text-align: center;
       border: 2px solid rgb(182 182 182 / 72%);
-      height: 100px;
-      margin: 10px;
       i {
         font-size: 30px;
         margin-bottom: 10px;
         color: #4c4c4c;
       }
     }
+    @media #{$md,$lg,$laptop} {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media #{$xxs,$xs,$sm} {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
-  &__online-equipping {
-    color: #181818;
-    .left {
-      background-color: $theme-color;
-      padding: 20px;
-      h5 {
-        font-weight: 800;
-        font-size: 20px;
-        letter-spacing: 1.5px;
+  &__about {
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      @media #{$xxs,$xs,$sm} {
+        margin-bottom: 0;
+        font-size: 26px;
+        padding: 0 20px;
       }
     }
-    .right {
-      padding: 20px;
-      margin-left: 50px;
-      h5 {
-        font-weight: 800;
-        font-size: 20px;
-        letter-spacing: 1.5px;
-        color: $theme-color;
+    .content {
+      display: flex;
+      padding: 50px;
+      @media #{$xxs,$xs,$sm} {
+        padding: 5px;
+        flex-direction: column-reverse;
       }
-    }
-  }
-}
-
-.story {
-  &__title {
-    color: $black;
-    font-size: 36px;
-
-    strong {
-      color: $theme-color;
-    }
-  }
-
-  &__text-area {
-    margin: 25px;
-    padding: 20px;
-    flex-direction: column;
-  }
-
-  &__button-custom {
-    width: 50%;
-  }
-}
-
-.video__area-df {
-  min-height: 250px;
-}
-
-.teams {
-  &__container {
-    background-color: #ffffff;
-    padding: 20px;
-  }
-  &__slider-container {
-    height: 300px;
-    @media #{$xxs,$xs} {
-      height: 500px;
-    }
-  }
-  &__slider {
-    padding: 0 50px;
-    @media #{$xxs,$xs} {
-      padding: 0 10px;
-    }
-    h2 {
-      @media #{$xxs,$xs} {
-        font-size: 25px;
+      &__left {
+        background-color: $theme-color;
+        padding: 20px;
+        h5 {
+          font-weight: 800;
+          font-size: 20px;
+          letter-spacing: 1.5px;
+        }
+      }
+      &__right {
+        padding: 20px;
+        h5 {
+          font-weight: 800;
+          font-size: 20px;
+          letter-spacing: 1.5px;
+          color: $theme-color;
+        }
+        @media #{$xxs,$xs,$sm} {
+          padding: 0;
+          transform: scale(.9);
+        }
       }
     }
   }
-  &__header {
-    height: inherit;
-    border: 10px solid $theme-color;
-    &-button {
-      border: 2px solid $theme-color;
+  &__approach {
+    display: flex;
+    align-items: center;
+    @media #{$xxs,$xs,$sm} {
+      padding: 5px;
+      flex-direction: column;
+    }
+    .content {
+      width: 100%;
+      padding: 50px;
+      @media #{$xxs,$xs,$sm} {
+        padding: 20px;
+      }
+      &__title {
+        font-size: 50px;
+        @media #{$xxs,$xs,$sm} {
+          font-size: 26px;
+        }
+        strong {
+          color: $theme-color;
+        }
+      }
+    }
+    .video {
+      width: 100%;
+      padding: 50px;
+      @media #{$xxs}, #{$xs} {
+        width: 100%;
+        padding: 0;
+      }
+
+      &__container {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+        z-index: 1;
+      }
+
+      &__player-wrapper {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      &__player {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      ::ng-deep .video__player iframe {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 }
+
+
+// .equipping-groups {
+//   &__container {
+//     background-color: #ffffff;
+//   }
+//   &__header {
+//     height: 480px;
+//   }
+//   &__help-items {
+//     padding: 20px;
+//     .col {
+//       display: flex;
+//       flex-direction: column;
+//       justify-content: center;
+//       align-items: center;
+//       border: 2px solid rgb(182 182 182 / 72%);
+//       height: 100px;
+//       margin: 10px;
+//       i {
+//         font-size: 30px;
+//         margin-bottom: 10px;
+//         color: #4c4c4c;
+//       }
+//     }
+//   }
+//   &__online-equipping {
+//     color: #181818;
+//     .left {
+//       background-color: $theme-color;
+//       padding: 20px;
+//       h5 {
+//         font-weight: 800;
+//         font-size: 20px;
+//         letter-spacing: 1.5px;
+//       }
+//     }
+//     .right {
+//       padding: 20px;
+//       margin-left: 50px;
+//       h5 {
+//         font-weight: 800;
+//         font-size: 20px;
+//         letter-spacing: 1.5px;
+//         color: $theme-color;
+//       }
+//     }
+//   }
+// }
+
+// .story {
+//   &__title {
+//     color: $black;
+//     font-size: 36px;
+
+//     strong {
+//       color: $theme-color;
+//     }
+//   }
+
+//   &__text-area {
+//     margin: 25px;
+//     padding: 20px;
+//     flex-direction: column;
+//   }
+
+//   &__button-custom {
+//     width: 50%;
+//   }
+// }
+
+// .video__area-df {
+//   min-height: 250px;
+// }
+
+// .teams {
+//   &__container {
+//     background-color: #ffffff;
+//     padding: 20px;
+//   }
+//   &__slider-container {
+//     height: 300px;
+//     @media #{$xxs,$xs} {
+//       height: 500px;
+//     }
+//   }
+//   &__slider {
+//     padding: 0 50px;
+//     @media #{$xxs,$xs} {
+//       padding: 0 10px;
+//     }
+//     h2 {
+//       @media #{$xxs,$xs} {
+//         font-size: 25px;
+//       }
+//     }
+//   }
+//   &__header {
+//     height: inherit;
+//     border: 10px solid $theme-color;
+//     &-button {
+//       border: 2px solid $theme-color;
+//     }
+//   }
+// }

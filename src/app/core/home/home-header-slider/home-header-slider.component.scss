@@ -1,80 +1,103 @@
 @import '../../../../assets/theme/scss/variables';
 
 ::ng-deep .header-slider-container {
-  .slider__content {
-    text-align: left;
-    white-space: break-spaces;
-  }
-  .dx-gallery-indicator {
-    bottom: 30px;
-  }
-  .dx-gallery-indicator-item, .dx-gallery-indicator-item-selected {
-    width: 20px;
-    height: 20px;
-  }
-  .dx-gallery-indicator-item {
-    border: $theme-color;
-  }
-  .dx-gallery-indicator-item-selected {
-    background: $theme-color;
-  }
-  .dx-state-focused.dx-gallery .dx-gallery-indicator-item-selected {
-    background: $theme-color;
-  }
+  margin-bottom: 20px;
+  .gallery {
+    &__slide {
+      height: calc(100vh - 100px);
+      display: flex;
+      align-items: center;
+      position: relative;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
 
-  .tl {
-    position: absolute ;
-    left: 30px;
-    top: 30px;
+      // @media #{$laptop}{
+      //   height: 450px;
+      // }
+      // @media #{$lg}{
+      //   height: 400px;
+      // }
+      // @media #{$md}{
+      //   height: 350px;
+      // }
+      // @media #{$xxs,$xs,$sm}{
+      //   height: 325px;
+      // }
+      &-overlay {
+        position: absolute;
+        inset: 0;                
+        background: rgba(0, 0, 0, 0.6); 
+      }
+      &-content {
+        height: 100%;
+        width: 50%;
+        white-space: break-spaces;
+        text-align: left;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        @media #{$md}{
+          width: 70%;
+        }
+        @media #{$sm,$xs}{
+          width: 100%;
+        }
+        @media #{$xxs}{
+          width: 100%;
+          padding: 10px;
+        }
+        .title {
+          font-weight: 900;
+          font-size: 75px;
+          color: #ffffff;
+          font-family: "Poppins", sans-serif !important;
+          letter-spacing: 2px;
+          @media #{$laptop}{
+            font-size: 50px;
+          }
+          @media #{$lg,$md}{
+            font-size: 45px;
+          }
+          @media #{$sm}{
+            font-size: 35px;
+          }
+          @media #{$xxs,$xs}{
+            font-size: 20px;
+          }
+        }
+        .text {
+          color: #ffffff;
+          font-size: 20px;
+          @media #{$laptop}{
+            font-size: 15px;
+          }
+          @media #{$lg,$md}{
+            font-size: 12px;
+          }
+          @media #{$sm,$xxs,$xs}{
+            display: none;
+          }
+        }
+      }
+    }
+    .dx-gallery-indicator {
+      bottom: 30px;
+    }
+    .dx-gallery-indicator-item, .dx-gallery-indicator-item-selected {
+      width: 20px;
+      height: 20px;
+    }
+    .dx-gallery-indicator-item {
+      border: $theme-color;
+    }
+    .dx-gallery-indicator-item-selected {
+      background: $theme-color;
+    }
+    .dx-state-focused.dx-gallery .dx-gallery-indicator-item-selected {
+      background: $theme-color;
+    }
+
   }
-
-  .cl {
-    position: absolute ;
-    left: 30px;
-    top: 30%;
-  }
-
-  .bl {
-    position: absolute ;
-    left: 30px;
-    bottom: 30px;
-  }
-
-  .tc {
-    position: absolute ;
-    left: 30%;
-    top: 30px;
-  }
-
-  .cc {
-    position: absolute ;
-    left: 30%;
-    top: 30%;
-  }
-
-  .bc {
-    position: absolute ;
-    left: 30%;
-    bottom: 30px;
-  }
-
-  .tr {
-    position: absolute ;
-    right: 30px;
-    top: 30px;
-  }
-
-  .cr {
-    position: absolute ;
-    right: 30px;
-    top: 30%;
-  }
-
-  .br {
-    position: absolute ;
-    right: 30px;
-    bottom: 30px;
-  }
-
-
 }

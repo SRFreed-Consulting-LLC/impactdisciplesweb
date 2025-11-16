@@ -1,55 +1,91 @@
 @import '../../../../assets/theme/scss/variables';
 
 .services {
-  padding: 95px 30px 0 30px;
-  &__title {
-    margin-bottom: 17px;
-    line-height: 22px;
-    color: #fff;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-size: 24px;
-    &:hover{
-      color: #fff;
-    }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 0 15px 0;
+  justify-content: center;
+  > div {
+    flex: 0 0 calc((100% - 15px * 3) / 4);
   }
-  &__text {
-    font-size: 14px;
-    color: #fff;
-    text-transform: capitalize;
-    font-weight: 500;
+  @media #{$xxs,$xs}{
+    padding: 0;
+    gap: 10px;
   }
-  .banner {
-    &__column {
-      margin: 0 20px;
-      padding: 0;
-    }
-    &__content {
-      left: 5%;
-      padding: 20px;
-      z-index: 2;
-      color: inherit;
-    }
-  }
-  .banner__item {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .banner__item::before {
-    content: '';
-    position: absolute;
-    top: -100%;
-    left: 0;
-    width: 100%;
+
+  &__item {
     height: 100%;
-    background-color: $theme-color;
-    transition: top 0.3s ease;
-    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    background-color: #1c1c1c;
+    border-radius: 10px;
+    box-sizing: border-box;
+    gap: 7px;
+    @media #{$xxs,$xs}{
+      border-radius: 0;
+    }
+    img {
+      border-radius: 10px 0 0 10px;
+      height: 175px;
+      width: 175px;
+      @media #{$xxs,$xs}{
+        border-radius: 0;
+        height: 125px;
+        width: 125px;
+      }
+    }
+    &-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 100%;
+      padding: 15px;
+      @media #{$xxs,$xs} {
+        padding: 10px;
+      }
+      .title {
+        font-size: 22px;
+        font-weight: 800;
+        color: $theme-color;
+        text-transform: uppercase;
+        line-height: 1em;
+        @media #{$sm,$xs} {
+          font-size: 18px;
+        }
+        @media #{$xxs} {
+          font-size: 13px;
+        }
+      }
+      .description {
+        color: #ffffff;
+        font-size: 12px;
+        @media #{$xxs,$xs} {
+          font-size: 10px;
+          line-height: 15px;
+        }
+      }
+      a {
+        @media #{$xxs} {
+          font-size: 9px;
+          padding: 0;
+          line-height: 24px;
+          height: 27px;
+        }
+      }
+
+    }
   }
-  
-  .banner__item:hover::before {
-    top: 0;
+
+  @media #{$md,$lg,$laptop} {
+    > div {
+      flex: 0 0 calc((100% - 15px) / 2);
+    }
   }
-  
+
+  @media #{$xxs,$xs,$sm} {
+    > div {
+      flex: 0 0 100%;
+    }
+  }
 }

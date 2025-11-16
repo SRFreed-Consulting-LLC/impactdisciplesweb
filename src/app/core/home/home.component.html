@@ -1,48 +1,34 @@
 <app-home-header></app-home-header>
-
-<main class="home">
-  <div class="box-25">
-    <!-- home header -->
-    <app-home-header-slider></app-home-header-slider>
-
-    <!-- homer services banner -->
-    <app-home-services></app-home-services>
-
-    <div *ngIf="isSummitPosted" class="mt-40 mb-40">
-      <app-disciple-making-summit-banner [large]="false"></app-disciple-making-summit-banner>
-    </div>
-
-    <!-- video -->
-    <div class="container-fluid">
-      <div class="row d-flex justify-content-center">
-        <div class="col-lg-8">
-          <div *ngIf="!isPlaying" class="video__area-df mb-60" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap.jpg?alt=media&token=9db9c6f4-c852-4722-807e-5fa5d93f881a)">
-            <div class="container">
-              <div class="video__content text-center">
-                <div class="video__button mb-60">
-                  <a (click)="playVideo()" class="cursor-pointer">
-                    <i class="fas fa-play"></i>
-                  </a>
-                </div>
-                <h5 class="video__title">OUR VISION </h5>
-                <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples of Jesus Christ. </p>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="isPlaying" id="video-overlay"  class="mb-60">
-            <youtube-player [videoId]="'HxKSa24hF60'" [width]="1211.33" [height]="565" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player>
-          </div>
+ <!-- <app-nav-bar></app-nav-bar> -->
+<app-home-header-slider></app-home-header-slider>
+<app-home-services></app-home-services>
+<app-disciple-making-summit-banner></app-disciple-making-summit-banner>
+<div class="video">
+  <div class="video__title">
+    <h1>OUR VISION</h1>
+    <hr animate="fadeInLeftToRight" class="slider-hr slider-hr-w100 slider-hr-thick">
+    <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples of Jesus Christ. </p>
+  </div>
+  <div *ngIf="!isPlaying" class="video__container" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap.jpg?alt=media&token=9db9c6f4-c852-4722-807e-5fa5d93f881a)">
+    <div class="container">
+      <div class="video__content text-center">
+        <div class="video__button">
+          <a (click)="playVideo()" class="cursor-pointer">
+            <i class="fas fa-play"></i>
+          </a>
         </div>
       </div>
     </div>
-
-    <!-- book banner -->
-    <app-book-banner></app-book-banner>
-
-    <!-- subscribe area -->
-    <app-subscribe-area></app-subscribe-area>
-
   </div>
-</main>
-
+  <div *ngIf="isPlaying" id="video-overlay">
+    <youtube-player
+      [videoId]="'HxKSa24hF60'"
+      [height]="400"
+      suggestedQuality="highres"
+      [playerVars]="{ autoplay: 1 }"
+    ></youtube-player>
+  </div>
+</div>
+<app-book-banner></app-book-banner>
+<app-subscribe-area></app-subscribe-area>
 <app-footer></app-footer>

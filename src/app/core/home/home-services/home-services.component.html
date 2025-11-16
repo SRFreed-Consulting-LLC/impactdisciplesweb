@@ -1,20 +1,13 @@
-<div class="services banner__area mb-60">
-  <div class="box-25">
-    <div class="row justify-content-center">
-      <div *ngFor="let item of services" class="col-xl-2 col-lg-2 col-md-4 banner__column">
-        <div class="banner__item mb-30 p-relative">
-          <div class="banner__thumb fix">
-            <a class="w-img" [href]="item.link">
-              <img [src]="item.img" alt="banner" height="300px" />
-            </a>
-          </div>
-          <div class="banner__content p-absolute transition-3">
-            <h5>
-              <a [innerHTML]="item.title" [href]="item.link" class="services__title"></a>
-            </h5>
-            <a [innerHTML]="item.description" [href]="item.link" class="services__text"></a>
-          </div>
-        </div>
+<div class="services">
+  <div *ngFor="let item of services">
+    <div class="services__item">
+      <a [href]="item.link">
+        <img [src]="item.img" alt="banner" />
+      </a>
+      <div class="services__item-content">
+        <div [innerHTML]="item.title" class="title"></div>
+        <div [innerHTML]="item.description" class="description"></div>
+        <a [href]="item.link"  class="impact-btn impact-btn-primary-border impact-btn-thin">READ MORE</a>
       </div>
     </div>
   </div>

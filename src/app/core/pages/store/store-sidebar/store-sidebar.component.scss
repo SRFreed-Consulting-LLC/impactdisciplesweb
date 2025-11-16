@@ -1,47 +1,201 @@
 @import '../../../../../assets/theme/scss/variables';
 
-.sidebar__wrapper {
-  ::ng-deep .dx-accordion-item, .dx-accordion-item-opened {
-    border-color: transparent;
-    .dx-accordion-item-title {
-      color: $theme-color;
+::ng-deep .sidebar {
+  width: max-content;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #1c1c1c;
+  @media #{$xxs,$xs}{
+    width: auto;
+  }
+  &__search {
+    position: relative;
+    margin-bottom: 30px;
+    @media #{$xxs,$xs}{
+      margin-bottom: 10px;
+    }
+    input {
+      width: 100%;
+      height: 53px;
+      padding: 0 60px 0 15px;
+      border: 1px solid #ebebeb;
+      @media #{$xxs,$xs}{
+        height: 30px;
+      }
+    }
+    button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 22px;
+      background: transparent;
+      color: #323232;
+      font-size: 20px;
+      @media #{$xxs,$xs}{
+        font-size: 16px;
+      }
     }
   }
-  ::ng-deep .dx-button {
-    border: none;
-    width: 100%;
-    .dx-button-content {
-      justify-content: left;
+  &__accordion {
+    &-header {
+      padding-bottom: 5px;
+      margin-bottom: 20px;
+      font-size: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 6px solid #ffcc00;
+      gap: 50px;
+      @media #{$xxs,$xs}{
+        gap: 5px;
+      }
+      h3 {
+        margin-bottom: 0;
+        font-size: 18px;
+        color: #ffffff;
+        font-weight: 900;
+        text-transform: uppercase;
+        @media #{$xxs,$xs}{
+          font-size: 12px;
+        }
+      }
+      .clear-filter-button {
+        width: fit-content;
+        border: 0;
+        background-color: transparent;
+        .dx-button-content {
+          font-size: 12px;
+          color: #b1b1b1;
+          @media #{$xxs,$xs}{
+            font-size: 10px;
+          }
+        }
+      }
     }
-  }
-  
-  ::ng-deep .clear-filter-button {
-    width: fit-content;
-    .dx-button-content {
-      font-size: 12px;
-      color: #7a7a7a;
-    }
-  }
-  
-  .sidebar__widget-title {
-    border-bottom: 1px solid $border;
-    padding-bottom: 10px;
-  }
-  
-  ::ng-deep .view-all {
-    &__truncate {
-      margin-left: 13px;
-      font-size: 10px;
-      letter-spacing: 1.2px;
-      color: #8a8a8a;
-    }
-    .dx-button-content {
-      justify-content: right;
-    }
-    .dx-button-text {
-      font-size: 10px;
-      letter-spacing: 1.2px;
-      color: #8a8a8a;
+    &-content {
+      .accordion {
+        .dx-accordion {
+          background-color: #1c1c1c;
+          .dx-accordion-item-opened {
+            border: 1px solid #484848c2;
+            border-radius: 10px;
+            .dx-accordion-item-title {
+              background-color: #1c1c1c;
+              color: #ffffff;
+              border-radius: 10px 10px 0 0;
+            }
+            .dx-accordion-item-body {
+              background-color: rgb(68 68 68);
+              color: #ffffff;
+              border-radius: 0 0 10px 10px;
+            }
+          }
+          .dx-accordion-item-closed {
+            .dx-accordion-item-title {
+              background-color: #1c1c1c;
+              color: #ffffff;
+              border-radius: 10px;
+            }
+          }
+          .dx-accordion-item.dx-state-focused,
+          .dx-accordion-item.dx-state-active {
+            border: none;
+          }
+          .dx-accordion-item:last-child {
+            border-bottom: 0;
+          }
+          .dx-accordion-item:first-child {
+            border-top: 0;
+          }
+        }
+        &__header {
+          padding-right: 40px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 16px;
+        }
+        &__tags-container {
+          display: flex;
+          flex-direction: column;
+          .dx-button {
+            border: none;
+            width: 100%;
+            background-color: transparent;
+            color: #ffffff;
+            border-top: 1px solid #ffffff;
+            border-radius: 0;
+            .dx-button-content {
+              justify-content: left;
+            }
+          }
+          .dx-button:first-child,.dx-button:last-child {
+            border-top: none;
+          }
+          .dx-button.dx-state-hover {
+            background-color: #ffd93ff2;
+            color: #1c1c1c;
+          }
+          .view-all {
+            .dx-button-content {
+              justify-content: right;
+              font-size: 10px;
+            }
+          }
+          .view-all.dx-state-hover {
+            background-color: transparent;
+          }
+        }
+      }
     }
   }
 }
+
+
+
+// .sidebar__wrapper {
+//   ::ng-deep .dx-accordion-item, .dx-accordion-item-opened {
+//     border-color: transparent;
+//     .dx-accordion-item-title {
+//       color: $theme-color;
+//     }
+//   }
+//   ::ng-deep .dx-button {
+//     border: none;
+//     width: 100%;
+//     .dx-button-content {
+//       justify-content: left;
+//     }
+//   }
+  
+//   ::ng-deep .clear-filter-button {
+//     width: fit-content;
+//     .dx-button-content {
+//       font-size: 12px;
+//       color: #7a7a7a;
+//     }
+//   }
+  
+//   .sidebar__widget-title {
+//     border-bottom: 1px solid $border;
+//     padding-bottom: 10px;
+//   }
+  
+//   ::ng-deep .view-all {
+//     &__truncate {
+//       margin-left: 13px;
+//       font-size: 10px;
+//       letter-spacing: 1.2px;
+//       color: #8a8a8a;
+//     }
+//     .dx-button-content {
+//       justify-content: right;
+//     }
+//     .dx-button-text {
+//       font-size: 10px;
+//       letter-spacing: 1.2px;
+//       color: #8a8a8a;
+//     }
+//   }
+// }

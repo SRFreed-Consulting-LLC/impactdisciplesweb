@@ -7,6 +7,10 @@
   }
   &__header {
     height: 480px;
+    @media #{$xxs,$xs} {
+      height: 150px;
+      background-size: contain;
+    }
     &__pretitle {
       color: #ffcc00;
       font-size: 20px;

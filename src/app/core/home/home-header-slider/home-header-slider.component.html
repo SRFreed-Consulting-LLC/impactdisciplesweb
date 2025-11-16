@@ -2,33 +2,28 @@
   <dx-gallery
     #gallery
     id="gallery"
+    class="gallery"
     [dataSource]="images"
-    [slideshowDelay]="5000"
-    [height]="'100%'"
-    [width]="'100%'"
-    [loop]="true"
+   
+    height="100%"
+    
     [showNavButtons]="false"
     [showIndicator]="true"
     [swipeEnabled]="true"
-    [animationDuration]="1000"
+    
   >
-  <div *dxTemplate="let galleryItem of 'item'">
-    <div class="single-slider single-slider-2 slider__height-2 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url('+galleryItem.image.url+')'">
-      <div class="container-fluid" style="height: 100%;">
-        <div class="row">
-            <div class="slider__content slider__content-3 {{galleryItem.side}}" [class.slider__content-black]="true" [ngStyle]="{'width.%': galleryItem.ctaWidth}">
-              <h2 animate="fadeInUp">{{galleryItem.title}}</h2>
-              <hr animate="fadeInLeftToRight" class="slider-hr">
-              <p animate="fadeInUpTwo">{{galleryItem.text}}</p>
-              <!--TODO: create a state or service or something for getting the current summit event otherwise link to events page-->
-
-              <a target="" *ngIf="galleryItem.ctaDestination != 'external'" animate="fadeInUpThree" [routerLink]="galleryItem.ctaDestination" class="impact-btn impact-btn-white-primary">{{galleryItem.ctaTitle}}</a>
-              <a target="none" *ngIf="galleryItem.ctaDestination == 'external'" animate="fadeInUpThree" [href]="galleryItem.ctaUrl" class="impact-btn impact-btn-white-primary">{{galleryItem.ctaTitle}}</a>
-            </div>
+    <div *dxTemplate="let galleryItem of 'item'">
+      <div class="gallery__slide" [style.backgroundImage]="'url('+galleryItem.image.url+')'">
+        <div class="gallery__slide-overlay">
+          <div class="gallery__slide-content">
+            <h2 class="title " animate="fadeInUp">{{galleryItem.title}}</h2>
+            <hr animate="fadeInLeftToRight" class="slider-hr">
+            <p class="text" animate="fadeInUpTwo">{{galleryItem.text}}</p>
+            <a target="" *ngIf="galleryItem.ctaDestination != 'external'" animate="fadeInUpThree" [routerLink]="galleryItem.ctaDestination" class="impact-btn impact-btn-white">{{galleryItem.ctaTitle}}</a>
+            <a target="none" *ngIf="galleryItem.ctaDestination == 'external'" animate="fadeInUpThree" [href]="galleryItem.ctaUrl" class="impact-btn impact-btn-white">{{galleryItem.ctaTitle}}</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </dx-gallery>
 </div>
-

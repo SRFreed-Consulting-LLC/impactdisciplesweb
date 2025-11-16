@@ -1,99 +1,212 @@
 @import '../../../../assets/theme/scss/variables';
 
-.DMS {
+.dms {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  height: 200px;
+  position: relative;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 40px;
+  margin: 20px 0;
   @media #{$xxs,$xs} {
-    padding: 15px 20px;
+    height: 175px;
+    margin: 5px 0 10px 0;
   }
-  &__container {
-    justify-content: center;
-    flex-direction: column;
+  &__overlay {
+    position: absolute;
+    inset: 0;                
+    background: rgba(0, 0, 0, 0.8); 
+    pointer-events: none;
+    display: flex;
     align-items: center;
-    height: 100%;
-    h1 {
-      text-align: center;
-      font-size: 85px;
-      font-weight: 200;
-      color: $theme-color;
-      margin-bottom: 25px;
-      @media #{$xxs,$xs} {
-        font-size: 37px;
-      }
-    }
-    h2 {
-      text-align: center;
-      font-size: 70px;
-      font-weight: 900;
-      color: #fff;
-      @media #{$xxs,$xs} {
-        font-size: 28px;
-      }
-    }
-    p {
-      color: #fff;
-      text-align: center;
-      font-size: 20px;
-      line-height: 1.2;
-      padding: 0 60px;
-      @media #{$xxs,$xs} {
-        padding: 0px 20px;
-      }
+    padding: 0 50px;
+    @media #{$xxs,$xs} {
+      flex-direction: column;
+      padding: 0 10px;
     }
   }
-  .impact-btn {
-    background-color: #000000b8;
-    width: fit-content;
-  }
-}
-
-.countdown-timer {
-  display: flex;
-  justify-content: center;
-  font-family: Arial, sans-serif;
-  align-items: center;
-  color: #fff;
-  height: fit-content;
-
-  .time-part {
+  &__title {
+    flex: 2;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin: 0 30px;
+    justify-content: center;
     @media #{$xxs,$xs} {
-      margin: 0px 10px;
+      flex: 1;
+      justify-content: end;
+      margin-top: 10px;
+      text-align: center;
     }
-
-    .number {
-      font-size: 70px;
-      font-weight: 800;
+    h2 {
+      font-size: 33px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 2px;
       @media #{$xxs,$xs} {
-        font-size: 30px;
+        font-size: 18px;
+        margin: 0;
       }
-    }
-
-    .label {
-      font-size: 16px;
-      margin-top: 25px;
-      font-weight: 600;
-      @media #{$xxs,$xs} {
-        font-size: 12px;
-        margin-top: 0px;
+      span {
+        color: $event;
       }
     }
   }
+  &__countdown {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    align-items: flex-end;
+    color: #fff;
 
-  .colon {
-    font-size: 70px;
-    font-weight: bold;
-    margin-bottom: 50px;
+    .time-part {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 10px;
+      @media #{$xxs,$xs} {
+        margin: 0px 10px;
+      }
+
+      .number {
+        font-size: 45px; 
+        font-weight: 800;
+        @media #{$xxs,$xs} {
+          font-size: 20px;
+        }
+      }
+
+      .label {
+        font-size: 10px;
+        margin-top: 10px;
+        font-weight: 600;
+        @media #{$xxs,$xs} {
+          font-size: 8px;
+          margin-top: 0px;
+        }
+      }
+    }
+
+    .colon {
+      font-size: 45px;
+      font-weight: bold;
+      margin-bottom: 35px;
+      @media #{$xxs,$xs} {
+        font-size: 30px;
+        margin-bottom: 24px;
+      }
+    }
+  }
+  &__button {
+    flex: 2;
+    display: flex;
+    justify-content: flex-end;
     @media #{$xxs,$xs} {
-      font-size: 30px;
-      margin-bottom: 24px;
+      flex: 1;
+      margin-top: 10px;
+    }
+    .impact-btn {
+      background-color: $event;
     }
   }
 }
+
+// .DMS {
+//   background-position: center;
+//   background-size: cover;
+//   background-repeat: no-repeat;
+//   display: flex;
+//   flex-direction: column;
+//   padding: 20px 40px;
+//   @media #{$xxs,$xs} {
+//     padding: 15px 20px;
+//   }
+//   &__container {
+//     justify-content: center;
+//     flex-direction: column;
+//     align-items: center;
+//     height: 100%;
+//     h1 {
+//       text-align: center;
+//       font-size: 85px;
+//       font-weight: 200;
+//       color: $theme-color;
+//       margin-bottom: 25px;
+//       @media #{$xxs,$xs} {
+//         font-size: 37px;
+//       }
+//     }
+//     h2 {
+//       text-align: center;
+//       font-size: 70px;
+//       font-weight: 900;
+//       color: #fff;
+//       @media #{$xxs,$xs} {
+//         font-size: 28px;
+//       }
+//     }
+//     p {
+//       color: #fff;
+//       text-align: center;
+//       font-size: 20px;
+//       line-height: 1.2;
+//       padding: 0 60px;
+//       @media #{$xxs,$xs} {
+//         padding: 0px 20px;
+//       }
+//     }
+//   }
+//   .impact-btn {
+//     background-color: #000000b8;
+//     width: fit-content;
+//   }
+// }
+
+// .countdown-timer {
+//   display: flex;
+//   justify-content: center;
+//   font-family: Arial, sans-serif;
+//   align-items: center;
+//   color: #fff;
+//   height: fit-content;
+
+//   .time-part {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     margin: 0 30px;
+//     @media #{$xxs,$xs} {
+//       margin: 0px 10px;
+//     }
+
+//     .number {
+//       font-size: 70px; 
+//       font-weight: 800;
+//       @media #{$xxs,$xs} {
+//         font-size: 30px;
+//       }
+//     }
+
+//     .label {
+//       font-size: 16px;
+//       margin-top: 25px;
+//       font-weight: 600;
+//       @media #{$xxs,$xs} {
+//         font-size: 12px;
+//         margin-top: 0px;
+//       }
+//     }
+//   }
+
+//   .colon {
+//     font-size: 70px;
+//     font-weight: bold;
+//     margin-bottom: 50px;
+//     @media #{$xxs,$xs} {
+//       font-size: 30px;
+//       margin-bottom: 24px;
+//     }
+//   }
+// }

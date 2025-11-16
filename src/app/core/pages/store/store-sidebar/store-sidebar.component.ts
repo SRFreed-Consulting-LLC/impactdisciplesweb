@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
 import { ProductCategoriesService } from 'impactdisciplescommon/src/services/data/product-categories.service';
 import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
+import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
 
 @Component({
   selector: 'app-store-sidebar',
@@ -14,6 +15,7 @@ import { ProductService } from 'impactdisciplescommon/src/services/data/product.
 export class StoreSidebarComponent implements OnInit, OnDestroy {
   @Input() showSeriesInSidebar = false;
   @Input() seriesItems: SeriesModel[] = [];
+  @Input() ebooksOnly: boolean = false;
   @Output() categoryFilterEvent = new EventEmitter<TagModel>();
   @Output() seriesFilterEvent = new EventEmitter<SeriesModel>();
   @Output() searchEvent = new EventEmitter<string>();
@@ -26,25 +28,51 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
   constructor(private productService: ProductService, private productCategoriesService: ProductCategoriesService, private router: Router) {}
 
   ngOnInit(): void {
-    combineLatest([
-      this.productService.streamAllByValue('isActive', true),
-      this.productCategoriesService.streamAll()
-    ]).pipe(
-      takeUntil(this.ngUnsubscribe),
-      map(([products, categories]) =>
-        categories.filter(cat => cat.showInStore).map(category => {
-          const categoryProducts = products.filter(product => product.category === category.id).sort((a,b) => a.categoryOrder - b.categoryOrder);
+    if(this.ebooksOnly) {
+      let queries: QueryParam[] = [
+        new QueryParam('isEBook', WhereFilterOperandKeys.equal, true),
+      ]
+      
+      combineLatest([
+        this.productService.queryAllByMultiValue(queries),
+        this.productCategoriesService.streamAll()
+      ]).pipe(
+        takeUntil(this.ngUnsubscribe),
+        map(([products, categories]) =>
+          categories.map(category => {
+            const categoryProducts = products.filter(product => product.category === category.id).sort((a,b) => a.categoryOrder - b.categoryOrder);
 
-          return {
-            category: category,
-            products: categoryProducts,
-            displayProducts: categoryProducts.slice(0, 10)
-          };
-        })
-      )
-    ).subscribe(categoryWithProducts => {
-      this.categoryWithProducts = categoryWithProducts;
-    });
+            return {
+              category: category,
+              products: categoryProducts,
+              displayProducts: categoryProducts.slice(0, 10)
+            };
+          })
+        )
+      ).subscribe(categoryWithProducts => {
+        this.categoryWithProducts = categoryWithProducts.filter((item) => item.displayProducts.length > 0);
+      });
+    } else {
+      combineLatest([
+        this.productService.streamAllByValue('isActive', true),
+        this.productCategoriesService.streamAll()
+      ]).pipe(
+        takeUntil(this.ngUnsubscribe),
+        map(([products, categories]) =>
+          categories.map(category => {
+            const categoryProducts = products.filter(product => product.category === category.id).sort((a,b) => a.categoryOrder - b.categoryOrder);
+
+            return {
+              category: category,
+              products: categoryProducts,
+              displayProducts: categoryProducts.slice(0, 10)
+            };
+          })
+        )
+      ).subscribe(categoryWithProducts => {
+        this.categoryWithProducts = categoryWithProducts;
+      });
+    }
   }
 
   ngOnDestroy(): void {
