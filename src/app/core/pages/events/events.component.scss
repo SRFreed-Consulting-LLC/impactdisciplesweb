@@ -6,6 +6,9 @@
     @media #{$xxs,$xs}{
       padding: 30px 0;
     }
+    @media #{$laptop}{
+      padding: 50px;
+    }
     h2 {
       text-align: center;
       font-size: 42px;
@@ -25,6 +28,10 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 100px;
       align-items: stretch;
+
+      @media #{$laptop}{
+        gap: 30px;
+      }
 
       @media #{$md, $lg} {
         grid-template-columns: repeat(2, 1fr);

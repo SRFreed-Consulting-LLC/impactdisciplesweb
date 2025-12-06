@@ -21,10 +21,10 @@
         color: #4c4c4c;
       }
     }
-    @media #{$md,$lg,$laptop} {
+    @media #{$sm,$md,$lg} {
       grid-template-columns: repeat(4, 1fr);
     }
-    @media #{$xxs,$xs,$sm} {
+    @media #{$xxs,$xs} {
       grid-template-columns: repeat(2, 1fr);
     }
   }

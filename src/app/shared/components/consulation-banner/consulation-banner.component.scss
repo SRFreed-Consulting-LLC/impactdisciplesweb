@@ -12,6 +12,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   margin: 20px 0;
+  padding: 10px;
   @media #{$xxs,$xs} {
     height: 175px;
     margin: 5px 0 10px 0;
@@ -25,12 +26,20 @@
       font-size: 18px;
       text-align: center;
     }
+    @media #{$sm,$md} {
+      font-size: 28px;
+      text-align: center;
+    }
   }
   &__description {
     font-size: 16px;
     color: #ffffffb0;
     @media #{$xxs,$xs} {
       font-size: 10px;
+      text-align: center;
+    }
+    @media #{$sm,$md} {
+      font-size: 14px;
       text-align: center;
     }
   }

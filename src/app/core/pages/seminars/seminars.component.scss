@@ -63,19 +63,28 @@
     justify-content: center;
     align-items: center;
 
-    @media #{$xxs}, #{$xs} {
+    @media #{$xxs,$xs} {
       flex-direction: column;
       margin: 20px;
     }
+    @media #{$sm,$md} {
+      margin-top: 50px;
+    }
 
     .content {
+      @media #{$sm,$md} {
+        padding: 25px;
+      }
       h1 {
         font-weight: 900;
         font-size: 50px;
         display: inline;
         white-space: nowrap;
-        @media #{$xxs}, #{$xs} {
+        @media #{$xxs,$xs} {
           font-size: 30px;
+        }
+        @media #{$sm,$md} {
+          font-size: 40px;
         }
         strong {
           color: $theme-color;
@@ -89,6 +98,9 @@
       @media #{$xxs}, #{$xs} {
         width: 100%;
         padding: 0;
+      }
+      @media #{$sm,$md} {
+        padding: 20px;
       }
 
       &__container {
@@ -121,7 +133,7 @@
     }
   }
   &__missions {
-      @media #{$xxs,$xs}{
+    @media #{$xxs,$xs}{
       margin-bottom: 15px;
     }
     .main-title {
@@ -131,7 +143,14 @@
       text-align: center;
       line-height: 1.4;
       @media #{$xxs,$xs}{
-        font-size: 42px;
+        font-size: 38px;
+        margin-bottom: 35px;
+      }
+      @media #{$sm,$md} {
+        font-size: 60px;
+      }
+      @media #{$lg} {
+        font-size: 75px;
       }
       strong {
         background-color: $theme-color;
@@ -155,13 +174,20 @@
       @media #{$xxs,$xs}{
         margin: 0;
         gap: 10px;
-      }
-
-      @media #{$xxs,$xs,$sm} {
         > div {
           flex: 0 0 100%;
           flex-direction: column;
         }
+      }
+      @media #{$sm,$md} {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 15px;
+        margin: 50px 10px;
+        align-items: stretch;
+      }
+      @media #{$lg} {
+        margin: 50px 10px;
       }
       &__item {
         height: 100%;
@@ -174,6 +200,11 @@
         @media #{$xxs,$xs}{
           border-radius: 0;
         }
+         @media #{$sm,$md} {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
         img {
           border-radius: 10px 0 0 10px;
           height: 175px;
@@ -182,6 +213,15 @@
             border-radius: 0;
             height: auto;
             width: 100%;
+          }
+          @media #{$sm,$md} {
+            width: 100%;
+            height: auto;
+            border-radius: 10px 10px 0 0;
+          }
+          @media #{$lg} {
+            width: 200px;
+            height: 200px;
           }
         }
         .details {
@@ -193,20 +233,32 @@
           @media #{$xxs,$xs} {
             padding: 10px;
           }
+          @media #{$sm,$md} {
+            flex: 1 1 auto; 
+            display: flex;
+            flex-direction: column;
+          }
           &__title {
             font-size: 22px;
             font-weight: 800;
             color: $theme-color;
             text-transform: uppercase;
-            @media #{$xxs,$xs} {
+            @media #{$xxs} {
               font-size: 18px;
+            }
+            @media #{$xs,$sm} {
+              font-size: 20px;
             }
           }
           &__description {
             color: #ffffff;
             font-size: 12px;
-            @media #{$xxs,$xs} {
+            @media #{$xxs} {
               font-size: 10px;
+              line-height: 15px;
+            }
+            @media #{$xs,$sm} {
+              font-size: 12px;
               line-height: 15px;
             }
           }
@@ -271,229 +323,3 @@
     background: #ffcc00;
   }
 }
-
-// .seminars {
-//   .slider__area {
-//     border-top: 20px solid #ffcc00;
-//     border-bottom: 20px solid #ffcc00;
-//   }
-//   &__container {
-//     background-color: #ffffff;
-//     padding: 20px;
-//   }
-//   &__header {
-//     height: 480px;
-//     &-button {
-//       background-color: $theme-color;
-//       color: #ffffff;
-//       font-size: 18px;
-//     }
-//   }
-//   &__overview {
-//     a{
-//       font-weight: 600;
-//       color: $theme-color;
-//     }
-//   }
-//   &__description {
-//     &__text-area {
-//       margin: 25px;
-//       padding: 20px;
-//       flex-direction: column;
-//     }
-//     &__title {
-//       text-align: center;
-//       .custom-hr {
-//         width: 200px;
-//         border: 0;
-//         border-top: 6px solid $theme-color;
-//         margin: 20px auto;
-//         opacity: 1;
-//       }
-//       h4 {
-//         color: $black;
-//         font-size: 36px;
-
-//         strong {
-//           color: $theme-color;
-//         }
-//       }
-//     }
-//     .video__area-df {
-//       min-height: 250px;
-//     }
-//   }
-//   &__prices-row {
-//     position: relative;
-//     z-index: 1;
-//     justify-content: center;
-//     background-color: $theme-color;
-//     padding: 50px 0;
-
-//     &-title {
-//       text-align: center;
-//       h2 {
-//         font-size: 45px;
-//       }
-//     }
-
-//     &__box {
-//       display: flex;
-//       flex-direction: column;
-//       align-items: center;
-//       padding: 40px 20px;
-//       height: 450px;
-//       justify-content: space-between;
-//       background-color: #fff;
-//       margin: 50px 25px;
-//       @media #{$xxs,$xs} {
-//         height: 500px;
-//       }
-//       .title {
-//         font-size: 28px;
-//         color: $theme-color;
-//         text-align: center;
-//       }
-//       .price {
-//         font-size: 80px;
-//         font-weight: 600;
-//         color: #353535;
-//       }
-//     }
-//   }
-
-//   &__large-title {
-//     h1 {
-//       font-weight: 300;
-//       width: 100%;
-//       text-align: center;
-//       line-height: 1.4;
-//       strong {
-//         background-color: $theme-color;
-//         font-weight: 900;
-//         color: #fff;
-//         padding: 0 30px 15px 30px;
-//         @media #{$xxs,$xs} {
-//           padding: 0 15px 5px 15px;
-//         }
-//       }
-//     }
-//   }
-
-//   .custom-bullets li {
-//     position: relative;
-//     padding-left: 30px;
-//   }
-
-//   .custom-bullets li::before {
-//     content: "•";
-//     color: #ffcc00;
-//     font-size: 3em;
-//     position: absolute;
-//     left: 0;
-//     top: 0;
-//   }
-// }
-
-// .services {
-//   &__title {
-//     margin-bottom: 17px;
-//     line-height: 22px;
-//     color: #fff;
-//     text-transform: uppercase;
-//     font-weight: 600;
-//     font-size: 45px;
-//     line-height: 1.1;
-//     &:hover{
-//       color: #fff;
-//     }
-//     @media #{$xxs,$xs} {
-//       font-size: 35px;
-//     }
-//   }
-//   &__text {
-//     font-size: 14px;
-//     color: #fff;
-//     text-transform: capitalize;
-//   }
-//   .banner {
-//     &__column {
-//       margin: 0 20px;
-//       display: flex;
-//       padding: 0;
-//     }
-//     &__item, &__column {
-//       width: 350px;
-//       @media #{$xxs,$xs} {
-//         width: 320px;
-//       }
-//     }
-//     &__content {
-//       left: 0;
-//       z-index: 2;
-//       color: inherit;
-//       padding: 0 30px;
-//     }
-//     &__thumb {
-//       img {
-//         height: 350px;
-//         @media #{$xxs,$xs} {
-//           height: 320px;
-//         }
-//       }
-//     }
-//   }
-//   .banner__item {
-//     position: relative;
-//     overflow: hidden;
-//   }
-
-//   .banner__item::before {
-//     content: '';
-//     position: absolute;
-//     top: -100%;
-//     left: 0;
-//     width: 100%;
-//     height: 100%;
-//     background-color: $theme-color;
-//     transition: top 0.3s ease;
-//     z-index: 1;
-//   }
-
-//   .banner__item:hover::before {
-//     top: 0;
-//   }
-
-// }
-
-// .countries-banner {
-//   .row {
-//     display: flex;
-//     align-items: center;
-//     justify-content: space-around;
-//     padding: 30px;
-//     width: 100%;
-//     h1 {
-//       text-align: center;
-//       font-weight: 900;
-//       letter-spacing: 20px;
-//     }
-//   }
-//   &__left {
-//     text-align: center;
-//     color: #414141;
-//     font-size: 18px;
-//     font-weight: 100;
-//   }
-//   &__right {
-//     text-align: right;
-//     @media #{$xxs,$xs} {
-//       margin-top: 20px;
-//     }
-//   }
-// }
-
-// #video-overlay {
-//   z-index: 1;
-//   position: relative;
-// }
