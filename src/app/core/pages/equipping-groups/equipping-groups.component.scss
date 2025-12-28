@@ -46,12 +46,15 @@
         flex-direction: column-reverse;
       }
       &__left {
-        background-color: $theme-color;
+        background-color: $theme-color-2;
         padding: 20px;
         h5 {
           font-weight: 800;
           font-size: 20px;
           letter-spacing: 1.5px;
+        }
+        p {
+          color: #ffffff;
         }
       }
       &__right {
@@ -60,7 +63,7 @@
           font-weight: 800;
           font-size: 20px;
           letter-spacing: 1.5px;
-          color: $theme-color;
+          color: $theme-color-2;
         }
         @media #{$xxs,$xs,$sm} {
           padding: 0;

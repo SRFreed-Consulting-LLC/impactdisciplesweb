@@ -25,53 +25,57 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private productService: ProductService, private productCategoriesService: ProductCategoriesService, private router: Router) {}
+  constructor(
+    private productService: ProductService,
+    private productCategoriesService: ProductCategoriesService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    if(this.ebooksOnly) {
-      let queries: QueryParam[] = [
-        new QueryParam('isEBook', WhereFilterOperandKeys.equal, true),
-      ]
-      
+    if (this.ebooksOnly) {
+      const queries: QueryParam[] = [
+        new QueryParam('isEBook', WhereFilterOperandKeys.equal, true)
+      ];
+
       combineLatest([
         this.productService.queryAllByMultiValue(queries),
         this.productCategoriesService.streamAll()
       ]).pipe(
-        takeUntil(this.ngUnsubscribe),
-        map(([products, categories]) =>
-          categories.map(category => {
-            const categoryProducts = products.filter(product => product.category === category.id).sort((a,b) => a.categoryOrder - b.categoryOrder);
+          takeUntil(this.ngUnsubscribe),
+          map(([products, categories]) =>
+            categories.map(category => {
+              const categoryProducts = products.filter(product => product.category === category.id).sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
 
-            return {
-              category: category,
-              products: categoryProducts,
-              displayProducts: categoryProducts.slice(0, 10)
-            };
-          })
-        )
-      ).subscribe(categoryWithProducts => {
-        this.categoryWithProducts = categoryWithProducts.filter((item) => item.displayProducts.length > 0);
-      });
+              return {
+                category: category,
+                products: categoryProducts,
+                displayProducts: categoryProducts.slice(0, 10)
+              };
+            })
+          )
+        ).subscribe(categoryWithProducts => {
+          this.categoryWithProducts = categoryWithProducts.filter((item) => item.displayProducts.length > 0);
+        });
     } else {
       combineLatest([
         this.productService.streamAllByValue('isActive', true),
         this.productCategoriesService.streamAll()
       ]).pipe(
-        takeUntil(this.ngUnsubscribe),
-        map(([products, categories]) =>
-          categories.map(category => {
-            const categoryProducts = products.filter(product => product.category === category.id).sort((a,b) => a.categoryOrder - b.categoryOrder);
+          takeUntil(this.ngUnsubscribe),
+          map(([products, categories]) =>
+            categories.map(category => {
+              const categoryProducts = products.filter(product => product.category === category.id).sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
 
-            return {
-              category: category,
-              products: categoryProducts,
-              displayProducts: categoryProducts.slice(0, 10)
-            };
-          })
-        )
-      ).subscribe(categoryWithProducts => {
-        this.categoryWithProducts = categoryWithProducts;
-      });
+              return {
+                category: category,
+                products: categoryProducts,
+                displayProducts: categoryProducts.slice(0, 10)
+              };
+            })
+          )
+        ).subscribe(categoryWithProducts => {
+          this.categoryWithProducts = categoryWithProducts;
+        });
     }
   }
 

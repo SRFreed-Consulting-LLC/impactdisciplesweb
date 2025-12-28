@@ -3,7 +3,7 @@
 <div class="team">
   <app-header
     [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fteam-header.PNG?alt=media&token=96b45f4e-2a72-4068-944a-ae188c4f3090'"
-    [title]="'Recieve A Free Consultation'"
+    [title]="'Receive A Free Consultation'"
     [description]="'Your first consultation is on us. Fill out a brief survey and one of our consultants will contact you shortly!'"
     [buttonLink]="'/consultation-survey'"
     [buttonText]="'Get My Free Consultation'"
@@ -21,7 +21,7 @@
         <div class="item__content">
           <h5>{{ coach.firstName }} {{ coach.lastName }}</h5>
           <p>{{ coach.title }}</p>
-          <p><a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-primary-border">Get to know {{ coach.firstName }}</a></p>
+          <p><a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-primary-blue">Get to know</a></p>
         </div>
       </div>
     </div>

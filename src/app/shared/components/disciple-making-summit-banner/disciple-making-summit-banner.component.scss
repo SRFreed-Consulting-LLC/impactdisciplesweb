@@ -60,7 +60,7 @@
         margin: 0;
       }
       span {
-        color: $event;
+        color: $theme-color-2;
       }
     }
   }
@@ -129,7 +129,7 @@
       margin-left: 25px;
     }
     .impact-btn {
-      background-color: $event;
+      background-color: $theme-color-2;
     }
   }
 }

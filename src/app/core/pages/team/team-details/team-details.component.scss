@@ -2,7 +2,7 @@
 :root {
   --border: 30px;
   --color1: #939393;
-  --color2: #ffcc00;
+  --color2: $theme-color;
   --from: 30deg;
   --distance: 46%;
 }
@@ -34,7 +34,7 @@
     width: 100%;
     background: conic-gradient(
       from 30deg,
-      #ffcc00,
+      $theme-color,
       #939393 46%,
       transparent 46%
     );

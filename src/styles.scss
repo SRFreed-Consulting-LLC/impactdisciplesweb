@@ -224,6 +224,36 @@ main {
       color: $theme-color;
     }
 	}
+	&-primary-blue {
+		color: $white;
+		background-color: $theme-color-2;
+		border-color: $theme-color-2;
+		&::after{
+			background-color: $white;
+		}
+		&:hover{
+			color: $theme-color-2;
+			border-color: $theme-color-2;
+		}
+    & span{
+      color: $theme-color-2;
+    }
+	}
+	&-primary-blue-dark {
+		color: $white;
+		background-color: #3072c1;
+		border-color: #3072c1;
+		&::after{
+			background-color: $white;
+		}
+		&:hover{
+			color: #3072c1;
+			border-color: #3072c1;
+		}
+    & span{
+      color: #3072c1;
+    }
+	}
   &-dark {
 		color: $white;
 		background-color: $primary-dark;
@@ -385,7 +415,7 @@ main {
 
 //lines
 .slider-hr {
-  background-image: linear-gradient(to right, transparent, #ffcc00);
+  background-image: linear-gradient(to right, transparent, $theme-color);
   height: 5px;
   border: none;
   outline: none;
@@ -407,7 +437,7 @@ main {
 }
 
 .slider-hr-large {
-  background-image: linear-gradient(to right, transparent, #ffcc00);
+  background-image: linear-gradient(to right, transparent, $theme-color);
   height: 10px;
   border: none;
   outline: none;
@@ -435,7 +465,7 @@ main {
 }
 
 .solid-line {
-	border-top: 10px solid #ffcc00;
+	border-top: 10px solid $theme-color;
   opacity: 1;
 }
 
@@ -443,7 +473,7 @@ main {
 
 //title
 .slider-small-pretitle {
-	color: #ffcc00;
+	color: $theme-color;
 	font-size: 20px;
 	@media #{$xxs,$xs} {
 		font-size: 14px;
@@ -451,7 +481,7 @@ main {
 }
 
 .slider-pretitle {
-	color: #ffcc00;
+	color: $theme-color;
 	font-size: 25px;
 	@media #{$xxs,$xs} {
 		font-size: 18px;

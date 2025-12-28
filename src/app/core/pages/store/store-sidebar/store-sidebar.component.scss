@@ -45,7 +45,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 6px solid #ffcc00;
+      border-bottom: 6px solid $theme-color;
       gap: 50px;
       @media #{$xxs,$xs}{
         gap: 5px;

@@ -6,7 +6,7 @@ const services: HomeServicesModel[] = [
     id: 0,
     img: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-seminars.PNG?alt=media&token=ec3a4fd3-5364-40b7-82d4-42898a5c2d81',
     title: "SEMINARS",
-    description: "Host a Disciple Making Church seminar for your ministry",
+    description: "Host a Disciple-Making Church seminar for your ministry",
     link: '/seminars'
   },
   {
