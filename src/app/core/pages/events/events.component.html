@@ -30,7 +30,7 @@
   <div *ngIf="onlineEventsList && onlineEventsList.length > 0" class="events__online">
     <h2>Online Events</h2>
     <div class="events__online-list">
-      <a class="events__online-item" *ngFor="let event of eventsList" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
+      <a class="events__online-item" *ngFor="let event of onlineEventsList" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
         <img [src]="event.imageUrl.url" alt="blog" *ngIf="event.imageUrl">
         <div class="content">
           <h4><a>{{ event.eventName }}</a></h4>
