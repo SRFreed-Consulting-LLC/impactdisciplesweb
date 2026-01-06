@@ -181,7 +181,7 @@ main {
 		height: 40px;
     padding: 0 30px;
     line-height: 38px;
-    width: 100%;		
+    width: 100%;
 	}
 	.dx-button-content {
 		display: flex;
@@ -211,7 +211,7 @@ main {
 		}
 	}
   &-primary {
-		color: $white;
+		color: $primary-dark;
 		background-color: $theme-color;
 		border-color: $theme-color;
 		&::after{
@@ -259,10 +259,10 @@ main {
 		background-color: $primary-dark;
 		border-color: $primary-dark;
 		&::after{
-			background-color: $white;
+			background-color: $primary-dark;
 		}
 		&:hover{
-			border-color: $white;
+			border-color:$primary-dark;
 		}
     & span{
       color: $primary-dark;
