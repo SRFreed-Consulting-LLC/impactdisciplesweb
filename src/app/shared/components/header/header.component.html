@@ -5,20 +5,20 @@
     <p *ngIf="description" animate="fadeInUpThree" class="description">{{ description }}</p>
     <hr *ngIf="showHr" animate="fadeInLeftToRight" class="slider-hr slider-hr-w100">
     <div class="buttons">
-      <a *ngIf="buttonLink && !buttonClick" animate="fadeInUpFour" [href]="buttonLink" class="impact-btn impact-btn-white">
+      <a *ngIf="buttonLink && !buttonClick" animate="fadeInUpFour" [href]="buttonLink" class="impact-btn">
         <i [ngClass]="buttonIcon ? buttonIcon : 'd-none'"></i>
         {{ buttonText }}
       </a>
-      <a *ngIf="buttonLink2 && !buttonClick2" animate="fadeInUpFour" [href]="buttonLink2" class="impact-btn impact-btn-white">
+      <a *ngIf="buttonLink2 && !buttonClick2" animate="fadeInUpFour" [href]="buttonLink2" class="impact-btn">
         <i [ngClass]="buttonIcon2 ? buttonIcon2 : 'd-none'"></i>
         {{ buttonText2 }}
       </a>
-      <a *ngIf="buttonLink3" animate="fadeInUpFour" [href]="buttonLink3" class="impact-btn impact-btn-white">
+      <a *ngIf="buttonLink3" animate="fadeInUpFour" [href]="buttonLink3" class="impact-btn">
         <i [ngClass]="buttonIcon3 ? buttonIcon3 : 'd-none'"></i>
         {{ buttonText3 }}
       </a>
-      <a *ngIf="buttonClick && !buttonLink" animate="fadeInUpFour" (click)="onButtonClick()" class="impact-btn impact-btn-white">{{ buttonText }}</a>
-      <a *ngIf="buttonClick2 && !buttonLink2" animate="fadeInUpFour" (click)="onButtonClick2()" class="impact-btn impact-btn-white">{{ buttonText2 }}</a>
+      <a *ngIf="buttonClick && !buttonLink" animate="fadeInUpFour" (click)="onButtonClick()" class="impact-btn">{{ buttonText }}</a>
+      <a *ngIf="buttonClick2 && !buttonLink2" animate="fadeInUpFour" (click)="onButtonClick2()" class="impact-btn">{{ buttonText2 }}</a>
     </div>
   </div>
 </div>

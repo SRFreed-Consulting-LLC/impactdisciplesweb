@@ -19,12 +19,16 @@
     position: absolute;
     inset: 0;                
     background: rgba(0, 0, 0, 0.8); 
-    pointer-events: none;
     display: flex;
     align-items: center;
     padding: 0 50px;
     gap: 20px;
-    @media #{$xxs,$xs,$sm} {
+    @media #{$xxs} {
+      flex-direction: column;
+      padding: 0 10px;
+      gap: 10px;
+    }
+    @media #{$xs,$sm} {
       flex-direction: column;
       padding: 0 10px;
     }
@@ -127,9 +131,6 @@
     }
     @media #{$md} {
       margin-left: 25px;
-    }
-    .impact-btn {
-      background-color: $theme-color-2;
     }
   }
 }

@@ -21,108 +21,10 @@
         <div class="item__content">
           <h5>{{ coach.firstName }} {{ coach.lastName }}</h5>
           <p>{{ coach.title }}</p>
-          <p><a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-primary-blue">Get to know</a></p>
+          <p><a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-blue">Get to know</a></p>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<!-- TEAM -->
-<!-- <div class="page-wrapper teams">
-  <main class="grey-bg">
-    <div class="container teams__container">
-      <div class="row">
-        <div class="col-12"> -->
-          <!-- TEAM HEADER - SWIPER-->
-          <!-- <section class="slider__area slider__area-4 p-relative teams__slider">
-            <div class="slider-active swiper-container teams__slider-container" #heroSliderContainer >
-              <div class="swiper-wrapper">
-                <div class="single-slider single-slider-2 slider__height-4 d-flex align-items-center swiper-slide teams__header" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fconsultation-banner.PNG?alt=media&token=9c57db12-b8c7-4c12-948c-f4b1b67755f8)'">
-                  <div class="container">
-                    <div class="row">
-                      <div class="col-xl-8 col-lg-7 col-md-9 col-sm-11 col-12">
-                        <div class="slider__content slider__content-4">
-                          <h2 class="teams__header-title">RECEIVE A FREE CONSULTATION</h2>
-                          <p class="teams__header-subtitle">Your first consultation is on us. Fill out a brief survey and one of our consultants will contact you shortly!</p>
-                          <a href="/consultation-survey" class="impact-btn">Get My Free Consultation</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="single-slider single-slider-2 slider__height-4 d-flex align-items-center swiper-slide teams__header" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fcontact-banner.PNG?alt=media&token=8f1d9891-df7b-4dd3-85a8-00ad0e8e2637)'">
-                  <div class="container">
-                    <div class="row slide-right">
-                      <div class="col-xl-8 col-lg-7 col-md-9 col-sm-11 col-12">
-                        <div class="slider__content slider__content-4">
-                          <h2 class="teams__header-title">CONTACT US</h2>
-                          <p class="teams__header-subtitle">If we can answer any questions or offer you more information, we will be happy to have a conversation with you. The quickest way to get in contact with us is through email, but feel free to reach out to us using any of the information below.</p>
-                          <a href="/contact" class="impact-btn">Questions?</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="tp-slider-dot tp-swiper-dot"></div>
-            </div>
-          </section> -->
-
-          <!-- TEAM - MEET THE TEAM -->
-          <!-- <section class="blog__area pb-70">
-            <div class="container">
-              <div class="row">
-                <div class="col-xl-10">
-                  <div class="section__title-wrapper text-center mb-55">
-                    <div class="section__title mb-10 mt-70">
-                      <h2>Meet the Team</h2>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-10">
-                  <div class="row">
-                    <div class="col-xl-4 card-deck" *ngFor="let coach of coaches$ | async">
-                      <div class="card mb-10">
-                        <img class="card-img-top" src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
-                        <div class="card-body">
-                          <h5 class="card-title">{{ coach.firstName }} {{ coach.lastName }}</h5>
-                          <p class="card-text">{{ coach.title }}</p>
-                          <p class="card-text"><small class="text-muted"> <a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-primary mt-10">Get to know {{ coach.firstName }}</a></small></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-2">
-                  <div class="row">
-                    <div class="section__title-wrapper text-start">
-                      <div class="mb-10">
-                        <h4>More</h4>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12"><a [routerLink]="['/about-us']">About Us</a></div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12"><a [routerLink]="['/contact']">Contact Us</a></div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12"><a [routerLink]="['/customer-reviews']">Customer Reviews</a></div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-          </section>
-        </div>
-      </div>
-    </div>
-  </main>
-</div> -->
-
 <app-footer></app-footer>
