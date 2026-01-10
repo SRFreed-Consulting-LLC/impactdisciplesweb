@@ -101,7 +101,7 @@
                   <li>Ticket Price <span>${{ event?.costInDollars }}</span></li>
                   <li>Total <span>${{ total }}</span></li>
                 </ul>
-                <a class="os-btn"(click)="proceedToCheckout()">Add To Cart</a>
+                <a class="impact-btn impact-btn-blue-border" (click)="proceedToCheckout()">Add To Cart</a>
               </div>
             </div>
             <div *ngIf="event && event.isOnline" class="row">

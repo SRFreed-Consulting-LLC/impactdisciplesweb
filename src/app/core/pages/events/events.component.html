@@ -22,7 +22,7 @@
             <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
           </div>
           <p *ngIf="event.description" class="content__description">{{ event.description }}</p>
-          <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin impact-btn-white">REGISTER NOW</a>
+          <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin">REGISTER NOW</a>
         </div>
       </a>
     </div>
@@ -40,7 +40,7 @@
             <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
           </div>
           <p *ngIf="event.description" class="content__description">{{ event.description }}</p>
-          <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin impact-btn-white">REGISTER NOW</a>
+          <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin">REGISTER NOW</a>
         </div>
       </a>
     </div>

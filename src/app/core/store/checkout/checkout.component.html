@@ -63,8 +63,8 @@
                   </dxi-item>
                 </dxi-item>
               </dx-form>
-              <dx-button *ngIf="this.calculateOrderTotal() > 0" class="mt-20 impact-btn impact-btn-dark" (onClick)="setView('billing')">Continue to Billing</dx-button>
-              <dx-button *ngIf="this.calculateOrderTotal() == 0" class="mt-20 impact-btn impact-btn-dark" (onClick)="submitRequest()">Submit</dx-button>
+              <dx-button *ngIf="this.calculateOrderTotal() > 0" class="mt-20 impact-btn impact-btn-blue" (onClick)="setView('billing')">Continue to Billing</dx-button>
+              <dx-button *ngIf="this.calculateOrderTotal() == 0" class="mt-20 impact-btn impact-btn-blue" (onClick)="submitRequest()">Submit</dx-button>
             </div>
           </div>
 

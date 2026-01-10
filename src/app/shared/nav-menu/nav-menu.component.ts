@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { IMenuType } from 'src/app/theme/shared/types/menu-d-t';
 import { MenuModel } from '../../../../impactdisciplescommon/src/models/utils/nav-menu.model';
 import menuData from '../../../../impactdisciplescommon/src/services/data/nav-menu-data';
@@ -8,17 +9,27 @@ import menuData from '../../../../impactdisciplescommon/src/services/data/nav-me
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.scss']
 })
-export class NavMenuComponent implements OnInit{
+export class NavMenuComponent implements OnInit {
   public menuItems: MenuModel[] = menuData;
 
   isSummitPosted: boolean = false;
 
-  constructor(){}
+  constructor(private router: Router) {}
 
   async ngOnInit(): Promise<void> {
     this.isSummitPosted = true;
-
     this.checkForSummit();
+  }
+
+  hasQuery(link?: string): boolean {
+    return !!link && link.includes('?');
+  }
+
+  go(event: MouseEvent, link?: string) {
+    if (!link) return;
+    event.preventDefault();
+    event.stopPropagation();
+    this.router.navigateByUrl(link);
   }
 
   getMenuClasses(item: IMenuType): string {
@@ -31,15 +42,15 @@ export class NavMenuComponent implements OnInit{
     return classes.join(' ');
   }
 
-  checkForSummit(){
+  checkForSummit() {
     this.menuItems.forEach(menu => {
-      if(menu.hasDropdown){
+      if (menu.hasDropdown) {
         menu.dropdownItems.forEach(menuitem => {
-          if(menuitem.visible == 'check'){
+          if (menuitem.visible == 'check') {
             menuitem.visible = this.isSummitPosted;
           }
-        })
+        });
       }
-    })
+    });
   }
 }

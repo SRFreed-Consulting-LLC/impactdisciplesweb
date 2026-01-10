@@ -28,7 +28,7 @@
               <div class="col-lg-4 col-sm-12">
                 <p class="checkout-coupon d-flex align-items-center">
                   <input class="mb-0" type="text" [(ngModel)]="couponCode" name="couponCode" placeholder="Coupon Code" />
-                  <button class="impact-btn impact-btn-dark ml-10" (click)="applyCoupon()">Apply</button>
+                  <button class="impact-btn impact-btn-blue ml-10" (click)="applyCoupon()">Apply</button>
                 </p>
               </div>
             </div>
@@ -169,13 +169,13 @@
           <!-- BUTTONS -->
           <div class="row align-items-center justify-content-between">
             <div class="col-lg-8 col-sm-12 mt-50">
-              <button (click)="cartService.clearCart()" class="impact-btn impact-btn-dark-border">
+              <button (click)="cartService.clearCart()" class="impact-btn impact-btn-blue-border">
                 Clear cart
               </button>
             </div>
 
             <div class="col-lg-3 col-sm-12 mt-50">
-              <a class="impact-btn impact-btn-dark" (click)="checkout()">Proceed to checkout</a>
+              <a class="impact-btn impact-btn-blue" (click)="checkout()">Proceed to checkout</a>
             </div>
           </div>
 

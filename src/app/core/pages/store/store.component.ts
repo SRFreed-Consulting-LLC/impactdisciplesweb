@@ -42,6 +42,7 @@ export class StoreComponent implements OnInit, OnDestroy {
     { text: 'Price Low to High', value: FilterType.priceLowToHigh },
     { text: 'Price High to Low', value: FilterType.priceHighToLow }
   ];
+  SPANISH_CATEGORY_ID = '18z0BtelKIKrwycvko9N';
 
 
 
@@ -68,6 +69,14 @@ export class StoreComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.route.queryParamMap
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(() => {
+        if (this.products?.length) {
+          this.applyCategoryFromUrl();
+        }
+      });
+
     this.getActiveSales().then(sales => {
       this.productService.streamAllByValue('isActive', true).subscribe((products) => {
         this.products = products;
@@ -75,23 +84,19 @@ export class StoreComponent implements OnInit, OnDestroy {
         let selectedSale: SaleModel;
 
         sales.forEach(sale => {
-          if(sale.isProducts){
+          if (sale.isProducts) {
             selectedSale = sale;
           }
-        })
+        });
 
-        if(selectedSale){
+        if (selectedSale) {
           this.products.forEach(product => {
-            product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost)
-          })
+            product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost);
+          });
         }
 
-        if(!this.showSeriesInMainView) {
-          this.setProducts(this.products)
-        } else {
-          this.filterProducts(FilterType.viewBySeries)
-        }
-      })
+        this.applyCategoryFromUrl();
+      });
     });
   }
 
@@ -117,13 +122,22 @@ export class StoreComponent implements OnInit, OnDestroy {
   }
 
    viewAllProducts(): void {
+    this.showSeriesInMainView = false;
     this.filteredProductItems = [...this.products];
     this.paginate = this.getPager(this.filteredProductItems.length, Number(+this.pageNo), this.pageSize);
     this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
   }
 
   filterProductsByCategory(category: TagModel): void {
+    this.showSeriesInMainView = false;
     this.filteredProductItems = this.products.filter((storeItem) => storeItem.category === category.id);
+    this.paginate = this.getPager(this.filteredProductItems.length, Number(+this.pageNo), this.pageSize);
+    this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+  }
+
+  filterProductsBySeries(series): void {
+    this.showSeriesInMainView = false;
+    this.filteredProductItems = this.products.filter((storeItem) => storeItem.series === series.id);
     this.paginate = this.getPager(this.filteredProductItems.length, Number(+this.pageNo), this.pageSize);
     this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
   }
@@ -165,7 +179,7 @@ export class StoreComponent implements OnInit, OnDestroy {
     switch(filterType) {
       case FilterType.viewAll:
         this.selectedFilter = FilterType.viewAll;
-        this.setProducts(this.products)
+        this.viewAllProducts()
         break;
       case FilterType.viewBySeries:
         this.selectedFilter = FilterType.viewBySeries;
@@ -201,6 +215,19 @@ export class StoreComponent implements OnInit, OnDestroy {
         this.setProducts(this.filteredProductItems);
         break;
     }
+  }
+
+  applyCategoryFromUrl(): void {
+    const category = this.route.snapshot.queryParamMap.get('category');
+
+    if (category === 'spanish-resources') {
+      this.filterProductsByCategory({ tag: 'Spanish Resources', id: this.SPANISH_CATEGORY_ID } as TagModel);
+      return;
+    }
+    
+    this.selectedFilter = null;
+    this.showSeriesInMainView = true;
+    this.filterProducts(FilterType.viewBySeries);
   }
 
   setPage(page: number) {

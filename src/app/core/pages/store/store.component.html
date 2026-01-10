@@ -37,7 +37,7 @@
           <div class="series__list">
             <div class="series__list-item" *ngFor="let series of seriesItems">
               <img [src]="series?.imageUrl?.url" alt="blog-1"/>
-              <dx-button class="impact-btn impact-btn-dark" (onClick)="filterProducts(FILTER_TYPE.series, series)">{{ series.name }}</dx-button>
+              <dx-button class="impact-btn impact-btn-blue" (onClick)="filterProductsBySeries(series)">{{ series.name }}</dx-button>
             </div>
           </div>
         </div>

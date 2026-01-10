@@ -156,8 +156,8 @@ main {
 	line-height: 46px;
 	padding: 0 42px;
 	border: 2px solid $white;
-	color: $white;
-	background: transparent;
+	color: $black;
+	background: $white;
 	z-index: 1;
 	font-size: 12px;
 	width: fit-content;
@@ -188,7 +188,7 @@ main {
 		justify-content: center;
 	}
 	& span{
-		color: $theme-color;
+		color: $blue;
 	}
 	&::after{
 		position: absolute;
@@ -197,12 +197,12 @@ main {
 		left: 0;
 		width: 100%;
 		height: 0;
-		background-color: $theme-color;
+		background-color: $blue;
 		z-index: -1;
 	}
 	&:hover{
 		color: $white;
-		border-color: $theme-color;
+		border-color: $blue;
 		&::after{
 			height: 100%;
 		}
@@ -210,115 +210,46 @@ main {
 			color: $white;
 		}
 	}
-  &-primary {
-		color: $primary-dark;
-		background-color: $theme-color;
-		border-color: $theme-color;
+	&-thin {
+		height: 40px;
+    line-height: 38px;
+	}
+	&-blue {
+		background-color: $blue;
+		color: $white;
+		border-color: $blue;
 		&::after{
 			background-color: $white;
 		}
 		&:hover{
-			border-color: $white;
+			border-color: $blue;
+			color: $black;
 		}
     & span{
-      color: $theme-color;
+      color: $black;
     }
 	}
-	&-primary-blue {
-		color: $white;
-		background-color: $theme-color-2;
-		border-color: $theme-color-2;
-		&::after{
-			background-color: $white;
-		}
-		&:hover{
-			color: $theme-color-2;
-			border-color: $theme-color-2;
-		}
-    & span{
-      color: $theme-color-2;
-    }
-	}
-	&-primary-blue-dark {
-		color: $white;
-		background-color: #3072c1;
-		border-color: #3072c1;
-		&::after{
-			background-color: $white;
-		}
-		&:hover{
-			color: #3072c1;
-			border-color: #3072c1;
-		}
-    & span{
-      color: #3072c1;
-    }
-	}
-  &-dark {
-		color: $white;
-		background-color: $primary-dark;
-		border-color: $primary-dark;
-		&::after{
-			background-color: $primary-dark;
-		}
-		&:hover{
-			border-color:$primary-dark;
-		}
-    & span{
-      color: $primary-dark;
-    }
-	}
-	&-white {
-		color: $primary-dark;
+	&-blue-border {
 		background-color: $white;
-		border-color: $white;
+		color: $black;
+		border-color: $blue;
 		&::after{
-			background-color: $theme-color;
-		}
-		&:hover{
-			border-color: $theme-color;
-		}
-    & span{
-      color: $white;
-    }
-	}
-	&-primary-border {
-		color: $theme-color;
-		background-color: transparent;
-		border-color: $theme-color;
-		&::after{
-			background-color: $theme-color;
-		}
-		&:hover{
-			border-color: $theme-color;
-		}
-    & span{
-      color: $white;
-    }
-	}
-	&-dark-border {
-		color: $primary-dark;
-		background-color: transparent;
-		border-color: $primary-dark;
-		&::after{
-			background-color: $white;
+			background-color: $blue;
 		}
 		&:hover{
 			border-color: $white;
+			color: $white;
 		}
     & span{
-      color: $primary-dark;
+      color: $white;
     }
 	}
-
 }
 
 .impact-icon-btn {
-	background: transparent;
-	position: relative;
-	z-index: 1;
-	border: 2px solid #ebebeb;
-	color: $black-2;
+	background: $white;
+	border: 2px solid $white;
+	color: $black;
 	position: relative;
 	display: flex;
 	justify-content: center;
@@ -328,6 +259,7 @@ main {
 	height: 50px;
 	line-height: 46px;
   padding: 0 20px;
+	z-index: 1;
 	i {
 		font-size: 20px;
 		margin-right: 10px;
@@ -354,12 +286,12 @@ main {
 		left: 0;
 		width: 100%;
 		height: 0;
-		background-color: $theme-color;
+		background-color: $blue;
 		z-index: -1;
 	}
 	&:hover{
 		color: $white;
-		border-color: $theme-color;
+		border-color: $blue;
 		&::after{
 			height: 100%;
 		}
@@ -375,41 +307,29 @@ main {
 			color: $white;
 		}
 	}
-	&-no-border {
-		color: $black-2;
-		background-color: $white;
-		border-color: transparent;
-		&::after{
-			background-color: $theme-color;
-		}
-		&:hover{
-			border-color: $theme-color;
-		}
-	}
-	&-dark-bg{
+	&-blue {
+		background-color: $blue;
 		color: $white;
-		background-color: $black-2;
-		border-color: $black-2;
+		border-color: $blue;
 		&::after{
-			background-color: $theme-color;
+			background-color: $white;
+			i {
+				color: $black;
+			}
 		}
 		&:hover{
-			border-color: $theme-color;
+			border-color: $blue;
+			color: $black;
+			i {
+				color: $black;
+			}
 		}
-		.dx-icon {
-			color: $white;
-		}
-	}
-	&-dark-border{
-		color: $black-2;
-		background-color: $white;
-		border-color: $black-2;
-		&::after{
-			background-color: $theme-color;
-		}
-		&:hover{
-			border-color: $theme-color;
-		}
+    & span{
+      color: $black;
+			i {
+				color: $black;
+			}
+    }
 	}
 }
 
