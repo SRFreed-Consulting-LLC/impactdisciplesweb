@@ -1,0 +1,117 @@
+<app-home-header></app-home-header>
+<div class="equipping-groups">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fhome-header-2.PNG?alt=media&token=9f2866c3-5b8c-4cdc-9604-573c276fd7f9'"
+    [pretitle]="'ONLINE EQUIPPING GROUPS'"
+    [title]="'Disciple-Making Church Equipping Group (NEW COURSE)'"
+    [buttonLink]="'/events'"
+    [buttonText]="'Enroll in a Group'"
+    [buttonLink2]="'https://impact-discipleship-ministries.mykajabi.com/login'"
+    [buttonText2]="'Go to Pastor Portal'"
+  ></app-header>
+  <div class="equipping-groups__approach">
+    <div class="content">
+      <h4 animate="fadeInUp" class="content__title mb-10">OUR APPROACH TO <strong>EQUIPPING CHURCHES</strong></h4>
+      <div animate="fadeInUpTwo">
+        <p>
+          The Disciple-Making Church Equipping Group is an online training experience designed to help churches move from intention to implementation in building a disciple-making culture.
+        </p>
+        <p>
+          For the first time ever, Impact Discipleship Ministries’ Disciple-Making Church Seminar—previously offered only as an onsite, half-day training—is now available in a seven-week live Zoom equipping group. Built on more than 30 years of real-world disciple-making experience, this proven content equips pastors and ministry leaders with the mission, model, and methods needed to multiply disciples together.
+        </p>
+        <p>
+          Through live weekly sessions, guided discussion, practical ministry projects, and proven tools, churches will gain clarity, alignment, and momentum toward a sustainable disciple-making culture. This experience is designed for pastors, ministry staff, key leaders, and churches ready to move beyond programs and toward multiplication.
+        </p>
+      </div>
+    </div>
+    <div class="video">
+      <div
+        *ngIf="!isPlaying"
+        class="video__container"
+        style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2FDMCHURCH%20for%20youtube%20cover.png?alt=media&token=0a4ead1b-4289-4185-8019-c0def5c536e3)"
+      >
+        <div class="container">
+          <div class="video__content text-center">
+            <div class="video__button">
+              <a (click)="playVideo()" class="cursor-pointer">
+                <i class="fas fa-play"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isPlaying" class="video__container">
+        <div class="video__player-wrapper">
+          <youtube-player
+            [videoId]="'7FqlKpxX8Eg'"
+            [playerVars]="{ autoplay: 1 }"
+            class="video__player"
+          ></youtube-player>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="equipping-groups__about">
+    <div class="content">
+      <div class="content__left">
+        <h5>GET STARTED</h5>
+        <p>
+          Ready to align your ministry around the mission of making disciples?
+          The Disciple-Making Church Equipping Group is a brand-new online experience designed to
+          equip your leadership with clarity, confidence, and a practical pathway forward.work. It consists of reading, video training, tailored projects, and online meetings with your trainer and peer group.</p>
+        <h5>COST</h5>
+        <p>We offer 2 options to pay for this service:</p>
+        <div>
+          <h6>Save with Full Payment: ${{webConfig.equippingGroupTotalCost}}</h6>
+          <p><i>One‑time payment for all 7 weeks of live, interactive Zoom sessions plus bonus materials.</i></p>
+        </div>
+        <div>
+          <h6>4 Month Plan: ${{webConfig.equippingGroupPaymentCost}}/month</h6>
+          <p><i>Join the 7‑week live Zoom equipping series on a 4‑month billing plan.</i></p>
+        </div>
+        <a href="/events" class="impact-btn impact-btn-blue-border mt-30">Get Started</a>
+      </div>
+      <div class="content__right">
+        <h5>An Online Equipping Experience for Church Leaders & Teams</h5>
+
+        <div class="mt-10">
+          Impact Discipleship Ministries exists to inspire people and churches to be and build disciples.
+          One of the most effective ways we do this is by equipping church leaders with a clear, proven
+          strategy to build a disciple-making culture.
+        </div>
+        <div class="mt-10">
+          NEW for the first time ever, our Disciple-Making Church Seminar is now available in an online
+          equipping group format. Previously offered only as an onsite, half-day training, this proven
+          content is now delivered as a seven-week live Zoom experience designed to help churches move
+          from intention to implementation.
+        </div>
+        <div class="mt-10">
+          Built on more than 30 years of real-world disciple-making experience, this equipping group
+          provides pastors and ministry leaders with the mission, model, and methods needed to multiply
+          disciples—together with a cohort of peers.
+        </div>
+        <div class="mt-10">
+          <h5>What This Equipping Group Includes</h5>
+          <ul>
+            <li class="mb-5">* <b>Seven live weekly Zoom sessions</b> led by experienced disciple-making practitioners</li>
+            <li class="mb-5">* Curated reading, video training, and practical ministry projects</li>
+            <li class="mb-5">* Guided discussion, coaching, and real-time application</li>
+            <li class="mb-5">* Proven tools and resources for building a disciple-making culture</li>
+            <li class="mb-5">* Follow-up support to help sustain momentum</li>
+          </ul>
+        </div>
+        <div class="mt-10">
+          <h5>Who This Is For</h5>
+          <ul>
+            <li class="mb-5">* Pastors and church leaders</li>
+            <li class="mb-5">* Ministry staff and key leaders</li>
+            <li class="mb-5">* Churches ready to move from programs to multiplication</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-consulation-banner></app-consulation-banner>
+</div>
+<app-footer></app-footer>

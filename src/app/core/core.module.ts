@@ -18,7 +18,7 @@ import { PrivatePolicyComponent } from "./pages/private-policy/private-policy.co
 import { TermsOfServiceComponent } from "./pages/terms-of-service/terms-of-service.component";
 import { GiveComponent } from "./pages/give/give.component";
 import { SeminarsComponent } from "./pages/seminars/seminars.component";
-import { EquippingGroupsComponent } from "./pages/equipping-groups/equipping-groups.component";
+import { EquippingGroupsChurchesComponent } from "./pages/equipping-groups/equipping-groups-pastors/equipping-groups-churches.component";
 import { CoachingWithImpactComponent } from "./pages/coaching-with-impact/coaching-with-impact.component";
 import { LunchAndLearnComponent } from "./pages/lunch-and-learn/lunch-and-learn.component";
 import { YouTubePlayerModule } from '@angular/youtube-player';
@@ -50,6 +50,9 @@ import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.co
 import { ScheduleComponent } from "./pages/schedule/schedule.component";
 import { BreakoutSessionsComponent } from "./pages/schedule/breakout-sessions/breakout-sessions.component";
 import { CourseModalComponent } from "./pages/schedule/course-modal/course-modal.component";
+import { EquippingGroupsPastorsComponent } from "./pages/equipping-groups/equipping-groups-churches/equipping-groups-pastors.component";
+import { EquippingGroupsComponent } from "./pages/equipping-groups/equipping-groups.component";
+import { EquippingGroupsLeadersComponent } from "./pages/equipping-groups/equipping-groups-leaders/equipping-groups-leaders.component";
 
 @NgModule({
   declarations: [
@@ -72,6 +75,9 @@ import { CourseModalComponent } from "./pages/schedule/course-modal/course-modal
     SeminarsComponent,
     SeminarFormComponent,
     EquippingGroupsComponent,
+    EquippingGroupsPastorsComponent,
+    EquippingGroupsLeadersComponent,
+    EquippingGroupsChurchesComponent,
     CoachingWithImpactComponent,
     LunchAndLearnComponent,
     LunchAndLearnFormComponent,
