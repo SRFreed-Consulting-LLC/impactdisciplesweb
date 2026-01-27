@@ -11,7 +11,7 @@ import { PrivatePolicyComponent } from './core/pages/private-policy/private-poli
 import { TermsOfServiceComponent } from './core/pages/terms-of-service/terms-of-service.component';
 import { GiveComponent } from './core/pages/give/give.component';
 import { SeminarsComponent } from './core/pages/seminars/seminars.component';
-import { EquippingGroupsChurchesComponent } from './core/pages/equipping-groups/equipping-groups-pastors/equipping-groups-churches.component';
+import { EquippingGroupsChurchesComponent } from './core/pages/equipping-groups/equipping-groups-churches/equipping-groups-churches.component';
 import { CoachingWithImpactComponent } from './core/pages/coaching-with-impact/coaching-with-impact.component';
 import { LunchAndLearnComponent } from './core/pages/lunch-and-learn/lunch-and-learn.component';
 import { ShoppingCartComponent } from './core/store/shopping-cart/shopping-cart.component';
@@ -33,7 +33,7 @@ import { CustomerReviewsComponent } from './core/pages/customer-reviews/customer
 import { MonthlyNewsletterComponent } from './core/pages/monthly-newsletter/monthly-newsletter.component';
 import { SummitPreviewComponent } from './core/pages/summit-preview/summit-preview.component';
 import { ScheduleComponent } from './core/pages/schedule/schedule.component';
-import { EquippingGroupsPastorsComponent } from './core/pages/equipping-groups/equipping-groups-churches/equipping-groups-pastors.component';
+import { EquippingGroupsPastorsComponent } from './core/pages/equipping-groups/equipping-groups-pastors/equipping-groups-pastors.component';
 import { EquippingGroupsLeadersComponent } from './core/pages/equipping-groups/equipping-groups-leaders/equipping-groups-leaders.component';
 import { EquippingGroupsComponent } from './core/pages/equipping-groups/equipping-groups.component';
 
