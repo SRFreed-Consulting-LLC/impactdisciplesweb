@@ -9,6 +9,10 @@
   ></app-header>
   <div class="give__main">
     <div class="options">
+    </div>
+  </div>
+  <div class="give__main">
+    <div class="options">
       <div class="options__item">
         <h3>One-Time</h3>
         <i class="large-icon fas fa-dollar-sign"></i>
@@ -24,12 +28,19 @@
         </div>
       </div>
       <div class="options__item">
-        <h3>Church Budget</h3>
-        <i class="large-icon fas fa-church"></i>
-        <p>Add Impact to your church’s budget and support world-wide missions and discipleship.</p>
+        <h3>Psalms 78:6 Impact Partners</h3>
+        <i class="large-icon fas fa-calendar-days"></i>
+        <p>Would you be willing to invest in the next generation of disciples?<br>
+        "Become an Impact Partner”<br>
+        Psalm 78:6- “So the next generation would know… and they would tell their children.”<br>
+        Your support multiples the mission of Jesus!</p>
+
+        <div class="buttons" [ngClass]="{'hidden': isFormVisible === 'partner'}">
+          <button class="impact-btn" (click)="window.open(environment.impactPartnersGiftUrl, '_blank')">BECOME A PARTNER</button>
+        </div>
       </div>
     </div>
-        <div class="intro">Your gift makes a difference in the lives of individual disciples, Disciple-Making Pastors, and Disciple-Making Churches all over the world. Consider partnering with us financially in one of the ways below.</div>
+    <div class="intro">Your gift makes a difference in the lives of individual disciples, Disciple-Making Pastors, and Disciple-Making Churches all over the world. Consider partnering with us financially in one of the ways below.</div>
 
     <div class="mailto" [style.background-image]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fyellow-world-banner.PNG?alt=media&token=a2f4b0e2-dacb-4101-b6f6-8de82c5de4dc)'">
       <div class="mailto__content">

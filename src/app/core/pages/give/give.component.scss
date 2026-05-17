@@ -24,7 +24,7 @@
       justify-content: center;
 
       &__item {
-        flex: 0 0 calc((100% - 40px) / 3);
+        flex: 0 0 calc((100% - 40px) / 4);
         background-color: #1c1c1c;
         color: white;
         text-align: center;
@@ -96,7 +96,7 @@
 
 .payment-form {
   overflow: hidden;
-  transition: max-height 0.6s ease, opacity 0.6s ease; 
+  transition: max-height 0.6s ease, opacity 0.6s ease;
   max-height: 0; /* Default hidden */
   opacity: 0;
   padding: 10px;
