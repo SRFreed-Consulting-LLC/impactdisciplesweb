@@ -57,51 +57,61 @@
             <a *ngIf="event?.isSummit" [routerLink]="['/summit', event?.startDate?.toString() | date: 'yyyy']">View More Details</a>
 
             <div *ngIf="event && !event.isOnline">
-              <div class="mt-20 mb-30">
-                <h4>ADD TICKETS:</h4>
-                <div class="event-details__right-ticket-number">
-                  <button class="os-btn" (click)="decrement()"> <i class="dx-icon-minus"></i></button>
-                  <dx-number-box [value]="cartItem?.attendees?.length"></dx-number-box>
-                  <button class="os-btn" (click)="increment()"><i class="dx-icon-plus"></i></button>
+              <div *ngIf="!event.isKajabiCourse">
+                <div class="mt-20 mb-30">
+                  <h4>ADD TICKETS:</h4>
+                  <div class="event-details__right-ticket-number">
+                    <button class="os-btn" (click)="decrement()"> <i class="dx-icon-minus"></i></button>
+                    <dx-number-box [value]="cartItem?.attendees?.length"></dx-number-box>
+                    <button class="os-btn" (click)="increment()"><i class="dx-icon-plus"></i></button>
+                  </div>
+                </div>
+
+                <h3>Tickets</h3>
+                <dx-accordion *ngFor="let attendee of cartItem?.attendees; let i = index" [collapsible]="true" [multiple]="true" [selectedIndex]="0">
+                  <dxi-item  title="Attendee {{ i + 1 }} *">
+                    <dx-form #attendeeForms [formData]="attendee" class="mb-25">
+                      <dxi-item dataField="firstName" [isRequired]="true"></dxi-item>
+                      <dxi-item dataField="lastName" [isRequired]="true"></dxi-item>
+                      <dxi-item dataField="email">
+                        <dxi-validation-rule type="required" message="Email Address is required">
+                        </dxi-validation-rule>
+                        <dxi-validation-rule
+                          type="async"
+                          message="A Person with this email address has already registered!"
+                          [validationCallback]="alreadyRegisteredValidation">
+                        </dxi-validation-rule>
+                        <dxi-validation-rule
+                          [reevaluate]="false"
+                          type="async"
+                          message="Each email registered must be unique!"
+                          [validationCallback]="uniqueEmailValidation">
+                        </dxi-validation-rule>
+                      </dxi-item>
+                    </dx-form>
+                  </dxi-item>
+                </dx-accordion>
+
+                <div *ngIf="!total || total == 0" class="cart-page-total">
+                  <a class="os-btn"(click)="signUpForEvent()">Sign UP</a>
+                </div>
+
+                <div *ngIf="total && total > 0" class="cart-page-total">
+                  <h2>Cart totals</h2>
+                  <ul class="mb-20">
+                    <li>Ticket Price <span>${{ event?.costInDollars }}</span></li>
+                    <li>Total <span>${{ total }}</span></li>
+                  </ul>
+                  <a class="impact-btn impact-btn-blue-border" (click)="proceedToCheckout()">Add To Cart</a>
                 </div>
               </div>
-
-              <h3>Tickets</h3>
-              <dx-accordion *ngFor="let attendee of cartItem?.attendees; let i = index" [collapsible]="true" [multiple]="true" [selectedIndex]="0">
-                <dxi-item  title="Attendee {{ i + 1 }} *">
-                  <dx-form #attendeeForms [formData]="attendee" class="mb-25">
-                    <dxi-item dataField="firstName" [isRequired]="true"></dxi-item>
-                    <dxi-item dataField="lastName" [isRequired]="true"></dxi-item>
-                    <dxi-item dataField="email">
-                      <dxi-validation-rule type="required" message="Email Address is required">
-                      </dxi-validation-rule>
-                      <dxi-validation-rule
-                        type="async"
-                        message="A Person with this email address has already registered!"
-                        [validationCallback]="alreadyRegisteredValidation">
-                      </dxi-validation-rule>
-                      <dxi-validation-rule
-                        [reevaluate]="false"
-                        type="async"
-                        message="Each email registered must be unique!"
-                        [validationCallback]="uniqueEmailValidation">
-                      </dxi-validation-rule>
-                    </dxi-item>
-                  </dx-form>
-                </dxi-item>
-              </dx-accordion>
-
-              <div *ngIf="!total || total == 0" class="cart-page-total">
-                <a class="os-btn"(click)="signUpForEvent()">Sign UP</a>
-              </div>
-
-              <div *ngIf="total && total > 0" class="cart-page-total">
-                <h2>Cart totals</h2>
-                <ul class="mb-20">
-                  <li>Ticket Price <span>${{ event?.costInDollars }}</span></li>
-                  <li>Total <span>${{ total }}</span></li>
-                </ul>
-                <a class="impact-btn impact-btn-blue-border" (click)="proceedToCheckout()">Add To Cart</a>
+              <div *ngIf="event.isKajabiCourse" class="row">
+                <div class="col-6 mt-20 mb-30">
+                  <button class="os-btn" style="line-height: 20px;" (click)="window.open(event.kajabiPurchaseURL)">Pay up front and Save</button>
+                </div>
+                <div class="col-6 mt-20 mb-30">
+                  <button class="os-btn" style="line-height: 20px;" (click)="window.open(event.kajabiSubscribeURL)">Monthly Subscription</button>
+                </div>
               </div>
             </div>
             <div *ngIf="event && event.isOnline" class="row">

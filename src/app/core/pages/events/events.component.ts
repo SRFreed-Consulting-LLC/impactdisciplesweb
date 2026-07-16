@@ -55,11 +55,11 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
 
       this.eventsList.sort((a, b) => {
         if (a.isSummit && !b.isSummit) {
-          return -1; // a comes before b
+          return -1;
         } else if (!a.isSummit && b.isSummit) {
-          return 1; // b comes before a
+          return 1;
         } else {
-          return 0; // no change
+          return 0;
         }
       });
 
@@ -68,12 +68,12 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
         return eventStartDate >= currentDate && event.isOnline;
       });
 
-      let datSorter = (a,b) => {
+      let dateSorter = (a,b) => {
         return new Date(a.startDate as string).getTime() - new Date(b.startDate as string).getTime()
       };
 
-      this.eventsList.sort(datSorter);
-      this.onlineEventsList.sort(datSorter);
+      this.eventsList.sort(dateSorter);
+      this.onlineEventsList.sort(dateSorter);
     });
   }
 
