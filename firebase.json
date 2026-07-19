@@ -3,33 +3,58 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "hosting": [{
-    "target": "production",
-    "public": "dist/impactdisciplesweb",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },{
-    "target": "development",
-    "public": "dist/impactdisciplesweb",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }]
+  "hosting": [
+    {
+      "target": "production",
+      "public": "dist/impactdisciplesweb",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "redirects": [
+        {
+          "source": "/merch",
+          "destination": "https://www.asbshops.com/lagrangehub/matthewfrady/impact",
+          "type": 301,
+          "headers": [{
+            "key": "Cache-Control",
+            "value": "max-age=0"
+          }]
+        }
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "development",
+      "public": "dist/impactdisciplesweb",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "redirects": [
+        {
+          "source": "/merch",
+          "destination": "https://www.asbshops.com/lagrangehub/matthewfrady/impact",
+          "type": 301,
+          "headers": [{
+            "key": "Cache-Control",
+            "value": "max-age=0"
+          }]
+        }
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
 }
