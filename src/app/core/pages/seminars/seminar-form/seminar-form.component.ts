@@ -17,9 +17,10 @@ import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-co
 import notify from 'devextreme/ui/notify';
 
 @Component({
-  selector: 'app-seminar-form',
-  templateUrl: './seminar-form.component.html',
-  styleUrls: ['./seminar-form.component.scss']
+    selector: 'app-seminar-form',
+    templateUrl: './seminar-form.component.html',
+    styleUrls: ['./seminar-form.component.scss'],
+    standalone: false
 })
 export class SeminarFormComponent implements OnInit {
   @ViewChild('seminarRequestFormComponent', { static: false }) seminarRequestFormComponent: DxFormComponent;

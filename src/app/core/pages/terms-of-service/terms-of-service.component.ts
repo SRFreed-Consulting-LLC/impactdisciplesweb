@@ -3,9 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 
 @Component({
-  selector: 'app-terms-of-service',
-  templateUrl: './terms-of-service.component.html',
-  styleUrls: ['./terms-of-service.component.scss']
+    selector: 'app-terms-of-service',
+    templateUrl: './terms-of-service.component.html',
+    styleUrls: ['./terms-of-service.component.scss'],
+    standalone: false
 })
 export class TermsOfServiceComponent implements OnInit  {
   public webConfig: WebConfigModel;

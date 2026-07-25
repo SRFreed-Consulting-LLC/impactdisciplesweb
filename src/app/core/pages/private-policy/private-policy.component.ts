@@ -3,9 +3,10 @@ import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-confi
 import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
 
 @Component({
-  selector: 'app-private-policy',
-  templateUrl: './private-policy.component.html',
-  styleUrls: ['./private-policy.component.scss']
+    selector: 'app-private-policy',
+    templateUrl: './private-policy.component.html',
+    styleUrls: ['./private-policy.component.scss'],
+    standalone: false
 })
 export class PrivatePolicyComponent implements OnInit {
   public webConfig: WebConfigModel;

@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .equipping-groups {
   &__key-words {
@@ -21,10 +21,10 @@
         color: #4c4c4c;
       }
     }
-    @media #{$sm,$md,$lg} {
+    @media #{variables.$sm,variables.$md,variables.$lg} {
       grid-template-columns: repeat(4, 1fr);
     }
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       grid-template-columns: repeat(2, 1fr);
     }
   }
@@ -32,7 +32,7 @@
     h1 {
       text-align: center;
       margin-bottom: 40px;
-      @media #{$xxs,$xs,$sm} {
+      @media #{variables.$xxs,variables.$xs,variables.$sm} {
         margin-bottom: 0;
         font-size: 26px;
         padding: 0 20px;
@@ -41,12 +41,12 @@
     .content {
       display: flex;
       padding: 50px;
-      @media #{$xxs,$xs,$sm} {
+      @media #{variables.$xxs,variables.$xs,variables.$sm} {
         padding: 5px;
         flex-direction: column-reverse;
       }
       &__left {
-        background-color: $theme-color-2;
+        background-color: variables.$theme-color-2;
         padding: 20px;
         h5 {
           font-weight: 800;
@@ -75,9 +75,9 @@
           font-weight: 800;
           font-size: 20px;
           letter-spacing: 1.5px;
-          color: $theme-color-2;
+          color: variables.$theme-color-2;
         }
-        @media #{$xxs,$xs,$sm} {
+        @media #{variables.$xxs,variables.$xs,variables.$sm} {
           padding: 0;
           transform: scale(.9);
         }
@@ -87,30 +87,30 @@
   &__approach {
     display: flex;
     align-items: center;
-    @media #{$xxs,$xs,$sm} {
+    @media #{variables.$xxs,variables.$xs,variables.$sm} {
       padding: 5px;
       flex-direction: column;
     }
     .content {
       width: 100%;
       padding: 50px;
-      @media #{$xxs,$xs,$sm} {
+      @media #{variables.$xxs,variables.$xs,variables.$sm} {
         padding: 20px;
       }
       &__title {
         font-size: 50px;
-        @media #{$xxs,$xs,$sm} {
+        @media #{variables.$xxs,variables.$xs,variables.$sm} {
           font-size: 26px;
         }
         strong {
-          color: $theme-color;
+          color: variables.$theme-color;
         }
       }
     }
     .video {
       width: 100%;
       padding: 50px;
-      @media #{$xxs}, #{$xs} {
+      @media #{variables.$xxs}, #{variables.$xs} {
         width: 100%;
         padding: 0;
       }

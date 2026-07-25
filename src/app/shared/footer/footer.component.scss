@@ -1,4 +1,4 @@
-@import '../../../assets/styles/variables.scss';
+@use '../../../assets/styles/variables.scss';
 
 .footer {
   &__top {
@@ -9,7 +9,7 @@
   &__widget-title {
     font-size: 45px;
     line-height: 1;
-    @media #{$xxs} {
+    @media #{variables.$xxs} {
       font-size: 34px;
     }
   }

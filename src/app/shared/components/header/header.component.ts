@@ -6,9 +6,10 @@ import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: false
 })
 export class HeaderComponent {
   @Input() backgroundUrl: string;

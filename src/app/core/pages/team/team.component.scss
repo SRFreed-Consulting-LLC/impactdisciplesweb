@@ -1,15 +1,15 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .team {
   &__options {
     display: flex;
     justify-content: space-around;
-    background-color: $theme-color;
+    background-color: variables.$theme-color;
     color: #1c1c1c;
     font-size: 20px;
     font-weight: 600;
     text-transform: uppercase;
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       flex-direction: column;
     }
     .item {
@@ -19,7 +19,7 @@
       &-middle {
         border-left: 2px solid;
         border-right: 2px solid;
-        @media #{$xxs,$xs} {
+        @media #{variables.$xxs,variables.$xs} {
           border-left: 0;
           border-right: 0;
           border-top: 2px solid;
@@ -33,13 +33,13 @@
     flex-direction: column;
     text-align: center;
     margin: 50px 20px;
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       margin: 50px 10px;
     }
     h2 {
       font-size: 60px;
       font-weight: 800;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         font-size: 36px;
         margin-bottom: 30px;
       }
@@ -51,7 +51,7 @@
       gap: 20px;
       padding: 40px;
       justify-items: center;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         grid-template-columns: none;
         padding: 0;
       }
@@ -74,7 +74,7 @@
           width: 200px;
           border-radius: 50%;
           object-fit: cover;
-          @media #{$xxs,$xs} {
+          @media #{variables.$xxs,variables.$xs} {
             height: 150px;
             width: 150px;
           }
@@ -88,14 +88,14 @@
             color: #ffffff;
             font-size: 30px;
             font-weight: 600;
-            @media #{$xxs,$xs} {
+            @media #{variables.$xxs,variables.$xs} {
               font-size: 25px;
             }
           }
           p {
             line-height: 1.4em;
             min-height: calc(1.4em * 2);
-            @media #{$xxs,$xs} {
+            @media #{variables.$xxs,variables.$xs} {
               min-height: 1em;
             }
           }

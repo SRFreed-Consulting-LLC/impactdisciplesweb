@@ -1,12 +1,12 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .events {
   &__person, &__online {
     padding: 50px 100px;
-    @media #{$xxs,$xs}{
+    @media #{variables.$xxs,variables.$xs}{
       padding: 30px 0;
     }
-    @media #{$laptop}{
+    @media #{variables.$laptop}{
       padding: 50px;
     }
     h2 {
@@ -18,7 +18,7 @@
       text-transform: uppercase;
       padding: 10px;
       color: #1c1c1c;
-      @media #{$xxs,$xs}{
+      @media #{variables.$xxs,variables.$xs}{
         font-size: 35px;
         margin-bottom: 30px;
       }
@@ -29,15 +29,15 @@
       gap: 100px;
       align-items: stretch;
 
-      @media #{$laptop}{
+      @media #{variables.$laptop}{
         gap: 30px;
       }
 
-      @media #{$md, $lg} {
+      @media #{variables.$md, variables.$lg} {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      @media #{$xxs, $xs, $sm} {
+      @media #{variables.$xxs, variables.$xs, variables.$sm} {
         grid-template-columns: 1fr;
         gap: 25px;
         padding: 10px;
@@ -52,7 +52,7 @@
       border-radius: 10px;
       background-color: #1c1c1c;
       border: 5px solid #1c1c1c;
-      @media #{$xxs,$xs}{
+      @media #{variables.$xxs,variables.$xs}{
         border-radius: 0;
       }
 
@@ -63,7 +63,7 @@
         display: block;
         border-radius: 10px 10px 0 0;
         background-color: #3e3e3e;
-        @media #{$xxs,$xs}{
+        @media #{variables.$xxs,variables.$xs}{
           border-radius: 0;
         }
       }

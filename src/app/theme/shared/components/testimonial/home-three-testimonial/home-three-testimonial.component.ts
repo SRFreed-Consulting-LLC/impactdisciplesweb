@@ -4,9 +4,10 @@ import { register } from 'swiper/element/bundle';
 register();
 
 @Component({
-  selector: 'theme-home-three-testimonial',
-  templateUrl: './home-three-testimonial.component.html',
-  styleUrls: ['./home-three-testimonial.component.scss']
+    selector: 'theme-home-three-testimonial',
+    templateUrl: './home-three-testimonial.component.html',
+    styleUrls: ['./home-three-testimonial.component.scss'],
+    standalone: false
 })
 export class HomeThreeTestimonialComponent {
 

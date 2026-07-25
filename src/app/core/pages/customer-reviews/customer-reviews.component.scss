@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .testimonial {
   &__wrapper {
@@ -16,14 +16,14 @@
     padding: 20px;
   }
   &__content {
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       padding: 0 20px;
     }
   }
   &__title {
     font-size: 90px;
     strong {
-      color: $theme-color;
+      color: variables.$theme-color;
       font-size: 95px;
     }
   }
@@ -40,9 +40,9 @@
   }
   &__header {
     height: inherit;
-    border: 10px solid $theme-color;
+    border: 10px solid variables.$theme-color;
     &-button {
-      border: 2px solid $theme-color;
+      border: 2px solid variables.$theme-color;
     }
    .slide-right {
     justify-content: end;
@@ -51,7 +51,7 @@
   }
   .teams-list {
     padding: 0 100px;
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       padding: 0;
     }
     &__team {
@@ -59,7 +59,7 @@
       padding: 0 25px;
       &-image {
         border-radius: 50%;
-        border: 2px solid $theme-color;
+        border: 2px solid variables.$theme-color;
         img {
           position: relative;
           bottom: -10px;

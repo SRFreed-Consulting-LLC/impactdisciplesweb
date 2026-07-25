@@ -92,13 +92,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "impactdisciplesweb:build:production"
+              "buildTarget": "impactdisciplesweb:build:production"
             },
             "development": {
-              "browserTarget": "impactdisciplesweb:build:development"
+              "buildTarget": "impactdisciplesweb:build:development"
             },
             "local": {
-              "browserTarget": "impactdisciplesweb:build:local"
+              "buildTarget": "impactdisciplesweb:build:local"
             }
           },
           "defaultConfiguration": "local"
@@ -106,7 +106,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "impactdisciplesweb:build"
+            "buildTarget": "impactdisciplesweb:build"
           }
         },
         "test": {
@@ -125,20 +125,6 @@
               "src/styles.scss"
             ],
             "scripts": []
-          }
-        }
-      }
-    },
-    "impactdisciplescommon": {
-      "projectType": "library",
-      "root": "impactdisciplescommon",
-      "sourceRoot": "impactdisciplescommoncommon/src",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "impactdisciplescommon/tsconfig.lib.json",
-            "project": "impactdisciplescommon/ng-package.json"
           }
         }
       }

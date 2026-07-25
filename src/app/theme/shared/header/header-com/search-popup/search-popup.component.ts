@@ -5,9 +5,10 @@ import category_data from '../../../data/category-data';
 import { ICategoryType } from '../../../types/category-d-t';
 
 @Component({
-  selector: 'theme-search-popup',
-  templateUrl: './search-popup.component.html',
-  styleUrls: ['./search-popup.component.scss']
+    selector: 'theme-search-popup',
+    templateUrl: './search-popup.component.html',
+    styleUrls: ['./search-popup.component.scss'],
+    standalone: false
 })
 export class SearchPopupComponent {
 

@@ -3,9 +3,10 @@ import { FormControl, FormGroup,Validators } from '@angular/forms';
 import notify from 'devextreme/ui/notify';
 
 @Component({
-  selector: 'theme-blog-reply-form',
-  templateUrl: './blog-reply-form.component.html',
-  styleUrls: ['./blog-reply-form.component.scss']
+    selector: 'theme-blog-reply-form',
+    templateUrl: './blog-reply-form.component.html',
+    styleUrls: ['./blog-reply-form.component.scss'],
+    standalone: false
 })
 export class BlogReplyFormComponent {
 

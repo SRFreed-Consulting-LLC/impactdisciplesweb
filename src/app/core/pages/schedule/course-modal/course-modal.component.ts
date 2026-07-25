@@ -21,9 +21,10 @@ export interface CourseItem {
 }
 
 @Component({
-  selector: 'app-course-modal',
-  templateUrl: './course-modal.component.html',
-  styleUrls: ['./course-modal.component.scss']
+    selector: 'app-course-modal',
+    templateUrl: './course-modal.component.html',
+    styleUrls: ['./course-modal.component.scss'],
+    standalone: false
 })
 export class CourseModalComponent implements OnInit, OnDestroy {
   @Input() allCourses: ScheduleModel[];

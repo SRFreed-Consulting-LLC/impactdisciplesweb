@@ -6,9 +6,10 @@ import { DMMService } from 'impactdisciplescommon/src/services/data/dmm.service'
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 
 @Component({
-  selector: 'app-dmm',
-  templateUrl: './dmm.component.html',
-  styleUrls: ['./dmm.component.scss']
+    selector: 'app-dmm',
+    templateUrl: './dmm.component.html',
+    styleUrls: ['./dmm.component.scss'],
+    standalone: false
 })
 export class BlogComponent implements OnInit {
   public dmms: DMMModel[] = [];

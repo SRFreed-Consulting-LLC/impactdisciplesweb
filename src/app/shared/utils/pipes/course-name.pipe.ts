@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { CourseService } from 'impactdisciplescommon/src/services/data/course.service';
 
 @Pipe({
-  name: 'courseName'
+    name: 'courseName',
+    standalone: false
 })
 export class CourseNamePipe implements PipeTransform {
 

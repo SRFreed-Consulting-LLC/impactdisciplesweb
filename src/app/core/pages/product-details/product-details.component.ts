@@ -11,9 +11,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 @Component({
-  selector: 'app-product-details',
-  templateUrl: './product-details.component.html',
-  styleUrls: ['./product-details.component.scss']
+    selector: 'app-product-details',
+    templateUrl: './product-details.component.html',
+    styleUrls: ['./product-details.component.scss'],
+    standalone: false
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('sizeValidator') sizeValidator: DxValidatorComponent;

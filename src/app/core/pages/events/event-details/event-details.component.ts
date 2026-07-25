@@ -18,9 +18,10 @@ import { EMailService } from 'impactdisciplescommon/src/services/data/email.serv
 import notify from 'devextreme/ui/notify';
 
 @Component({
-  selector: 'app-event-details',
-  templateUrl: './event-details.component.html',
-  styleUrls: ['./event-details.component.scss']
+    selector: 'app-event-details',
+    templateUrl: './event-details.component.html',
+    styleUrls: ['./event-details.component.scss'],
+    standalone: false
 })
 export class EventDetailsComponent implements OnInit, OnDestroy {
   @ViewChildren('attendeeForms') attendeeForms: QueryList<DxFormComponent>;

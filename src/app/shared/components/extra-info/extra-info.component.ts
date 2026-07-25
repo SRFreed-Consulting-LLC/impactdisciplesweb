@@ -3,9 +3,10 @@ import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/cus
 import { Subject, } from 'rxjs';
 
 @Component({
-  selector: 'app-extra-info',
-  templateUrl: './extra-info.component.html',
-  styleUrls: ['./extra-info.component.scss']
+    selector: 'app-extra-info',
+    templateUrl: './extra-info.component.html',
+    styleUrls: ['./extra-info.component.scss'],
+    standalone: false
 })
 export class ExtraInfoComponent implements OnDestroy {
   isLoggedIn: boolean = false;

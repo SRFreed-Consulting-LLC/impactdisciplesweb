@@ -3,9 +3,10 @@ import { PodCastModel } from 'impactdisciplescommon/src/models/domain/pod-cast.m
 
 
 @Component({
-  selector: 'app-podcast-postbox-item',
-  templateUrl: './podcast-postbox-item.component.html',
-  styleUrls: ['./podcast-postbox-item.component.scss']
+    selector: 'app-podcast-postbox-item',
+    templateUrl: './podcast-postbox-item.component.html',
+    styleUrls: ['./podcast-postbox-item.component.scss'],
+    standalone: false
 })
 export class PodcastPostboxItemComponent {
   @Input() podcast!: PodCastModel;

@@ -1,7 +1,7 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .scroll-top {
-  @media #{$xxs,$xs} {
+  @media #{variables.$xxs,variables.$xs} {
     display: none !important;
   }
 }

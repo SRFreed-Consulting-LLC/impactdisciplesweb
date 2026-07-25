@@ -20,9 +20,10 @@ import { EventRegistrationService } from 'impactdisciplescommon/src/services/dat
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-breakout-sessions',
-  templateUrl: './breakout-sessions.component.html',
-  styleUrls: ['./breakout-sessions.component.scss']
+    selector: 'app-breakout-sessions',
+    templateUrl: './breakout-sessions.component.html',
+    styleUrls: ['./breakout-sessions.component.scss'],
+    standalone: false
 })
 export class BreakoutSessionsComponent implements OnInit, OnDestroy{
   allCourses: ScheduleModel[];

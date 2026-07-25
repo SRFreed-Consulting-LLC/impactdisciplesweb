@@ -1,9 +1,10 @@
 import { Component,Input } from '@angular/core';
 
 @Component({
-  selector: 'theme-subscribe-area',
-  templateUrl: './subscribe-area.component.html',
-  styleUrls: ['./subscribe-area.component.scss']
+    selector: 'theme-subscribe-area',
+    templateUrl: './subscribe-area.component.html',
+    styleUrls: ['./subscribe-area.component.scss'],
+    standalone: false
 })
 export class SubscribeAreaComponent {
 

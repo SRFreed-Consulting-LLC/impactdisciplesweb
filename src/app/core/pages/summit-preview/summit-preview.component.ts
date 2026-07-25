@@ -10,9 +10,10 @@ import { CoachService } from 'impactdisciplescommon/src/services/data/coach.serv
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 
 @Component({
-  selector: 'app-summit-preview',
-  templateUrl: './summit-preview.component.html',
-  styleUrls: ['./summit-preview.component.scss']
+    selector: 'app-summit-preview',
+    templateUrl: './summit-preview.component.html',
+    styleUrls: ['./summit-preview.component.scss'],
+    standalone: false
 })
 export class SummitPreviewComponent implements OnInit, OnDestroy {
 

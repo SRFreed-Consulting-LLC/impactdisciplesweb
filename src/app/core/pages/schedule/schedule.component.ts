@@ -24,9 +24,10 @@ import { BreakoutSessionModal } from './breakout-sessions/breakout-sessions-moda
 import notify from 'devextreme/ui/notify';
 
 @Component({
-  selector: 'app-schedule',
-  templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.scss']
+    selector: 'app-schedule',
+    templateUrl: './schedule.component.html',
+    styleUrls: ['./schedule.component.scss'],
+    standalone: false
 })
 export class ScheduleComponent implements OnInit, OnDestroy {
   event: EventModel;

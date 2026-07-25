@@ -5,9 +5,10 @@ import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 @Component({
-  selector: 'app-store-postbox-item',
-  templateUrl: './store-postbox-item.component.html',
-  styleUrls: ['./store-postbox-item.component.scss']
+    selector: 'app-store-postbox-item',
+    templateUrl: './store-postbox-item.component.html',
+    styleUrls: ['./store-postbox-item.component.scss'],
+    standalone: false
 })
 export class StorePostboxItemComponent {
   @Input() product: ProductModel;

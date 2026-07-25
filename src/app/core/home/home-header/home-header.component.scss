@@ -1,14 +1,14 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 ::ng-deep .header {
-  background-color: $primary-dark;
+  background-color: variables.$primary-dark;
   height: 80px;
   &__area {
     padding: 10px;
-    @media #{$sm,$xs}{
+    @media #{variables.$sm,variables.$xs}{
       padding-top: 15px;
     }
-    @media #{$xxs}{
+    @media #{variables.$xxs}{
       padding: 0 10px
     }
   }
@@ -20,7 +20,7 @@
 
     &-logo {
       flex: 1;
-      @media #{$xxs,$xs}{
+      @media #{variables.$xxs,variables.$xs}{
         transform: scale(.8);
       }
     }
@@ -38,20 +38,20 @@
 
           & a {
             display: block;
-            color: $white;
+            color: variables.$white;
             font-weight: 500;
             text-transform: capitalize;
           }
           &.active{
             & a{
-              color: $theme-color;
+              color: variables.$theme-color;
             }
           }
           &.has-dropdown {
             & > a {
               position: relative;
               padding-right: 15px;
-              color: $white;
+              color: variables.$white;
               &::after {
                 position: absolute;
                 content: "\f107";
@@ -65,7 +65,7 @@
           }
           &:hover {
             & a {
-                color: $theme-color;
+                color: variables.$theme-color;
             }
             & ul.submenu {
               visibility: visible;
@@ -77,7 +77,7 @@
             position: absolute;
             top: 100%;
             left: 0;
-            background-color: $white;
+            background-color: variables.$white;
             min-width: 200px;
             padding: 15px 0;
             transform: scaleY(0);
@@ -94,14 +94,14 @@
               display: block;
               &.active {
                 & a {
-                  color: $theme-color;
+                  color: variables.$theme-color;
                 }
               }
               & a {
                 padding: 5px 20px;
-                color: $primary-dark;
+                color: variables.$primary-dark;
                 &:hover {
-                  color: $theme-color;
+                  color: variables.$theme-color;
                 }
               }
             }
@@ -120,12 +120,12 @@
           display: inline-block;
           position: relative;
           margin-left: 25px;
-          @media #{$xxs, $xs} {
+          @media #{variables.$xxs, variables.$xs} {
             margin-left: 0;
             transform: scale(.8);
           }
           & > a {
-            color: $white;
+            color: variables.$white;
             position: relative;
             display: inline-block;
             position: relative;
@@ -133,14 +133,14 @@
               margin-right: 0;
             }
             & i {
-              color: $white;
+              color: variables.$white;
               margin-right: 3px;
               font-size: 18px;
             }
           }
           &:hover {
             & > a {
-              color: $theme-color;
+              color: variables.$theme-color;
             }
             & .extra-info {
               visibility: visible;
@@ -151,7 +151,7 @@
             position: absolute;
             top: 100%;
             right: 0;
-            background-color: $white;
+            background-color: variables.$white;
             padding: 20px;
             margin: 0;
             min-width: 220px;
@@ -173,7 +173,7 @@
                   & a {
                     padding: 5px 0;
                     line-height: 30px;
-                    color: $primary-dark;
+                    color: variables.$primary-dark;
                   }
                 }
               }
@@ -181,7 +181,7 @@
             & .extra-title {
               & h5 {
                 font-size: 14px;
-                color: $theme-color;
+                color: variables.$theme-color;
                 margin: 15px 0 10px;
                 text-transform: capitalize;
               }
@@ -193,7 +193,7 @@
   }
   &__mobile-menu-btn {
     font-size: 20px;
-    color: $white;
+    color: variables.$white;
     margin: 0 10px 0 20px;
   }
 }
@@ -217,25 +217,25 @@
       & > a {
         padding: 13px 0;
         display: block;
-        border-bottom: 1px solid rgba($color: $primary-dark, $alpha: .5);
+        border-bottom: 1px solid rgba($color: variables.$primary-dark, $alpha: .5);
         font-size: 16px;
-        color: $primary-dark;
+        color: variables.$primary-dark;
         font-weight: 500;
         text-transform: uppercase;
         position: relative;
 
         &:hover {
-          color: $theme-color;
+          color: variables.$theme-color;
           padding-left: 5px;
         }
       }
 
       & a[aria-expanded="true"] {
-        color: $primary-dark;
+        color: variables.$primary-dark;
 
         &:before {
-          background: $primary-dark;
-          border-color: $primary-dark;
+          background: variables.$primary-dark;
+          border-color: variables.$primary-dark;
         }
       }
 
@@ -246,11 +246,11 @@
           padding-left: 15px;
           &:hover {
             > a {
-              color: $theme-color;
+              color: variables.$theme-color;
               padding-left: 20px;
               &:before {
-                background: $primary-dark;
-                border-color: $primary-dark;
+                background: variables.$primary-dark;
+                border-color: variables.$primary-dark;
               }
             }
           }
@@ -269,7 +269,7 @@
               left: 0;
               top: 50%;
               transform: translateY(-50%);
-              border: 2px solid $primary-dark;
+              border: 2px solid variables.$primary-dark;
               border-radius: 50%;
             }
           }
