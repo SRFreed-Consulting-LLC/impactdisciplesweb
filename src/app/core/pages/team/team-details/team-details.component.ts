@@ -5,9 +5,10 @@ import { CoachService } from 'impactdisciplescommon/src/services/data/coach.serv
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-team-details',
-  templateUrl: './team-details.component.html',
-  styleUrls: ['./team-details.component.scss']
+    selector: 'app-team-details',
+    templateUrl: './team-details.component.html',
+    styleUrls: ['./team-details.component.scss'],
+    standalone: false
 })
 export class TeamDetailsComponent implements OnInit, OnDestroy {
   teamMember: CoachModel;

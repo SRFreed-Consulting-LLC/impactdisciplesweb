@@ -3,9 +3,10 @@ import { CartService } from '../../services/cart.service';
 import { UtilsService } from '../../services/utils.service';
 
 @Component({
-  selector: 'theme-header-one',
-  templateUrl: './header-one.component.html',
-  styleUrls: ['./header-one.component.scss']
+    selector: 'theme-header-one',
+    templateUrl: './header-one.component.html',
+    styleUrls: ['./header-one.component.scss'],
+    standalone: false
 })
 export class HeaderOneComponent {
   @Input () header_big = false;

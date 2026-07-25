@@ -5,9 +5,10 @@ import { mobile_menus } from '../../data/menu-data';
 
 
 @Component({
-  selector: 'theme-offcanvas',
-  templateUrl: './offcanvas.component.html',
-  styleUrls: ['./offcanvas.component.scss']
+    selector: 'theme-offcanvas',
+    templateUrl: './offcanvas.component.html',
+    styleUrls: ['./offcanvas.component.scss'],
+    standalone: false
 })
 
 

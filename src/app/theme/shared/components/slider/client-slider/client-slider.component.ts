@@ -2,9 +2,10 @@ import { Component,Input } from '@angular/core';
 import Swiper from 'swiper';
 
 @Component({
-  selector: 'theme-client-slider',
-  templateUrl: './client-slider.component.html',
-  styleUrls: ['./client-slider.component.scss']
+    selector: 'theme-client-slider',
+    templateUrl: './client-slider.component.html',
+    styleUrls: ['./client-slider.component.scss'],
+    standalone: false
 })
 export class ClientSliderComponent {
 

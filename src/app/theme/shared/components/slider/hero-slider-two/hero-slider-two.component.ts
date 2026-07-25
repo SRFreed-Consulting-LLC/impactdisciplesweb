@@ -5,9 +5,10 @@ import { IHeroSlider } from '../../../types/hero-slider-t';
 import { HeroSliderData } from '../../../data/hero-slider-data';
 
 @Component({
-  selector: 'theme-hero-slider-two',
-  templateUrl: './hero-slider-two.component.html',
-  styleUrls: ['./hero-slider-two.component.scss']
+    selector: 'theme-hero-slider-two',
+    templateUrl: './hero-slider-two.component.html',
+    styleUrls: ['./hero-slider-two.component.scss'],
+    standalone: false
 })
 export class HeroSliderTwoComponent {
 

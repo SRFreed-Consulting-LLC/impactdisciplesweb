@@ -4,9 +4,10 @@ import { MonthlyNewletterService } from 'impactdisciplescommon/src/services/data
 
 
 @Component({
-  selector: 'app-monthly-newsletter',
-  templateUrl: './monthly-newsletter.component.html',
-  styleUrls: ['./monthly-newsletter.component.scss']
+    selector: 'app-monthly-newsletter',
+    templateUrl: './monthly-newsletter.component.html',
+    styleUrls: ['./monthly-newsletter.component.scss'],
+    standalone: false
 })
 export class MonthlyNewsletterComponent implements OnInit {
 

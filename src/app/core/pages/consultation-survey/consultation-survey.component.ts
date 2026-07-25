@@ -11,9 +11,10 @@ import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.m
 import notify from 'devextreme/ui/notify';
 
 @Component({
-  selector: 'app-consultation-survey',
-  templateUrl: './consultation-survey.component.html',
-  styleUrls: ['./consultation-survey.component.scss']
+    selector: 'app-consultation-survey',
+    templateUrl: './consultation-survey.component.html',
+    styleUrls: ['./consultation-survey.component.scss'],
+    standalone: false
 })
 export class ConsultationSurveyComponent implements OnInit {
   consultationSurveyForm: ConsultationSurveyModel;

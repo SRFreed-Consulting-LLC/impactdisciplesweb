@@ -10,9 +10,10 @@ import { ProductService } from 'impactdisciplescommon/src/services/data/product.
 import { SeriesService } from 'impactdisciplescommon/src/services/data/series.service';
 
 @Component({
-  selector: 'app-e-books',
-  templateUrl: './e-books.component.html',
-  styleUrls: ['./e-books.component.scss']
+    selector: 'app-e-books',
+    templateUrl: './e-books.component.html',
+    styleUrls: ['./e-books.component.scss'],
+    standalone: false
 })
 export class EBooksComponent {
   public products: ProductModel[] = [];

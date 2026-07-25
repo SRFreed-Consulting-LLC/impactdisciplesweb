@@ -4,9 +4,10 @@ import { UtilsService } from '../../../services/utils.service';
 
 
 @Component({
-  selector: 'theme-blog-details-area',
-  templateUrl: './blog-details-area.component.html',
-  styleUrls: ['./blog-details-area.component.scss']
+    selector: 'theme-blog-details-area',
+    templateUrl: './blog-details-area.component.html',
+    styleUrls: ['./blog-details-area.component.scss'],
+    standalone: false
 })
 export class BlogDetailsAreaComponent {
   @Input() blog!:IBlogType;

@@ -12,9 +12,10 @@ import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-tim
 import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
 
 @Component({
-  selector: 'app-lunch-and-learn-form',
-  templateUrl: './lunch-and-learn-form.component.html',
-  styleUrls: ['./lunch-and-learn-form.component.scss']
+    selector: 'app-lunch-and-learn-form',
+    templateUrl: './lunch-and-learn-form.component.html',
+    styleUrls: ['./lunch-and-learn-form.component.scss'],
+    standalone: false
 })
 export class LunchAndLearnFormComponent implements OnInit {
   @ViewChild('lunchRequestFormComponent', { static: false }) lunchRequestFormComponent: DxFormComponent;

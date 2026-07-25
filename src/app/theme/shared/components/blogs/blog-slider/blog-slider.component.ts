@@ -5,9 +5,10 @@ import blog_data from '../../../data/blog-data';
 
 
 @Component({
-  selector: 'theme-blog-slider',
-  templateUrl: './blog-slider.component.html',
-  styleUrls: ['./blog-slider.component.scss']
+    selector: 'theme-blog-slider',
+    templateUrl: './blog-slider.component.html',
+    styleUrls: ['./blog-slider.component.scss'],
+    standalone: false
 })
 export class BlogSliderComponent {
   public blogData:IBlogType[] = blog_data.filter(b => b.blog === 'home');

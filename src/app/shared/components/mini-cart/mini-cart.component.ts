@@ -3,9 +3,10 @@ import { CartService } from '../../utils/services/cart.service';
 import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
 
 @Component({
-  selector: 'app-mini-cart',
-  templateUrl: './mini-cart.component.html',
-  styleUrls: ['./mini-cart.component.scss']
+    selector: 'app-mini-cart',
+    templateUrl: './mini-cart.component.html',
+    styleUrls: ['./mini-cart.component.scss'],
+    standalone: false
 })
 export class MiniCartComponent {
   NumberUtil = NumberUtil;

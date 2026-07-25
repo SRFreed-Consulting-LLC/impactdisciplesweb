@@ -4,9 +4,10 @@ import { EventService } from 'impactdisciplescommon/src/services/data/event.serv
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-disciple-making-summit-banner',
-  templateUrl: './disciple-making-summit-banner.component.html',
-  styleUrls: ['./disciple-making-summit-banner.component.scss']
+    selector: 'app-disciple-making-summit-banner',
+    templateUrl: './disciple-making-summit-banner.component.html',
+    styleUrls: ['./disciple-making-summit-banner.component.scss'],
+    standalone: false
 })
 export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
   @Input() large: boolean = false;

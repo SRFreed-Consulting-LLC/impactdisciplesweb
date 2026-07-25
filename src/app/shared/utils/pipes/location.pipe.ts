@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { LocationService } from 'impactdisciplescommon/src/services/data/location.service';
 
 @Pipe({
-  name: 'location'
+    name: 'location',
+    standalone: false
 })
 export class LocationPipe implements PipeTransform {
 

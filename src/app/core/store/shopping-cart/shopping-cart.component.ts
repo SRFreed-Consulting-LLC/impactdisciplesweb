@@ -9,9 +9,10 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 
 @Component({
-  selector: 'app-shopping-cart',
-  templateUrl: './shopping-cart.component.html',
-  styleUrls: ['./shopping-cart.component.scss']
+    selector: 'app-shopping-cart',
+    templateUrl: './shopping-cart.component.html',
+    styleUrls: ['./shopping-cart.component.scss'],
+    standalone: false
 })
 export class ShoppingCartComponent implements OnInit {
   shoppingCart: CheckoutForm = {... new CheckoutForm()};

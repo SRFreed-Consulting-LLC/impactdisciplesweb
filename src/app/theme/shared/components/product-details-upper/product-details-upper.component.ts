@@ -4,9 +4,10 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 
 @Component({
-  selector: 'theme-product-details-upper',
-  templateUrl: './product-details-upper.component.html',
-  styleUrls: ['./product-details-upper.component.scss'],
+    selector: 'theme-product-details-upper',
+    templateUrl: './product-details-upper.component.html',
+    styleUrls: ['./product-details-upper.component.scss'],
+    standalone: false
 })
 export class ProductDetailsUpperComponent {
   @Input() product!: IProduct;

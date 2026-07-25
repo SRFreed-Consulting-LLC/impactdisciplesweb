@@ -3,7 +3,8 @@ import { BlogCategoriesService } from 'impactdisciplescommon/src/services/data/b
 import { ProductCategoriesService } from 'impactdisciplescommon/src/services/data/product-categories.service';
 
 @Pipe({
-  name: 'categoryName'
+    name: 'categoryName',
+    standalone: false
 })
 export class CategoryNamePipe implements PipeTransform {
 

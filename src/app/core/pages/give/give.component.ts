@@ -6,9 +6,10 @@ import { StripeService } from 'src/app/shared/utils/services/stripe.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-give',
-  templateUrl: './give.component.html',
-  styleUrls: ['./give.component.scss']
+    selector: 'app-give',
+    templateUrl: './give.component.html',
+    styleUrls: ['./give.component.scss'],
+    standalone: false
 })
 export class GiveComponent implements OnInit {
   public impactDisciplesInfo = impactDisciplesInfo;
