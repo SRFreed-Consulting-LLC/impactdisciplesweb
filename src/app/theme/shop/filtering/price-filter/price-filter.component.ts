@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import {Component,Output,Input,EventEmitter,Inject,PLATFORM_ID} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Options } from 'ngx-slider-v2';
+import { Options } from '@angular-slider/ngx-slider';
 import { ViewportScroller } from '@angular/common';
 import { ProductService } from 'src/app/theme/shared/services/product.service';
 
