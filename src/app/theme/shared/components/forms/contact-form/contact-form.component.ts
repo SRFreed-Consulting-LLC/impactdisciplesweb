@@ -3,9 +3,10 @@ import { FormControl, FormGroup,Validators } from '@angular/forms';
 import notify from 'devextreme/ui/notify';
 
 @Component({
-  selector: 'theme-contact-form',
-  templateUrl: './contact-form.component.html',
-  styleUrls: ['./contact-form.component.scss']
+    selector: 'theme-contact-form',
+    templateUrl: './contact-form.component.html',
+    styleUrls: ['./contact-form.component.scss'],
+    standalone: false
 })
 export class ContactFormComponent {
   public contactForm!: FormGroup;

@@ -5,9 +5,10 @@ import { MenuModel } from '../../../../impactdisciplescommon/src/models/utils/na
 import menuData from '../../../../impactdisciplescommon/src/services/data/nav-menu-data';
 
 @Component({
-  selector: 'app-nav-menu',
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.scss']
+    selector: 'app-nav-menu',
+    templateUrl: './nav-menu.component.html',
+    styleUrls: ['./nav-menu.component.scss'],
+    standalone: false
 })
 export class NavMenuComponent implements OnInit {
   public menuItems: MenuModel[] = menuData;

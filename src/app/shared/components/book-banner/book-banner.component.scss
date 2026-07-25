@@ -1,12 +1,12 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .book {
   &__title {
-    color: $black;
+    color: variables.$black;
     font-size: 36px;
 
     strong {
-      color: $theme-color-2;
+      color: variables.$theme-color-2;
     }
   }
 

@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 ::ng-deep .header-slider-container {
   margin-bottom: 20px;
@@ -38,14 +38,14 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        @media #{$md}{
+        @media #{variables.$md}{
           width: 80%;
           padding: 10px 0 50px 30px;
         }
-        @media #{$sm,$xs}{
+        @media #{variables.$sm,variables.$xs}{
           width: 100%;
         }
-        @media #{$xxs}{
+        @media #{variables.$xxs}{
           width: 100%;
           padding: 10px;
         }
@@ -55,29 +55,29 @@
           color: #ffffff;
           font-family: "Poppins", sans-serif !important;
           letter-spacing: 2px;
-          @media #{$laptop}{
+          @media #{variables.$laptop}{
             font-size: 50px;
           }
-          @media #{$lg,$md}{
+          @media #{variables.$lg,variables.$md}{
             font-size: 45px;
           }
-          @media #{$sm}{
+          @media #{variables.$sm}{
             font-size: 35px;
           }
-          @media #{$xxs,$xs}{
+          @media #{variables.$xxs,variables.$xs}{
             font-size: 20px;
           }
         }
         .text {
           color: #ffffff;
           font-size: 20px;
-          @media #{$laptop}{
+          @media #{variables.$laptop}{
             font-size: 15px;
           }
-          @media #{$lg,$md}{
+          @media #{variables.$lg,variables.$md}{
             font-size: 12px;
           }
-          @media #{$sm,$xxs,$xs}{
+          @media #{variables.$sm,variables.$xxs,variables.$xs}{
             display: none;
           }
         }
@@ -91,13 +91,13 @@
       height: 20px;
     }
     .dx-gallery-indicator-item {
-      border: $theme-color;
+      border: variables.$theme-color;
     }
     .dx-gallery-indicator-item-selected {
-      background: $theme-color;
+      background: variables.$theme-color;
     }
     .dx-state-focused.dx-gallery .dx-gallery-indicator-item-selected {
-      background: $theme-color;
+      background: variables.$theme-color;
     }
 
   }

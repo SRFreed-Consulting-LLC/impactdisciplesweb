@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .seminars {
   &__overview {
@@ -7,7 +7,7 @@
     align-items: center;
     padding: 50px;
     text-align: center;
-    @media #{$xxs}{
+    @media #{variables.$xxs}{
       padding: 25px;
     }
   }
@@ -15,27 +15,27 @@
     display: flex;
     justify-content: center;
     background-color: #1c1c1c;
-    @media #{$sm,$xxs,$xs}{
+    @media #{variables.$sm,variables.$xxs,variables.$xs}{
       flex-direction: column;
     }
     .item {
       display: flex;
       flex-direction: column;
       line-height: 1.4;
-      border: 1px solid $theme-color;
+      border: 1px solid variables.$theme-color;
       margin: 30px;
       padding: 30px 50px;
-      @media #{$sm,$xxs,$xs}{
+      @media #{variables.$sm,variables.$xxs,variables.$xs}{
         padding: 10px 14px;
         margin: 20px;
       }
 
       .title {
         font-size: 28px;
-        color: $theme-color;
+        color: variables.$theme-color;
         text-align: center;
         margin-bottom: 10px;
-        @media #{$sm,$xxs,$xs}{
+        @media #{variables.$sm,variables.$xxs,variables.$xs}{
           font-size: 25px;
         }
       }
@@ -49,7 +49,7 @@
         display: block;
         position: static;
         text-align: center;
-        @media #{$sm,$xxs,$xs}{
+        @media #{variables.$sm,variables.$xxs,variables.$xs}{
           font-size: 60px;
         }
       }
@@ -64,16 +64,16 @@
     justify-content: center;
     align-items: center;
 
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       flex-direction: column;
       margin: 20px;
     }
-    @media #{$sm,$md} {
+    @media #{variables.$sm,variables.$md} {
       margin-top: 50px;
     }
 
     .content {
-      @media #{$sm,$md} {
+      @media #{variables.$sm,variables.$md} {
         padding: 25px;
       }
       h1 {
@@ -81,14 +81,14 @@
         font-size: 50px;
         display: inline;
         white-space: nowrap;
-        @media #{$xxs,$xs} {
+        @media #{variables.$xxs,variables.$xs} {
           font-size: 30px;
         }
-        @media #{$sm,$md} {
+        @media #{variables.$sm,variables.$md} {
           font-size: 40px;
         }
         strong {
-          color: $theme-color;
+          color: variables.$theme-color;
         }
       }
     }
@@ -96,11 +96,11 @@
     .video {
       width: 50%;
       padding: 50px;
-      @media #{$xxs}, #{$xs} {
+      @media #{variables.$xxs}, #{variables.$xs} {
         width: 100%;
         padding: 0;
       }
-      @media #{$sm,$md} {
+      @media #{variables.$sm,variables.$md} {
         padding: 20px;
       }
 
@@ -134,7 +134,7 @@
     }
   }
   &__missions {
-    @media #{$xxs,$xs}{
+    @media #{variables.$xxs,variables.$xs}{
       margin-bottom: 15px;
     }
     .main-title {
@@ -143,22 +143,22 @@
       width: 100%;
       text-align: center;
       line-height: 1.4;
-      @media #{$xxs,$xs}{
+      @media #{variables.$xxs,variables.$xs}{
         font-size: 38px;
         margin-bottom: 35px;
       }
-      @media #{$sm,$md} {
+      @media #{variables.$sm,variables.$md} {
         font-size: 60px;
       }
-      @media #{$lg} {
+      @media #{variables.$lg} {
         font-size: 75px;
       }
       strong {
-        background-color: $theme-color-2;
+        background-color: variables.$theme-color-2;
         font-weight: 900;
         color: #fff;
         padding: 0 30px 15px 30px;
-        @media #{$xxs,$xs} {
+        @media #{variables.$xxs,variables.$xs} {
           padding: 0 15px 5px 15px;
         }
       } 
@@ -172,7 +172,7 @@
       > div {
         flex: 0 0 calc((100% - 15px * 3) / 2);
       }
-      @media #{$xxs,$xs}{
+      @media #{variables.$xxs,variables.$xs}{
         margin: 0;
         gap: 10px;
         > div {
@@ -180,14 +180,14 @@
           flex-direction: column;
         }
       }
-      @media #{$sm,$md} {
+      @media #{variables.$sm,variables.$md} {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 15px;
         margin: 50px 10px;
         align-items: stretch;
       }
-      @media #{$lg} {
+      @media #{variables.$lg} {
         margin: 50px 10px;
       }
       &__item {
@@ -198,10 +198,10 @@
         border-radius: 10px;
         box-sizing: border-box;
         gap: 7px;
-        @media #{$xxs,$xs}{
+        @media #{variables.$xxs,variables.$xs}{
           border-radius: 0;
         }
-         @media #{$sm,$md} {
+         @media #{variables.$sm,variables.$md} {
           height: 100%;
           display: flex;
           flex-direction: column;
@@ -210,17 +210,17 @@
           border-radius: 10px 0 0 10px;
           height: 175px;
           width: 175px;
-          @media #{$xxs,$xs}{
+          @media #{variables.$xxs,variables.$xs}{
             border-radius: 0;
             height: auto;
             width: 100%;
           }
-          @media #{$sm,$md} {
+          @media #{variables.$sm,variables.$md} {
             width: 100%;
             height: auto;
             border-radius: 10px 10px 0 0;
           }
-          @media #{$lg} {
+          @media #{variables.$lg} {
             width: 200px;
             height: 200px;
           }
@@ -231,10 +231,10 @@
           justify-content: space-around;
           height: 100%;
           padding: 15px;
-          @media #{$xxs,$xs} {
+          @media #{variables.$xxs,variables.$xs} {
             padding: 10px;
           }
-          @media #{$sm,$md} {
+          @media #{variables.$sm,variables.$md} {
             flex: 1 1 auto; 
             display: flex;
             flex-direction: column;
@@ -242,23 +242,23 @@
           &__title {
             font-size: 22px;
             font-weight: 800;
-            color: $theme-color;
+            color: variables.$theme-color;
             text-transform: uppercase;
-            @media #{$xxs} {
+            @media #{variables.$xxs} {
               font-size: 18px;
             }
-            @media #{$xs,$sm} {
+            @media #{variables.$xs,variables.$sm} {
               font-size: 20px;
             }
           }
           &__description {
             color: #ffffff;
             font-size: 12px;
-            @media #{$xxs} {
+            @media #{variables.$xxs} {
               font-size: 10px;
               line-height: 15px;
             }
-            @media #{$xs,$sm} {
+            @media #{variables.$xs,variables.$sm} {
               font-size: 12px;
               line-height: 15px;
             }
@@ -278,14 +278,14 @@
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;
-      @media #{$xxs,$xs,$sm} {
+      @media #{variables.$xxs,variables.$xs,variables.$sm} {
         flex-direction: column;
       }
       &__details {
         width: 100%;
         text-align: center;
         padding: 25px;
-        @media #{$xxs,$xs,$sm} {
+        @media #{variables.$xxs,variables.$xs,variables.$sm} {
           padding: 0;
         }
         .title {
@@ -321,6 +321,6 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: $theme-color;
+    background: variables.$theme-color;
   }
 }

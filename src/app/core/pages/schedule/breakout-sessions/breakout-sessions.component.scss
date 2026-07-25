@@ -1,4 +1,4 @@
-@import '../../../../../assets/styles/variables.scss';
+@use '../../../../../assets/styles/variables.scss';
 
 .sessions {
   height: 85vh;
@@ -13,7 +13,7 @@
       font-weight: 300;
       margin-bottom: 15px;
       padding: 10px 0 10px 10px;
-      background-color: $primary;
+      background-color: variables.$primary;
       border-radius: 5px;
       color: #fff;
     }
@@ -42,7 +42,7 @@
         &.not-first-child {
           .session-item {
             background-color: #f0f0f0;
-            border: 1px solid $border;
+            border: 1px solid variables.$border;
           }
         }
 
@@ -56,7 +56,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      border: 1px solid $border;
+      border: 1px solid variables.$border;
       min-height: 130px;
       min-width: 130px;
       max-width: 130px;
@@ -96,12 +96,12 @@
     font-weight: 300;
     margin-bottom: 15px;
     padding: 10px 0 10px 10px;
-    background-color: $primary;
+    background-color: variables.$primary;
     border-radius: 5px;
     color: #fff;
   }
   &__item {
-    border: 1px solid $border;
+    border: 1px solid variables.$border;
     border-radius: 10px;
     margin-bottom: 20px;
     background-color: rgba(91, 189, 255, 0.5607843137);
@@ -183,7 +183,7 @@
     &-add {
       width: 100%;
       color: #ffffff;
-      background-color: $primary;
+      background-color: variables.$primary;
     }
   }
   .coaches {
@@ -210,7 +210,7 @@
     .coach {
       display: flex;
       background-color: #ffffff;
-      border: 1px solid $border;
+      border: 1px solid variables.$border;
       border-radius: 10px;
       padding: 5px 20px 5px 5px;
       align-items: center;
@@ -237,7 +237,7 @@
   //   background-color: #f3f3f375;
   // }
   .dx-popup-title.dx-toolbar {
-    background-color: $primary;
+    background-color: variables.$primary;
     .dx-button-mode-text .dx-icon {
       color: #fff;
     }

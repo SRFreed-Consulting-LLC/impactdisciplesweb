@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'theme-breadcrumb-one',
-  templateUrl: './breadcrumb-one.component.html',
-  styleUrls: ['./breadcrumb-one.component.scss']
+    selector: 'theme-breadcrumb-one',
+    templateUrl: './breadcrumb-one.component.html',
+    styleUrls: ['./breadcrumb-one.component.scss'],
+    standalone: false
 })
 export class BreadcrumbOneComponent {
   @Input() bg?: string;

@@ -9,9 +9,10 @@ import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-co
 import notify from 'devextreme/ui/notify';
 
 @Component({
-  selector: 'app-seminars',
-  templateUrl: './seminars.component.html',
-  styleUrls: ['./seminars.component.scss']
+    selector: 'app-seminars',
+    templateUrl: './seminars.component.html',
+    styleUrls: ['./seminars.component.scss'],
+    standalone: false
 })
 export class SeminarsComponent implements OnInit {
   isPlaying: boolean = false;

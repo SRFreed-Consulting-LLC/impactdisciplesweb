@@ -1,4 +1,4 @@
-@import '../../../../../assets/theme/scss/variables';
+@use '../../../../../assets/theme/scss/variables';
 
 .podcast-item {
   display: flex;
@@ -9,7 +9,7 @@
       object-fit: contain;
       display: block;
       padding: 10px;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         width: 100%;
         height: 125px;
       }

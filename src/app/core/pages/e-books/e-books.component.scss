@@ -1,11 +1,11 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 ::ng-deep .e-books {
   &__container {
     display: flex;
     padding: 50px;
 
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       flex-direction: column;
       padding: 10px;
     }
@@ -21,7 +21,7 @@
       padding: 25px 50px;
       background: #fff;
       align-items: stretch;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         gap: 15px;
         margin: 10px 0 0 0;
         padding: 0; 
@@ -30,7 +30,7 @@
     }
     &-pagination {
       margin: 20px 50px;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         margin: 20px 5px;
       }
       li {

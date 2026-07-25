@@ -8,9 +8,10 @@ import { ProductService } from 'impactdisciplescommon/src/services/data/product.
 import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
 
 @Component({
-  selector: 'app-store-sidebar',
-  templateUrl: './store-sidebar.component.html',
-  styleUrls: ['./store-sidebar.component.scss']
+    selector: 'app-store-sidebar',
+    templateUrl: './store-sidebar.component.html',
+    styleUrls: ['./store-sidebar.component.scss'],
+    standalone: false
 })
 export class StoreSidebarComponent implements OnInit, OnDestroy {
   @Input() showSeriesInSidebar = false;

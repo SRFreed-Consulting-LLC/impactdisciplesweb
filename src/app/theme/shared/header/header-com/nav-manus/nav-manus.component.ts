@@ -4,9 +4,10 @@ import { IMenuType } from '../../../types/menu-d-t';
 
 
 @Component({
-  selector: 'theme-nav-manus',
-  templateUrl: './nav-manus.component.html',
-  styleUrls: ['./nav-manus.component.scss']
+    selector: 'theme-nav-manus',
+    templateUrl: './nav-manus.component.html',
+    styleUrls: ['./nav-manus.component.scss'],
+    standalone: false
 })
 export class NavManusComponent {
   public menu_data:IMenuType[] = menuData;

@@ -19,14 +19,14 @@ import { NgxsModule } from '@ngxs/store';
     BrowserModule,
     AppRoutingModule,
     NgxsModule.forRoot([], { developmentMode: !environment.production }),
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideFirestore(() => getFirestore()),
     CoreModule,
     SharedModule,
     ThemeSharedModule
   ],
   providers: [
-    CookieService
+    CookieService,
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideFirestore(() => getFirestore())
   ],
   bootstrap: [AppComponent]
 })

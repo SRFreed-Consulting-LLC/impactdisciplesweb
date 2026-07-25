@@ -3,9 +3,10 @@ import { TestimonialModel } from 'impactdisciplescommon/src/models/domain/testim
 import { TestimonialService } from 'impactdisciplescommon/src/services/data/testimonial.service';
 
 @Component({
-  selector: 'app-customer-reviews',
-  templateUrl: './customer-reviews.component.html',
-  styleUrls: ['./customer-reviews.component.scss']
+    selector: 'app-customer-reviews',
+    templateUrl: './customer-reviews.component.html',
+    styleUrls: ['./customer-reviews.component.scss'],
+    standalone: false
 })
 export class CustomerReviewsComponent implements OnInit {
 

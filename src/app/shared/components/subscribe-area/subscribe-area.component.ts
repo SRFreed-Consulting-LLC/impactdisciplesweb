@@ -4,9 +4,10 @@ import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/do
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 
 @Component({
-  selector: 'app-subscribe-area',
-  templateUrl: './subscribe-area.component.html',
-  styleUrls: ['./subscribe-area.component.scss']
+    selector: 'app-subscribe-area',
+    templateUrl: './subscribe-area.component.html',
+    styleUrls: ['./subscribe-area.component.scss'],
+    standalone: false
 })
 export class SubscribeAreaComponent {
   subscription: NewsletterSubscriptionModel = {... new NewsletterSubscriptionModel()};

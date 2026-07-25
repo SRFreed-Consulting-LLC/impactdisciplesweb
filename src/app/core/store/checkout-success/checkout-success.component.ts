@@ -19,9 +19,10 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-checkout-success',
-  templateUrl: './checkout-success.component.html',
-  styleUrls: ['./checkout-success.component.scss']
+    selector: 'app-checkout-success',
+    templateUrl: './checkout-success.component.html',
+    styleUrls: ['./checkout-success.component.scss'],
+    standalone: false
 })
 export class CheckoutSuccessComponent implements AfterViewInit{
 

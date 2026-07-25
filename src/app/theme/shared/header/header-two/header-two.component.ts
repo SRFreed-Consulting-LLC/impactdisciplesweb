@@ -3,9 +3,10 @@ import { CartService } from '../../services/cart.service';
 import { UtilsService } from '../../services/utils.service';
 
 @Component({
-  selector: 'theme-header-two',
-  templateUrl: './header-two.component.html',
-  styleUrls: ['./header-two.component.scss']
+    selector: 'theme-header-two',
+    templateUrl: './header-two.component.html',
+    styleUrls: ['./header-two.component.scss'],
+    standalone: false
 })
 export class HeaderTwoComponent {
 

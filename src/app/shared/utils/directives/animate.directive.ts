@@ -1,7 +1,8 @@
 import { Directive, ElementRef, Renderer2, Input, OnInit } from '@angular/core';
 
 @Directive({
-  selector: '[animate]'
+    selector: '[animate]',
+    standalone: false
 })
 export class AnimateDirective implements OnInit {
   @Input('animate') animationClass: string = 'fadeInUp'; // Default animation class

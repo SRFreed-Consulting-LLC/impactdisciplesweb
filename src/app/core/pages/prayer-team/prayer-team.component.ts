@@ -4,9 +4,10 @@ import { PrayerTeamSubscriptionModel } from 'impactdisciplescommon/src/models/do
 import { PrayerTeamSubscriptionService } from 'impactdisciplescommon/src/services/data/prayer-team-subscription.service';
 
 @Component({
-  selector: 'app-prayer-team',
-  templateUrl: './prayer-team.component.html',
-  styleUrls: ['./prayer-team.component.scss']
+    selector: 'app-prayer-team',
+    templateUrl: './prayer-team.component.html',
+    styleUrls: ['./prayer-team.component.scss'],
+    standalone: false
 })
 export class PrayerTeamComponent {
   prayerTeamSubscription: PrayerTeamSubscriptionModel = {... new PrayerTeamSubscriptionModel()};

@@ -4,9 +4,10 @@ import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-co
 import { UtilsService } from 'src/app/theme/shared/services/utils.service';
 
 @Component({
-  selector: 'app-equipping-groups-pastors',
-  templateUrl: './equipping-groups-pastors.component.html',
-  styleUrls: ['./equipping-groups-pastors.component.scss']
+    selector: 'app-equipping-groups-pastors',
+    templateUrl: './equipping-groups-pastors.component.html',
+    styleUrls: ['./equipping-groups-pastors.component.scss'],
+    standalone: false
 })
 export class EquippingGroupsPastorsComponent  {
   public webConfig: WebConfigModel = new WebConfigModel();

@@ -1,4 +1,4 @@
-@import '../../../../../assets/theme/scss/variables';
+@use '../../../../../assets/theme/scss/variables';
 
 .product {
   display: flex;
@@ -7,7 +7,7 @@
   background: #fff;
   border-radius: 5px;
 
-  @media #{$xxs,$xs} { 
+  @media #{variables.$xxs,variables.$xs} { 
     border-radius: 0; 
     margin: 10px;
   }
@@ -32,7 +32,7 @@
       display: block;
       padding: 10px;
       border-radius: 10px 10px 0 0;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         width: 100%;
         height: 125px;
       }
@@ -48,13 +48,13 @@
     gap: 7px;
     background: #1c1c1c;
     padding: 0 5px 20px;
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       gap: 0;
     }
 
     h5 { 
       font-size: 28px; 
-      color: $theme-color; 
+      color: variables.$theme-color; 
     }
     h4 { 
       font-weight: 600; 
@@ -63,7 +63,7 @@
       padding: 0 20px; 
       height: 3em;
       width: 250px;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         height: auto;
         width: 215px;
         margin-bottom: 10px;
@@ -82,7 +82,7 @@
       margin-top: auto;
       display: flex;
       gap: 10px;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         flex-direction: column;
         width: 100%;
       }

@@ -17,9 +17,10 @@ interface GroupedAgendaItem {
 }
 
 @Component({
-  selector: 'app-summit',
-  templateUrl: './summit.component.html',
-  styleUrls: ['./summit.component.scss']
+    selector: 'app-summit',
+    templateUrl: './summit.component.html',
+    styleUrls: ['./summit.component.scss'],
+    standalone: false
 })
 export class SummitComponent implements OnInit, OnDestroy {
 

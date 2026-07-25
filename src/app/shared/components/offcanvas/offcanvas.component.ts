@@ -4,9 +4,10 @@ import { MobileMenuModel } from '../../../../../impactdisciplescommon/src/models
 import { mobileMenuData } from '../../../../../impactdisciplescommon/src/services/data/nav-menu-data';
 
 @Component({
-  selector: 'app-offcanvas',
-  templateUrl: './offcanvas.component.html',
-  styleUrls: ['./offcanvas.component.scss']
+    selector: 'app-offcanvas',
+    templateUrl: './offcanvas.component.html',
+    styleUrls: ['./offcanvas.component.scss'],
+    standalone: false
 })
 
 export class OffcanvasComponent {

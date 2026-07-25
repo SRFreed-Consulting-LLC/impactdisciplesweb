@@ -3,9 +3,10 @@ import { HomePageImageModel } from 'impactdisciplescommon/src/models/domain/home
 import { HomePageImageService } from 'impactdisciplescommon/src/services/data/home-page-images.service';
 
 @Component({
-  selector: 'app-home-header-slider',
-  templateUrl: './home-header-slider.component.html',
-  styleUrls: ['./home-header-slider.component.scss']
+    selector: 'app-home-header-slider',
+    templateUrl: './home-header-slider.component.html',
+    styleUrls: ['./home-header-slider.component.scss'],
+    standalone: false
 })
 export class HomeHeaderSliderComponent implements OnInit{
   public images: HomePageImageModel[] = [];

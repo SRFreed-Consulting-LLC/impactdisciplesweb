@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 ::ng-deep .checkout {
   &__customer-info {
@@ -9,7 +9,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         flex-direction: column;
       }
       .info {
@@ -25,7 +25,7 @@
       .customer-details {
         display: flex;
         gap: 10px;
-        @media #{$xxs,$xs} {
+        @media #{variables.$xxs,variables.$xs} {
           flex-direction: column;
         }
       }
@@ -47,11 +47,11 @@
       .order-total {
         font-size: 25px;
         border-bottom: none !important;
-        @media #{$xxs,$xs} {
+        @media #{variables.$xxs,variables.$xs} {
           font-size: 18px;
         }
         &__amount {
-          color: $theme-color;
+          color: variables.$theme-color;
         }
       }
       .tag-icon {
@@ -81,14 +81,14 @@
   }
   .checkbox {
     .dx-field-item-label-text {
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         overflow-wrap: break-word;
         word-break: break-word;
         white-space: normal;
       }
     }
     .dx-field-item-content {
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         width: fit-content;
         flex-grow: 0 !important;
       }

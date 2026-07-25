@@ -4,9 +4,10 @@ import { PodCastService } from 'impactdisciplescommon/src/services/data/pod-cast
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-podcast-sidebar',
-  templateUrl: './podcast-sidebar.component.html',
-  styleUrls: ['./podcast-sidebar.component.scss']
+    selector: 'app-podcast-sidebar',
+    templateUrl: './podcast-sidebar.component.html',
+    styleUrls: ['./podcast-sidebar.component.scss'],
+    standalone: false
 })
 export class PodcastSidebarComponent implements OnInit, OnDestroy {
   @Output() searchEvent = new EventEmitter<string>();

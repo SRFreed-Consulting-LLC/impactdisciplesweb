@@ -8,9 +8,10 @@ import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-co
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-podcasts',
-  templateUrl: './podcasts.component.html',
-  styleUrls: ['./podcasts.component.scss']
+    selector: 'app-podcasts',
+    templateUrl: './podcasts.component.html',
+    styleUrls: ['./podcasts.component.scss'],
+    standalone: false
 })
 export class PodcastsComponent implements OnInit, OnDestroy {
   podcasts: PodCastModel[] = [];
