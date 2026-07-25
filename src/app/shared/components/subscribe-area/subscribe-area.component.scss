@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .subscribe {
   &__area {
@@ -10,17 +10,17 @@
   }
 
   &__title {
-    color: $white;
+    color: variables.$white;
     font-size: 70px;
     font-weight: 600;
-    @media #{$xxs} {
+    @media #{variables.$xxs} {
       font-size: 42px;
       padding: 0;
     }
   }
 
   &__description {
-    color: $grey-2;
+    color: variables.$grey-2;
     font-size: 18px;
   }
 
@@ -29,7 +29,7 @@
     justify-content: center;
     form {
       width: 50%;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         width: 100%;
       }
     }
@@ -41,8 +41,8 @@
   }
 
   &__button {
-    border: 1px solid $grey-2;
-    color: $grey-2;
+    border: 1px solid variables.$grey-2;
+    color: variables.$grey-2;
     background-color: #201f1f;
   }
 }

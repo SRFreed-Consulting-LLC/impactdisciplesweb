@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .dms {
   display: flex;
@@ -11,7 +11,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   margin: 20px 0;
-  @media #{$xxs,$xs} {
+  @media #{variables.$xxs,variables.$xs} {
     height: 175px;
     margin-top: 15px;
   }
@@ -23,16 +23,16 @@
     align-items: center;
     padding: 0 50px;
     gap: 20px;
-    @media #{$xxs} {
+    @media #{variables.$xxs} {
       flex-direction: column;
       padding: 0 10px;
       gap: 10px;
     }
-    @media #{$xs,$sm} {
+    @media #{variables.$xs,variables.$sm} {
       flex-direction: column;
       padding: 0 10px;
     }
-    @media #{$md} {
+    @media #{variables.$md} {
       padding: 0 34px;
     }
   }
@@ -41,13 +41,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    @media #{$xxs,$xs,$sm} {
+    @media #{variables.$xxs,variables.$xs,variables.$sm} {
       flex: 1;
       justify-content: end;
       margin-top: 10px;
       text-align: center;
     }
-    @media #{$md} {
+    @media #{variables.$md} {
       text-align: center;
     }
     h2 {
@@ -55,16 +55,16 @@
       font-weight: 900;
       color: #ffffff;
       letter-spacing: 2px;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         font-size: 18px;
         margin: 0;
       }
-      @media #{$sm,$md} {
+      @media #{variables.$sm,variables.$md} {
         font-size: 30px;
         margin: 0;
       }
       span {
-        color: $theme-color-2;
+        color: variables.$theme-color-2;
       }
     }
   }
@@ -81,20 +81,20 @@
       flex-direction: column;
       align-items: center;
       margin: 0 10px;
-      @media #{$xxs,$xs,$sm} {
+      @media #{variables.$xxs,variables.$xs,variables.$sm} {
         margin: 0px 10px;
       }
 
       .number {
         font-size: 45px; 
         font-weight: 800;
-        @media #{$xxs,$xs} {
+        @media #{variables.$xxs,variables.$xs} {
           font-size: 20px;
         }
-        @media #{$sm} {
+        @media #{variables.$sm} {
           font-size: 28px;
         }
-        @media #{$md} {
+        @media #{variables.$md} {
           font-size: 30px;
         }
       }
@@ -103,7 +103,7 @@
         font-size: 10px;
         margin-top: 10px;
         font-weight: 600;
-        @media #{$xxs,$xs,$sm} {
+        @media #{variables.$xxs,variables.$xs,variables.$sm} {
           font-size: 8px;
           margin-top: 0px;
         }
@@ -114,7 +114,7 @@
       font-size: 45px;
       font-weight: bold;
       margin-bottom: 35px;
-      @media #{$xxs,$xs,$sm} {
+      @media #{variables.$xxs,variables.$xs,variables.$sm} {
         font-size: 30px;
         margin-bottom: 24px;
       }
@@ -124,12 +124,12 @@
     flex: 2;
     display: flex;
     justify-content: flex-end;
-    @media #{$xxs,$xs,$sm} {
+    @media #{variables.$xxs,variables.$xs,variables.$sm} {
       flex: 1;
       width: 80%;
       margin-top: 10px;
     }
-    @media #{$md} {
+    @media #{variables.$md} {
       margin-left: 25px;
     }
   }

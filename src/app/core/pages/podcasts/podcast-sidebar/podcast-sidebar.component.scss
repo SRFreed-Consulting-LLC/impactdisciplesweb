@@ -1,4 +1,4 @@
-@import '../../../../../assets/theme/scss/variables';
+@use '../../../../../assets/theme/scss/variables';
 
 .podcast-sidebar {
   &__item {
@@ -21,7 +21,7 @@
   }
   
   .sidebar__widget-title {
-    border-bottom: 1px solid $border;
+    border-bottom: 1px solid variables.$border;
     padding-bottom: 10px;
   
   }

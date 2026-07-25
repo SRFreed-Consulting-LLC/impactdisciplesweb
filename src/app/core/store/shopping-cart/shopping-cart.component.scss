@@ -1,13 +1,13 @@
-@import '../../../../assets/styles/variables.scss';
+@use '../../../../assets/styles/variables.scss';
 
 .cart-area {
   .table-content {
-    @media #{$xxs,$xs,$sm} {
+    @media #{variables.$xxs,variables.$xs,variables.$sm} {
       overflow-x: visible;
     }
 
     .table {
-      @media #{$xxs,$xs,$sm} {
+      @media #{variables.$xxs,variables.$xs,variables.$sm} {
         thead {
           display: none;
         }
@@ -78,7 +78,7 @@
   }
 
   tfoot {
-    @media #{$xxs,$xs,$sm} {
+    @media #{variables.$xxs,variables.$xs,variables.$sm} {
       tr {
         display: flex;
         justify-content: space-between;

@@ -1,4 +1,4 @@
-@import '../../../../../assets/theme/scss/variables';
+@use '../../../../../assets/theme/scss/variables';
 :root {
   --border: 30px;
   --color1: #939393;
@@ -34,7 +34,7 @@
     width: 100%;
     background: conic-gradient(
       from 30deg,
-      $theme-color,
+      variables.$theme-color,
       #939393 46%,
       transparent 46%
     );
@@ -52,7 +52,7 @@
   .custom-hr {
     width: 200px; 
     border: 0;    
-    border-top: 6px solid $theme-color;  
+    border-top: 6px solid variables.$theme-color;  
     margin: 50px auto;
     opacity: 1;
   }

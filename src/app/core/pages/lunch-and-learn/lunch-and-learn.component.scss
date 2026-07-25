@@ -1,33 +1,33 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .lunch {
   &__overview {
     padding: 50px 100px 0 100px;
     text-align: center;
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       padding: 10px;
     }
-    @media #{$sm,$md} {
+    @media #{variables.$sm,variables.$md} {
       padding: 50px 50px 0 50px;
     }
     
     h2 {
       font-size: 50px;
       margin-bottom: 20px;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
        font-size: 40px;
       }
-      @media #{$sm,$md} {
+      @media #{variables.$sm,variables.$md} {
         font-size: 44px;
       }
     }
     p {
       line-height: 2em;
       font-size: 20px;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         font-size: 14px;
       }
-      @media #{$sm,$md} {
+      @media #{variables.$sm,variables.$md} {
         font-size: 16px;
       }
     }
@@ -37,7 +37,7 @@
     justify-content: center;
     align-items: center;
 
-    @media #{$xxs,$xs,$sm,$md} {
+    @media #{variables.$xxs,variables.$xs,variables.$sm,variables.$md} {
       flex-direction: column;
       margin: 20px;
       gap: 20px;
@@ -49,11 +49,11 @@
         font-size: 50px;
         text-align: center;
         white-space: nowrap;
-        @media #{$xxs,$xs} {
+        @media #{variables.$xxs,variables.$xs} {
           font-size: 30px;
         }
         strong {
-          color: $theme-color;
+          color: variables.$theme-color;
         }
       }
     }
@@ -61,7 +61,7 @@
     .video {
       width: 50%;
       padding: 50px;
-      @media #{$xxs,$xs,$sm,$md} {
+      @media #{variables.$xxs,variables.$xs,variables.$sm,variables.$md} {
         width: 100%;
         padding: 0;
       }
@@ -115,6 +115,6 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: $theme-color;
+    background: variables.$theme-color;
   }
 }

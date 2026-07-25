@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .services {
   display: flex;
@@ -9,7 +9,7 @@
   > div {
     flex: 0 0 calc((100% - 15px * 3) / 4);
   }
-  @media #{$xxs,$xs,$sm}{
+  @media #{variables.$xxs,variables.$xs,variables.$sm}{
     padding: 0;
     gap: 10px;
   }
@@ -22,19 +22,19 @@
     border-radius: 10px;
     box-sizing: border-box;
     gap: 7px;
-    @media #{$xxs,$xs,$sm}{
+    @media #{variables.$xxs,variables.$xs,variables.$sm}{
       border-radius: 0;
     }
     img {
       border-radius: 10px 0 0 10px;
       height: 175px;
       width: 175px;
-      @media #{$xxs,$xs}{
+      @media #{variables.$xxs,variables.$xs}{
         border-radius: 0;
         height: 125px;
         width: 125px;
       }
-      @media #{$sm}{
+      @media #{variables.$sm}{
         border-radius: 0;
         height: 175px;
         width: 175px;
@@ -46,40 +46,40 @@
       justify-content: space-around;
       height: 100%;
       padding: 15px;
-      @media #{$xxs,$xs,$sm} {
+      @media #{variables.$xxs,variables.$xs,variables.$sm} {
         padding: 10px;
         width: 100%;
       }
       .title {
         font-size: 22px;
         font-weight: 800;
-        color: $theme-color;
+        color: variables.$theme-color;
         text-transform: uppercase;
         line-height: 1em;
-        @media #{$sm} {
+        @media #{variables.$sm} {
           font-size: 26px;
         }
-        @media #{$xs} {
+        @media #{variables.$xs} {
           font-size: 18px;
         }
-        @media #{$xxs} {
+        @media #{variables.$xxs} {
           font-size: 13px;
         }
       }
       .description {
         color: #ffffff;
         font-size: 12px;
-        @media #{$xxs,$xs,$sm} {
+        @media #{variables.$xxs,variables.$xs,variables.$sm} {
           font-size: 10px;
           line-height: 15px;
         }
-        @media #{$sm} {
+        @media #{variables.$sm} {
           font-size: 13px;
           line-height: 15px;
         }
       }
       a {
-        @media #{$xxs} {
+        @media #{variables.$xxs} {
           font-size: 9px;
           padding: 0;
           line-height: 24px;
@@ -90,13 +90,13 @@
     }
   }
 
-  @media #{$md,$lg,$laptop} {
+  @media #{variables.$md,variables.$lg,variables.$laptop} {
     > div {
       flex: 0 0 calc((100% - 15px) / 2);
     }
   }
 
-  @media #{$xxs,$xs,$sm} {
+  @media #{variables.$xxs,variables.$xs,variables.$sm} {
     > div {
       flex: 0 0 100%;
     }

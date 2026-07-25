@@ -1,4 +1,4 @@
-@import '../../../../../assets/styles/variables.scss';
+@use '../../../../../assets/styles/variables.scss';
 
 .course-popup-content {
   text-align: center;
@@ -32,7 +32,7 @@
     &-add {
       width: 100%;
       color: #ffffff;
-      background-color: $primary;
+      background-color: variables.$primary;
     }
   }
   .coaches {
@@ -59,7 +59,7 @@
     .coach {
       display: flex;
       background-color: #ffffff;
-      border: 1px solid $border;
+      border: 1px solid variables.$border;
       border-radius: 10px;
       padding: 5px 20px 5px 5px;
       align-items: center;
@@ -86,7 +86,7 @@
   //   background-color: #f3f3f375;
   // }
   .dx-popup-title.dx-toolbar {
-    background-color: $primary;
+    background-color: variables.$primary;
     .dx-button-mode-text .dx-icon {
       color: #fff;
     }

@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .summit {
   &__container {
@@ -11,25 +11,25 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    @media #{$xxs} {
+    @media #{variables.$xxs} {
       height: 200px;
       background-position: top;
       background-repeat: no-repeat;
       background-size: contain;
     }
-    @media #{$xs} {
+    @media #{variables.$xs} {
       height: 250px;
       background-position: top;
       background-repeat: no-repeat;
       background-size: contain;
     }
-    @media #{$sm} {
+    @media #{variables.$sm} {
       height: 300px;
       background-position: top;
       background-repeat: no-repeat;
       background-size: contain;
     }
-    @media #{$md} {
+    @media #{variables.$md} {
       height: 400px;
       background-position: top;
       background-repeat: no-repeat;
@@ -74,7 +74,7 @@
 
   .story {
     &__title {
-      color: $black;
+      color: variables.$black;
       font-size: 36px;
 
       strong {
@@ -154,14 +154,14 @@
     flex-direction: column;
     align-items: center;
     margin: 0 30px;
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       margin: 0px 10px;
     }
 
     .number {
       font-size: 70px;
       font-weight: 800;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         font-size: 30px;
       }
     }
@@ -170,7 +170,7 @@
       font-size: 16px;
       margin-top: 25px;
       font-weight: 600;
-      @media #{$xxs,$xs} {
+      @media #{variables.$xxs,variables.$xs} {
         font-size: 12px;
         margin-top: 0px;
       }
@@ -181,7 +181,7 @@
     font-size: 70px;
     font-weight: bold;
     margin-bottom: 50px;
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       font-size: 30px;
       margin-bottom: 24px;
     }

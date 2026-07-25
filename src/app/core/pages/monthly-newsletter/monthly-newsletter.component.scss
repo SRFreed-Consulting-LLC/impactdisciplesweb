@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/scss/variables';
+@use '../../../../assets/theme/scss/variables';
 
 .blog {
   &__container {
@@ -7,12 +7,12 @@
   }
   &__header {
     height: 480px;
-    @media #{$xxs,$xs} {
+    @media #{variables.$xxs,variables.$xs} {
       height: 150px;
       background-size: contain;
     }
     &__pretitle {
-      color: $theme-color;
+      color: variables.$theme-color;
       font-size: 20px;
     }
     &__title {
@@ -32,7 +32,7 @@
   .custom-hr {
     width: 200px;
     border: 0;
-    border-top: 6px solid $theme-color;
+    border-top: 6px solid variables.$theme-color;
     opacity: 1;
   }
 }
