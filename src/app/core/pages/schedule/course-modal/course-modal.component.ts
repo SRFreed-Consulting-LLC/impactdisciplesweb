@@ -1,19 +1,17 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Actions, ofActionDispatched, Store } from '@ngxs/store';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CourseModel } from 'impactdisciplescommon/src/models/domain/course.model';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ShowCourseModal } from './course-modal.actions';
 import { TrainingRoomModel } from 'impactdisciplescommon/src/models/domain/training-room.model';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
 import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { confirm } from 'devextreme/ui/dialog';
-import { ResetSchedule } from '../schedule.actions';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { ScheduleModel } from 'impactdisciplescommon/src/models/utils/schedule.model';
 import { ScheduleService } from 'impactdisciplescommon/src/services/utils/schedule.service';
+import { ScheduleEventBusService } from '../schedule-event-bus.service';
 
 export interface CourseItem {
   course: CourseModel;
@@ -26,7 +24,7 @@ export interface CourseItem {
     styleUrls: ['./course-modal.component.scss'],
     standalone: false
 })
-export class CourseModalComponent implements OnInit, OnDestroy {
+export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
   @Input() allCourses: ScheduleModel[];
   @Input('event') event: EventModel;
   @Input('courses') coursesList: CourseModel[] = [];
@@ -37,21 +35,27 @@ export class CourseModalComponent implements OnInit, OnDestroy {
   currentUser: CustomerModel | EventRegistrationModel;
   @Output() courseUpdated: EventEmitter<any> = new EventEmitter<any>();
 
+  // Looked up by id from the template on every change-detection cycle --
+  // Maps give O(1) lookups instead of re-scanning the full list with
+  // .find() each time. Rebuilt in ngOnChanges (covers @Input updates) and
+  // again after the showCourseModal subscribe below (covers the
+  // programmatic reassignment of coachesList/roomsList there).
+  private coachesMap = new Map<string, CoachModel>();
+  private roomsMap = new Map<string, TrainingRoomModel>();
+
   public isVisible$ = new BehaviorSubject<boolean>(false);
 
   private ngUnsubscribe = new Subject<void>();
 
   constructor(
-    private store: Store,
-    private actions$: Actions,
+    private scheduleEventBus: ScheduleEventBusService,
     private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService){}
 
   async ngOnInit(): Promise<void> {
-    this.actions$.pipe(
-      ofActionDispatched(ShowCourseModal),
+    this.scheduleEventBus.showCourseModal.pipe(
       takeUntil(this.ngUnsubscribe)
-    ).subscribe(({ customAgendaItem, course, currentUser, event, allCourses, coachesList, roomsList }: ShowCourseModal) => {
+    ).subscribe(({ customAgendaItem, course, currentUser, event, allCourses, coachesList, roomsList }) => {
       this.customAgendaItem = customAgendaItem;
       this.courseItem = course;
       this.currentUser = currentUser;
@@ -59,54 +63,40 @@ export class CourseModalComponent implements OnInit, OnDestroy {
       this.allCourses = allCourses;
       this.coachesList = coachesList;
       this.roomsList = roomsList;
+      this.rebuildLookupMaps();
       this.isVisible$.next(true);
     })
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['coachesList'] || changes['roomsList']) {
+      this.rebuildLookupMaps();
+    }
+  }
+
+  private rebuildLookupMaps(): void {
+    this.coachesMap = new Map((this.coachesList || []).map(coach => [coach.id, coach]));
+    this.roomsMap = new Map((this.roomsList || []).map(room => [room.id, room]));
   }
 
   getCapacity(){
     return this.scheduleService.traininlist.get(this?.customAgendaItem?.item.id)?.length;
   }
 
-
   getRoomName(id: string){
-    let room: TrainingRoomModel = this.roomsList.find(item => item.id == id);
-
-    if(room){
-      return room.name
-    } else {
-      return '';
-    }
+    return this.roomsMap.get(id)?.name || '';
   }
 
   getCoachImg(id: string){
-    let coach: CoachModel = this.coachesList.find(item => item.id == id);
-
-    if(coach){
-      return coach.photoUrl.url
-    } else {
-      return '';
-    }
+    return this.coachesMap.get(id)?.photoUrl.url || '';
   }
 
   getCoachName(id: string){
-    let coach: CoachModel = this.coachesList.find(item => item.id == id);
-
-    if(coach){
-      return coach.fullname
-    } else {
-      return '';
-    }
+    return this.coachesMap.get(id)?.fullname || '';
   }
 
-
   getCoachTitle(id: string){
-    let coach: CoachModel = this.coachesList.find(item => item.id == id);
-
-    if(coach){
-      return coach.title
-    } else {
-      return '';
-    }
+    return this.coachesMap.get(id)?.title || '';
   }
 
   addCourse(course: AgendaItem) {
@@ -129,7 +119,7 @@ export class CourseModalComponent implements OnInit, OnDestroy {
             this.eventRegistrationService
               .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
               .then(() => {
-                this.store.dispatch(new ResetSchedule());
+                this.scheduleEventBus.dispatchResetSchedule();
                 this.isVisible$.next(false);
               });
           });
@@ -140,7 +130,7 @@ export class CourseModalComponent implements OnInit, OnDestroy {
       this.eventRegistrationService
         .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
-          this.store.dispatch(new ResetSchedule());
+          this.scheduleEventBus.dispatchResetSchedule();
           this.isVisible$.next(false);
         });
     }
@@ -152,7 +142,7 @@ export class CourseModalComponent implements OnInit, OnDestroy {
         this.eventRegistrationService
         .unregisterForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
-          this.store.dispatch(new ResetSchedule());
+          this.scheduleEventBus.dispatchResetSchedule();
           this.isVisible$.next(false)
         });
       }

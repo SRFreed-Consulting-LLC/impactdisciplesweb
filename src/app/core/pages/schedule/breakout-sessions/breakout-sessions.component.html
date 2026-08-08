@@ -51,7 +51,7 @@
                           <div class="coaches__wrapper">
                             <div *ngFor="let coach of course?.item.coaches" class="coach">
                               <div class="coach__img">
-                                <img class="transform" [src]="getCoachImg(coach)" [alt]="getCoachName(coach)" width="40">
+                                <img loading="lazy" class="transform" [src]="getCoachImg(coach)" [alt]="getCoachName(coach)" width="40">
                               </div>
                               <div class="coach__details">
                                 <div class="name">{{ getCoachName(coach) }}</div>

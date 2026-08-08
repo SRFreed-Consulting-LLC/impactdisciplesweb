@@ -4,8 +4,6 @@ import { Tab } from 'impactdisciplescommon/src/models/utils/tab.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
-import { Actions, ofActionDispatched, Store } from '@ngxs/store';
-import { ResetSchedule } from './schedule.actions';
 import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
 import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
 import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
@@ -18,9 +16,8 @@ import { ScheduleModel, TimeGroupsModel } from 'impactdisciplescommon/src/models
 import { ScheduleService } from 'impactdisciplescommon/src/services/utils/schedule.service';
 import { AuthService } from 'impactdisciplespwacommon/src/services/events/auth.service';
 import { ActivatedRoute } from '@angular/router';
-import { ShowCourseModal } from './course-modal/course-modal.actions';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
-import { BreakoutSessionModal } from './breakout-sessions/breakout-sessions-modal.actions';
+import { ScheduleEventBusService } from './schedule-event-bus.service';
 import notify from 'devextreme/ui/notify';
 
 @Component({
@@ -42,6 +39,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   coachesList: CoachModel[] = [];
   roomsList: TrainingRoomModel[] = [];
 
+  // Looked up by id from the *ngFor template on every change-detection
+  // cycle (getCourse/getRoomName/getCoachName) -- Maps give O(1) lookups
+  // instead of re-scanning the full list with .find() each time.
+  private coursesMap = new Map<string, CourseModel>();
+  private coachesMap = new Map<string, CoachModel>();
+  private roomsMap = new Map<string, TrainingRoomModel>();
+
   private ngUnsubscribe = new Subject<void>();
 
   visible: boolean = false;
@@ -52,8 +56,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService,
-    private actions$: Actions,
-    private store: Store,
+    private scheduleEventBus: ScheduleEventBusService,
     private locationService: LocationService,
     private courseService: CourseService,
     private coachService: CoachService) { }
@@ -79,13 +82,17 @@ export class ScheduleComponent implements OnInit, OnDestroy {
               return location.trainingrooms;
             })
 
+            this.coursesMap = new Map(this.coursesList.map(course => [course.id, course]));
+            this.coachesMap = new Map(this.coachesList.map(coach => [coach.id, coach]));
+            this.roomsMap = new Map(this.roomsList.map(room => [room.id, room]));
+
             this.scheduleService.monitorBreakoutCapacity(this.event);
 
-            this.actions$.pipe(ofActionDispatched(ResetSchedule), takeUntil(this.ngUnsubscribe)).subscribe(async () => {
+            this.scheduleEventBus.resetSchedule.pipe(takeUntil(this.ngUnsubscribe)).subscribe(async () => {
               await this.updateSchedule();
             });
 
-            this.store.dispatch(new ResetSchedule());
+            this.scheduleEventBus.dispatchResetSchedule();
 
             this.visible = true;
           } else {
@@ -141,7 +148,16 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   onNavigateToBreakouts(timeGroup: TimeGroupsModel) {
-    this.store.dispatch(new BreakoutSessionModal(this.allCourses, this.myCourses, this.currentUser, this.event, this.coursesList, this.coachesList, this.roomsList, timeGroup));
+    this.scheduleEventBus.dispatchShowBreakoutSessionsModal({
+      allCourses: this.allCourses,
+      myCourses: this.myCourses,
+      currentUser: this.currentUser,
+      event: this.event,
+      coursesList: this.coursesList,
+      coachesList: this.coachesList,
+      roomsList: this.roomsList,
+      timeGroup: timeGroup
+    });
   }
 
   isAnyItemAssignedInGroup(timeGroup: { date: Date; items: { isAssignedToUser: boolean; item: AgendaItem }[] }): boolean {
@@ -157,23 +173,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   getCourse(id: string){
-    let course: CourseModel = this.coursesList.find(course => course.id == id);
-
-    if(course){
-      return course
-    } else {
-      return null;
-    }
+    return this.coursesMap.get(id) || null;
   }
 
   getRoomName(id: string){
-    let room: TrainingRoomModel = this.roomsList.find(item => item.id == id);
-
-    if(room){
-      return room.name
-    } else {
-      return '';
-    }
+    return this.roomsMap.get(id)?.name || '';
   }
 
   getCoachList(coaches: string[]){
@@ -187,13 +191,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   getCoachName(id: string){
-    let coach: CoachModel = this.coachesList.find(item => item.id == id);
-
-    if(coach){
-      return coach.fullname
-    } else {
-      return '';
-    }
+    return this.coachesMap.get(id)?.fullname || '';
   }
 
   ngOnDestroy() {

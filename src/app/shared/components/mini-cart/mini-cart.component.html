@@ -7,7 +7,7 @@
       <li *ngFor="let item of cartService.getCartProducts()">
         <div class="cart-img f-left">
           <a [routerLink]="item?.isEvent ? ['/event-details', item?.id] : ['/product-details', item?.id]">
-            <img [src]="item?.img?.url" alt="cart-img" />
+            <img loading="lazy" [src]="item?.img?.url" alt="cart-img" />
           </a>
         </div>
         <div class="cart-content f-left text-left">

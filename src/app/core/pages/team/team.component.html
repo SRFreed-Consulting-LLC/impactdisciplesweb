@@ -17,7 +17,7 @@
     <h2>MEET THE TEAM</h2>
     <div class="team__meet-items">
       <div class="item" *ngFor="let coach of coaches">
-        <img src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
+        <img loading="lazy" src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
         <div class="item__content">
           <h5>{{ coach.firstName }} {{ coach.lastName }}</h5>
           <p>{{ coach.title }}</p>

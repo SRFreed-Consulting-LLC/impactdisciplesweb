@@ -21,7 +21,7 @@
             <div class="swiper-wrapper">
               <div *ngFor="let item of testimonials" class="testimonail__slider-item swiper-slide">
                 <div class="testimonial__image text-center mb-50">
-                  <img src="../../../../assets/icons/stars.png" alt="user">
+                  <img loading="lazy" src="../../../../assets/icons/stars.png" alt="user">
                 </div>
                 <div class="testimonial__content">
                   <h4 *ngIf="item.quote">"{{ item.quote }}"</h4>

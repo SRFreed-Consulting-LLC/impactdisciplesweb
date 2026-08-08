@@ -184,7 +184,7 @@ export class StoreComponent implements OnInit, OnDestroy {
         break;
       case FilterType.viewBySeries:
         this.selectedFilter = FilterType.viewBySeries;
-        this.seriesService.streamAll().subscribe((seriesItems) => {
+        this.seriesService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((seriesItems) => {
           this.seriesItems = seriesItems.sort((a, b) => a.order - b.order);
         })
         this.showSeriesInMainView = true;

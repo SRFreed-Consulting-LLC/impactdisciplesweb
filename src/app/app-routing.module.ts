@@ -1,192 +1,67 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './core/home/home.component';
-import { EventsComponent } from './core/pages/events/events.component';
-import { TeamComponent } from './core/pages/team/team.component';
-import { EventDetailsComponent } from './core/pages/events/event-details/event-details.component';
-import { CheckoutSuccessComponent } from './core/store/checkout-success/checkout-success.component';
-import { ContactComponent } from './core/pages/contact/contact.component';
-import { NewsletterComponent } from './core/pages/newsletter/newsletter.component';
-import { PrivatePolicyComponent } from './core/pages/private-policy/private-policy.component';
-import { TermsOfServiceComponent } from './core/pages/terms-of-service/terms-of-service.component';
-import { GiveComponent } from './core/pages/give/give.component';
-import { SeminarsComponent } from './core/pages/seminars/seminars.component';
-import { EquippingGroupsChurchesComponent } from './core/pages/equipping-groups/equipping-groups-churches/equipping-groups-churches.component';
-import { CoachingWithImpactComponent } from './core/pages/coaching-with-impact/coaching-with-impact.component';
-import { LunchAndLearnComponent } from './core/pages/lunch-and-learn/lunch-and-learn.component';
-import { ShoppingCartComponent } from './core/store/shopping-cart/shopping-cart.component';
-import { CheckoutComponent } from './core/store/checkout/checkout.component';
-import { LunchAndLearnFormComponent } from './core/pages/lunch-and-learn/lunch-and-learn-form/lunch-and-learn-form.component';
-import { SeminarFormComponent } from './core/pages/seminars/seminar-form/seminar-form.component';
-import { ConsultationSurveyComponent } from './core/pages/consultation-survey/consultation-survey.component';
-import { AccountComponent } from './core/pages/account/account.component';
-import { BlogComponent } from './core/pages/dmms/dmm.component';
-import { EBooksComponent } from './core/pages/e-books/e-books.component';
-import { PodcastsComponent } from './core/pages/podcasts/podcasts.component';
-import { PrayerTeamComponent } from './core/pages/prayer-team/prayer-team.component';
-import { StoreComponent } from './core/pages/store/store.component';
-import { TeamDetailsComponent } from './core/pages/team/team-details/team-details.component';
-import { ProductDetailsComponent } from './core/pages/product-details/product-details.component';
-import { SummitComponent } from './core/pages/summit/summit.component';
-import { AboutUsComponent } from './core/pages/about-us/about-us.component';
-import { CustomerReviewsComponent } from './core/pages/customer-reviews/customer-reviews.component';
-import { MonthlyNewsletterComponent } from './core/pages/monthly-newsletter/monthly-newsletter.component';
-import { SummitPreviewComponent } from './core/pages/summit-preview/summit-preview.component';
-import { ScheduleComponent } from './core/pages/schedule/schedule.component';
-import { EquippingGroupsPastorsComponent } from './core/pages/equipping-groups/equipping-groups-pastors/equipping-groups-pastors.component';
-import { EquippingGroupsLeadersComponent } from './core/pages/equipping-groups/equipping-groups-leaders/equipping-groups-leaders.component';
-import { EquippingGroupsComponent } from './core/pages/equipping-groups/equipping-groups.component';
+import { RouterModule, Routes, UrlSegment } from '@angular/router';
 
-//TODO: Clean this up...sort routes into respective modules
+// Each route group below is lazy-loaded via loadChildren so a visitor only
+// downloads the code for the page area they actually visit, instead of the
+// whole site's components/DevExtreme forms in one eager bundle.
+//
+// IMPORTANT: these use a custom `matcher` instead of `path: ''`. Angular's
+// router has to actually import() a lazy `loadChildren` module to discover
+// its internal routes before it can tell whether they match the URL -- with
+// multiple sibling entries all using `path: ''` (this file's original
+// version), navigating to a route near the end of this array triggered
+// loading *every* module before it too, since the router tries each
+// candidate in order until one's (not-yet-known) children match. Confirmed:
+// visiting /account was loading the home, events, team, store, and content
+// chunks first, silently defeating most of the lazy-loading benefit above.
+// A custom UrlMatcher lets the router reject a non-matching entry
+// synchronously from the URL's first segment alone, with zero network cost
+// -- only the one module that actually owns the requested path ever loads.
+function firstSegmentMatcher(allowedFirstSegments: string[]) {
+  return (segments: UrlSegment[]) => {
+    if (segments.length === 0) return null;
+    return allowedFirstSegments.includes(segments[0].path) ? { consumed: [] } : null;
+  };
+}
+
 const routes: Routes = [
   {
-    path: '',
-    component: HomeComponent
+    matcher: (segments: UrlSegment[]) => segments.length === 0 ? { consumed: [] } : null,
+    loadChildren: () => import('./core/home.module').then(m => m.HomeModule)
   },
   {
-    path: 'summit-preview/:year',
-    component: SummitPreviewComponent
+    matcher: firstSegmentMatcher(['events', 'event-details']),
+    loadChildren: () => import('./core/events.module').then(m => m.EventsFeatureModule)
   },
   {
-    path: 'events',
-    component: EventsComponent
+    matcher: firstSegmentMatcher(['team', 'team-details']),
+    loadChildren: () => import('./core/team.module').then(m => m.TeamFeatureModule)
   },
   {
-    path: 'event-details/:id',
-    component: EventDetailsComponent
+    matcher: firstSegmentMatcher(['store', 'spanish-resources', 'product-details', 'shopping-cart', 'checkout', 'checkout-success', 'e-books']),
+    loadChildren: () => import('./core/store-feature.module').then(m => m.StoreFeatureModule)
   },
   {
-    path: 'events/:event-id/registrations/:registration-id',
-    component: ScheduleComponent
+    matcher: firstSegmentMatcher([
+      'about-us', 'contact', 'newsletter', 'give', 'seminars', 'seminar-form',
+      'equipping-groups', 'equipping-groups-pastors', 'equipping-groups-leaders', 'equipping-groups-churches',
+      'coaching-with-impact', 'lunch-and-learns', 'lunch-and-learn-form',
+      'private-policy', 'terms', 'customer-reviews', 'consultation-survey',
+      'monthly-newsletter', 'prayer-team'
+    ]),
+    loadChildren: () => import('./core/content.module').then(m => m.ContentFeatureModule)
   },
   {
-    path: 'team',
-    component: TeamComponent
+    matcher: firstSegmentMatcher(['account']),
+    loadChildren: () => import('./core/account.module').then(m => m.AccountFeatureModule)
   },
   {
-    path: 'team-details/:id',
-    component: TeamDetailsComponent
+    matcher: firstSegmentMatcher(['disciple-making-minute', 'podcasts']),
+    loadChildren: () => import('./core/blog.module').then(m => m.BlogFeatureModule)
   },
   {
-    path: 'about-us',
-    component: AboutUsComponent
-  },
-  {
-    path: 'contact',
-    component: ContactComponent
-  },
-  {
-    path: 'newsletter',
-    component: NewsletterComponent
-  },
-  {
-    path: 'give',
-    component: GiveComponent
-  },
-  {
-    path: 'seminars',
-    component: SeminarsComponent
-  },
-  {
-    path: 'seminar-form',
-    component: SeminarFormComponent
-  },
-  {
-    path: 'equipping-groups',
-    component: EquippingGroupsComponent
-  },
-  {
-    path: 'equipping-groups-pastors',
-    component: EquippingGroupsPastorsComponent
-  },
-  {
-    path: 'equipping-groups-leaders',
-    component: EquippingGroupsLeadersComponent
-  },
-  {
-    path: 'equipping-groups-churches',
-    component: EquippingGroupsChurchesComponent
-  },
-  {
-    path: 'coaching-with-impact',
-    component: CoachingWithImpactComponent
-  },
-  {
-    path:'lunch-and-learns',
-    component: LunchAndLearnComponent
-  },
-  {
-    path:'lunch-and-learn-form',
-    component: LunchAndLearnFormComponent
-  },
-  {
-    path: 'private-policy',
-    component: PrivatePolicyComponent
-  },
-  {
-    path: 'terms',
-    component: TermsOfServiceComponent
-  },
-  {
-    path: 'customer-reviews',
-    component: CustomerReviewsComponent
-  },
-  {
-    path: 'store',
-    component: StoreComponent
-  },
-  {
-    path: 'spanish-resources',
-    component: StoreComponent,
-    data: { catagory: 'Espanol Resources' }
-  },
-  {
-    path: 'product-details/:id',
-    component: ProductDetailsComponent
-  },
-  {
-    path: 'shopping-cart',
-    component: ShoppingCartComponent
-  },
-  {
-    path: 'checkout',
-    component: CheckoutComponent
-  },
-  {
-    path: 'checkout-success',
-    component: CheckoutSuccessComponent
-  },
-  {
-    path: 'consultation-survey',
-    component: ConsultationSurveyComponent
-  },
-  {
-    path: 'account',
-    component: AccountComponent
-  },
-  {
-    path: 'disciple-making-minute',
-    component: BlogComponent
-  },
-  {
-    path: 'monthly-newsletter',
-    component: MonthlyNewsletterComponent
-  },
-  {
-    path: 'e-books',
-    component: EBooksComponent
-  },
-  {
-    path: 'podcasts',
-    component: PodcastsComponent
-  },
-  {
-    path: 'prayer-team',
-    component: PrayerTeamComponent
-  },
-  {
-    path: 'summit/:year',
-    component: SummitComponent
+    matcher: firstSegmentMatcher(['summit', 'summit-preview']),
+    loadChildren: () => import('./core/summit.module').then(m => m.SummitFeatureModule)
   }
 ];
 

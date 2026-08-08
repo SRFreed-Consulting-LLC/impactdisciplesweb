@@ -14,8 +14,11 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "jszip", "devexpress-diagram", "devexpress-gantt", "devextreme-quill"
-           ],
+              "jszip",
+              "devexpress-diagram",
+              "devexpress-gantt",
+              "devextreme-quill"
+            ],
             "outputPath": "dist/impactdisciplesweb",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -46,13 +49,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "7mb",
-                  "maximumError": "10mb"
+                  "maximumWarning": "3.5mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "5mb",
-                  "maximumError": "7mb"
+                  "maximumWarning": "300kb",
+                  "maximumError": "400kb"
                 }
               ],
               "outputHashing": "all"
@@ -126,8 +129,22 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
+  },
+  "cli": {
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }

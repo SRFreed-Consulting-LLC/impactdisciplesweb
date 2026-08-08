@@ -1,7 +1,7 @@
 <div class="product">
   <a class="product__image" [routerLink]="['/product-details', product?.id]">
     <i *ngIf="product.salePrice && product.salePrice > 0" class="fas fa-tag"></i>
-    <img [src]="product?.imageUrl?.url" alt="product">
+    <img loading="lazy" [src]="product?.imageUrl?.url" alt="product">
   </a>
   <div class="product__content">
     <hr class="slider-hr-solid">

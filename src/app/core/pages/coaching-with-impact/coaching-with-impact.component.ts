@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UtilsService } from 'src/app/theme/shared/services/utils.service';
+import { UtilsService } from 'src/app/shared/utils/services/utils.service';
 
 @Component({
     selector: 'app-coaching-with-impact',

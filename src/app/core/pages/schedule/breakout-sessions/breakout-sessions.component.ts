@@ -1,8 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Actions, ofActionDispatched, Store } from '@ngxs/store';
 import { CourseModel } from 'impactdisciplescommon/src/models/domain/course.model';
 import { TrainingRoomModel } from 'impactdisciplescommon/src/models/domain/training-room.model';
-import { ShowCourseModal } from '../course-modal/course-modal.actions';
 import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
 import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
 import { alert, confirm } from 'devextreme/ui/dialog';
@@ -13,11 +11,10 @@ import { ScheduleModel, TimeGroupsModel } from 'impactdisciplescommon/src/models
 import { ScheduleService } from 'impactdisciplescommon/src/services/utils/schedule.service';
 import notify from 'devextreme/ui/notify';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { BreakoutSessionModal } from './breakout-sessions-modal.actions';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
-import { ResetSchedule } from '../schedule.actions';
 import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
 import { formatDate } from '@angular/common';
+import { ScheduleEventBusService } from '../schedule-event-bus.service';
 
 @Component({
     selector: 'app-breakout-sessions',
@@ -35,21 +32,27 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
   roomsList: TrainingRoomModel[] = [];
   selectedTimegroup: TimeGroupsModel;
 
+  // Looked up by id from the *ngFor templates on every change-detection
+  // cycle (getCourse/getRoomName/getCoach*) -- Maps give O(1) lookups
+  // instead of re-scanning the full list with .find() each time.
+  private coursesMap = new Map<string, CourseModel>();
+  private coachesMap = new Map<string, CoachModel>();
+  private roomsMap = new Map<string, TrainingRoomModel>();
+
   public isVisible$ = new BehaviorSubject<boolean>(false);
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private actions$: Actions,
-    private store: Store,
+  constructor(
+    private scheduleEventBus: ScheduleEventBusService,
     private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService,
     private eventService: EventService) { }
 
     async ngOnInit(): Promise<void> {
 
-      this.actions$.pipe(
-        ofActionDispatched(BreakoutSessionModal),
+      this.scheduleEventBus.showBreakoutSessionsModal.pipe(
         takeUntil(this.ngUnsubscribe)
-      ).subscribe(({ allCourses, myCourses, currentUser, event, coursesList, coachesList, roomsList, timeGroup }: BreakoutSessionModal) => {
+      ).subscribe(({ allCourses, myCourses, currentUser, event, coursesList, coachesList, roomsList, timeGroup }) => {
         this.allCourses = allCourses;
         this.myCourses = myCourses;
         this.currentUser = currentUser;
@@ -58,28 +61,21 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
         this.coachesList = coachesList;
         this.roomsList = roomsList
         this.selectedTimegroup = timeGroup;
+
+        this.coursesMap = new Map(this.coursesList.map(course => [course.id, course]));
+        this.coachesMap = new Map(this.coachesList.map(coach => [coach.id, coach]));
+        this.roomsMap = new Map(this.roomsList.map(room => [room.id, room]));
+
         this.isVisible$.next(true);
       })
     }
 
   getCourse(id: string){
-    let course: CourseModel = this.coursesList.find(course => course.id == id);
-
-    if(course){
-      return course
-    } else {
-      return null;
-    }
+    return this.coursesMap.get(id) || null;
   }
 
   getRoomName(id: string){
-    let room: TrainingRoomModel = this.roomsList.find(item => item.id == id);
-
-    if(room){
-      return room.name
-    } else {
-      return '';
-    }
+    return this.roomsMap.get(id)?.name || '';
   }
 
   getCourseTitle(course:CourseModel){
@@ -90,41 +86,30 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     }
   }
   getCoachImg(id: string){
-    let coach: CoachModel = this.coachesList.find(item => item.id == id);
-
-    if(coach){
-      return coach.photoUrl.url
-    } else {
-      return '';
-    }
+    return this.coachesMap.get(id)?.photoUrl.url || '';
   }
 
   getCoachName(id: string){
-    let coach: CoachModel = this.coachesList.find(item => item.id == id);
-
-    if(coach){
-      return coach.fullname
-    } else {
-      return '';
-    }
+    return this.coachesMap.get(id)?.fullname || '';
   }
 
-
   getCoachTitle(id: string){
-    let coach: CoachModel = this.coachesList.find(item => item.id == id);
-
-    if(coach){
-      return coach.title
-    } else {
-      return '';
-    }
+    return this.coachesMap.get(id)?.title || '';
   }
 
   viewCourse(item: any) {
     if(item.item.isCourse){
       if(this.viewCourseCapcaity(item.item.id) < item.item.maxParticipants){
         let course: CourseModel = this.getCourse(item.item.course);
-        this.store.dispatch(new ShowCourseModal(item, course, this.currentUser, this.event, this.allCourses, this.coachesList, this.roomsList));
+        this.scheduleEventBus.dispatchShowCourseModal({
+          customAgendaItem: item,
+          course: course,
+          currentUser: this.currentUser,
+          event: this.event,
+          allCourses: this.allCourses,
+          coachesList: this.coachesList,
+          roomsList: this.roomsList
+        });
       } else {
         confirm('<i>This session is currently Full. Would you like to be added to the "Wait List"?</i>', 'Session is Full').then(async (dialogResult) => {
           if (dialogResult) {
@@ -142,7 +127,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
               this.event = e;
 
               alert('<i>You have been successfully added to the waitList</i>', 'Registration Success').then(() => {
-                this.store.dispatch(new ResetSchedule());
+                this.scheduleEventBus.dispatchResetSchedule();
                 this.isVisible$.next(false);
               })
             })
@@ -176,7 +161,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
               .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
               .then(() => {
                 alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
-                  this.store.dispatch(new ResetSchedule());
+                  this.scheduleEventBus.dispatchResetSchedule();
                   this.isVisible$.next(false);
                 })
               });
@@ -189,7 +174,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
         .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
           alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
-            this.store.dispatch(new ResetSchedule());
+            this.scheduleEventBus.dispatchResetSchedule();
             this.isVisible$.next(false);
           })
         });
@@ -203,7 +188,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
         .unregisterForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
           alert('<i>You have been successfully removed from ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Removed').then(() => {
-            this.store.dispatch(new ResetSchedule());
+            this.scheduleEventBus.dispatchResetSchedule();
             this.isVisible$.next(false);
           })
 

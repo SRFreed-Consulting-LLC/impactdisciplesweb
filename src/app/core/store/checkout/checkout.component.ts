@@ -250,19 +250,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           shape: 'rect',
         },
         onApprove: (data, actions) => {
-          console.log('onApprove - transaction was approved, but not authorized', data, actions);
-          actions.order.get().then(details => {
-            console.log('onApprove - you can get full order details inside onApprove: ', details);
-          });
+          // Note: intentionally not logging `data`/order details here -- they
+          // carry buyer PII (name, address, payer email) and shouldn't land
+          // in the browser console in production.
         },
         onClientAuthorization: (data) => {
-          console.log(data)
-
           this.submitRequest(data);
         },
-        onCancel: (data, actions) => {
-          console.log('OnCancel', data, actions);
-        },
+        onCancel: () => {},
         onError: err => {
           notify({
             message: "There was an error processing the Paypal Transaction",
@@ -270,11 +265,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             width: 600,
             type: 'error'
           });
-          console.log('OnError', err);
         },
-        onClick: (data, actions) => {
-          console.log('onClick', data, actions);
-        },
+        onClick: () => {},
     };
   }
 

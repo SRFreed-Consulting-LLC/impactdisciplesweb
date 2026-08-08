@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-config.model';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
-import { UtilsService } from 'src/app/theme/shared/services/utils.service';
+import { UtilsService } from 'src/app/shared/utils/services/utils.service';
 import { Timestamp } from 'firebase/firestore';
 import { ConsultationRequestModel } from 'impactdisciplescommon/src/models/domain/consultation-request.model';
 import { ConsultationRequestService } from 'impactdisciplescommon/src/services/data/consultation-request.service';
