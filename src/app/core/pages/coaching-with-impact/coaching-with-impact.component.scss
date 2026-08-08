@@ -1609,26 +1609,11 @@
                     margin-left: 0
                 }
 
-                .et_pb_preload .et_pb_section_video_bg,.et_pb_preload>div {
-                    visibility: hidden
-                }
-
-                .et_pb_preload,.et_pb_section.et_pb_section_video.et_pb_preload {
-                    position: relative;
-                    background: #464646!important
-                }
-
-                .et_pb_preload:before {
-                    content: "";
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    background: url(https://impactdisciples.com/wp-content/themes/Divi/includes/builder/styles/images/preloader.gif) no-repeat;
-                    border-radius: 32px;
-                    width: 32px;
-                    height: 32px;
-                    margin: -16px 0 0 -16px
-                }
+                // Removed: .et_pb_preload rules (Divi's page-builder loading
+                // spinner, pointed at impactdisciples.com/wp-content/...).
+                // "et_pb_preload" has zero occurrences in this component's
+                // template -- the class is never applied to anything here,
+                // so these rules (and the external gif fetch) were dead.
 
                 .box-shadow-overlay {
                     position: absolute;
@@ -2096,14 +2081,19 @@
                     visibility: visible;
                 }
 
-                @font-face {
-                    font-family: ETmodules;
-                    font-display: block;
-                    src: url(//impactdisciples.com/wp-content/themes/Divi/core/admin/fonts/modules/all/modules.eot);
-                    src: url(//impactdisciples.com/wp-content/themes/Divi/core/admin/fonts/modules/all/modules.eot?#iefix) format("embedded-opentype"),url(//impactdisciples.com/wp-content/themes/Divi/core/admin/fonts/modules/all/modules.woff) format("woff"),url(//impactdisciples.com/wp-content/themes/Divi/core/admin/fonts/modules/all/modules.ttf) format("truetype"),url(//impactdisciples.com/wp-content/themes/Divi/core/admin/fonts/modules/all/modules.svg#ETmodules) format("svg");
-                    font-weight: 400;
-                    font-style: normal
-                }
+                // Removed: @font-face for "ETmodules" (Divi's builder icon
+                // font, pointed at impactdisciples.com/wp-content/...). The
+                // rules that use font-family: ETmodules below are gated
+                // behind Divi wrapper classes (et_button_icon_visible,
+                // et_pb_custom_button_icon, body.et_button_custom_icon,
+                // #wp-admin-bar-et-use-visual-builder, etc.) that never
+                // appear anywhere in this component's actual template --
+                // verified by grep -- so no icon glyph from this font was
+                // ever visible; it was purely a dead network fetch. The
+                // scattered `font-family: ETmodules` declarations are left
+                // in place (harmless without a matching @font-face -- they
+                // just fall back to the browser default, same as before on
+                // elements where the icon was invisible anyway).
 
                 @media (min-width: 981px) {
                     .et_pb_gutters3 .et_pb_column,.et_pb_gutters3.et_pb_row .et_pb_column {
@@ -5286,22 +5276,13 @@
                     background-color: #ffffff;
                 }
 
-                @font-face {
-                    font-family: Inter;
-                    font-style: normal;
-                    font-weight: 300 900;
-                    font-display: fallback;
-                    src: url('https://impactdisciples.com/wp-content/plugins/woocommerce/assets/fonts/Inter-VariableFont_slnt,wght.woff2') format('woff2');
-                    font-stretch: normal;
-                }
-
-                @font-face {
-                    font-family: Cardo;
-                    font-style: normal;
-                    font-weight: 400;
-                    font-display: fallback;
-                    src: url('https://impactdisciples.com/wp-content/plugins/woocommerce/assets/fonts/cardo_normal_400.woff2') format('woff2');
-                }
+                // Removed: @font-face for "Inter"/"Cardo" pointed at
+                // impactdisciples.com/wp-content/plugins/woocommerce/... (a
+                // leftover from this component's WordPress/WooCommerce page
+                // export). Neither font-family was ever applied to any
+                // element in this file -- the declarations were dead, and
+                // the browser still attempted (and failed, via CORS) to
+                // fetch Inter for zero visual benefit.
 
 body,.et_pb_column_1_2 .et_quote_content blockquote cite,.et_pb_column_1_2 .et_link_content a.et_link_main_url,.et_pb_column_1_3 .et_quote_content blockquote cite,.et_pb_column_3_8 .et_quote_content blockquote cite,.et_pb_column_1_4 .et_quote_content blockquote cite,.et_pb_blog_grid .et_quote_content blockquote cite,.et_pb_column_1_3 .et_link_content a.et_link_main_url,.et_pb_column_3_8 .et_link_content a.et_link_main_url,.et_pb_column_1_4 .et_link_content a.et_link_main_url,.et_pb_blog_grid .et_link_content a.et_link_main_url,body .et_pb_bg_layout_light .et_pb_post p,body .et_pb_bg_layout_dark .et_pb_post p {
                     font-size: 16px

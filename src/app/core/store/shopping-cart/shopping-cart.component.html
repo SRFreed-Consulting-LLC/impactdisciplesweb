@@ -57,7 +57,7 @@
                   <!-- IMAGE -->
                   <td class="product-thumbnail" data-title="Image">
                     <a [routerLink]="item?.isEvent ? ['/event-details', item?.id] : ['/product-details', item?.id]">
-                      <img [src]="item?.img?.url" [alt]="item?.itemName">
+                      <img loading="lazy" [src]="item?.img?.url" [alt]="item?.itemName">
                     </a>
                   </td>
 

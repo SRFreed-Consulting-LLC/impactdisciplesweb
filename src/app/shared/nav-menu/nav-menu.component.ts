@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IMenuType } from 'src/app/theme/shared/types/menu-d-t';
+import { IMenuType } from 'src/app/shared/utils/models/menu.model';
 import { MenuModel } from '../../../../impactdisciplescommon/src/models/utils/nav-menu.model';
 import menuData from '../../../../impactdisciplescommon/src/services/data/nav-menu-data';
 

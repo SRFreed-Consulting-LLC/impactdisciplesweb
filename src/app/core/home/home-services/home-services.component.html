@@ -2,7 +2,7 @@
   <div *ngFor="let item of services">
     <div class="services__item">
       <a [href]="item.link">
-        <img [src]="item.img" alt="banner" />
+        <img loading="lazy" [src]="item.img" alt="banner" />
       </a>
       <div class="services__item-content">
         <div [innerHTML]="item.title" class="title"></div>

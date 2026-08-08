@@ -12,7 +12,7 @@
             <div class="product__modal-box">
               <div class="mb-20">
                 <div class="product__modal-img w-img">
-                  <img [src]="product?.imageUrl?.url" alt="product-img">
+                  <img loading="lazy" [src]="product?.imageUrl?.url" alt="product-img">
                 </div>
               </div>
             </div>
@@ -127,7 +127,7 @@
                     <div class="blog__item mb-30">
                       <div class="blog__thumb fix">
                         <a [routerLink]="['/product-details', p?.id]">
-                          <img [src]="p?.imageUrl?.url" alt="blog" height="250px">
+                          <img loading="lazy" [src]="p?.imageUrl?.url" alt="blog" height="250px">
                         </a>
                       </div>
                       <div class="blog__content">

@@ -99,7 +99,7 @@
                 <div *ngFor="let coach of coaches" class="slide teams-list__team">
                   <div class="teams-list__team-image fix">
                     <a [routerLink]="['/team-details', coach.id]" class="w-img">
-                      <img class="transform" [src]="coach.photoUrl.url" [alt]="coach.firstName">
+                      <img loading="lazy" class="transform" [src]="coach.photoUrl.url" [alt]="coach.firstName">
                     </a>
                   </div>
 

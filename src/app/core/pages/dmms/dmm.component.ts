@@ -1,6 +1,7 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, switchMap, takeUntil } from 'rxjs';
 import { DMMModel } from 'impactdisciplescommon/src/models/domain/dmm.model';
 import { DMMService } from 'impactdisciplescommon/src/services/data/dmm.service';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
@@ -11,7 +12,7 @@ import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data
     styleUrls: ['./dmm.component.scss'],
     standalone: false
 })
-export class BlogComponent implements OnInit {
+export class BlogComponent implements OnInit, OnDestroy {
   public dmms: DMMModel[] = [];
   public filteredDmms: DMMModel[] = [];
   public pageSize: number = 6;
@@ -19,6 +20,8 @@ export class BlogComponent implements OnInit {
   public sortBy: string = 'asc';
   public pageNo: number = 1;
   public impactDisciplesInfo = impactDisciplesInfo;
+
+  private ngUnsubscribe = new Subject<void>();
 
   constructor(
     private dmmService: DMMService,
@@ -28,18 +31,25 @@ export class BlogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.pageNo = params['page'] ? params['page'] : this.pageNo;
-      this.loadDmms();
-    });
-  }
-
-  loadDmms(): void {
-    this.dmmService.streamAllByValue('isActive', true).subscribe((blogs) => {
+    // switchMap cancels the previous streamAllByValue listener before
+    // opening a new one on each pagination click, instead of stacking a
+    // new live Firestore listener per click.
+    this.route.queryParams.pipe(
+      switchMap((params) => {
+        this.pageNo = params['page'] ? params['page'] : this.pageNo;
+        return this.dmmService.streamAllByValue('isActive', true);
+      }),
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe((blogs) => {
       this.dmms = blogs.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
       this.paginate = this.getPager(this.dmms.length, Number(+this.pageNo), this.pageSize);
       this.filteredDmms = this.dmms.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   setPage(page: number) {

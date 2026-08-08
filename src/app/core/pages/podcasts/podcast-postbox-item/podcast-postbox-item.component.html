@@ -1,6 +1,6 @@
 <div class="podcast-item" (click)="onSelectPodcast(podcast)">
   <a class="podcast-item__image">
-    <img [src]="podcast?.thumbnail?.url" alt="podcast">
+    <img loading="lazy" [src]="podcast?.thumbnail?.url" alt="podcast">
   </a>
   <div class="podcast-item__content">
     <h4>

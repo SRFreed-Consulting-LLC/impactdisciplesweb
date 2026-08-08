@@ -23,6 +23,11 @@ import { TimeFormatPipe } from "./utils/pipes/time-format.pipe";
 import { AnimateDirective } from "./utils/directives/animate.directive";
 import { ConsulationBannerComponent } from "./components/consulation-banner/consulation-banner.component";
 import { HeaderComponent } from "./components/header/header.component";
+// HomeHeaderComponent is the global site header (logo/nav/cart) -- it is
+// used from nearly every page's template (see the app-wide grep in the perf
+// sweep notes), not just the homepage, so it lives here in the eagerly
+// loaded SharedModule rather than in a lazy-loaded feature module.
+import { HomeHeaderComponent } from "../core/home/home-header/home-header.component";
 
 @NgModule({
   declarations: [
@@ -45,7 +50,8 @@ import { HeaderComponent } from "./components/header/header.component";
     DiscipleMakingSummitBannerComponent,
     AnimateDirective,
     ConsulationBannerComponent,
-    HeaderComponent
+    HeaderComponent,
+    HomeHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -74,7 +80,8 @@ import { HeaderComponent } from "./components/header/header.component";
     DiscipleMakingSummitBannerComponent,
     AnimateDirective,
     ConsulationBannerComponent,
-    HeaderComponent
+    HeaderComponent,
+    HomeHeaderComponent
   ]
 })
 export class SharedModule { }
