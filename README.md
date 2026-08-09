@@ -14,7 +14,6 @@ or, if already cloned:
 
 ```
 npm run init-git-submodules
-npm run init-git-pwa-submodules
 ```
 
 Then `npm install` and pick an environment to run against:
@@ -37,19 +36,17 @@ npm run start-prod    # impactdisciples-a82a8 (production) Firebase project, loc
   modules and therefore loaded eagerly (imported into `AppModule`), notably
   `HomeHeaderComponent` (the global site header/nav, used on nearly every
   page despite the name) and `CartService`.
-- **`src/app/theme/`** — a purchased Angular e-commerce template. **Most of
-  this is unused/unrouted** — only a handful of pieces
-  (`ThemeSharedModule`'s footer/menu-adjacent bits) are actually live; the
-  rest (`theme/home/*`, `theme/pages/blog-*|login|register|account|checkout`,
-  `theme/shop/*`) has no route pointing to it. Treat it as legacy scaffolding
-  pending removal, not a second copy of the real app.
+- **`src/assets/styles/theme/`** — the live site's actual CSS design system
+  (originally sourced from a purchased "Outstock" Angular e-commerce
+  template): a ~230 KB scss partial set (`main.scss` + friends) and the
+  Font Awesome Pro/Ionicons font files it depends on. The template's
+  *component* code (the actual unused `theme/` NgModule tree, ~260 files)
+  was removed entirely — nothing routed to it — along with ~8 MB of dead
+  demo images that shipped alongside these still-needed assets.
 - **`impactdisciplescommon`** (submodule) — shared Firebase data-access layer
   (`FirebaseDAO<T>` / `BaseService<T>`) and domain models/services, shared
   with the `impactdisciples-admin` app. Changes here affect both apps —
   verify against a checkout of `impactdisciples-admin` before committing.
-- **`impactdisciplespwacommon`** (submodule) — shared code for
-  event/registration flows, also consumed by the separate library-manager
-  apps outside this repo.
 
 ## Environments
 
@@ -102,6 +99,12 @@ lack of importance:
 - **`strictNullChecks`/`noImplicitAny` are disabled** in `tsconfig.json`
   despite `strict: true` being set — re-enabling surfaces ~900 compile
   errors across the codebase (measured, not yet fixed).
-- **`theme/*` unused vendor template** (~100 files) pending removal, along
-  with the duplicate `CartService` in `theme/shared/services/`.
 - **Zero test coverage.**
+- **`tsconfig.json` (the base config) has no `include`/`files` restriction**,
+  so a bare `tsc -p tsconfig.json --noEmit` type-checks every `.ts` file
+  under the repo root -- including unused files in the `impactdisciplescommon`
+  submodule that this app never actually imports (e.g. admin-only services).
+  The real build (`ng build`, via `tsconfig.app.json`) correctly scopes to
+  the real import graph from `src/main.ts` and is unaffected -- but a quick
+  manual sanity check should use `tsc -p tsconfig.app.json --noEmit`, not
+  the base config, or it'll report false positives.

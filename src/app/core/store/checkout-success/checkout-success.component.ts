@@ -14,7 +14,7 @@ import { EventService } from 'impactdisciplescommon/src/services/data/event.serv
 import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
 import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
 import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
-import { ImpactUserService } from 'impactdisciplespwacommon/src/services/impact-user.service';
+import { ImpactUserService } from 'src/app/shared/utils/services/impact-user.service';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { environment } from 'src/environments/environment';
 

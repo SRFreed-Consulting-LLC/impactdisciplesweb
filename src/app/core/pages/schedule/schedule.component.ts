@@ -14,7 +14,6 @@ import { CoachService } from 'impactdisciplescommon/src/services/data/coach.serv
 import { CourseService } from 'impactdisciplescommon/src/services/data/course.service';
 import { ScheduleModel, TimeGroupsModel } from 'impactdisciplescommon/src/models/utils/schedule.model';
 import { ScheduleService } from 'impactdisciplescommon/src/services/utils/schedule.service';
-import { AuthService } from 'impactdisciplespwacommon/src/services/events/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
 import { ScheduleEventBusService } from './schedule-event-bus.service';
@@ -52,7 +51,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   constructor(
     private eventService: EventService,
-    private authService: AuthService,
     private route: ActivatedRoute,
     private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService,
