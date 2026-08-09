@@ -2,14 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { Timestamp } from 'firebase/firestore';
-import { LunchAndLearnModel } from 'impactdisciplescommon/src/models/domain/lunch-and-learn.model';
-import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
-import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
-import { LunchAndLearnService } from 'impactdisciplescommon/src/services/data/lunch-and-learn.service';
-import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
-import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
-import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
+import { LunchAndLearnModel } from 'src/app/common/models/domain/lunch-and-learn.model';
+import { Address } from 'src/app/common/models/domain/utils/address.model';
+import { Phone } from 'src/app/common/models/domain/utils/phone.model';
+import { EMailService } from 'src/app/common/services/data/email.service';
+import { LunchAndLearnService } from 'src/app/common/services/data/lunch-and-learn.service';
+import { WebConfigService } from 'src/app/common/services/data/web-config.service';
+import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
+import { EnumHelper } from 'src/app/common/utils/enum_helper';
 
 @Component({
     selector: 'app-lunch-and-learn-form',

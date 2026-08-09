@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { BlogCategoriesService } from 'impactdisciplescommon/src/services/data/blog-categories.service';
-import { ProductCategoriesService } from 'impactdisciplescommon/src/services/data/product-categories.service';
+import { BlogCategoriesService } from 'src/app/common/services/data/blog-categories.service';
+import { ProductCategoriesService } from 'src/app/common/services/data/product-categories.service';
 
 @Pipe({
     name: 'categoryName',

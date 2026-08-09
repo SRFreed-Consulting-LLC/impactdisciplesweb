@@ -1,4 +1,4 @@
-import { Person } from "impactdisciplescommon/src/models/domain/utils/person.model";
+import { Person } from "src/app/common/models/domain/utils/person.model";
 import { BookLicenseModel } from "./book-license.model";
 
 export class ImpactUser extends Person {

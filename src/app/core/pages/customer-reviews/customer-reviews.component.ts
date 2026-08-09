@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TestimonialModel } from 'impactdisciplescommon/src/models/domain/testimonial.model';
-import { TestimonialService } from 'impactdisciplescommon/src/services/data/testimonial.service';
+import { TestimonialModel } from 'src/app/common/models/domain/testimonial.model';
+import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 
 @Component({
     selector: 'app-customer-reviews',

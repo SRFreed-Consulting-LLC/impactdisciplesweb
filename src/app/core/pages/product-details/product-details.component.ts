@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DxValidatorComponent } from 'devextreme-angular';
-import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
-import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
-import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
-import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
-import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
+import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { ProductModel } from 'src/app/common/models/utils/product.model';
+import { SaleModel } from 'src/app/common/models/utils/sale.model';
+import { ProductService } from 'src/app/common/services/data/product.service';
+import { SalesService } from 'src/app/common/services/data/sales.service';
+import { NumberUtil } from 'src/app/common/utils/number-util';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 

@@ -1,4 +1,4 @@
-import { BaseModel } from "impactdisciplescommon/src/models/base.model";
+import { BaseModel } from "src/app/common/models/base.model";
 
 export class BookLicenseModel extends BaseModel {
   purchaseDate: any;

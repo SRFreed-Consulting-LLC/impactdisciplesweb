@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CartItem } from "../../../../../impactdisciplescommon/src/models/utils/cart.model";
+import { CartItem } from "../../../../../src/app/common/models/utils/cart.model";
 import notify from "devextreme/ui/notify";
 
 const state = {

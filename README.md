@@ -4,19 +4,8 @@ Public marketing/e-commerce site for Impact Disciples Ministries (Angular 20 + F
 
 ## Getting started
 
-This repo uses **git submodules** for shared domain code — clone with:
-
-```
-git clone --recurse-submodules <repo-url>
-```
-
-or, if already cloned:
-
-```
-npm run init-git-submodules
-```
-
-Then `npm install` and pick an environment to run against:
+This repo has no git submodules — a normal clone is all you need. `npm install`
+and pick an environment to run against:
 
 ```
 npm run start-local   # local Firebase project config, http://localhost:4200
@@ -43,10 +32,19 @@ npm run start-prod    # impactdisciples-a82a8 (production) Firebase project, loc
   *component* code (the actual unused `theme/` NgModule tree, ~260 files)
   was removed entirely — nothing routed to it — along with ~8 MB of dead
   demo images that shipped alongside these still-needed assets.
-- **`impactdisciplescommon`** (submodule) — shared Firebase data-access layer
-  (`FirebaseDAO<T>` / `BaseService<T>`) and domain models/services, shared
-  with the `impactdisciples-admin` app. Changes here affect both apps —
-  verify against a checkout of `impactdisciples-admin` before committing.
+- **`src/app/common/`** — the Firebase data-access layer (`FirebaseDAO<T>` /
+  `BaseService<T>`), domain models, and domain services (products, events,
+  coaches, etc). This used to be a git submodule (`impactdisciplescommon`)
+  shared with `impactdisciples-admin`; it was copied into this app directly
+  (2026-08-09) to remove the submodule dependency entirely. **This means
+  `impactdisciples-web` and `impactdisciples-admin` each now have their own
+  independent copy of this code** — a fix made in one no longer
+  automatically applies to the other. If you fix a bug here that also
+  exists in `impactdisciples-admin`'s own copy of the same logic, port it
+  over by hand. Only the 86 files this app actually imports (traced via its
+  real import graph, not a blind copy of the whole former submodule) were
+  brought over — see git history on this directory for exactly what moved
+  and why.
 
 ## Environments
 
@@ -102,9 +100,9 @@ lack of importance:
 - **Zero test coverage.**
 - **`tsconfig.json` (the base config) has no `include`/`files` restriction**,
   so a bare `tsc -p tsconfig.json --noEmit` type-checks every `.ts` file
-  under the repo root -- including unused files in the `impactdisciplescommon`
-  submodule that this app never actually imports (e.g. admin-only services).
-  The real build (`ng build`, via `tsconfig.app.json`) correctly scopes to
-  the real import graph from `src/main.ts` and is unaffected -- but a quick
-  manual sanity check should use `tsc -p tsconfig.app.json --noEmit`, not
-  the base config, or it'll report false positives.
+  under the repo root rather than just the real import graph from
+  `src/main.ts`. This used to produce false positives from unused files in
+  the (now-removed) `impactdisciplescommon` submodule; with that gone there's
+  currently nothing extra under the repo root for it to over-include, but
+  prefer `tsc -p tsconfig.app.json --noEmit` for a manual sanity check anyway
+  so this stays correct if that ever changes.

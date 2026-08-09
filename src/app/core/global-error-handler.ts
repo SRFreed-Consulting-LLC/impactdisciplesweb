@@ -1,5 +1,5 @@
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
-import { LoggerService } from 'impactdisciplescommon/src/services/data/logger.service';
+import { LoggerService } from 'src/app/common/services/data/logger.service';
 
 /**
  * App-wide fallback for uncaught exceptions (template errors, unhandled

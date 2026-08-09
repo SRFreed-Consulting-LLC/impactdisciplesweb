@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BaseService } from 'impactdisciplescommon/src/services/data/base.service';
-import { FirebaseDAO } from 'impactdisciplescommon/src/dao/firebase.dao';
-import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { BaseService } from 'src/app/common/services/data/base.service';
+import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
+import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { Timestamp } from 'firebase/firestore';
 import { ImpactUser } from '../models/impact-user.model';
 import { BookLicenseModel } from '../models/book-license.model';

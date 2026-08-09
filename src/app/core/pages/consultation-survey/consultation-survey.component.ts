@@ -1,13 +1,13 @@
 import { Component, OnInit,  } from '@angular/core';
-import { ConsultationSurveyModel } from 'impactdisciplescommon/src/models/domain/consultation-survey.model';
+import { ConsultationSurveyModel } from 'src/app/common/models/domain/consultation-survey.model';
 import { DxButtonTypes } from 'devextreme-angular/ui/button';
 import { Timestamp } from 'firebase/firestore';
-import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { ConsultationSurveyService } from 'impactdisciplescommon/src/services/data/consultation-survey.service';
-import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
-import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
-import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
-import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
+import { Phone } from 'src/app/common/models/domain/utils/phone.model';
+import { ConsultationSurveyService } from 'src/app/common/services/data/consultation-survey.service';
+import { EMailService } from 'src/app/common/services/data/email.service';
+import { WebConfigService } from 'src/app/common/services/data/web-config.service';
+import { EnumHelper } from 'src/app/common/utils/enum_helper';
+import { Address } from 'src/app/common/models/domain/utils/address.model';
 import notify from 'devextreme/ui/notify';
 
 @Component({

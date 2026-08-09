@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HomePageImageModel } from 'impactdisciplescommon/src/models/domain/home-page-image.model';
-import { HomePageImageService } from 'impactdisciplescommon/src/services/data/home-page-images.service';
+import { HomePageImageModel } from 'src/app/common/models/domain/home-page-image.model';
+import { HomePageImageService } from 'src/app/common/services/data/home-page-images.service';
 
 @Component({
     selector: 'app-home-header-slider',

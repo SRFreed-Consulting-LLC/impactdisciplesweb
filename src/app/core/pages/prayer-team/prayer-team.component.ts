@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import notify from 'devextreme/ui/notify';
-import { PrayerTeamSubscriptionModel } from 'impactdisciplescommon/src/models/domain/prayer-team-subscription.model';
-import { PrayerTeamSubscriptionService } from 'impactdisciplescommon/src/services/data/prayer-team-subscription.service';
+import { PrayerTeamSubscriptionModel } from 'src/app/common/models/domain/prayer-team-subscription.model';
+import { PrayerTeamSubscriptionService } from 'src/app/common/services/data/prayer-team-subscription.service';
 
 @Component({
     selector: 'app-prayer-team',

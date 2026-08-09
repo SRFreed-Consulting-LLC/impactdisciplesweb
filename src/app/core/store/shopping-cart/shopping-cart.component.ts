@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import notify from 'devextreme/ui/notify';
-import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
-import { CouponService } from 'impactdisciplescommon/src/services/data/coupon.service';
-import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
+import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
+import { CouponModel } from 'src/app/common/models/utils/coupon.model';
+import { CouponService } from 'src/app/common/services/data/coupon.service';
+import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 

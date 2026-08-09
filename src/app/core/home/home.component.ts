@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
+import { EventService } from 'src/app/common/services/data/event.service';
 
 @Component({
     selector: 'app-home',

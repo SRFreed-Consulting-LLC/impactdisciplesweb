@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DMMModel } from 'impactdisciplescommon/src/models/domain/dmm.model';
+import { DMMModel } from 'src/app/common/models/domain/dmm.model';
 
 @Component({
     selector: 'app-dmm-postbox-item',

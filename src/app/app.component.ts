@@ -1,5 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
-import { ScreenService } from 'impactdisciplescommon/src/services/utils/screen.service';
+import { ScreenService } from 'src/app/common/services/utils/screen.service';
 
 @Component({
     selector: 'app-root',

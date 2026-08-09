@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import notify from 'devextreme/ui/notify';
-import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
-import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
+import { NewsletterSubscriptionModel } from 'src/app/common/models/domain/newsletter-subscription.model';
+import { NewsletterSubscriptionService } from 'src/app/common/services/data/newsletter-subscription.service';
 
 @Component({
     selector: 'app-subscribe-area',

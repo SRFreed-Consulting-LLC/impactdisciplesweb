@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CartService } from '../../utils/services/cart.service';
-import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
+import { NumberUtil } from 'src/app/common/utils/number-util';
 
 @Component({
     selector: 'app-mini-cart',

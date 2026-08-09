@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
-import { CoachService } from 'impactdisciplescommon/src/services/data/coach.service';
+import { CoachModel } from 'src/app/common/models/domain/coach.model';
+import { CoachService } from 'src/app/common/services/data/coach.service';
 import { map, Observable } from 'rxjs';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';

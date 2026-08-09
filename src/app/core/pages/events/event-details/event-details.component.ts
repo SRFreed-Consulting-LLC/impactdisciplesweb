@@ -1,20 +1,20 @@
-import { EventRegistrationService } from './../../../../../../impactdisciplescommon/src/services/data/event-registration.service';
+import { EventRegistrationService } from './../../../../../../src/app/common/services/data/event-registration.service';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
+import { EventModel } from 'src/app/common/models/domain/event.model';
 import { Subject, takeUntil } from 'rxjs';
-import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
+import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
 import { DxFormComponent } from 'devextreme-angular';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
-import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
-import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
+import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { EventService } from 'src/app/common/services/data/event.service';
+import { NumberUtil } from 'src/app/common/utils/number-util';
 import { AsyncRule } from 'devextreme/common';
-import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
+import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
 import { Timestamp } from 'firebase/firestore';
-import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
-import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
-import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
+import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
+import { EMailModel } from 'src/app/common/models/admin/mail.model';
+import { EMailService } from 'src/app/common/services/data/email.service';
 import notify from 'devextreme/ui/notify';
 
 @Component({

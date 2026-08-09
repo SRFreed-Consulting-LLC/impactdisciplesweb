@@ -1,9 +1,9 @@
 import { Component,Input, OnDestroy, OnInit } from '@angular/core';
 import Swiper from 'swiper';
 import { Subject, takeUntil } from 'rxjs';
-import { TestimonialModel } from 'impactdisciplescommon/src/models/domain/testimonial.model';
-import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
-import { TestimonialService } from 'impactdisciplescommon/src/services/data/testimonial.service';
+import { TestimonialModel } from 'src/app/common/models/domain/testimonial.model';
+import { QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
+import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 
 @Component({
     selector: 'app-testimonials',

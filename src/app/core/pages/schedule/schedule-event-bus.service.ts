@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
-import { CourseModel } from 'impactdisciplescommon/src/models/domain/course.model';
-import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
-import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
-import { TrainingRoomModel } from 'impactdisciplescommon/src/models/domain/training-room.model';
-import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
-import { ScheduleModel, TimeGroupsModel } from 'impactdisciplescommon/src/models/utils/schedule.model';
+import { CoachModel } from 'src/app/common/models/domain/coach.model';
+import { CourseModel } from 'src/app/common/models/domain/course.model';
+import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
+import { EventModel } from 'src/app/common/models/domain/event.model';
+import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
+import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
+import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
 
 export interface ShowCourseModalPayload {
   customAgendaItem: any;

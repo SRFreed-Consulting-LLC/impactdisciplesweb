@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MonthlyNewsletterModel } from 'impactdisciplescommon/src/models/domain/monthly-newsletter.model';
-import { MonthlyNewletterService } from 'impactdisciplescommon/src/services/data/monthly-newsletter.service';
+import { MonthlyNewsletterModel } from 'src/app/common/models/domain/monthly-newsletter.model';
+import { MonthlyNewletterService } from 'src/app/common/services/data/monthly-newsletter.service';
 
 
 @Component({

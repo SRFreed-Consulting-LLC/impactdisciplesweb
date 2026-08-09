@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import notify from 'devextreme/ui/notify';
-import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

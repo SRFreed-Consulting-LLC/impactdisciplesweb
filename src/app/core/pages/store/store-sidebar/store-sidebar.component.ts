@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
+import { SeriesModel } from 'src/app/common/models/utils/series.model';
 import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
-import { ProductCategoriesService } from 'impactdisciplescommon/src/services/data/product-categories.service';
-import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
-import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
+import { TagModel } from 'src/app/common/models/domain/tag.model';
+import { ProductCategoriesService } from 'src/app/common/services/data/product-categories.service';
+import { ProductService } from 'src/app/common/services/data/product.service';
+import { QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
 
 @Component({
     selector: 'app-store-sidebar',

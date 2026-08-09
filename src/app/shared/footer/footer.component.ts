@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import impactDisciplesInfo from '../utils/data/impact-disciples.data';
-import { NewsletterSubscriptionModel } from 'impactdisciplescommon/src/models/domain/newsletter-subscription.model';
+import { NewsletterSubscriptionModel } from 'src/app/common/models/domain/newsletter-subscription.model';
 import { Timestamp } from 'firebase/firestore';
-import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
+import { NewsletterSubscriptionService } from 'src/app/common/services/data/newsletter-subscription.service';
 import notify from 'devextreme/ui/notify';
 
 @Component({
