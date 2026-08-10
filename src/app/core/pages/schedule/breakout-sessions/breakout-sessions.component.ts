@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CourseModel } from 'src/app/common/models/domain/course.model';
 import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
@@ -9,7 +9,6 @@ import { EventRegistrationModel } from 'src/app/common/models/domain/event-regis
 import { CoachModel } from 'src/app/common/models/domain/coach.model';
 import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
-import notify from 'devextreme/ui/notify';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';

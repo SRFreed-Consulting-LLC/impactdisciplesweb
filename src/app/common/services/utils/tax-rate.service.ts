@@ -1,6 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
 import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
-import { environment } from 'src/environments/environment';
 import { LoggerService } from '../data/logger.service';
 import { WebConfigService } from '../data/web-config.service';
 import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
@@ -52,7 +51,7 @@ export class TaxRateService implements OnInit {
 
     try{
       taxableAmount = checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => (item.price? item.price : 0) * item.orderQuantity)?.reduce((a,b) => a + b);
-    } catch(err){
+    } catch {
       this.logService.logMessage('TAXCALC REQUEST', checkoutForm.email, 'Error getting taxable amount');
 
       taxableAmount = 0;

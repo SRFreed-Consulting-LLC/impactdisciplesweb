@@ -17,7 +17,7 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { PurchasesService } from 'src/app/common/services/data/purchases.service';
 import { SaleModel } from 'src/app/common/models/utils/sale.model';
 import { EMailService } from 'src/app/common/services/data/email.service';
-import { IClientAuthorizeCallbackData, ICreateOrderRequest, IPayPalConfig, IPurchaseUnit, ITransactionItem, IUnitAmount, IUnitBreakdown } from 'ngx-paypal';
+import { IClientAuthorizeCallbackData, ICreateOrderRequest, IPayPalConfig, ITransactionItem, IUnitAmount, IUnitBreakdown } from 'ngx-paypal';
 import notify from 'devextreme/ui/notify';
 
 @Component({
@@ -231,7 +231,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.payPalConfig = {
       currency: this.currency,
       clientId: this.webConfig.paypalClientId,
-      createOrderOnClient: (data) => <ICreateOrderRequest> {
+      createOrderOnClient: () => <ICreateOrderRequest> {
           intent: 'CAPTURE',
           purchase_units: [
             {
@@ -249,8 +249,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           color:'blue',
           shape: 'rect',
         },
-        onApprove: (data, actions) => {
-          // Note: intentionally not logging `data`/order details here -- they
+        onApprove: () => {
+          // Note: intentionally not logging order details here -- they
           // carry buyer PII (name, address, payer email) and shouldn't land
           // in the browser console in production.
         },
@@ -258,7 +258,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.submitRequest(data);
         },
         onCancel: () => {},
-        onError: err => {
+        onError: () => {
           notify({
             message: "There was an error processing the Paypal Transaction",
             position: 'top',
@@ -354,7 +354,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       item.price = item.price && NumberUtil.isNumber(item.price)? item.price : 0;
     })
 
-    this.purchasesService.add(this.checkoutForm).then(cart => {
+    this.purchasesService.add(this.checkoutForm).then(() => {
       localStorage.setItem('checkoutForm', JSON.stringify(this.checkoutForm));
 
       this.sendProductPurchaseSuccessEmail(this.checkoutForm);

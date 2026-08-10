@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Unsubscribe } from 'firebase/firestore';
 import { FirebaseDAO, WhereFilterOperandKeys, QueryParam } from 'src/app/common/dao/firebase.dao';
 import { BaseModel } from 'src/app/common/models/base.model';
-import { from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

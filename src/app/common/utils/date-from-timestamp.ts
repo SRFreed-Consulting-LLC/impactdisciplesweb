@@ -23,8 +23,6 @@ export const dateFromTimestamp = (item) => {
 };
 
 const parseStringDate = (dateString: string): null | Date => {
-  //console.warn('Wrong Date format detected: all dates must be stored as Timestamp in DB', dateString);
-
   if (!dateString) {
     return null;
   }
@@ -32,6 +30,5 @@ const parseStringDate = (dateString: string): null | Date => {
     const date = parse(dateString, 'MM/dd/yyyy', new Date());
     return isValid(date) ? date : null;
   }
-  //console.warn('Wrong date format detected: unsupported string format', dateString);
   return dateString as any;
 };

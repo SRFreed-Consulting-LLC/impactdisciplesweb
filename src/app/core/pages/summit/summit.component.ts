@@ -8,13 +8,6 @@ import { CoachModel } from 'src/app/common/models/domain/coach.model';
 import { CoachService } from 'src/app/common/services/data/coach.service';
 import { EventService } from 'src/app/common/services/data/event.service';
 
-interface GroupedAgendaItem {
-  startDate: string;
-  endDate: string;
-  courses: string[];
-  nonCourses: string[];
-}
-
 @Component({
     selector: 'app-summit',
     templateUrl: './summit.component.html',

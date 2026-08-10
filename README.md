@@ -13,6 +13,9 @@ npm run start-dev     # impactdisciplesdev Firebase project
 npm run start-prod    # impactdisciples-a82a8 (production) Firebase project, local serve
 ```
 
+Runs on the Angular CLI default port 4200. `impactdisciples-admin` always runs
+on 5200, so both dev servers can run side by side without a port clash.
+
 ## Architecture
 
 - **`src/app/core/`** — the real application. Routes are grouped into lazy-loaded

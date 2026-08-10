@@ -160,15 +160,12 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   private settleCart(){
-    let total = 0; // Initialize the total for applicable items
     let totalDiscount = 0; // Initialize the total for applicable items
 
     this.shoppingCart.cartItems.forEach(item => {
       if(item.salePrice){
         item.price = item.salePrice;
       }
-
-      total += (item.price * item.orderQuantity);
 
       totalDiscount += (item.discount * item.orderQuantity);
     });

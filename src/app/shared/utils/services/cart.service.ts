@@ -20,10 +20,6 @@ export class CartService {
 
   addCartProduct(payload: CartItem) {
     const isExist = state.cart.some((i: CartItem) => i.id === payload.id);
-    // if (payload.status === 'out-of-stock' || payload.quantity === 0) {
-    //   this.toastrService.error(`Out of stock ${payload.title}`);
-    // }
-    // else
     if (!isExist) {
       const newItem = {
         ...payload

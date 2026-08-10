@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EventModel } from 'src/app/common/models/domain/event.model';
-import { Tab } from 'src/app/common/models/utils/tab.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
