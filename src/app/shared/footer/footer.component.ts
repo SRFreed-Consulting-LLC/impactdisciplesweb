@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import impactDisciplesInfo from '../utils/data/impact-disciples.data';
-import { NewsletterSubscriptionModel } from 'src/app/common/models/domain/newsletter-subscription.model';
+import { SubscriptionModel } from 'src/app/common/models/domain/subscription.model';
 import { Timestamp } from 'firebase/firestore';
-import { NewsletterSubscriptionService } from 'src/app/common/services/data/newsletter-subscription.service';
+import { SubscriptionService } from 'src/app/common/services/data/subscription.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
@@ -14,9 +14,9 @@ import { ToastService } from 'src/app/shared/utils/services/toast.service';
 export class FooterComponent {
   public impactDisciplesInfo = impactDisciplesInfo;
 
-  subscription: NewsletterSubscriptionModel = {... new NewsletterSubscriptionModel()};
+  subscription: SubscriptionModel = {... new SubscriptionModel(), type: 'newsletter'};
 
-  constructor(private subscriptionService: NewsletterSubscriptionService, private toastService: ToastService){}
+  constructor(private subscriptionService: SubscriptionService, private toastService: ToastService){}
 
   handleFormSubmit() {
     this.subscription.date = Timestamp.now();

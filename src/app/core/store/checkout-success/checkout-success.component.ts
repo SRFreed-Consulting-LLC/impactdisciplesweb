@@ -10,7 +10,7 @@ import { AffilliateSalesService } from 'src/app/common/services/data/affiliate-s
 import { EMailService } from 'src/app/common/services/data/email.service';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { EventService } from 'src/app/common/services/data/event.service';
-import { NewsletterSubscriptionService } from 'src/app/common/services/data/newsletter-subscription.service';
+import { SubscriptionService } from 'src/app/common/services/data/subscription.service';
 import { TaxRateSummaryService } from 'src/app/common/services/data/tax-rate-summary.service';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
 import { ImpactUserService } from 'src/app/shared/utils/services/impact-user.service';
@@ -27,7 +27,7 @@ import { environment } from 'src/environments/environment';
 export class CheckoutSuccessComponent implements AfterViewInit{
 
   constructor(public cartService: CartService,
-    private newsletterSubscriptionService: NewsletterSubscriptionService,
+    private newsletterSubscriptionService: SubscriptionService,
     private eventRegistrationService: EventRegistrationService,
     private impactService: ImpactUserService,
     private emailService: EMailService,
@@ -41,7 +41,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
 
     if(checkoutForm){
       if(checkoutForm.isNewsletter){
-        this.newsletterSubscriptionService.createNewsLetterSubscription(checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email);
+        this.newsletterSubscriptionService.createSubscription('newsletter', checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email);
       }
 
       if(checkoutForm.couponCode){

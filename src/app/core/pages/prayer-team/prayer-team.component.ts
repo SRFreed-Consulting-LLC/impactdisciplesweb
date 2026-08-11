@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { PrayerTeamSubscriptionModel } from 'src/app/common/models/domain/prayer-team-subscription.model';
-import { PrayerTeamSubscriptionService } from 'src/app/common/services/data/prayer-team-subscription.service';
+import { SubscriptionModel } from 'src/app/common/models/domain/subscription.model';
+import { SubscriptionService } from 'src/app/common/services/data/subscription.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
@@ -10,12 +10,12 @@ import { ToastService } from 'src/app/shared/utils/services/toast.service';
     standalone: false
 })
 export class PrayerTeamComponent {
-  prayerTeamSubscription: PrayerTeamSubscriptionModel = {... new PrayerTeamSubscriptionModel()};
+  prayerTeamSubscription: SubscriptionModel = {... new SubscriptionModel(), type: 'prayer'};
 
-  constructor(private prayerTeamSubscriptionService: PrayerTeamSubscriptionService, private toastService: ToastService){}
+  constructor(private prayerTeamSubscriptionService: SubscriptionService, private toastService: ToastService){}
 
   handleFormSubmit() {
-    this.prayerTeamSubscriptionService.createPrayerTeamSubscription(this.prayerTeamSubscription.firstName, this.prayerTeamSubscription.lastName, this.prayerTeamSubscription.email).then(sub => {
+    this.prayerTeamSubscriptionService.createSubscription('prayer', this.prayerTeamSubscription.firstName, this.prayerTeamSubscription.lastName, this.prayerTeamSubscription.email).then(sub => {
       if(sub){
         this.toastService.notify({ message: 'Prayer Team Subscription added Successfully!', type: 'success' });
 
