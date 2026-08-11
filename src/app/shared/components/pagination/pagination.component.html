@@ -1,7 +1,7 @@
 <div class="basic-pagination">
   <ul *ngIf="paginate.pages && paginate.pages.length ">
     <li [ngClass]="{ disabled: paginate.currentPage === 1 }">
-      <a (click)="pageSet(paginate.currentPage - 1)" class="cursor-pointer">
+      <a (click)="pageSet(paginate.currentPage - 1)" (keydown.enter)="pageSet(paginate.currentPage - 1)" (keydown.space)="pageSet(paginate.currentPage - 1)" tabindex="0" role="button" class="cursor-pointer">
         <i class="fal fa-angle-left"></i>
       </a>
     </li>
@@ -10,13 +10,17 @@
       <a
         class="cursor-pointer"
         (click)="pageSet(page)"
+        (keydown.enter)="pageSet(page)"
+        (keydown.space)="pageSet(page)"
+        tabindex="0"
+        role="button"
       >
         {{ page }}
       </a>
     </li>
 
     <li [ngClass]="{ disabled: paginate.currentPage === paginate.totalPages }">
-      <a class="cursor-pointer" (click)="pageSet(paginate.currentPage + 1)">
+      <a class="cursor-pointer" (click)="pageSet(paginate.currentPage + 1)" (keydown.enter)="pageSet(paginate.currentPage + 1)" (keydown.space)="pageSet(paginate.currentPage + 1)" tabindex="0" role="button">
         <i class="fal fa-angle-right"></i>
       </a>
     </li>

@@ -1,4 +1,4 @@
 <div class="scroll-top" id="scroll" [style.display]="scrollDisplay">
-  <a class="cursor-pointer" (click)="scrollToTop()">
+  <a class="cursor-pointer" (click)="scrollToTop()" (keydown.enter)="scrollToTop()" (keydown.space)="scrollToTop()" tabindex="0" role="button">
     <i class="fas fa-level-up-alt"></i>
   </a>

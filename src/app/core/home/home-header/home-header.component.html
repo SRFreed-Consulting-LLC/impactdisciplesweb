@@ -28,7 +28,7 @@
         </ul>
       </div>
       <div class="header__mobile-menu-btn d-lg-none">
-        <a (click)="utilsService.handleOpenMobileMenu()" class="mobile-menu-toggle cursor-pointer">
+        <a (click)="utilsService.handleOpenMobileMenu()" (keydown.enter)="utilsService.handleOpenMobileMenu()" (keydown.space)="utilsService.handleOpenMobileMenu()" tabindex="0" role="button" class="mobile-menu-toggle cursor-pointer">
           <i class="fas fa-bars"></i>
         </a>
       </div>

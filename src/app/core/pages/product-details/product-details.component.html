@@ -42,12 +42,12 @@
                     <div class="product-quantity mr-20 mb-20">
                       <div class="cart-plus-minus">
                         <input id="product-quantity" type="text" [value]="cartItem?.orderQuantity" disabled readonly />
-                        <div (click)="decrement()" class="dec qtybutton">-</div>
-                        <div (click)="increment()" class="inc qtybutton">+</div>
+                        <div (click)="decrement()" (keydown.enter)="decrement()" (keydown.space)="decrement()" tabindex="0" role="button" class="dec qtybutton">-</div>
+                        <div (click)="increment()" (keydown.enter)="increment()" (keydown.space)="increment()" tabindex="0" role="button" class="inc qtybutton">+</div>
                       </div>
                     </div>
                     <div class="pro-cart-btn">
-                      <a (click)="addCartProduct()" class="impact-icon-btn impact-icon-btn-blue mb-20">
+                      <a (click)="addCartProduct()" (keydown.enter)="addCartProduct()" (keydown.space)="addCartProduct()" tabindex="0" role="button" class="impact-icon-btn impact-icon-btn-blue mb-20">
                         + Add to Cart
                       </a>
                     </div>

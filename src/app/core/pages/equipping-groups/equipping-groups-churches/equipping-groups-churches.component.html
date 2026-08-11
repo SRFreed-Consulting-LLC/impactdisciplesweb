@@ -33,7 +33,7 @@
         <div class="container">
           <div class="video__content text-center">
             <div class="video__button">
-              <a (click)="playVideo()" class="cursor-pointer">
+              <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
                 <i class="fas fa-play"></i>
               </a>
             </div>

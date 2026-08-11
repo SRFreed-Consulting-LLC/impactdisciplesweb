@@ -99,7 +99,7 @@
                   <span>{{ checkoutForm.email}}</span>
                   <span>{{checkoutForm.phone.number}}</span>
                 </div>
-                <a (click)="setView('shipping')">Change</a>
+                <a (click)="setView('shipping')" (keydown.enter)="setView('shipping')" (keydown.space)="setView('shipping')" tabindex="0" role="button">Change</a>
               </div>
               <div *ngIf="isShippingAddressNeeded()" class="checkout__customer-info-block">
                 <span>Ship To</span>
@@ -111,7 +111,7 @@
                   {{ checkoutForm?.shippingAddress?.zip }}
                   {{ checkoutForm?.shippingAddress?.country }}
                 </span>
-                <a (click)="setView('shipping')">Change</a>
+                <a (click)="setView('shipping')" (keydown.enter)="setView('shipping')" (keydown.space)="setView('shipping')" tabindex="0" role="button">Change</a>
               </div>
             </div>
 

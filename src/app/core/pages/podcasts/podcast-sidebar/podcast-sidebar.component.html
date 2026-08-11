@@ -22,7 +22,7 @@
     <div class="sidebar__widget-content mt-20">
       <div class="rc__post-wrapper">
         <ul>
-          <li *ngFor="let podcast of recentPodcasts" class="d-flex podcast-sidebar__item" (click)="onSelectPodcast(podcast)">
+          <li *ngFor="let podcast of recentPodcasts" class="d-flex podcast-sidebar__item" (click)="onSelectPodcast(podcast)" (keydown.enter)="onSelectPodcast(podcast)" (keydown.space)="onSelectPodcast(podcast)" tabindex="0" role="button">
             <div class="rc__post-thumb mr-20">
               <a>
                 <img loading="lazy" [src]="podcast.thumbnail.url" alt="blog-1" style="width: 70px; height: 50px;" />

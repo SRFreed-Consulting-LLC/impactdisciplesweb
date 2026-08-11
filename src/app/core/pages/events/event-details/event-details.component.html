@@ -96,7 +96,7 @@
                 </div>
 
                 <div *ngIf="!total || total === 0" class="cart-page-total">
-                  <a class="os-btn"(click)="signUpForEvent()">Sign UP</a>
+                  <a class="os-btn" (click)="signUpForEvent()" (keydown.enter)="signUpForEvent()" (keydown.space)="signUpForEvent()" tabindex="0" role="button">Sign UP</a>
                 </div>
 
                 <div *ngIf="total && total > 0" class="cart-page-total">
@@ -105,7 +105,7 @@
                     <li>Ticket Price <span>${{ event?.costInDollars }}</span></li>
                     <li>Total <span>${{ total }}</span></li>
                   </ul>
-                  <a class="impact-btn impact-btn-blue-border" (click)="proceedToCheckout()">Add To Cart</a>
+                  <a class="impact-btn impact-btn-blue-border" (click)="proceedToCheckout()" (keydown.enter)="proceedToCheckout()" (keydown.space)="proceedToCheckout()" tabindex="0" role="button">Add To Cart</a>
                 </div>
               </div>
               <div *ngIf="event.isKajabiCourse" class="row">

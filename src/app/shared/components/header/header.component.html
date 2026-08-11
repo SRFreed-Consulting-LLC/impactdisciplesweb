@@ -17,8 +17,8 @@
         <i [ngClass]="buttonIcon3 ? buttonIcon3 : 'd-none'"></i>
         {{ buttonText3 }}
       </a>
-      <a *ngIf="buttonClick && !buttonLink" appAnimate="fadeInUpFour" (click)="onButtonClick()" class="impact-btn">{{ buttonText }}</a>
-      <a *ngIf="buttonClick2 && !buttonLink2" appAnimate="fadeInUpFour" (click)="onButtonClick2()" class="impact-btn">{{ buttonText2 }}</a>
+      <a *ngIf="buttonClick && !buttonLink" appAnimate="fadeInUpFour" (click)="onButtonClick()" (keydown.enter)="onButtonClick()" (keydown.space)="onButtonClick()" tabindex="0" role="button" class="impact-btn">{{ buttonText }}</a>
+      <a *ngIf="buttonClick2 && !buttonLink2" appAnimate="fadeInUpFour" (click)="onButtonClick2()" (keydown.enter)="onButtonClick2()" (keydown.space)="onButtonClick2()" tabindex="0" role="button" class="impact-btn">{{ buttonText2 }}</a>
     </div>
   </div>
 </div>

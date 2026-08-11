@@ -1,4 +1,4 @@
-<div class="podcast-item" (click)="onSelectPodcast(podcast)">
+<div class="podcast-item" (click)="onSelectPodcast(podcast)" (keydown.enter)="onSelectPodcast(podcast)" (keydown.space)="onSelectPodcast(podcast)" tabindex="0" role="button">
   <a class="podcast-item__image">
     <img loading="lazy" [src]="podcast?.thumbnail?.url" alt="podcast">
   </a>

@@ -1,5 +1,5 @@
 <div class="impact-modal" [class.impact-modal--open]="isVisible$ | async">
-  <div class="impact-modal__backdrop" (click)="onCancel()"></div>
+  <div class="impact-modal__backdrop" (click)="onCancel()" (keydown.escape)="onCancel()" tabindex="-1" role="presentation"></div>
   <div class="impact-modal__dialog course-popup" style="width: 50%; height: 75%;">
     <div class="impact-modal__header">
       <button type="button" class="impact-modal__close" (click)="onCancel()" aria-label="Close">&times;</button>

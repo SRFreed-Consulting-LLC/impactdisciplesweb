@@ -13,7 +13,7 @@
     <h4><a [routerLink]="['/product-details', product?.id]">{{product?.title}}</a></h4>
     <div class="product__content-buttons">
       <a [routerLink]="['/product-details', product?.id]" class="impact-btn">view</a>
-      <a (click)="addCartProduct()" class="impact-icon-btn impact-icon-btn-blue"><i class="fas fa-cart-plus"></i>ADD</a>
+      <a (click)="addCartProduct()" (keydown.enter)="addCartProduct()" (keydown.space)="addCartProduct()" tabindex="0" role="button" class="impact-icon-btn impact-icon-btn-blue"><i class="fas fa-cart-plus"></i>ADD</a>
     </div>
   </div>
 </div>

@@ -16,7 +16,7 @@
                           <div class="weekday">{{ activeDay.date | date: 'EEEE' }} {{ activeDay.date | date: 'MMM' }} {{ activeDay.date | date: 'd' }}</div>
                         </div>
                         <div *ngFor="let timeGroup of activeDay.timeGroups">
-                          <div *ngIf="timeGroup.items.length > 1" class="breakout" (click)="onNavigateToBreakouts(timeGroup)">
+                          <div *ngIf="timeGroup.items.length > 1" class="breakout" (click)="onNavigateToBreakouts(timeGroup)" (keydown.enter)="onNavigateToBreakouts(timeGroup)" (keydown.space)="onNavigateToBreakouts(timeGroup)" tabindex="0" role="button">
                             <div class="breakout__date">
                               <div>{{ timeGroup.items[0].item.startDate | date: 'h:mm a' }}</div>
                               <div>{{ timeGroup.items[0].item.endDate | date: 'h:mm a' }}</div>
