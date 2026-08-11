@@ -1,6 +1,6 @@
 import { WhereFilterOperandKeys } from './../../../../../src/app/common/dao/firebase.dao';
 import { ViewportScroller } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryParam } from 'src/app/common/dao/firebase.dao';
 import { TagModel } from 'src/app/common/models/domain/tag.model';
@@ -15,7 +15,7 @@ import { SeriesService } from 'src/app/common/services/data/series.service';
     styleUrls: ['./e-books.component.scss'],
     standalone: false
 })
-export class EBooksComponent {
+export class EBooksComponent implements OnInit {
   public products: ProductModel[] = [];
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];

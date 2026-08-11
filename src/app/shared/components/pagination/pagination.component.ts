@@ -1,4 +1,4 @@
-import { Component,EventEmitter,Input,Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
     selector: 'app-pagination',
@@ -6,7 +6,7 @@ import { Component,EventEmitter,Input,Output } from '@angular/core';
     styleUrls: ['./pagination.component.scss'],
     standalone: false
 })
-export class PaginationComponent {
+export class PaginationComponent implements OnInit {
 
   @Input() data: any[] = [];
   @Input() paginate: any = {};

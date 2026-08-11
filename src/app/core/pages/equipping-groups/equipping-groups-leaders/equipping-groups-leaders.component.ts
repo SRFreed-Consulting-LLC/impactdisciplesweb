@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { UtilsService } from 'src/app/shared/utils/services/utils.service';
@@ -9,7 +9,7 @@ import { UtilsService } from 'src/app/shared/utils/services/utils.service';
     styleUrls: ['./equipping-groups-leaders.component.scss'],
     standalone: false
 })
-export class EquippingGroupsLeadersComponent  {
+export class EquippingGroupsLeadersComponent implements OnInit {
   public webConfig: WebConfigModel = new WebConfigModel();
   isPlaying = false;
 
