@@ -75,18 +75,18 @@
                     </button>
                     <div class="attendee-accordion-item__body mb-25" *ngIf="openIndexes.has(i)">
                       <div class="attendee-form__field">
-                        <label>First Name<span class="attendee-form__required">*</span></label>
-                        <input type="text" formControlName="firstName" [class.is-invalid]="attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched">
+                        <label [attr.for]="'attendee-firstName-' + i">First Name<span class="attendee-form__required">*</span></label>
+                        <input [id]="'attendee-firstName-' + i" type="text" formControlName="firstName" [class.is-invalid]="attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched">
                         <div class="attendee-form__error" *ngIf="attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched">First Name is required</div>
                       </div>
                       <div class="attendee-form__field">
-                        <label>Last Name<span class="attendee-form__required">*</span></label>
-                        <input type="text" formControlName="lastName" [class.is-invalid]="attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched">
+                        <label [attr.for]="'attendee-lastName-' + i">Last Name<span class="attendee-form__required">*</span></label>
+                        <input [id]="'attendee-lastName-' + i" type="text" formControlName="lastName" [class.is-invalid]="attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched">
                         <div class="attendee-form__error" *ngIf="attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched">Last Name is required</div>
                       </div>
                       <div class="attendee-form__field">
-                        <label>Email<span class="attendee-form__required">*</span></label>
-                        <input type="email" formControlName="email" [class.is-invalid]="attendeeGroup.get('email').invalid && attendeeGroup.get('email').touched">
+                        <label [attr.for]="'attendee-email-' + i">Email<span class="attendee-form__required">*</span></label>
+                        <input [id]="'attendee-email-' + i" type="email" formControlName="email" [class.is-invalid]="attendeeGroup.get('email').invalid && attendeeGroup.get('email').touched">
                         <div class="attendee-form__error" *ngIf="attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('required')">Email Address is required</div>
                         <div class="attendee-form__error" *ngIf="attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('alreadyRegistered')">A Person with this email address has already registered!</div>
                         <div class="attendee-form__error" *ngIf="attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('duplicateEmail')">Each email registered must be unique!</div>

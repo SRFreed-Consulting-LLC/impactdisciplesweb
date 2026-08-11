@@ -29,20 +29,20 @@
         <div class="prayer-team__form row d-flex justify-content-center align-items-center">
           <div class="col-lg-4 col-sm-12">
             <div class="contact__input mb-20">
-              <label>First Name <span class="required">*</span></label>
-              <input required type="name" name="name" [(ngModel)]="prayerTeamSubscription.firstName">
+              <label for="prayer-team-firstName">First Name <span class="required">*</span></label>
+              <input id="prayer-team-firstName" required type="name" name="name" [(ngModel)]="prayerTeamSubscription.firstName">
             </div>
           </div>
           <div class="col-lg-4 col-sm-12">
             <div class="contact__input mb-20">
-              <label>Last Name <span class="required">*</span></label>
-              <input required type="name" name="name" [(ngModel)]="prayerTeamSubscription.lastName">
+              <label for="prayer-team-lastName">Last Name <span class="required">*</span></label>
+              <input id="prayer-team-lastName" required type="name" name="name" [(ngModel)]="prayerTeamSubscription.lastName">
             </div>
           </div>
           <div class="col-lg-4 col-sm-12">
             <div class="contact__input mb-20">
-              <label>Email <span class="required">*</span></label>
-              <input required type="email" name="email" [(ngModel)]="prayerTeamSubscription.email">
+              <label for="prayer-team-email">Email <span class="required">*</span></label>
+              <input id="prayer-team-email" required type="email" name="email" [(ngModel)]="prayerTeamSubscription.email">
             </div>
           </div>
         </div>

@@ -22,23 +22,23 @@
                 <div class="row">
                   <div class="col-12"><h4>Customer Information</h4></div>
                   <div class="col-md-6 checkout-form__field">
-                    <label>First Name<span class="checkout-form__required">*</span></label>
-                    <input type="text" formControlName="firstName" [class.is-invalid]="customerForm.get('firstName').invalid && customerForm.get('firstName').touched">
+                    <label for="checkout-firstName">First Name<span class="checkout-form__required">*</span></label>
+                    <input id="checkout-firstName" type="text" formControlName="firstName" [class.is-invalid]="customerForm.get('firstName').invalid && customerForm.get('firstName').touched">
                     <div class="checkout-form__error" *ngIf="customerForm.get('firstName').invalid && customerForm.get('firstName').touched">First Name is required</div>
                   </div>
                   <div class="col-md-6 checkout-form__field">
-                    <label>Last Name<span class="checkout-form__required">*</span></label>
-                    <input type="text" formControlName="lastName" [class.is-invalid]="customerForm.get('lastName').invalid && customerForm.get('lastName').touched">
+                    <label for="checkout-lastName">Last Name<span class="checkout-form__required">*</span></label>
+                    <input id="checkout-lastName" type="text" formControlName="lastName" [class.is-invalid]="customerForm.get('lastName').invalid && customerForm.get('lastName').touched">
                     <div class="checkout-form__error" *ngIf="customerForm.get('lastName').invalid && customerForm.get('lastName').touched">Last Name is required</div>
                   </div>
                   <div class="col-md-6 checkout-form__field">
-                    <label>Email Address<span class="checkout-form__required">*</span></label>
-                    <input type="email" formControlName="email" [class.is-invalid]="customerForm.get('email').invalid && customerForm.get('email').touched">
+                    <label for="checkout-email">Email Address<span class="checkout-form__required">*</span></label>
+                    <input id="checkout-email" type="email" formControlName="email" [class.is-invalid]="customerForm.get('email').invalid && customerForm.get('email').touched">
                     <div class="checkout-form__error" *ngIf="customerForm.get('email').invalid && customerForm.get('email').touched">Email Address is required</div>
                   </div>
                   <div class="col-md-6 checkout-form__field" formGroupName="phone">
-                    <label>Phone Number<span class="checkout-form__required">*</span></label>
-                    <input type="tel" formControlName="number" [class.is-invalid]="customerForm.get('phone.number').invalid && customerForm.get('phone.number').touched">
+                    <label for="checkout-phone">Phone Number<span class="checkout-form__required">*</span></label>
+                    <input id="checkout-phone" type="tel" formControlName="number" [class.is-invalid]="customerForm.get('phone.number').invalid && customerForm.get('phone.number').touched">
                     <div class="checkout-form__error" *ngIf="customerForm.get('phone.number').invalid && customerForm.get('phone.number').touched">Phone Number is required</div>
                   </div>
                   <div class="col-12 checkout-form__field checkout-form__field--checkbox">
@@ -52,34 +52,34 @@
                 <div class="row" *ngIf="isShippingAddressNeeded()" [formGroup]="shippingAddressForm">
                   <div class="col-12"><h4>Shipping Address</h4></div>
                   <div class="col-12 checkout-form__field">
-                    <label>Address<span class="checkout-form__required">*</span></label>
-                    <input type="text" formControlName="address1" placeholder="Street Address" [class.is-invalid]="shippingAddressForm.get('address1').invalid && shippingAddressForm.get('address1').touched">
+                    <label for="checkout-address1">Address<span class="checkout-form__required">*</span></label>
+                    <input id="checkout-address1" type="text" formControlName="address1" placeholder="Street Address" [class.is-invalid]="shippingAddressForm.get('address1').invalid && shippingAddressForm.get('address1').touched">
                     <div class="checkout-form__error" *ngIf="shippingAddressForm.get('address1').invalid && shippingAddressForm.get('address1').touched">Address is required</div>
                   </div>
                   <div class="col-12 checkout-form__field">
                     <input type="text" formControlName="address2" placeholder="Apartment, Suite, Unit, etc.">
                   </div>
                   <div class="col-md-6 checkout-form__field">
-                    <label>City<span class="checkout-form__required">*</span></label>
-                    <input type="text" formControlName="city" placeholder="City" [class.is-invalid]="shippingAddressForm.get('city').invalid && shippingAddressForm.get('city').touched">
+                    <label for="checkout-city">City<span class="checkout-form__required">*</span></label>
+                    <input id="checkout-city" type="text" formControlName="city" placeholder="City" [class.is-invalid]="shippingAddressForm.get('city').invalid && shippingAddressForm.get('city').touched">
                     <div class="checkout-form__error" *ngIf="shippingAddressForm.get('city').invalid && shippingAddressForm.get('city').touched">City is required</div>
                   </div>
                   <div class="col-md-3 checkout-form__field">
-                    <label>State<span class="checkout-form__required">*</span></label>
-                    <select formControlName="state" [class.is-invalid]="shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched">
+                    <label for="checkout-state">State<span class="checkout-form__required">*</span></label>
+                    <select id="checkout-state" formControlName="state" [class.is-invalid]="shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched">
                       <option value="" disabled>Select...</option>
                       <option *ngFor="let state of states" [value]="state">{{ state }}</option>
                     </select>
                     <div class="checkout-form__error" *ngIf="shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched">State is required</div>
                   </div>
                   <div class="col-md-3 checkout-form__field">
-                    <label>Zip Code<span class="checkout-form__required">*</span></label>
-                    <input type="text" formControlName="zip" placeholder="Zip Code" [class.is-invalid]="shippingAddressForm.get('zip').invalid && shippingAddressForm.get('zip').touched">
+                    <label for="checkout-zip">Zip Code<span class="checkout-form__required">*</span></label>
+                    <input id="checkout-zip" type="text" formControlName="zip" placeholder="Zip Code" [class.is-invalid]="shippingAddressForm.get('zip').invalid && shippingAddressForm.get('zip').touched">
                     <div class="checkout-form__error" *ngIf="shippingAddressForm.get('zip').invalid && shippingAddressForm.get('zip').touched">Zip Code is required</div>
                   </div>
                   <div class="col-md-6 checkout-form__field">
-                    <label>Country<span class="checkout-form__required">*</span></label>
-                    <select formControlName="country">
+                    <label for="checkout-country">Country<span class="checkout-form__required">*</span></label>
+                    <select id="checkout-country" formControlName="country">
                       <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
                     </select>
                   </div>

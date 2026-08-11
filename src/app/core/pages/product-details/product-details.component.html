@@ -37,11 +37,11 @@
                 <form action="#">
                   <div class="pro-quan-area d-sm-flex align-items-center">
                     <div class="product-quantity-title">
-                      <label>Quantity</label>
+                      <label for="product-quantity">Quantity</label>
                     </div>
                     <div class="product-quantity mr-20 mb-20">
                       <div class="cart-plus-minus">
-                        <input type="text" [value]="cartItem?.orderQuantity" disabled readonly />
+                        <input id="product-quantity" type="text" [value]="cartItem?.orderQuantity" disabled readonly />
                         <div (click)="decrement()" class="dec qtybutton">-</div>
                         <div (click)="increment()" class="inc qtybutton">+</div>
                       </div>
@@ -57,24 +57,24 @@
               <div>
                 <div class="row mb-25">
                   <div class="col-6" *ngIf="product?.sizes && product?.sizes.length > 0">
-                    <label>Size</label>
-                    <select [class.is-invalid]="sizeError" (change)="setSize($any($event.target).value)">
+                    <label for="product-size">Size</label>
+                    <select id="product-size" [class.is-invalid]="sizeError" (change)="setSize($any($event.target).value)">
                       <option value="" [selected]="!cartItem.size" disabled hidden>Select...</option>
                       <option *ngFor="let size of product.sizes" [value]="size" [selected]="size === cartItem.size">{{ size }}</option>
                     </select>
                     <div class="field-error" *ngIf="sizeError">Size is required</div>
                   </div>
                   <div class="col-6" *ngIf="product?.colors && product?.colors.length > 0">
-                    <label>Color</label>
-                    <select [class.is-invalid]="colorError" (change)="setColor($any($event.target).value)">
+                    <label for="product-color">Color</label>
+                    <select id="product-color" [class.is-invalid]="colorError" (change)="setColor($any($event.target).value)">
                       <option value="" [selected]="!cartItem.color" disabled hidden>Select...</option>
                       <option *ngFor="let color of product.colors" [value]="color" [selected]="color === cartItem.color">{{ color }}</option>
                     </select>
                     <div class="field-error" *ngIf="colorError">Color is required</div>
                   </div>
                   <div class="col-6" *ngIf="product?.languages && product?.languages.length > 0">
-                    <label>Language</label>
-                    <select [class.is-invalid]="languageError" (change)="setLanguage($any($event.target).value)">
+                    <label for="product-language">Language</label>
+                    <select id="product-language" [class.is-invalid]="languageError" (change)="setLanguage($any($event.target).value)">
                       <option value="" [selected]="!cartItem.language" disabled hidden>Select...</option>
                       <option *ngFor="let language of product.languages" [value]="language" [selected]="language === cartItem.language">{{ language }}</option>
                     </select>
