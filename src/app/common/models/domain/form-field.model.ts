@@ -52,6 +52,64 @@ export interface FormFieldStyle {
 export type LabelDisplay = 'label' | 'placeholder';
 export type ImageWidth = 'small' | 'medium' | 'large' | 'full';
 
+// Input-chrome attributes (border radius/color, focus+radio/checkbox accent
+// color) - distinct from FormFieldStyle, which is about the field's own
+// text. Settable at the whole-form level (FormDefinitionModel.controlStyle,
+// the default for every field) and overridden per field
+// (FormFieldDef.controlStyle) - see controlStyleVars() for how the two
+// combine via CSS custom property cascade. Same shape as the admin copy.
+export interface FormControlStyle {
+  borderRadius?: number;
+  borderColor?: string;
+  accentColor?: string;
+  paddingBlock?: number; // px - top/bottom inset between the border and the text
+  paddingInline?: number; // px - left/right inset between the border and the text
+}
+
+// Matches DevExtreme's dx.light theme defaults exactly - the look every
+// form here had before being migrated off dx-form onto app-dynamic-form,
+// preserved as this system's own built-in default. Same values as the
+// admin copy's DEFAULT_CONTROL_STYLE (including the same simplification of
+// DevExtreme's own 7px-top/8px-bottom padding down to one symmetric number).
+export const DEFAULT_CONTROL_STYLE: Required<FormControlStyle> = {
+  borderRadius: 4,
+  borderColor: '#dddddd',
+  accentColor: '#337ab7',
+  paddingBlock: 8,
+  paddingInline: 9
+};
+
+// Builds a partial [ngStyle] object of CSS custom properties from whichever
+// of the 3 FormControlStyle properties are actually set - same logic as the
+// admin copy's controlStyleVars(). Applied at two DOM levels (the whole
+// form's wrapper in dynamic-form.component.html, then again per-field on
+// that field's own wrapper in dynamic-form-field.component.html) - CSS
+// custom property inheritance resolves "field overrides form overrides
+// built-in default" via the var(--dff-x, fallback) usage in
+// dynamic-form-field.component.scss, no merge logic needed here.
+export function controlStyleVars(style?: FormControlStyle): Record<string, string> {
+  if (!style) {
+    return {};
+  }
+  const out: Record<string, string> = {};
+  if (style.borderRadius != null) {
+    out['--dff-radius'] = `${style.borderRadius}px`;
+  }
+  if (style.borderColor) {
+    out['--dff-border'] = style.borderColor;
+  }
+  if (style.accentColor) {
+    out['--dff-accent'] = style.accentColor;
+  }
+  if (style.paddingBlock != null) {
+    out['--dff-padding-block'] = `${style.paddingBlock}px`;
+  }
+  if (style.paddingInline != null) {
+    out['--dff-padding-inline'] = `${style.paddingInline}px`;
+  }
+  return out;
+}
+
 // See the admin copy's own comment - wrapped in an object (not a bare
 // FormFieldDef[][]) because Firestore rejects an array whose elements are
 // themselves arrays.
@@ -71,6 +129,7 @@ export interface FormFieldDef {
   imageAlt?: string;
   imageWidth?: ImageWidth;
   style?: FormFieldStyle;
+  controlStyle?: FormControlStyle;
   labelDisplay?: LabelDisplay;
   columns?: FormFieldColumn[];
 }

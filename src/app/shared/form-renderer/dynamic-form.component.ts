@@ -4,7 +4,7 @@ import { FormGroup } from '@angular/forms';
 // own use of the same import today. Not a new dependency.
 import notify from 'devextreme/ui/notify';
 import { FormDefinitionModel } from 'src/app/common/models/domain/form-definition.model';
-import { flattenDataFields, FormFieldDef } from 'src/app/common/models/domain/form-field.model';
+import { controlStyleVars, flattenDataFields, FormFieldDef } from 'src/app/common/models/domain/form-field.model';
 import { FormSubmissionModel } from 'src/app/common/models/domain/form-submission.model';
 import { FormDefinitionService } from 'src/app/common/services/data/form-definition.service';
 import { FormSubmissionService } from 'src/app/common/services/data/form-submission.service';
@@ -47,6 +47,14 @@ export class DynamicFormComponent implements OnChanges {
 
   get fields(): FormFieldDef[] {
     return this.formDef?.fields ?? [];
+  }
+
+  // Form-wide default input-chrome styling, applied as CSS custom
+  // properties on this component's own wrapper - see controlStyleVars()'s
+  // own comment on how a field's own controlStyle then overrides just its
+  // own subtree via ordinary CSS custom property inheritance.
+  get controlStyleVars(): Record<string, string> {
+    return controlStyleVars(this.formDef?.controlStyle);
   }
 
   private load(): void {

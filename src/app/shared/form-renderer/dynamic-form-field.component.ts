@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { fieldStyleObject, FormFieldDef, IMAGE_WIDTH_CSS } from 'src/app/common/models/domain/form-field.model';
+import { controlStyleVars, fieldStyleObject, FormFieldDef, IMAGE_WIDTH_CSS } from 'src/app/common/models/domain/form-field.model';
 
 // Renders exactly one FormFieldDef against the shared top-level FormGroup a
 // parent app-dynamic-form built (see build-form-group.ts) - dispatches by
@@ -23,6 +23,14 @@ export class DynamicFormFieldComponent {
 
   get styleObject(): Record<string, string> {
     return fieldStyleObject(this.field.style);
+  }
+
+  // Combined with this field's own controlStyle override (if any) - Angular
+  // doesn't allow two [ngStyle] bindings on one element, so this merges what
+  // used to be two separate getters. See the admin app's equivalent
+  // FormRendererFieldComponent.wrapperStyle for the same pattern.
+  get wrapperStyle(): Record<string, string> {
+    return { ...this.styleObject, ...controlStyleVars(this.field.controlStyle) };
   }
 
   get imageWidthCss(): string {

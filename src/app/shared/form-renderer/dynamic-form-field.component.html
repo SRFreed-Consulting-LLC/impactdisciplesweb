@@ -8,7 +8,7 @@
      cleared even though its radio still LOOKS checked - live-diagnosed via
      Playwright: submitting a form with two radio-scale fields correctly
      filled reported only the second one as satisfied. -->
-<div class="dff" [ngSwitch]="field.type" [ngStyle]="styleObject">
+<div class="dff" [ngSwitch]="field.type" [ngStyle]="wrapperStyle">
 
   <!-- Basic -->
   <div *ngSwitchCase="'text'" class="dff__control">

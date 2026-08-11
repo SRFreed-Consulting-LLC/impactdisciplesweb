@@ -17,6 +17,43 @@
   select {
     width: 100%;
   }
+
+  // Matches DevExtreme's dx.light `.dx-editor-outlined` defaults (the look
+  // every one of these forms had before migrating off dx-form) - consumed
+  // via CSS custom properties so a form's own controlStyle (set in the
+  // admin app's Form Builder) or an individual field's own override can
+  // cascade in without any merge logic here. See controlStyleVars() in
+  // form-field.model.ts for how --dff-radius/--dff-border/--dff-accent get
+  // set on this field's own wrapper (and, above that, the whole form's).
+  // Excludes type=checkbox/radio, which use accent-color below instead of
+  // a border box.
+  input:not([type='checkbox']):not([type='radio']),
+  textarea,
+  select {
+    border-radius: var(--dff-radius, 4px);
+    border: 1px solid var(--dff-border, #dddddd);
+    // Text was sitting flush against the border with no default padding at
+    // all - the other half of the DevExtreme "softness" gap alongside
+    // radius/border/accent above (dx.light's own .dx-texteditor-input rule
+    // is `padding:7px 9px 8px`, simplified to one symmetric block value -
+    // see DEFAULT_CONTROL_STYLE's own comment).
+    padding: var(--dff-padding-block, 8px) var(--dff-padding-inline, 9px);
+
+    &:focus {
+      outline: none;
+      border-color: var(--dff-accent, #337ab7);
+    }
+  }
+
+  // Native browser-drawn accent color for radio/checkbox controls - a
+  // pragmatic stand-in for DevExtreme's own custom-drawn 22px circles
+  // (`.dx-radiobutton-icon`/`.dx-checkbox-icon`, both filled with
+  // `--dx-accent` on selection) without hand-rolling replacement markup;
+  // supported in every browser this site otherwise targets.
+  input[type='checkbox'],
+  input[type='radio'] {
+    accent-color: var(--dff-accent, #337ab7);
+  }
 }
 
 .dff__required {

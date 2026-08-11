@@ -10,7 +10,7 @@
       Thank you! Your submission has been received.
     </div>
 
-    <form *ngIf="!submitted" [formGroup]="form" (ngSubmit)="onSubmit()" [style.background-color]="formDef.backgroundColor || null" class="dynamic-form__fields">
+    <form *ngIf="!submitted" [formGroup]="form" (ngSubmit)="onSubmit()" [style.background-color]="formDef.backgroundColor || null" [ngStyle]="controlStyleVars" class="dynamic-form__fields">
       <ng-container *ngFor="let field of fields">
         <app-dynamic-form-field [field]="field" [form]="form"></app-dynamic-form-field>
       </ng-container>

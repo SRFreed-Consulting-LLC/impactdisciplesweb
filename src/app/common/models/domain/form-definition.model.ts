@@ -1,5 +1,5 @@
 import { BaseModel } from '../base.model';
-import { FormFieldDef } from './form-field.model';
+import { FormControlStyle, FormFieldDef } from './form-field.model';
 
 // Trimmed copy of the sibling impactdisciples-admin repo's model of the same
 // name - a form built in that app's Web Manager > Form Builder. This app
@@ -10,6 +10,7 @@ export class FormDefinitionModel extends BaseModel {
   status: 'draft' | 'published';
   fields: FormFieldDef[];
   backgroundColor?: string;
+  controlStyle?: FormControlStyle;
   publicUrl?: string;
   createdAt?: Date;
   updatedAt?: Date;
