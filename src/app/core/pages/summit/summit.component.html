@@ -4,7 +4,7 @@
   <main class="grey-bg">
     <div class="summit__container container">
       <!--SUMMIT HEADER -->
-      <img class="summit__header" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Summit%2027%20Event.png?alt=media&token=72af5029-2943-42eb-b9b7-f2c2a7066645">
+      <img class="summit__header" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Summit%2027%20Event.png?alt=media&token=72af5029-2943-42eb-b9b7-f2c2a7066645" alt="Disciple-Making Summit">
     </div>
   </main>
 </div>
@@ -13,7 +13,7 @@
   <main class="grey-bg">
     <div class="summit__container container">
       <!--SUMMIT HEADER -->
-      <img class="summit__header" [src]="summit?.imageUrl?.url">
+      <img class="summit__header" [src]="summit?.imageUrl?.url" [alt]="summit?.eventName || 'Disciple-Making Summit'">
 
       <div class="summit__register-button">
         <a  [routerLink]="['/event-details', summit?.id]" class="impact-btn">REGISTER NOW</a>
