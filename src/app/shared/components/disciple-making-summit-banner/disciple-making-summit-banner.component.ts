@@ -18,7 +18,7 @@ export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
   public minutes = 0;
   public seconds = 0;
 
-  private intervalId: any;
+  private intervalId: number;
   private ngUnsubscribe = new Subject<void>();
 
   constructor(private eventService: EventService){}

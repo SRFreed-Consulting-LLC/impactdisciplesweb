@@ -11,7 +11,7 @@ import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.mo
 import { LocationService } from 'src/app/common/services/data/location.service';
 import { CoachService } from 'src/app/common/services/data/coach.service';
 import { CourseService } from 'src/app/common/services/data/course.service';
-import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
+import { DaysModel, ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
 import { ActivatedRoute } from '@angular/router';
 import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
@@ -27,7 +27,7 @@ import { ToastService, ToastType } from 'src/app/shared/utils/services/toast.ser
 export class ScheduleComponent implements OnInit, OnDestroy {
   event: EventModel;
   currentUser: CustomerModel | EventRegistrationModel;
-  activeDay: any;
+  activeDay: DaysModel;
   allCourses: ScheduleModel[];
   fullSchedule: ScheduleModel[];
   myCourses: ScheduleModel[];
@@ -131,13 +131,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   preselectActiveDay() {
     const today = new Date();
     const futureDates = this.fullSchedule
-      .flatMap((monthGroup: any) => monthGroup.days)
-      .filter((dayGroup: any) => new Date(dayGroup.date) >= today);
+      .flatMap((monthGroup: ScheduleModel) => monthGroup.days)
+      .filter((dayGroup: DaysModel) => new Date(dayGroup.date) >= today);
 
     this.activeDay = futureDates.length > 0 ? futureDates[0] : this.fullSchedule[0]?.days[0];
   }
 
-  setActiveDay(dayGroup: any) {
+  setActiveDay(dayGroup: DaysModel) {
     this.activeDay = dayGroup;
   }
 

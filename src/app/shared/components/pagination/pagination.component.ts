@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Pager } from 'src/app/common/models/utils/pager.model';
 
 @Component({
     selector: 'app-pagination',
@@ -8,10 +9,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class PaginationComponent {
 
-  @Input() data: any[] = [];
-  @Input() paginate: any = {};
+  // Bound but never actually read inside this component - genuinely
+  // polymorphic across callers (DMMModel[], ProductModel[], PodCastModel[]...).
+  @Input() data: unknown[] = [];
+  @Input() paginate: Pager = {};
 
-  @Output() setPage: EventEmitter<any> = new EventEmitter<any>();
+  @Output() setPage: EventEmitter<number> = new EventEmitter<number>();
 
   pageSet(page: number) {
     this.setPage.emit(page); // Set Page Number

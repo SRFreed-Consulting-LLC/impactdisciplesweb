@@ -2,6 +2,7 @@ import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PodCastModel } from 'src/app/common/models/domain/pod-cast.model';
+import { Pager } from 'src/app/common/models/utils/pager.model';
 import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
 import { PodCastService } from 'src/app/common/services/data/pod-cast.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
@@ -21,7 +22,7 @@ export class PodcastsComponent implements OnInit, OnDestroy {
   isPlaying = false;
   public webConfig: WebConfigModel;
   public pageSize = 6;
-  public paginate: any = {};
+  public paginate: Pager = {};
   public sortBy = 'asc';
   public pageNo = 1;
 

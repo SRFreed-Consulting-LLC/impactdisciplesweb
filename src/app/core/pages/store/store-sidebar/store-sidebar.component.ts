@@ -3,9 +3,16 @@ import { SeriesModel } from 'src/app/common/models/utils/series.model';
 import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { TagModel } from 'src/app/common/models/domain/tag.model';
+import { ProductModel } from 'src/app/common/models/utils/product.model';
 import { ProductCategoriesService } from 'src/app/common/services/data/product-categories.service';
 import { ProductService } from 'src/app/common/services/data/product.service';
 import { QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
+
+interface CategoryWithProducts {
+  category: TagModel;
+  products: ProductModel[];
+  displayProducts: ProductModel[];
+}
 
 @Component({
     selector: 'app-store-sidebar',
@@ -22,7 +29,7 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
   @Output() searchEvent = new EventEmitter<string>();
   @Output() viewAllProductsEvents = new EventEmitter<void>();
 
-  public categoryWithProducts: any;
+  public categoryWithProducts: CategoryWithProducts[];
 
   // Replaces DxAccordion's [collapsible]="true" [multiple]="false" -- one
   // category open at a time, clicking the open one closes it. 0 to match

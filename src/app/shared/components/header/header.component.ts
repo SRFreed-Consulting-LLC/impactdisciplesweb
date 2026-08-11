@@ -12,19 +12,19 @@ export class HeaderComponent {
   @Input() title: string;
   @Input() description: string;
   @Input() showHr = false;
-  @Input() buttonLink: any;
+  @Input() buttonLink: string;
   @Input() buttonText: string;
   @Input() buttonIcon: string;
-  @Input() buttonLink2: any;
+  @Input() buttonLink2: string;
   @Input() buttonText2: string;
   @Input() buttonIcon2: string;
-  @Input() buttonLink3: any;
+  @Input() buttonLink3: string;
   @Input() buttonText3: string;
   @Input() buttonIcon3: string;
   @Input() buttonClick = false;
   @Input() buttonClick2 = false;
-  @Output() buttonClickAction = new EventEmitter<any>();
-  @Output() buttonClickAction2 = new EventEmitter<any>();
+  @Output() buttonClickAction = new EventEmitter<void>();
+  @Output() buttonClickAction2 = new EventEmitter<void>();
 
   onButtonClick () {
     this.buttonClickAction.emit();

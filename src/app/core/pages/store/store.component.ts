@@ -2,6 +2,7 @@ import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TagModel } from 'src/app/common/models/domain/tag.model';
+import { Pager } from 'src/app/common/models/utils/pager.model';
 import { ProductModel } from 'src/app/common/models/utils/product.model';
 import { SaleModel } from 'src/app/common/models/utils/sale.model';
 import { SeriesModel } from 'src/app/common/models/utils/series.model';
@@ -31,7 +32,7 @@ export class StoreComponent implements OnInit, OnDestroy {
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];
   public showSeriesInMainView = true;
-  public paginate: any = {};
+  public paginate: Pager = {};
   public pageNo = 1;
   public pageSize = 10;
   public selectedFilter: FilterType = null;
@@ -171,7 +172,7 @@ export class StoreComponent implements OnInit, OnDestroy {
     this.setProducts(this.filteredProductItems);
   }
 
-  filterProducts(filterType: FilterType, filterItem?: any) {
+  filterProducts(filterType: FilterType, filterItem?: { id?: string }) {
     this.showSeriesInMainView = false;
     switch(filterType) {
       case FilterType.viewAll:

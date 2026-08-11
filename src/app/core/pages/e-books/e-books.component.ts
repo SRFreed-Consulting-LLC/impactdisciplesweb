@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryParam } from 'src/app/common/dao/firebase.dao';
 import { TagModel } from 'src/app/common/models/domain/tag.model';
+import { Pager } from 'src/app/common/models/utils/pager.model';
 import { ProductModel } from 'src/app/common/models/utils/product.model';
 import { SeriesModel } from 'src/app/common/models/utils/series.model';
 import { ProductService } from 'src/app/common/services/data/product.service';
@@ -20,7 +21,7 @@ export class EBooksComponent implements OnInit {
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];
   public showSeriesInMainView = false;
-  public paginate: any = {};
+  public paginate: Pager = {};
   public pageNo = 1;
   public pageSize = 10;
 

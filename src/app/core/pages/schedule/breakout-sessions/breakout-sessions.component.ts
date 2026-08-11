@@ -7,7 +7,7 @@ import { DialogService } from 'src/app/shared/utils/services/dialog.service';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
 import { CoachModel } from 'src/app/common/models/domain/coach.model';
-import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
+import { ScheduleModel, TimeGroupsModel, UpdatedAgendaItemModel } from 'src/app/common/models/utils/schedule.model';
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
@@ -97,7 +97,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     return this.coachesMap.get(id)?.title || '';
   }
 
-  viewCourse(item: any) {
+  viewCourse(item: UpdatedAgendaItemModel) {
     if(item.item.isCourse){
       if(this.viewCourseCapcaity(item.item.id) < item.item.maxParticipants){
         const course: CourseModel = this.getCourse(item.item.course);
@@ -201,7 +201,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     this.isVisible$.next(false);
   }
 
-  viewCourseCapcaity(item: any) {
+  viewCourseCapcaity(item: string) {
     return this.scheduleService.traininlist.get(item)?.length || 0;
   }
 

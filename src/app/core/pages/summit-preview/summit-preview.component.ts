@@ -29,7 +29,7 @@ export class SummitPreviewComponent implements OnInit, OnDestroy {
 
   isPlaying = false
 
-  private intervalId: any;
+  private intervalId: number;
 
   constructor(private route: ActivatedRoute, private eventService: EventService, public utilsService: UtilsService, private coachService: CoachService) { }
 

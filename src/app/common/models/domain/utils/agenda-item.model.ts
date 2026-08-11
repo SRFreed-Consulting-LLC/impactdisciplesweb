@@ -14,4 +14,9 @@ export class AgendaItem extends BaseModel{
   signedUp?: number;
   description?: string;
   room?: string;
+  // Emails of users who asked to be waitlisted once maxParticipants was hit
+  // (breakout-sessions.component.ts) - always used at runtime, just never
+  // declared here (only surfaced once viewCourse()'s item param stopped
+  // being typed any).
+  waitList?: string[];
 }

@@ -6,10 +6,10 @@ import { EventRegistrationModel } from 'src/app/common/models/domain/event-regis
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
-import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
+import { ScheduleModel, TimeGroupsModel, UpdatedAgendaItemModel } from 'src/app/common/models/utils/schedule.model';
 
 export interface ShowCourseModalPayload {
-  customAgendaItem: any;
+  customAgendaItem: UpdatedAgendaItemModel;
   course: CourseModel;
   currentUser: CustomerModel | EventRegistrationModel;
   event: EventModel;

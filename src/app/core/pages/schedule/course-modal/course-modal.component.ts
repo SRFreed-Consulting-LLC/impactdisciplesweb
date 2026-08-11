@@ -9,7 +9,7 @@ import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { DialogService } from 'src/app/shared/utils/services/dialog.service';
 import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
-import { ScheduleModel } from 'src/app/common/models/utils/schedule.model';
+import { ScheduleModel, UpdatedAgendaItemModel } from 'src/app/common/models/utils/schedule.model';
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
 import { ScheduleEventBusService } from '../schedule-event-bus.service';
 
@@ -30,10 +30,10 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
   @Input() coursesList: CourseModel[] = [];
   @Input() coachesList: CoachModel[] = [];
   @Input() roomsList: TrainingRoomModel[] = [];
-  customAgendaItem: any;
+  customAgendaItem: UpdatedAgendaItemModel;
   courseItem: CourseModel;
   currentUser: CustomerModel | EventRegistrationModel;
-  @Output() courseUpdated: EventEmitter<any> = new EventEmitter<any>();
+  @Output() courseUpdated: EventEmitter<void> = new EventEmitter<void>();
 
   // Looked up by id from the template on every change-detection cycle --
   // Maps give O(1) lookups instead of re-scanning the full list with

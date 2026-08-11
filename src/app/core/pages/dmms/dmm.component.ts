@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { DMMModel } from 'src/app/common/models/domain/dmm.model';
+import { Pager } from 'src/app/common/models/utils/pager.model';
 import { DMMService } from 'src/app/common/services/data/dmm.service';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 
@@ -16,7 +17,7 @@ export class BlogComponent implements OnInit, OnDestroy {
   public dmms: DMMModel[] = [];
   public filteredDmms: DMMModel[] = [];
   public pageSize = 6;
-  public paginate: any = {};
+  public paginate: Pager = {};
   public sortBy = 'asc';
   public pageNo = 1;
   public impactDisciplesInfo = impactDisciplesInfo;
