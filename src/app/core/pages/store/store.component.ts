@@ -158,10 +158,6 @@ export class StoreComponent implements OnInit, OnDestroy {
     })
   }
 
-  showDiscipleMakingSeries(): void {
-
-  }
-
   searchProducts(searchTerm: string): void {
     this.selectedFilter = null;
     const termLower = searchTerm.toLowerCase();

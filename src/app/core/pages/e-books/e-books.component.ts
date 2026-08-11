@@ -79,10 +79,6 @@ export class EBooksComponent implements OnInit {
     this.filteredProductItems = this.filteredProductItems.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
   }
 
-  showDiscipleMakingSeries(): void {
-
-  }
-
   setPage(page: number) {
     this.router
       .navigate([], {
