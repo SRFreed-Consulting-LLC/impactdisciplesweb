@@ -172,7 +172,10 @@ export class FirebaseDAO<T extends BaseModel> {
   public async getAllFromSubCollection(table: string, record_id: string, subcollection: string, fromFirestore?): Promise<T[]> {
     const snap = await getDocs(collection(this.fs, table, record_id, subcollection));
 
-    const docsData = snap.docs.map((item) => (item.exists() ? item.data() as T : null));
+    const docsData = snap.docs.map((item) => {
+      const val = item.exists() ? item.data() as T : null;
+      return fromFirestore && val ? fromFirestore(val) : val;
+    });
 
     return docsData;
   }

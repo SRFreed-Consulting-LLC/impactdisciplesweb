@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { LoggerService } from '../data/logger.service';
 import { WebConfigService } from '../data/web-config.service';
@@ -8,7 +8,7 @@ import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
 @Injectable({
   providedIn: 'root'
 })
-export class TaxRateService implements OnInit {
+export class TaxRateService {
 
   webconfig: WebConfigModel;
 
@@ -16,10 +16,6 @@ export class TaxRateService implements OnInit {
     this.webconfigService.getAll().then(configs => {
       this.webconfig = configs[0];
     })
-  }
-
-  async ngOnInit(): Promise<void> {
-    this.webconfig = await this.webconfigService.getAll()[0];
   }
 
   async calculateTaxRate(checkoutForm: CheckoutForm): Promise<CheckoutForm>{
