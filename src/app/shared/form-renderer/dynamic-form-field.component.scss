@@ -1,0 +1,112 @@
+.dff {
+  margin-bottom: 18px;
+}
+
+.dff__control {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+  }
+}
+
+.dff__required {
+  color: #b3261e;
+  margin-left: 3px;
+}
+
+.dff__error {
+  color: #b3261e;
+  font-size: 12.5px;
+  margin-top: 4px;
+}
+
+// Angular applies ng-invalid/ng-touched directly onto the native element,
+// covering both a single control (text/email/etc) and a nested group's own
+// sub-inputs (address/phone) with the same rule. !important is load-bearing
+// here, not decorative: this site's global theme CSS already styles bare
+// inputs by tag selector (that's why an unstyled <input> looks fine
+// elsewhere on this site), and that tag-selector rule's specificity ties
+// with a plain class selector here - without it, a required-but-blank
+// field failed validation with literally no visible indication of which
+// one was the problem (live-diagnosed: a missing Phone Number produced a
+// generic "fill in all required fields" toast with every field on screen
+// looking identical).
+.dff__control input.ng-invalid.ng-touched,
+.dff__control textarea.ng-invalid.ng-touched,
+.dff__control select.ng-invalid.ng-touched {
+  border: 1px solid #b3261e !important;
+  background-color: #fdf2f2 !important;
+}
+
+.dff__group-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.dff__checkbox-label,
+.dff__radio-label {
+  display: block;
+  font-weight: 400;
+  margin-bottom: 6px;
+
+  input {
+    width: auto;
+    margin-right: 8px;
+  }
+}
+
+.dff__block-input {
+  margin-bottom: 10px;
+}
+
+.dff__stars {
+  display: flex;
+  gap: 4px;
+}
+
+.dff__star {
+  font-size: 26px;
+  line-height: 1;
+  color: #d9d9d9;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dff__star--filled {
+  color: #f0b400;
+}
+
+.dff__heading {
+  margin: 4px 0 10px;
+}
+
+.dff__content {
+  margin-bottom: 10px;
+}
+
+.dff__image-wrap {
+  margin-bottom: 12px;
+}
+
+.dff__image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.dff__divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+}
