@@ -42,7 +42,7 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
 
   ngOnInit(): void {
     this.eventService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe(async (events) => {
-      let  currentDate = new Date();
+      const  currentDate = new Date();
       currentDate.setDate(new Date().getDate() -1);
 
       this.dms = events.find(event => event.isSummit);
@@ -69,7 +69,7 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
         return eventStartDate >= currentDate && event.isOnline;
       });
 
-      let dateSorter = (a,b) => {
+      const dateSorter = (a,b) => {
         return new Date(a.startDate as string).getTime() - new Date(b.startDate as string).getTime()
       };
 

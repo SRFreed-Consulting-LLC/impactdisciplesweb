@@ -55,10 +55,10 @@ export class ShoppingCartComponent implements OnInit {
     this.resetCartItems();
 
     if (this.couponCode) {
-      let coupons: CouponModel[] = await this.couponService.getAllByValue('code', this.couponCode);
+      const coupons: CouponModel[] = await this.couponService.getAllByValue('code', this.couponCode);
 
       if (coupons?.length > 0 && coupons[0]?.isActive) {
-        let validCoupon = coupons[0];
+        const validCoupon = coupons[0];
 
         let isValid: boolean = false;
 

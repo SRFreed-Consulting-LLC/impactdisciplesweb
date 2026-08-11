@@ -47,14 +47,14 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
   async getActiveSales() {
     return this.salesService.getAllByValue("isActive", true).then(sales => {
-      let retval: SaleModel[] = [];
+      const retval: SaleModel[] = [];
 
-      let today = new Date();
+      const today = new Date();
 
       sales.forEach(sale => {
-        let startDate = new Date(sale.startDate as string)
+        const startDate = new Date(sale.startDate as string)
 
-        let endDate = new Date(sale.endDate as string)
+        const endDate = new Date(sale.endDate as string)
 
         if(startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime()){
           retval.push(sale);

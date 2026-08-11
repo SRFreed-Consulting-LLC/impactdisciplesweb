@@ -34,7 +34,7 @@ export class StripeService {
   }
 
   async submitStripePayment(savedForm: CheckoutForm, elements){
-    let response = await this.getStripe().then(async stripe => {
+    const response = await this.getStripe().then(async stripe => {
       return await stripe.confirmPayment({
         elements: elements,
         confirmParams: {

@@ -37,7 +37,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private toastService: ToastService){}
 
   async ngAfterViewInit() {
-    let checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
+    const checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
 
     if(checkoutForm){
       if(checkoutForm.isNewsletter){
@@ -48,11 +48,11 @@ export class CheckoutSuccessComponent implements AfterViewInit{
         this.recordAffiliateSale(checkoutForm);
       }
 
-      let events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
-      let products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
-      let digitalBooks: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook);
+      const events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
+      const products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
+      const digitalBooks: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook);
 
-      let followUpEmails: CartItem[] = checkoutForm.cartItems.filter(item => item.followUpEmailId);
+      const followUpEmails: CartItem[] = checkoutForm.cartItems.filter(item => item.followUpEmailId);
 
 
       if(digitalBooks.length > 0){
@@ -81,7 +81,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   }
 
   recordAffiliateSale(checkoutForm:CheckoutForm) {
-    let sale: AffilliateSaleModel = {... new AffilliateSaleModel()};
+    const sale: AffilliateSaleModel = {... new AffilliateSaleModel()};
     sale.code = checkoutForm.couponCode;
     sale.date = Timestamp.now();
     sale.email = checkoutForm.email;
@@ -94,7 +94,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   registerEventUsers(confirmationId, events: CartItem[]){
     events.forEach(event => {
       event.attendees.forEach(async attendee => {
-        let registration = {... new EventRegistrationModel()};
+        const registration = {... new EventRegistrationModel()};
         registration.eventId = event.id;
         registration.firstName = attendee.firstName;
         registration.lastName = attendee.lastName;
@@ -126,7 +126,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
   }
 
   sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
-    let form = {};
+    const form = {};
     form['firstName'] = registration.firstName;
     form['lastName'] = registration.lastName;
     form['email'] = registration.email?.toLowerCase();
@@ -141,7 +141,7 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     followUpEmails.forEach(followUp => {
 
       console.log('checkoutForm', checkoutForm)
-      let form = {};
+      const form = {};
       form['firstName'] = checkoutForm.firstName;
       form['lastName'] = checkoutForm.lastName;
       form['email'] = checkoutForm.email?.toLowerCase();

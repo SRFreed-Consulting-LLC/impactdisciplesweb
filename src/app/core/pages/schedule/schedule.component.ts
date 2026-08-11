@@ -60,9 +60,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private toastService: ToastService) { }
 
   async ngOnInit() {
-    let eventId = this.route.snapshot.paramMap.get('event-id');
+    const eventId = this.route.snapshot.paramMap.get('event-id');
 
-    let registrationId = this.route.snapshot.paramMap.get('registration-id');
+    const registrationId = this.route.snapshot.paramMap.get('registration-id');
 
     if(eventId){
       this.eventService.streamAllByValue('id', eventId).pipe(takeUntil(this.ngUnsubscribe)).subscribe(async events => {
@@ -175,7 +175,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   getCoachList(coaches: string[]){
-    let coachList: string[] = [];
+    const coachList: string[] = [];
 
     coaches.forEach(coach => {
       coachList.push(this.getCoachName(coach))

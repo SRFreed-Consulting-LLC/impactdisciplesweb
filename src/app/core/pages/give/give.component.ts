@@ -52,7 +52,7 @@ export class GiveComponent implements OnInit {
           if (paymentForm) {
             paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
 
-            let request = {};
+            const request = {};
             request['items'] = [{ id: "Gift", amount: this.oneTimeAmount }];
             request['description'] = "One time gift";
 
@@ -102,7 +102,7 @@ export class GiveComponent implements OnInit {
     e.preventDefault();
     this.setLoading(true);
 
-    let response = await this.stripeService.getStripe().then(async stripe => {
+    const response = await this.stripeService.getStripe().then(async stripe => {
       return await stripe.confirmPayment({
         elements: this.elements,
         confirmParams: {

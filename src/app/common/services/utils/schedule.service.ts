@@ -132,7 +132,7 @@ export class ScheduleService {
 
   monitorBreakoutCapacity(event: EventModel){
     this.eventRegistrationService.streamTrainingSessionList(event.id).subscribe(registeredusers => {
-      let retval: Map<string, string[]> = new Map<string, string[]>();
+      const retval: Map<string, string[]> = new Map<string, string[]>();
 
       registeredusers.forEach(user => {
         user?.trainingSessions?.forEach(session =>{

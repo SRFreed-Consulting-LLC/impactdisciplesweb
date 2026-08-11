@@ -119,7 +119,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.isBillingView = true;
           this.isSetupPanelVisible = true;
 
-          let promises = [];
+          const promises = [];
 
           promises.push(this.calculateShippingCost());
           promises.push(this.calculateEstimatedTax());
@@ -207,7 +207,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   calculateOrderTotal(){
-    let total = (isNaN(this.calculateSubTotal()) ? 0 : this.calculateSubTotal())
+    const total = (isNaN(this.calculateSubTotal()) ? 0 : this.calculateSubTotal())
       - (isNaN(this.calculateTotalDiscount()) ? 0 :  this.calculateTotalDiscount())
       + (isNaN(this.checkoutForm.estimatedTaxes) ? 0 :  this.checkoutForm.estimatedTaxes)
       + (isNaN(this.checkoutForm.shippingRate) ? 0 :  this.checkoutForm.shippingRate)
@@ -217,44 +217,44 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   isShippingAddressNeeded(){
-    let shippingNotRequired = this.checkoutForm.cartItems.map(item => item.isEBook || item.isEvent || item.isDigitalBook).every(Boolean)
+    const shippingNotRequired = this.checkoutForm.cartItems.map(item => item.isEBook || item.isEvent || item.isDigitalBook).every(Boolean)
 
     return !shippingNotRequired
   }
 
   private createPaypalConfig(){
-    let itemTotal = this.checkoutForm.cartItems.map(item => {
-      let p = item.salePrice ? item.salePrice : item.price;
+    const itemTotal = this.checkoutForm.cartItems.map(item => {
+      const p = item.salePrice ? item.salePrice : item.price;
 
       return p * item.orderQuantity;
     }).reduce((a,b) => a + b);
 
-    let itemUnitTotal: IUnitAmount = {
+    const itemUnitTotal: IUnitAmount = {
       currency_code: this.currency,
       value: this.calculateSubTotal().toFixed(2).toString()
     }
 
-    let discountTotal: IUnitAmount = {
+    const discountTotal: IUnitAmount = {
       currency_code: this.currency,
       value: this.calculateTotalDiscount()?.toFixed(2).toString()
     }
 
-    let shippingTotal: IUnitAmount = {
+    const shippingTotal: IUnitAmount = {
       currency_code: this.currency,
       value: this.checkoutForm.shippingRate.toFixed(2).toString()
     }
 
-    let shippingDiscountTotal: IUnitAmount = {
+    const shippingDiscountTotal: IUnitAmount = {
       currency_code: this.currency,
       value: (itemTotal > this.webConfig.freeShippingAmount ? this.checkoutForm.shippingRate : 0).toFixed(2).toString()
     }
 
-    let taxesTotal: IUnitAmount = {
+    const taxesTotal: IUnitAmount = {
       currency_code: this.currency,
       value: this.checkoutForm.estimatedTaxes?.toFixed(2).toString()
     }
 
-    let breakdown: IUnitBreakdown = {
+    const breakdown: IUnitBreakdown = {
       item_total: itemUnitTotal,
       shipping: shippingTotal,
       shipping_discount: shippingDiscountTotal,
@@ -263,13 +263,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
 
-    let amount: IUnitAmount = {
+    const amount: IUnitAmount = {
       currency_code: this.currency,
       value: this.calculateOrderTotal().toFixed(2).toString(),
       breakdown: breakdown
     }
 
-    let items: ITransactionItem[] = this.checkoutForm.cartItems.map(item => <ITransactionItem>{
+    const items: ITransactionItem[] = this.checkoutForm.cartItems.map(item => <ITransactionItem>{
       name: item.itemName,
       quantity: item.orderQuantity.toString(),
       category: 'DIGITAL_GOODS',
@@ -358,11 +358,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   private getActiveSales() {
     this.salesService.getAllByValue("isActive", true).then(sales => {
-      let today = new Date();
+      const today = new Date();
 
       sales.forEach(sale => {
-        let startDate = new Date(sale.startDate as string)
-        let endDate = new Date(sale.endDate as string)
+        const startDate = new Date(sale.startDate as string)
+        const endDate = new Date(sale.endDate as string)
 
         if(startDate <= today && endDate >= today){
           this.sales.push(sale);
@@ -423,7 +423,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   sendProductPurchaseSuccessEmail(cart: CheckoutForm){
     let ebooksPurchased = false;
-    let USDollar = new Intl.NumberFormat('en-US', {
+    const USDollar = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
     });
@@ -458,7 +458,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       html+="</tr>"
     })
 
-    let subtotal = cart.cartItems.map(item => item.price * item.orderQuantity).reduce((a,b)=> a + b);
+    const subtotal = cart.cartItems.map(item => item.price * item.orderQuantity).reduce((a,b)=> a + b);
 
     html +="<tr><td></td><td></td><td></td><td></td><td>SUBTOTAL</td><td style='text-align: right;'><b>"+ USDollar.format(subtotal) +"</b></td><td></td></tr>";
 
@@ -491,7 +491,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       html += '<br><div>(For easy installation, it is best to open this email on your preferred Device and click the link!)</div>'
     }
 
-    let form = {};
+    const form = {};
     form['firstName'] = cart.firstName;
     form['lastName'] = cart.lastName;
     form['email'] = cart.email;

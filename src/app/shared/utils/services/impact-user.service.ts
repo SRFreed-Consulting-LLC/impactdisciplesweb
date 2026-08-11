@@ -27,7 +27,7 @@ export class ImpactUserService extends BaseService<ImpactUser>{
   async registerImpactUser(checkoutForm: CheckoutForm){
     this.getAllByValue('email', checkoutForm.email).then(users => {
       if(!users || users.length == 0){
-        let user: ImpactUser = {...new ImpactUser()}
+        const user: ImpactUser = {...new ImpactUser()}
         user.email = checkoutForm.email?.toLowerCase();
         user.firstName = checkoutForm.firstName;
         user.lastName = checkoutForm.lastName;
@@ -43,20 +43,20 @@ export class ImpactUserService extends BaseService<ImpactUser>{
   }
 
   async getActiveLicenses(user: ImpactUser, checkoutForm: CheckoutForm){
-    let currentLicenses: BookLicenseModel[] = user.bookLicenses? user.bookLicenses : [];
+    const currentLicenses: BookLicenseModel[] = user.bookLicenses? user.bookLicenses : [];
 
-    let licenseRequests: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook == true);
+    const licenseRequests: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook == true);
 
     // is the user currently licensed for the requested books?
     licenseRequests.forEach(request => {
-      let match = currentLicenses?.filter(license => license.bookId == request.digitalBookId)
+      const match = currentLicenses?.filter(license => license.bookId == request.digitalBookId)
 
       if(match && match.length == 1){
         // reset the purchase date to now
         match[0].purchaseDate = Timestamp.now();
       } else {
         // create a new license
-        let lm: BookLicenseModel = {...new BookLicenseModel()}
+        const lm: BookLicenseModel = {...new BookLicenseModel()}
         lm.bookId = request.digitalBookId;
         lm.length = 1
         lm.language = request.language;

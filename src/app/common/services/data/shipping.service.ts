@@ -27,7 +27,7 @@ export class ShippingService extends BaseService<ShippingModel>{
     let totalWeight: number;
 
     try {
-      let weightMap =  checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => (item.weight? item.weight : 0) * item.orderQuantity);
+      const weightMap =  checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => (item.weight? item.weight : 0) * item.orderQuantity);
 
       totalWeight = (weightMap && weightMap.length > 0)? weightMap.reduce((a,b) => a + b) : 0;
     } catch(err){
@@ -36,7 +36,7 @@ export class ShippingService extends BaseService<ShippingModel>{
       totalWeight = 0;
     }
 
-    let request: ShippingRequest = await this.createRequest(checkoutForm, totalWeight);
+    const request: ShippingRequest = await this.createRequest(checkoutForm, totalWeight);
 
     if(totalWeight > 0){
       return this.makeRequest(request).then(result => {
@@ -58,16 +58,16 @@ export class ShippingService extends BaseService<ShippingModel>{
   }
 
   private async createRequest(checkoutForm: CheckoutForm, weight: number): Promise<ShippingRequest>{
-    let request: ShippingRequest = {... new ShippingRequest()};
+    const request: ShippingRequest = {... new ShippingRequest()};
 
     try {
       const configs = await this.webConfigService.getAll();
 
-      let toName: string = checkoutForm.firstName + ' ' + checkoutForm.lastName;
-      let toAddress: Address = checkoutForm.shippingAddress;
-      let toPhone: Phone = checkoutForm.phone;
+      const toName: string = checkoutForm.firstName + ' ' + checkoutForm.lastName;
+      const toAddress: Address = checkoutForm.shippingAddress;
+      const toPhone: Phone = checkoutForm.phone;
 
-      let shipping: ShippingModel = {...new ShippingModel()};
+      const shipping: ShippingModel = {...new ShippingModel()};
       shipping.shipTo.name = toName;
       shipping.shipTo.phone = toPhone.number;
       shipping.shipTo.addressLine1 = toAddress.address1;
@@ -84,7 +84,7 @@ export class ShippingService extends BaseService<ShippingModel>{
       shipping.shipFrom.postalCode = configs[0].address.zip;
       shipping.shipFrom.countryCode = "US";
 
-      let pkg: Package = {... new Package()};
+      const pkg: Package = {... new Package()};
       pkg.weight = {...new WeightDetail()};
       pkg.weight.unit = UNIT_OF_MEASURE.OUNCE;
       pkg.weight.value = weight? weight : 0;

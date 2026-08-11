@@ -100,7 +100,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
   viewCourse(item: any) {
     if(item.item.isCourse){
       if(this.viewCourseCapcaity(item.item.id) < item.item.maxParticipants){
-        let course: CourseModel = this.getCourse(item.item.course);
+        const course: CourseModel = this.getCourse(item.item.course);
         this.scheduleEventBus.dispatchShowCourseModal({
           customAgendaItem: item,
           course: course,
@@ -120,7 +120,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
             item.item.waitList.push(this.currentUser.email);
 
             await this.eventService.getById(this.event.id).then(e => {
-              let agendaItemId = e.agendaItems.findIndex(agendaItem=> agendaItem.id == item.item.id);
+              const agendaItemId = e.agendaItems.findIndex(agendaItem=> agendaItem.id == item.item.id);
 
               e.agendaItems[agendaItemId] = item.item;
 

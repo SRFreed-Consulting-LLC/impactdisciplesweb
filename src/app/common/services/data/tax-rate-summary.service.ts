@@ -16,7 +16,7 @@ export class TaxRateSummaryService extends BaseService<TaxRateSummary>{
 
   recordStateTaxesCollected(cart: CheckoutForm){
     if(cart.shippingAddress.zip && cart.taxRate && cart.estimatedTaxes){
-      let queries: QueryParam[] = [
+      const queries: QueryParam[] = [
         new QueryParam('year', WhereFilterOperandKeys.equal, new Date().getFullYear().toString()),
         new QueryParam('zip', WhereFilterOperandKeys.equal, cart.shippingAddress.zip)
       ]

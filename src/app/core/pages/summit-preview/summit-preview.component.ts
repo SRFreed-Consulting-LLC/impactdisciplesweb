@@ -35,9 +35,9 @@ export class SummitPreviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap.subscribe(async params => {
-      let year = Number(params.get('year'));
+      const year = Number(params.get('year'));
 
-      let query = [
+      const query = [
         new QueryParam('startDate', WhereFilterOperandKeys.more, (year) + '-01-01'),
         new QueryParam('isSummit', WhereFilterOperandKeys.equal, true)
       ]

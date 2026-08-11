@@ -27,7 +27,7 @@ export class EventRegistrationService extends BaseService<EventRegistrationModel
   }
 
   async getEventRegistration(email: string, eventId: string): Promise<EventRegistrationModel[]> {
-    let params: QueryParam[] = [];
+    const params: QueryParam[] = [];
     params.push(new QueryParam('email', WhereFilterOperandKeys.equal, email.toLowerCase()));
     params.push(new QueryParam('eventId', WhereFilterOperandKeys.equal, eventId));
 
@@ -35,11 +35,11 @@ export class EventRegistrationService extends BaseService<EventRegistrationModel
   }
 
   async registerForTrainingSession(email: string, agendaItemId: string, eventId: string): Promise<EventRegistrationModel> {
-    let params: QueryParam[] = [];
+    const params: QueryParam[] = [];
     params.push(new QueryParam('email', WhereFilterOperandKeys.equal, email.toLowerCase()));
     params.push(new QueryParam('eventId', WhereFilterOperandKeys.equal, eventId));
 
-    let retval = await this.queryAllByMultiValue(params)
+    const retval = await this.queryAllByMultiValue(params)
 
     if(retval && retval.length == 1){
       if(!retval[0].trainingSessions){
@@ -57,11 +57,11 @@ export class EventRegistrationService extends BaseService<EventRegistrationModel
   }
 
   async unregisterForTrainingSession(email: string, agendaItemId: string, eventId: string): Promise<EventRegistrationModel> {
-    let params: QueryParam[] = [];
+    const params: QueryParam[] = [];
     params.push(new QueryParam('email', WhereFilterOperandKeys.equal, email.toLowerCase()));
     params.push(new QueryParam('eventId', WhereFilterOperandKeys.equal, eventId));
 
-    let retval = await this.queryAllByMultiValue(params);
+    const retval = await this.queryAllByMultiValue(params);
 
     if(retval && retval.length == 1){
       retval[0].trainingSessions = retval[0].trainingSessions.filter(session => session != agendaItemId);
@@ -75,11 +75,11 @@ export class EventRegistrationService extends BaseService<EventRegistrationModel
   }
 
   async getUserTrainingSession(email: string, eventId: string): Promise<string []> {
-    let params: QueryParam[] = [];
+    const params: QueryParam[] = [];
     params.push(new QueryParam('email', WhereFilterOperandKeys.equal, email.toLowerCase()));
     params.push(new QueryParam('eventId', WhereFilterOperandKeys.equal, eventId));
 
-    let retval = await this.queryAllByMultiValue(params);
+    const retval = await this.queryAllByMultiValue(params);
 
     if(retval && retval.length == 1){
       return retval[0].trainingSessions;

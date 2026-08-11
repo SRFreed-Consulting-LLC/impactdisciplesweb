@@ -158,7 +158,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
       this.attendeesForm.controls.forEach(async (control) => {
         const attendeeGroup = control as FormGroup;
         const value = attendeeGroup.getRawValue();
-        let registration = {... new EventRegistrationModel()};
+        const registration = {... new EventRegistrationModel()};
         registration.eventId = this.event.id;
         registration.firstName = value.firstName;
         registration.lastName = value.lastName;
@@ -188,7 +188,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   }
 
   sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
-    let form = {};
+    const form = {};
     form['firstName'] = registration.firstName;
     form['lastName'] = registration.lastName;
     form['email'] = registration.email;
