@@ -3,7 +3,7 @@ import impactDisciplesInfo from '../utils/data/impact-disciples.data';
 import { NewsletterSubscriptionModel } from 'src/app/common/models/domain/newsletter-subscription.model';
 import { Timestamp } from 'firebase/firestore';
 import { NewsletterSubscriptionService } from 'src/app/common/services/data/newsletter-subscription.service';
-import notify from 'devextreme/ui/notify';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
     selector: 'app-footer',
@@ -16,18 +16,13 @@ export class FooterComponent {
 
   subscription: NewsletterSubscriptionModel = {... new NewsletterSubscriptionModel()};
 
-  constructor(private subscriptionService: NewsletterSubscriptionService){}
+  constructor(private subscriptionService: NewsletterSubscriptionService, private toastService: ToastService){}
 
   handleFormSubmit() {
     this.subscription.date = Timestamp.now();
 
     this.subscriptionService.add(this.subscription).then(() => {
-      notify({
-        message: 'Subscription added Successfully!',
-        position: 'top',
-        width: 600,
-        type: 'success'
-      });
+      this.toastService.notify({ message: 'Subscription added Successfully!', type: 'success' });
     })
   }
 }

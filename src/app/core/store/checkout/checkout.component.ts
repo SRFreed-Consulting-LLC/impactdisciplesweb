@@ -1,9 +1,9 @@
 import { WebConfigModel } from './../../../../../src/app/common/models/utils/web-config.model';
 import { WebConfigService } from './../../../../../src/app/common/services/data/web-config.service';
 import { SalesService } from './../../../../../src/app/common/services/data/sales.service';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DxFormComponent } from 'devextreme-angular';
 import { Timestamp } from 'firebase/firestore';
 import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { CouponModel } from 'src/app/common/models/utils/coupon.model';
@@ -18,7 +18,7 @@ import { PurchasesService } from 'src/app/common/services/data/purchases.service
 import { SaleModel } from 'src/app/common/models/utils/sale.model';
 import { EMailService } from 'src/app/common/services/data/email.service';
 import { IClientAuthorizeCallbackData, ICreateOrderRequest, IPayPalConfig, ITransactionItem, IUnitAmount, IUnitBreakdown } from 'ngx-paypal';
-import notify from 'devextreme/ui/notify';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
     selector: 'app-checkout',
@@ -27,8 +27,29 @@ import notify from 'devextreme/ui/notify';
     standalone: false
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
-  @ViewChild('shippingFormComponent', { static: false }) shippingFormComponent: DxFormComponent;
-  @ViewChild('billingFormComponent', { static: false }) billingFormComponent: DxFormComponent;
+  // Replaces DxForm's [formData]="checkoutForm" two-way binding + the
+  // #shippingFormComponent ViewChild's .instance.validate().isValid gate.
+  // Two groups (not one) so shippingAddressForm's required validators can
+  // be skipped entirely when isShippingAddressNeeded() is false -- matches
+  // the old *ngIf'd dxi-item group, which meant DevExtreme never validated
+  // those fields at all for e-book/digital-only orders.
+  customerForm: FormGroup = this.fb.group({
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    email: ['', Validators.required],
+    phone: this.fb.group({
+      number: ['', Validators.required]
+    }),
+    isNewsletter: [true]
+  });
+  shippingAddressForm: FormGroup = this.fb.group({
+    address1: ['', Validators.required],
+    address2: [''],
+    city: ['', Validators.required],
+    state: ['', Validators.required],
+    zip: ['', Validators.required],
+    country: ['United States', Validators.required]
+  });
 
   checkoutForm: CheckoutForm = {... new CheckoutForm()};
   couponCode: string = '';
@@ -67,7 +88,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private emailService: EMailService,
     private salesService: SalesService,
     private webConfigService: WebConfigService,
-    private router: Router) {}
+    private router: Router,
+    private toastService: ToastService,
+    private fb: FormBuilder) {}
 
   async ngOnInit(): Promise<void> {
     this.setView();
@@ -84,7 +107,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.isBillingView = false;
         break;
       case 'billing':
-        if(this.shippingFormComponent.instance.validate().isValid) {
+        this.customerForm.markAllAsTouched();
+        if (this.isShippingAddressNeeded()) {
+          this.shippingAddressForm.markAllAsTouched();
+        }
+
+        if(this.customerForm.valid && (!this.isShippingAddressNeeded() || this.shippingAddressForm.valid)) {
+          this.applyFormValuesToCheckoutForm();
+
           this.isShippingView = false;
           this.isBillingView = true;
           this.isSetupPanelVisible = true;
@@ -114,6 +144,27 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.isShippingView = true;
         this.isBillingView = false;
         break;
+    }
+  }
+
+  // Replaces DxForm's [formData]="checkoutForm" in-place two-way binding --
+  // that DevExtreme feature wrote every keystroke straight into
+  // checkoutForm's own nested fields, which the billing-view recap and
+  // every calculate*()/submitRequest() method below reads directly.
+  // Reactive Forms don't do that automatically, so this copies the two
+  // FormGroups' values across once, at the exact point the old validate()
+  // gate used to run (the transition to billing) -- everything downstream
+  // keeps working unmodified against checkoutForm.
+  private applyFormValuesToCheckoutForm(): void {
+    const customer = this.customerForm.getRawValue();
+    this.checkoutForm.firstName = customer.firstName;
+    this.checkoutForm.lastName = customer.lastName;
+    this.checkoutForm.email = customer.email;
+    this.checkoutForm.phone = { ...this.checkoutForm.phone, number: customer.phone.number };
+    this.checkoutForm.isNewsletter = customer.isNewsletter;
+
+    if (this.isShippingAddressNeeded()) {
+      this.checkoutForm.shippingAddress = this.shippingAddressForm.getRawValue();
     }
   }
 
@@ -259,22 +310,29 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         },
         onCancel: () => {},
         onError: () => {
-          notify({
-            message: "There was an error processing the Paypal Transaction",
-            position: 'top',
-            width: 600,
-            type: 'error'
-          });
+          this.toastService.notify({ message: "There was an error processing the Paypal Transaction", type: 'error' });
         },
         onClick: () => {},
     };
   }
 
   private getDefaultCheckOutForm() {
+    // history.state.data is only set when navigating in from the shopping
+    // cart page's own router.navigate(['/checkout'], { state: { data: ... }})
+    // call (see shopping-cart.component.ts). Direct navigation -- a
+    // bookmark, a page refresh, browser back/forward -- leaves history.state
+    // without a .data property at all, which used to throw here (reading
+    // .couponCode off undefined) and, because this method never got to
+    // assign this.checkoutForm, cascaded into a second crash on first
+    // render (calculateSubTotal() calling .map() on the still-undefined
+    // cartItems of the class-field default). Pre-existing bug, fixed here
+    // as part of removing DevExtreme from this component -- unrelated to
+    // that migration itself, but found while verifying it.
+    const navigationData = history.state?.data;
     this.checkoutForm = {
       cartItems: this.cartService.getCartProducts(),
       shippingDiscount: 0,
-      couponCode: history.state.data.couponCode? history.state.data.couponCode : '',
+      couponCode: navigationData?.couponCode ? navigationData.couponCode : '',
       isShippingSameAsBilling: true,
       isNewsletter: true,
       billingAddress: { state: '', country: 'United States'},

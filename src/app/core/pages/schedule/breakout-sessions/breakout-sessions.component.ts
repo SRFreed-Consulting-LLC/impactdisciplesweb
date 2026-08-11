@@ -3,7 +3,7 @@ import { CourseModel } from 'src/app/common/models/domain/course.model';
 import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { EventModel } from 'src/app/common/models/domain/event.model';
-import { alert, confirm } from 'devextreme/ui/dialog';
+import { DialogService } from 'src/app/shared/utils/services/dialog.service';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
 import { CoachModel } from 'src/app/common/models/domain/coach.model';
@@ -45,7 +45,8 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     private scheduleEventBus: ScheduleEventBusService,
     private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService,
-    private eventService: EventService) { }
+    private eventService: EventService,
+    private dialogService: DialogService) { }
 
     async ngOnInit(): Promise<void> {
 
@@ -110,7 +111,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
           roomsList: this.roomsList
         });
       } else {
-        confirm('<i>This session is currently Full. Would you like to be added to the "Wait List"?</i>', 'Session is Full').then(async (dialogResult) => {
+        this.dialogService.confirm('<i>This session is currently Full. Would you like to be added to the "Wait List"?</i>', 'Session is Full').then(async (dialogResult) => {
           if (dialogResult) {
             if(!item.item.waitList){
               item.item.waitList = [];
@@ -125,7 +126,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
 
               this.event = e;
 
-              alert('<i>You have been successfully added to the waitList</i>', 'Registration Success').then(() => {
+              this.dialogService.alert('<i>You have been successfully added to the waitList</i>', 'Registration Success').then(() => {
                 this.scheduleEventBus.dispatchResetSchedule();
                 this.isVisible$.next(false);
               })
@@ -151,7 +152,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
       );
 
     if (conflictingCourse) {
-      confirm('<i>You are already assigned to a course at this time. Would you like to remove that course and add the new one?</i>', 'Confirm').then((dialogResult) => {
+      this.dialogService.confirm('<i>You are already assigned to a course at this time. Would you like to remove that course and add the new one?</i>', 'Confirm').then((dialogResult) => {
         if (dialogResult) {
           this.eventRegistrationService
           .unregisterForTrainingSession(this.currentUser.email, conflictingCourse.item.id, this.event.id)
@@ -159,7 +160,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
             this.eventRegistrationService
               .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
               .then(() => {
-                alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
+                this.dialogService.alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
                   this.scheduleEventBus.dispatchResetSchedule();
                   this.isVisible$.next(false);
                 })
@@ -172,7 +173,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
       this.eventRegistrationService
         .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
-          alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
+          this.dialogService.alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
             this.scheduleEventBus.dispatchResetSchedule();
             this.isVisible$.next(false);
           })
@@ -181,12 +182,12 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
   }
 
   removeCourse(course: AgendaItem) {
-    confirm('<i>Are you sure you want to remove this course from your schedule?</i>', 'Confirm').then((dialogResult) => {
+    this.dialogService.confirm('<i>Are you sure you want to remove this course from your schedule?</i>', 'Confirm').then((dialogResult) => {
       if (dialogResult) {
         this.eventRegistrationService
         .unregisterForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
-          alert('<i>You have been successfully removed from ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Removed').then(() => {
+          this.dialogService.alert('<i>You have been successfully removed from ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Removed').then(() => {
             this.scheduleEventBus.dispatchResetSchedule();
             this.isVisible$.next(false);
           })

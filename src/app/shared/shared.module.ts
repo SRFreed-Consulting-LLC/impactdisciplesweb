@@ -10,7 +10,6 @@ import { OffcanvasComponent } from "./components/offcanvas/offcanvas.component";
 import { BackToTopComponent } from "./components/back-to-top/back-to-top.component";
 import { SubscribeAreaComponent } from "./components/subscribe-area/subscribe-area.component";
 import { FooterComponent } from "./footer/footer.component";
-import { DxButtonModule } from "devextreme-angular";
 import { LocationPipe } from "./utils/pipes/location.pipe";
 import { CourseNamePipe } from "./utils/pipes/course-name.pipe";
 import { BookBannerComponent } from "./components/book-banner/book-banner.component";
@@ -56,7 +55,6 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    DxButtonModule,
     DatePipe
   ],
   exports: [

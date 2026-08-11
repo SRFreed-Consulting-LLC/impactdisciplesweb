@@ -64,86 +64,99 @@
         width: fit-content;
         border: 0;
         background-color: transparent;
-        .dx-button-content {
-          font-size: 12px;
-          color: #b1b1b1;
-          @media #{variables.$xxs,variables.$xs}{
-            font-size: 10px;
-          }
+        font-size: 12px;
+        color: #b1b1b1;
+        @media #{variables.$xxs,variables.$xs}{
+          font-size: 10px;
         }
       }
     }
     &-content {
       .accordion {
-        .dx-accordion {
-          background-color: #1c1c1c;
-          .dx-accordion-item-opened {
-            border: 1px solid #484848c2;
-            border-radius: 10px;
-            .dx-accordion-item-title {
-              background-color: #1c1c1c;
+        background-color: #1c1c1c;
+
+        // Values below are pulled from the live production DOM's computed
+        // styles (getComputedStyle against the real dx-accordion), not
+        // guessed -- matching exactly, including which corners get the
+        // 10px radius (only the OPEN item's title-top/body-bottom; every
+        // closed item is flat -- 0 radius was the actual bug here, not a
+        // missing rule, since the base &__title rule below previously
+        // applied 10px unconditionally to every title, open or closed).
+        .accordion-item {
+          margin: 0;
+
+          &:not(:first-child) .accordion-item__title:not(.accordion-item__title--opened) {
+            border-top: 1px solid rgba(255, 255, 255, 0.13);
+          }
+
+          &__title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            margin: 0;
+            background-color: #1c1c1c;
+            color: #ffffff;
+            border-radius: 0;
+            padding: 9px 12px;
+            font-size: 18px;
+
+            i {
+              font-size: 13px;
               color: #ffffff;
+              flex-shrink: 0;
+            }
+
+            &--opened {
               border-radius: 10px 10px 0 0;
             }
-            .dx-accordion-item-body {
-              background-color: rgb(68 68 68);
-              color: #ffffff;
-              border-radius: 0 0 10px 10px;
-            }
           }
-          .dx-accordion-item-closed {
-            .dx-accordion-item-title {
-              background-color: #1c1c1c;
-              color: #ffffff;
-              border-radius: 10px;
-            }
-          }
-          .dx-accordion-item.dx-state-focused,
-          .dx-accordion-item.dx-state-active {
-            border: none;
-          }
-          .dx-accordion-item:last-child {
-            border-bottom: 0;
-          }
-          .dx-accordion-item:first-child {
-            border-top: 0;
+
+          &__body {
+            background-color: rgb(68 68 68);
+            color: #ffffff;
+            border-radius: 0 0 10px 10px;
+            padding: 8px 12px 22px;
           }
         }
+
         &__header {
-          padding-right: 40px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
           font-size: 16px;
+          font-weight: 400;
         }
         &__tags-container {
           display: flex;
           flex-direction: column;
-          .dx-button {
+          button {
             border: none;
             width: 100%;
             background-color: transparent;
             color: #ffffff;
             border-top: 1px solid #ffffff;
             border-radius: 0;
-            .dx-button-content {
-              justify-content: left;
-            }
+            margin: 0;
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 14px;
           }
-          .dx-button:first-child,.dx-button:last-child {
+          button:first-child, button:last-child {
             border-top: none;
           }
-          .dx-button.dx-state-hover {
+          button:hover {
             background-color: #ffd93ff2;
             color: #1c1c1c;
           }
           .view-all {
-            .dx-button-content {
-              justify-content: right;
-              font-size: 10px;
-            }
+            text-align: right;
+            font-size: 10px;
           }
-          .view-all.dx-state-hover {
+          .view-all:hover {
             background-color: transparent;
           }
         }

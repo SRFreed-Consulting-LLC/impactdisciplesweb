@@ -16,7 +16,7 @@ import { ScheduleService } from 'src/app/common/services/utils/schedule.service'
 import { ActivatedRoute } from '@angular/router';
 import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
 import { ScheduleEventBusService } from './schedule-event-bus.service';
-import notify from 'devextreme/ui/notify';
+import { ToastService, ToastType } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
     selector: 'app-schedule',
@@ -56,7 +56,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private scheduleEventBus: ScheduleEventBusService,
     private locationService: LocationService,
     private courseService: CourseService,
-    private coachService: CoachService) { }
+    private coachService: CoachService,
+    private toastService: ToastService) { }
 
   async ngOnInit() {
     let eventId = this.route.snapshot.paramMap.get('event-id');
@@ -104,12 +105,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendNotification(message: string, type: string){
-    notify({
-      message: message,
-      position: 'top',
-      type: type
-    });
+  sendNotification(message: string, type: ToastType){
+    this.toastService.notify({ message, type });
   }
 
   private async updateSchedule() {

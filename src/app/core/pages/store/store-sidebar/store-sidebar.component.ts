@@ -24,6 +24,11 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
 
   public categoryWithProducts: any;
 
+  // Replaces DxAccordion's [collapsible]="true" [multiple]="false" -- one
+  // category open at a time, clicking the open one closes it. 0 to match
+  // DevExtreme's own default selectedIndex (first item open on load).
+  public openIndex: number | null = 0;
+
   private ngUnsubscribe = new Subject<void>();
 
   constructor(
@@ -109,5 +114,9 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
 
   onItemClick(id: string): void {
     this.router.navigate(['/product-details', id]);
+  }
+
+  toggleIndex(index: number): void {
+    this.openIndex = this.openIndex === index ? null : index;
   }
 }

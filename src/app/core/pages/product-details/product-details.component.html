@@ -57,34 +57,28 @@
               <div>
                 <div class="row mb-25">
                   <div class="col-6" *ngIf="product?.sizes && product?.sizes.length > 0">
-                    <dx-select-box [dataSource]="product.sizes" [value]="this.cartItem.size" [label]="'Size'" (onSelectionChanged)="setSize($event)">
-                      <dx-validator #sizeValidator>
-                        <dxi-validation-rule
-                          type="required"
-                          message="Size is required">
-                        </dxi-validation-rule>
-                      </dx-validator>
-                    </dx-select-box>
+                    <label>Size</label>
+                    <select [class.is-invalid]="sizeError" (change)="setSize($any($event.target).value)">
+                      <option value="" [selected]="!cartItem.size" disabled hidden>Select...</option>
+                      <option *ngFor="let size of product.sizes" [value]="size" [selected]="size === cartItem.size">{{ size }}</option>
+                    </select>
+                    <div class="field-error" *ngIf="sizeError">Size is required</div>
                   </div>
                   <div class="col-6" *ngIf="product?.colors && product?.colors.length > 0">
-                    <dx-select-box [dataSource]="product.colors" [value]="this.cartItem.color" [label]="'Color'" (onSelectionChanged)="setColor($event)">
-                      <dx-validator #colorValidator>
-                        <dxi-validation-rule
-                          type="required"
-                          message="Color is required">
-                        </dxi-validation-rule>
-                      </dx-validator>
-                    </dx-select-box>
+                    <label>Color</label>
+                    <select [class.is-invalid]="colorError" (change)="setColor($any($event.target).value)">
+                      <option value="" [selected]="!cartItem.color" disabled hidden>Select...</option>
+                      <option *ngFor="let color of product.colors" [value]="color" [selected]="color === cartItem.color">{{ color }}</option>
+                    </select>
+                    <div class="field-error" *ngIf="colorError">Color is required</div>
                   </div>
                   <div class="col-6" *ngIf="product?.languages && product?.languages.length > 0">
-                    <dx-select-box [dataSource]="product.languages" [value]="this.cartItem.language" [label]="'Language'" (onSelectionChanged)="setLanguage($event)">
-                      <dx-validator #languageValidator>
-                        <dxi-validation-rule
-                          type="required"
-                          message="Language is required">
-                        </dxi-validation-rule>
-                      </dx-validator>
-                    </dx-select-box>
+                    <label>Language</label>
+                    <select [class.is-invalid]="languageError" (change)="setLanguage($any($event.target).value)">
+                      <option value="" [selected]="!cartItem.language" disabled hidden>Select...</option>
+                      <option *ngFor="let language of product.languages" [value]="language" [selected]="language === cartItem.language">{{ language }}</option>
+                    </select>
+                    <div class="field-error" *ngIf="languageError">Language is required</div>
                   </div>
                 </div>
               </div>

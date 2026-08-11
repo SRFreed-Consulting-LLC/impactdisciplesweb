@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { CartItem } from "../../../../../src/app/common/models/utils/cart.model";
-import notify from "devextreme/ui/notify";
+import { ToastService } from "./toast.service";
 
 const state = {
   cart: JSON.parse(localStorage['cart'] || '[]')
@@ -12,7 +12,7 @@ const state = {
 export class CartService {
   public orderQuantity: number = 1;
 
-  constructor(){}
+  constructor(private toastService: ToastService){}
 
   public getCartProducts(): CartItem[] {
     return state.cart;
@@ -26,12 +26,7 @@ export class CartService {
       };
       state.cart.push(newItem);
 
-      notify({
-        message: `${payload.itemName} added to cart`,
-        position: 'top',
-        width: 600,
-        type: 'success'
-      });
+      this.toastService.notify({ message: `${payload.itemName} added to cart`, type: 'success' });
 
     } else {
       state.cart.map((item: CartItem) => {
@@ -42,12 +37,7 @@ export class CartService {
                 ? this.orderQuantity + item.orderQuantity
                 : item.orderQuantity + 1;
 
-            notify({
-              message: `${this.orderQuantity} ${item.itemName} added to cart`,
-              position: 'top',
-              width: 600,
-              type: 'success'
-            });
+            this.toastService.notify({ message: `${this.orderQuantity} ${item.itemName} added to cart`, type: 'success' });
           }
         }
         return { ...item };
@@ -100,12 +90,7 @@ export class CartService {
           if (item.orderQuantity > 1) {
             item.orderQuantity = item.orderQuantity - 1;
 
-            notify({
-              message: `Decrement Quantity For ${item.itemName}`,
-              position: 'top',
-              width: 600,
-              type: 'info'
-            });
+            this.toastService.notify({ message: `Decrement Quantity For ${item.itemName}`, type: 'info' });
           }
         }
       }
@@ -119,12 +104,7 @@ export class CartService {
       (p: CartItem) => p.id !== payload.id
     );
 
-    notify({
-      message: `${payload.itemName} remove to cart`,
-      position: 'top',
-      width: 600,
-      type: 'error'
-    });
+    this.toastService.notify({ message: `${payload.itemName} remove to cart`, type: 'error' });
 
     localStorage.setItem("cart", JSON.stringify(state.cart));
   };

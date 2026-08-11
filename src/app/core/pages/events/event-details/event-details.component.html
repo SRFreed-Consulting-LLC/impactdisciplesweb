@@ -61,36 +61,39 @@
                 <div class="mt-20 mb-30">
                   <h4>ADD TICKETS:</h4>
                   <div class="event-details__right-ticket-number">
-                    <button class="os-btn" (click)="decrement()"> <i class="dx-icon-minus"></i></button>
-                    <dx-number-box [value]="cartItem?.attendees?.length"></dx-number-box>
-                    <button class="os-btn" (click)="increment()"><i class="dx-icon-plus"></i></button>
+                    <button class="os-btn" (click)="decrement()"> <i class="fas fa-minus"></i></button>
+                    <input type="text" readonly class="attendee-count" [value]="cartItem?.attendees?.length">
+                    <button class="os-btn" (click)="increment()"><i class="fas fa-plus"></i></button>
                   </div>
                 </div>
 
                 <h3>Tickets</h3>
-                <dx-accordion *ngFor="let attendee of cartItem?.attendees; let i = index" [collapsible]="true" [multiple]="true" [selectedIndex]="0">
-                  <dxi-item  title="Attendee {{ i + 1 }} *">
-                    <dx-form #attendeeForms [formData]="attendee" class="mb-25">
-                      <dxi-item dataField="firstName" [isRequired]="true"></dxi-item>
-                      <dxi-item dataField="lastName" [isRequired]="true"></dxi-item>
-                      <dxi-item dataField="email">
-                        <dxi-validation-rule type="required" message="Email Address is required">
-                        </dxi-validation-rule>
-                        <dxi-validation-rule
-                          type="async"
-                          message="A Person with this email address has already registered!"
-                          [validationCallback]="alreadyRegisteredValidation">
-                        </dxi-validation-rule>
-                        <dxi-validation-rule
-                          [reevaluate]="false"
-                          type="async"
-                          message="Each email registered must be unique!"
-                          [validationCallback]="uniqueEmailValidation">
-                        </dxi-validation-rule>
-                      </dxi-item>
-                    </dx-form>
-                  </dxi-item>
-                </dx-accordion>
+                <div class="attendee-accordion">
+                  <div class="attendee-accordion-item" *ngFor="let attendeeGroup of attendeesForm.controls; let i = index" [formGroup]="$any(attendeeGroup)">
+                    <button type="button" class="attendee-accordion-item__title" [class.attendee-accordion-item__title--opened]="openIndexes.has(i)" (click)="toggleAttendee(i)">
+                      Attendee {{ i + 1 }} <span class="attendee-form__required">*</span>
+                    </button>
+                    <div class="attendee-accordion-item__body mb-25" *ngIf="openIndexes.has(i)">
+                      <div class="attendee-form__field">
+                        <label>First Name<span class="attendee-form__required">*</span></label>
+                        <input type="text" formControlName="firstName" [class.is-invalid]="attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched">
+                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched">First Name is required</div>
+                      </div>
+                      <div class="attendee-form__field">
+                        <label>Last Name<span class="attendee-form__required">*</span></label>
+                        <input type="text" formControlName="lastName" [class.is-invalid]="attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched">
+                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched">Last Name is required</div>
+                      </div>
+                      <div class="attendee-form__field">
+                        <label>Email<span class="attendee-form__required">*</span></label>
+                        <input type="email" formControlName="email" [class.is-invalid]="attendeeGroup.get('email').invalid && attendeeGroup.get('email').touched">
+                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('required')">Email Address is required</div>
+                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('alreadyRegistered')">A Person with this email address has already registered!</div>
+                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('duplicateEmail')">Each email registered must be unique!</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 <div *ngIf="!total || total == 0" class="cart-page-total">
                   <a class="os-btn"(click)="signUpForEvent()">Sign UP</a>

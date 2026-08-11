@@ -1,12 +1,10 @@
-<dx-popup
-  [showTitle]="true"
-  [dragEnabled]="false"
-  [visible]="isVisible$ | async"
-  [width]="'50%'"
-  [height]="'75%'"
-  cssClass="course-popup"
-  [showCloseButton]="true"
-  (onHiding)="onCancel()">
+<div class="impact-modal" [class.impact-modal--open]="isVisible$ | async">
+  <div class="impact-modal__backdrop" (click)="onCancel()"></div>
+  <div class="impact-modal__dialog course-popup" style="width: 50%; height: 75%;">
+    <div class="impact-modal__header">
+      <button type="button" class="impact-modal__close" (click)="onCancel()" aria-label="Close">&times;</button>
+    </div>
+    <div class="impact-modal__body">
 
   <div class="course-popup-content" *ngIf="isVisible$ | async">
     <div class="course-popup-content__title">{{ courseItem?.title }}</div>
@@ -29,8 +27,8 @@
         <span *ngIf="getCapacity() >= customAgendaItem?.item.maxParticipants" style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;Full</span>
       </div>
     </div>
-    <dx-button *ngIf="!customAgendaItem?.isAssignedToUser" class="course-popup-content__button-add" [text]="'Sign up'" (onClick)="addCourse(customAgendaItem.item)"></dx-button>
-    <dx-button *ngIf="customAgendaItem?.isAssignedToUser" class="course-popup-content__button-remove" [text]="'Remove'" (onClick)="removeCourse(customAgendaItem.item)"></dx-button>
+    <button type="button" *ngIf="!customAgendaItem?.isAssignedToUser" class="course-popup-content__button-add" (click)="addCourse(customAgendaItem.item)">Sign up</button>
+    <button type="button" *ngIf="customAgendaItem?.isAssignedToUser" class="course-popup-content__button-remove" (click)="removeCourse(customAgendaItem.item)">Remove</button>
     <div class="coaches">
       <div class="coaches__header">Speakers</div>
       <div class="coaches__wrapper">
@@ -50,4 +48,6 @@
     </div>
   </div>
 
-</dx-popup>
+    </div>
+  </div>
+</div>

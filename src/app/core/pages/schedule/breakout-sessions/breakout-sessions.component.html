@@ -1,12 +1,10 @@
-<dx-popup
-  [showTitle]="true"
-  [dragEnabled]="false"
-  [visible]="isVisible$ | async"
-  [width]="resizePopup()"
-  [height]="'100%'"
-  cssClass="course-popup"
-  [showCloseButton]="true"
-  (onHiding)="onCancel()">
+<div class="impact-modal" [class.impact-modal--open]="isVisible$ | async">
+  <div class="impact-modal__backdrop" (click)="onCancel()"></div>
+  <div class="impact-modal__dialog course-popup" [style.width]="resizePopup()" style="height: 100%;">
+    <div class="impact-modal__header">
+      <button type="button" class="impact-modal__close" (click)="onCancel()" aria-label="Close">&times;</button>
+    </div>
+    <div class="impact-modal__body">
   <div class="sessions"  style="margin-top: 20px;">
     <div *ngFor="let monthGroup of allCourses; let i = index">
       <div *ngFor="let dayGroup of monthGroup.days">
@@ -42,8 +40,8 @@
                           <span *ngIf="viewCourseCapcaity(course.item.id) >= course.item.maxParticipants" style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;Full</span>
                         </div>
                         <div style="align-items: center; text-align: center;">
-                          <dx-button *ngIf="!course?.isAssignedToUser" class="course-popup-content__button-add" [text]="'Sign up'" (onClick)="addCourse(course.item)"></dx-button>
-                          <dx-button *ngIf="course?.isAssignedToUser" class="course-popup-content__button-remove" [text]="'Remove'" (onClick)="removeCourse(course.item)"></dx-button>
+                          <button type="button" *ngIf="!course?.isAssignedToUser" class="course-popup-content__button-add" (click)="addCourse(course.item)">Sign up</button>
+                          <button type="button" *ngIf="course?.isAssignedToUser" class="course-popup-content__button-remove" (click)="removeCourse(course.item)">Remove</button>
                         </div>
                       </div>
                       <div class="col-12 alignText-start">
@@ -70,5 +68,6 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
-</dx-popup>
+</div>

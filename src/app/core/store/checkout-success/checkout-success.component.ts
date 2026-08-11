@@ -1,6 +1,5 @@
 import { formatDate } from '@angular/common';
 import { AfterViewInit, Component } from '@angular/core';
-import notify from 'devextreme/ui/notify';
 import { Timestamp } from 'firebase/firestore';
 import { EMailModel } from 'src/app/common/models/admin/mail.model';
 import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
@@ -16,6 +15,7 @@ import { TaxRateSummaryService } from 'src/app/common/services/data/tax-rate-sum
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
 import { ImpactUserService } from 'src/app/shared/utils/services/impact-user.service';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -33,7 +33,8 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private emailService: EMailService,
     private eventService: EventService,
     private affiliateSaleService: AffilliateSalesService,
-    private taxSummaryService: TaxRateSummaryService){}
+    private taxSummaryService: TaxRateSummaryService,
+    private toastService: ToastService){}
 
   async ngAfterViewInit() {
     let checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
@@ -109,11 +110,9 @@ export class CheckoutSuccessComponent implements AfterViewInit{
             }).then(registration => {
               this.eventRegistrationService.update(registration.id, registration);
             }).then(() => {
-              notify({
+              this.toastService.notify({
                 message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
                 ' starting on ' + dateFromTimestamp(event.startDate),
-                position: 'top',
-                width: 600,
                 type: 'success'
               });
 

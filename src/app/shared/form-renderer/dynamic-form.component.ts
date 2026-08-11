@@ -1,8 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-// This app's own existing toast pattern - see consultation-survey.component.ts's
-// own use of the same import today. Not a new dependency.
-import notify from 'devextreme/ui/notify';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { FormDefinitionModel } from 'src/app/common/models/domain/form-definition.model';
 import { controlStyleVars, flattenDataFields, FormFieldDef } from 'src/app/common/models/domain/form-field.model';
 import { FormSubmissionModel } from 'src/app/common/models/domain/form-submission.model';
@@ -37,7 +35,7 @@ export class DynamicFormComponent implements OnChanges {
   formDef: FormDefinitionModel | null = null;
   form: FormGroup = new FormGroup({});
 
-  constructor(private formDefinitionService: FormDefinitionService, private formSubmissionService: FormSubmissionService) {}
+  constructor(private formDefinitionService: FormDefinitionService, private formSubmissionService: FormSubmissionService, private toastService: ToastService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['formId'] && this.formId) {
@@ -85,7 +83,7 @@ export class DynamicFormComponent implements OnChanges {
     }
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      notify({ message: 'Please fill in all required fields.', position: 'top', width: 500, type: 'warning' });
+      this.toastService.notify({ message: 'Please fill in all required fields.', type: 'warning' });
       // On a long form the invalid field (now visibly red-bordered - see
       // dynamic-form-field.component.scss) can easily be scrolled off
       // screen, leaving the toast as the only thing anyone actually sees.
@@ -113,10 +111,10 @@ export class DynamicFormComponent implements OnChanges {
       .add(submission)
       .then(() => {
         this.submitted = true;
-        notify({ message: 'Thank you! Your submission has been received.', position: 'top', width: 500, type: 'success' });
+        this.toastService.notify({ message: 'Thank you! Your submission has been received.', type: 'success' });
       })
       .catch(() => {
-        notify({ message: 'Something went wrong submitting the form. Please try again.', position: 'top', width: 500, type: 'error' });
+        this.toastService.notify({ message: 'Something went wrong submitting the form. Please try again.', type: 'error' });
       })
       .finally(() => {
         this.submitting = false;

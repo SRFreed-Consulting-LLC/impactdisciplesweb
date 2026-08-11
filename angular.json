@@ -14,10 +14,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "jszip",
-              "devexpress-diagram",
-              "devexpress-gantt",
-              "devextreme-quill"
+              "jszip"
             ],
             "outputPath": "dist/impactdisciplesweb",
             "index": "src/index.html",
@@ -31,7 +28,6 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/devextreme/dist/css/dx.light.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],

@@ -7,7 +7,7 @@ import { CoachModel } from 'src/app/common/models/domain/coach.model';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { EventModel } from 'src/app/common/models/domain/event.model';
-import { confirm } from 'devextreme/ui/dialog';
+import { DialogService } from 'src/app/shared/utils/services/dialog.service';
 import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
 import { ScheduleModel } from 'src/app/common/models/utils/schedule.model';
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
@@ -50,7 +50,8 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private scheduleEventBus: ScheduleEventBusService,
     private eventRegistrationService: EventRegistrationService,
-    private scheduleService: ScheduleService){}
+    private scheduleService: ScheduleService,
+    private dialogService: DialogService){}
 
   async ngOnInit(): Promise<void> {
     this.scheduleEventBus.showCourseModal.pipe(
@@ -111,7 +112,7 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
       );
 
     if (conflictingCourse) {
-      confirm('<i>You are already assigned to a course at this time. Would you like to remove that course and add the new one?</i>', 'Confirm').then((dialogResult) => {
+      this.dialogService.confirm('<i>You are already assigned to a course at this time. Would you like to remove that course and add the new one?</i>', 'Confirm').then((dialogResult) => {
         if (dialogResult) {
           this.eventRegistrationService
           .unregisterForTrainingSession(this.currentUser.email, conflictingCourse.item.id, this.event.id)
@@ -137,7 +138,7 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   removeCourse(course: AgendaItem) {
-    confirm('<i>Are you sure you want to remove this course from your schedule?</i>', 'Confirm').then((dialogResult) => {
+    this.dialogService.confirm('<i>Are you sure you want to remove this course from your schedule?</i>', 'Confirm').then((dialogResult) => {
       if (dialogResult) {
         this.eventRegistrationService
         .unregisterForTrainingSession(this.currentUser.email, course.id, this.event.id)
