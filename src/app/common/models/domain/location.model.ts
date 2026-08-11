@@ -10,5 +10,5 @@ export class LocationModel extends BaseModel {
   contactName: string;
   phone: Phone;
   trainingrooms: TrainingRoomModel[];
-  organization: OrganizationModel | any;
+  organization: OrganizationModel | string;
 }

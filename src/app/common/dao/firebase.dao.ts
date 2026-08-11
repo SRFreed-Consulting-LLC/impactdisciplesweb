@@ -25,7 +25,7 @@ export class FirebaseDAO<T extends BaseModel> {
     });
   }
 
-  public getAllByValue(table: string, field: string, value: any, fromFirestore?, limitCount?: number): Promise<T[]>{
+  public getAllByValue(table: string, field: string, value: unknown, fromFirestore?, limitCount?: number): Promise<T[]>{
     const constraints: QueryConstraint[] = [where(field, "==", value)];
     if (limitCount) constraints.push(limit(limitCount));
 
@@ -34,7 +34,7 @@ export class FirebaseDAO<T extends BaseModel> {
     });
   }
 
-  public queryByValue(table: string, field: string, opStr: WhereFilterOperandKeys, value: any, fromFirestore?, limitCount?: number): Promise<T[]>{
+  public queryByValue(table: string, field: string, opStr: WhereFilterOperandKeys, value: unknown, fromFirestore?, limitCount?: number): Promise<T[]>{
     const constraints: QueryConstraint[] = [where(field, opStr, value)];
     if (limitCount) constraints.push(limit(limitCount));
 
@@ -105,7 +105,7 @@ export class FirebaseDAO<T extends BaseModel> {
     );
   }
 
-  public streamByValue(table: string, field: string, value: any, fromFirestore?, limitCount?: number): Observable<T[]>{
+  public streamByValue(table: string, field: string, value: unknown, fromFirestore?, limitCount?: number): Observable<T[]>{
     const constraints: QueryConstraint[] = [where(field, "==", value)];
     if (limitCount) constraints.push(limit(limitCount));
 
@@ -131,7 +131,7 @@ export class FirebaseDAO<T extends BaseModel> {
     })
   }
 
-  public queryStreamByValue(table: string, field: string, opStr: WhereFilterOperandKeys, value: any, fromFirestore?, limitCount?: number): Observable<T[]>{
+  public queryStreamByValue(table: string, field: string, opStr: WhereFilterOperandKeys, value: unknown, fromFirestore?, limitCount?: number): Observable<T[]>{
     const constraints: QueryConstraint[] = [where(field, opStr, value)];
     if (limitCount) constraints.push(limit(limitCount));
 
@@ -228,12 +228,12 @@ export enum WhereFilterOperandKeys {
 }
 
 export class QueryParam {
-  constructor(field: string, operation: WhereFilterOperandKeys, value: any) {
+  constructor(field: string, operation: WhereFilterOperandKeys, value: unknown) {
     this.field = field;
     this.operation = operation;
     this.value = value;
   }
   field: string;
-  value: any;
+  value: unknown;
   operation: WhereFilterOperandKeys;
 }

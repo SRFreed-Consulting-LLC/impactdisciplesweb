@@ -7,10 +7,10 @@ export class EventRegistrationModel extends BaseModel{
   eventId: string;
   email: string;
   receipt: string;
-  registrationDate: Timestamp | any;
+  registrationDate: Timestamp | Date | string;
   trainingSessions: string [];
   loggedIn?: boolean = false;
   receiptEmailId?: string;
   receiptEmailStatus: string;
-  receiptEmailDate: Timestamp | any;
+  receiptEmailDate: Timestamp | Date | string;
 }

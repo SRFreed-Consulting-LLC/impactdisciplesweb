@@ -5,6 +5,7 @@ import { Address } from "src/app/common/models/domain/utils/address.model";
 import { Phone } from "src/app/common/models/domain/utils/phone.model";
 import { UNIT_OF_MEASURE } from 'src/app/common/lists/unit_of_measure.enum';
 import { IClientAuthorizeCallbackData } from 'ngx-paypal';
+import { ImageModel } from 'src/app/common/models/utils/image.model';
 
 export interface CartItem {
   id?: string;
@@ -18,13 +19,13 @@ export interface CartItem {
   isEBook?: boolean;
   isDigitalBook?: boolean;
   digitalBookId?: string;
-  img?: any;
+  img?: ImageModel;
   attendees?: Attendee[];
   dateProcessed?: Timestamp;
   processedStatus?: string;
   weight?: number;
   uom?: UNIT_OF_MEASURE;
-  eBookUrl?: any;
+  eBookUrl?: ImageModel;
   size?: string;
   color?: string;
   language?: string;
@@ -65,8 +66,10 @@ export class CheckoutForm extends BaseModel {
   couponPercent?: number;
   //amount charged for shipping
   shippingRate?: number = 0;
-  //id of shipping rate used
-  shippingRateId?: any;
+  //id of shipping rate used - actually the whole selected rate object from
+  //the shipping API response (a spread, not just an id - see
+  //shipping.service.ts), no local type for that external shape.
+  shippingRateId?: unknown;
   //amount of shipping discount
   shippingDiscount?: number = 0;
   //shipping discount reason
@@ -79,7 +82,7 @@ export class CheckoutForm extends BaseModel {
   taxSource?: string;
 
   //url to shipping label
-  shippingLabel?: any;
+  shippingLabel?: unknown;
 
   refundAmount?: number = 0;
   refundId?: string;

@@ -5,7 +5,7 @@ export class MailTemplateModel extends BaseModel {
   name: string
   subject: string;
   html: string;
-  attachments: any[];
+  attachments: unknown[];
 }
 
 export class EMailModel extends BaseModel {
