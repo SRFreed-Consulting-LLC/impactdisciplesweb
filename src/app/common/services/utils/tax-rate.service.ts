@@ -23,7 +23,7 @@ export class TaxRateService implements OnInit {
   }
 
   async calculateTaxRate(checkoutForm: CheckoutForm): Promise<CheckoutForm>{
-    var myHeaders = new Headers();
+    const myHeaders = new Headers();
     myHeaders.append("apikey", this.webconfig.taxApiKey);
 
     const taxRates = await fetch("https://api.apilayer.com/tax_data/tax_rates?zip="+checkoutForm.shippingAddress.zip+"&use_client_ip=false&country=US", {

@@ -206,8 +206,8 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
   }
 
 resizePopup() {
-  var viewportWidth = window.innerWidth;
-  var popupWidth = viewportWidth < 768 ? '100%' : '50%';
+  const viewportWidth = window.innerWidth;
+  const popupWidth = viewportWidth < 768 ? '100%' : '50%';
   return popupWidth
 }
 
