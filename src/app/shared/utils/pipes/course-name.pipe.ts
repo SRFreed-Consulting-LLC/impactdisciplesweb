@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CourseService } from 'impactdisciplescommon/src/services/data/course.service';
+import { CourseService } from 'src/app/common/services/data/course.service';
 
 @Pipe({
     name: 'courseName',

@@ -1,83 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { DxFormComponent } from 'devextreme-angular';
-import notify from 'devextreme/ui/notify';
-import { Timestamp } from 'firebase/firestore';
-import { LunchAndLearnModel } from 'impactdisciplescommon/src/models/domain/lunch-and-learn.model';
-import { Address } from 'impactdisciplescommon/src/models/domain/utils/address.model';
-import { Phone } from 'impactdisciplescommon/src/models/domain/utils/phone.model';
-import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
-import { LunchAndLearnService } from 'impactdisciplescommon/src/services/data/lunch-and-learn.service';
-import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
-import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
-import { EnumHelper } from 'impactdisciplescommon/src/utils/enum_helper';
+import { Component } from '@angular/core';
 
+// Now backed by app-dynamic-form (src/app/shared/form-renderer/) - the
+// "Lunch and Learn Request" form is authored/edited in the sibling
+// impactdisciples-admin app's Web Manager > Form Builder, not here. See
+// consultation-survey.component.ts for the full explanation of this
+// pattern (same one, second use).
+//
+// The id below is this form's Firestore document id in the
+// impactdisciplesdev project - not portable to production as-is, same
+// caveat as Consultation Survey's own formId.
 @Component({
     selector: 'app-lunch-and-learn-form',
     templateUrl: './lunch-and-learn-form.component.html',
     styleUrls: ['./lunch-and-learn-form.component.scss'],
     standalone: false
 })
-export class LunchAndLearnFormComponent implements OnInit {
-  @ViewChild('lunchRequestFormComponent', { static: false }) lunchRequestFormComponent: DxFormComponent;
-  lunchRequestForm: LunchAndLearnModel;
-
-  phoneEditorOptions = {
-    mask: '(X00) 000-0000',
-    maskRules: {
-      X: /[02-9]/,
-    },
-    maskInvalidMessage: 'The phone must have a correct USA phone format',
-    valueChangeEvent: 'keyup',
-  };
-
-  public states: string[];
-
-  constructor(private lunchAndLearnService: LunchAndLearnService,
-    private webConfigService: WebConfigService,
-    private emailService: EMailService
-  ){}
-
-  ngOnInit(): void {
-    this.lunchRequestForm = {... new LunchAndLearnModel()};
-    this.lunchRequestForm.coordinatorPhone = {... new Phone()};
-    this.lunchRequestForm.locationAddress = {... new Address()};
-
-    this.states = EnumHelper.getStateTypesAsArray();
-  }
-
-  onSubmitForm() {
-    if(this.lunchRequestFormComponent.instance.validate().isValid) {
-      this.lunchRequestForm.date = Timestamp.now();
-
-      this.lunchRequestForm.dateString = new Date().toDateString();
-      this.lunchRequestForm.requestedDateString = dateFromTimestamp(this.lunchRequestForm.requestedDate as Timestamp).toDateString();
-      this.lunchRequestForm.requestedStartTimeString = dateFromTimestamp(this.lunchRequestForm.requestedStartTime as Timestamp).toTimeString();
-      this.lunchRequestForm.requestedEndTimeString = dateFromTimestamp(this.lunchRequestForm.requestedEndTime as Timestamp).toTimeString();
-
-      this.webConfigService.getAll().then(config => {
-        return config[0].adminEmailAddress;
-      }).then (email => {
-        this.lunchAndLearnService.add(this.lunchRequestForm).then((form) => {
-          notify({
-            message: "Lunch and Learn Request submited Successfully!",
-            position: 'top',
-            width: 600,
-            type: 'success'
-          });
-          return form;
-        }).then(form => {
-          this.emailService.sendTemplateEmail(email, 'Lunch And Learn Template', form);
-        })
-      })
-    }
-  }
-
-  displayAddress(item: any): string {
-    if (!item) return '';
-
-    const address: Address = item.address;
-    const fullAddress = `${address.address1}, ${address.city}, ${address.state}, ${address.zip}`;
-    return fullAddress;
-  }
-
+export class LunchAndLearnFormComponent {
+  readonly formId = 'pgo4i6DO4Fnhc8KmqzWa';
 }

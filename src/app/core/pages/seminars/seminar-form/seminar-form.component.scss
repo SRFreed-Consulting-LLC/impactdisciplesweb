@@ -1,19 +1,4 @@
-::ng-deep .seminar-form {
-  &__button {
-    float: right;
-  }
-
-  .dx-item {
-    margin-top: 30px;
-  }
-
-  .dx-button-has-text .dx-button-content {
-    padding-block: 13px;
-    padding-inline-start: 12px;
-    padding-inline-end: 12px;
-  }
-
-  .dx-button-text{
-    color: black;
-  }
-}
+// The .dx-item/.dx-button-*/__button rules that used to live here targeted
+// the dx-form (and its own submit link) this page rendered directly - now
+// backed by app-dynamic-form (plain HTML, no DevExtreme), so those rules
+// had nothing left to match.

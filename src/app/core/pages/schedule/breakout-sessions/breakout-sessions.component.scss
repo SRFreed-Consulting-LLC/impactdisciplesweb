@@ -144,13 +144,6 @@
   background-color: #5bff818f;
 }
 
-::ng-deep .dx-accordion-item {
-  border: none;
-}
-::ng-deep .dx-accordion-item:last-child {
-  border-bottom: none;
-}
-
 .course-popup-content {
   text-align: left;
   &__title {
@@ -232,17 +225,58 @@
   }
 }
 
-::ng-deep .dx-popup-normal {
-  // .dx-popup-content {
-  //   background-color: #f3f3f375;
-  // }
-  .dx-popup-title.dx-toolbar {
+// Replaces DxPopup's [showTitle]/[showCloseButton]/[dragEnabled]="false"
+// chrome -- a plain fixed-position overlay + centered dialog, shown/hidden
+// via isVisible$ instead of DevExtreme's own overlay lifecycle. Header bar
+// color matches what the old ::ng-deep .dx-popup-title override applied.
+.impact-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  align-items: center;
+  justify-content: center;
+
+  &--open {
+    display: flex;
+  }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &__dialog {
+    position: relative;
+    background-color: #fff;
+    border-radius: 4px;
+    max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &__header {
     background-color: variables.$primary;
-    .dx-button-mode-text .dx-icon {
-      color: #fff;
-    }
-    .dx-toolbar-label>div {
-      color: #fff;
-    }
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 12px;
+    flex-shrink: 0;
+  }
+
+  &__close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  &__body {
+    overflow-y: auto;
+    flex: 1;
   }
 }

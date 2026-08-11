@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { LocationService } from 'impactdisciplescommon/src/services/data/location.service';
+import { LocationService } from 'src/app/common/services/data/location.service';
 
 @Pipe({
     name: 'location',

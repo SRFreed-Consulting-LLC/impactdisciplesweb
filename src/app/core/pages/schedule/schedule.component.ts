@@ -1,24 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
-import { Tab } from 'impactdisciplescommon/src/models/utils/tab.model';
+import { EventModel } from 'src/app/common/models/domain/event.model';
 import { Subject, takeUntil } from 'rxjs';
-import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
-import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
-import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
-import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
-import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
-import { CourseModel } from 'impactdisciplescommon/src/models/domain/course.model';
-import { TrainingRoomModel } from 'impactdisciplescommon/src/models/domain/training-room.model';
-import { LocationService } from 'impactdisciplescommon/src/services/data/location.service';
-import { CoachService } from 'impactdisciplescommon/src/services/data/coach.service';
-import { CourseService } from 'impactdisciplescommon/src/services/data/course.service';
-import { ScheduleModel, TimeGroupsModel } from 'impactdisciplescommon/src/models/utils/schedule.model';
-import { ScheduleService } from 'impactdisciplescommon/src/services/utils/schedule.service';
-import { AuthService } from 'impactdisciplespwacommon/src/services/events/auth.service';
+import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
+import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
+import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
+import { EventService } from 'src/app/common/services/data/event.service';
+import { CoachModel } from 'src/app/common/models/domain/coach.model';
+import { CourseModel } from 'src/app/common/models/domain/course.model';
+import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
+import { LocationService } from 'src/app/common/services/data/location.service';
+import { CoachService } from 'src/app/common/services/data/coach.service';
+import { CourseService } from 'src/app/common/services/data/course.service';
+import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
+import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
 import { ActivatedRoute } from '@angular/router';
-import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
+import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
 import { ScheduleEventBusService } from './schedule-event-bus.service';
-import notify from 'devextreme/ui/notify';
+import { ToastService, ToastType } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
     selector: 'app-schedule',
@@ -52,14 +50,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   constructor(
     private eventService: EventService,
-    private authService: AuthService,
     private route: ActivatedRoute,
     private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService,
     private scheduleEventBus: ScheduleEventBusService,
     private locationService: LocationService,
     private courseService: CourseService,
-    private coachService: CoachService) { }
+    private coachService: CoachService,
+    private toastService: ToastService) { }
 
   async ngOnInit() {
     let eventId = this.route.snapshot.paramMap.get('event-id');
@@ -107,12 +105,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendNotification(message: string, type: string){
-    notify({
-      message: message,
-      position: 'top',
-      type: type
-    });
+  sendNotification(message: string, type: ToastType){
+    this.toastService.notify({ message, type });
   }
 
   private async updateSchedule() {

@@ -1,12 +1,11 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DxValidatorComponent } from 'devextreme-angular';
-import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
-import { SaleModel } from 'impactdisciplescommon/src/models/utils/sale.model';
-import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
-import { SalesService } from 'impactdisciplescommon/src/services/data/sales.service';
-import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
+import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { ProductModel } from 'src/app/common/models/utils/product.model';
+import { SaleModel } from 'src/app/common/models/utils/sale.model';
+import { ProductService } from 'src/app/common/services/data/product.service';
+import { SalesService } from 'src/app/common/services/data/sales.service';
+import { NumberUtil } from 'src/app/common/utils/number-util';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
@@ -17,9 +16,12 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
     standalone: false
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
-  @ViewChild('sizeValidator') sizeValidator: DxValidatorComponent;
-  @ViewChild('colorValidator') colorValidator: DxValidatorComponent;
-  @ViewChild('languageValidator') languageValidator: DxValidatorComponent;
+  // Set true (and shown as an inline "X is required" message) only after a
+  // failed addCartProduct() attempt -- replaces DxValidator's required-rule
+  // behavior, which validated on demand via .instance.validate() the same way.
+  sizeError = false;
+  colorError = false;
+  languageError = false;
 
   product: ProductModel;
   cartItem: CartItem;
@@ -120,40 +122,29 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  setSize(e) {
-    this.cartItem.size = e.selectedItem
+  setSize(value: string) {
+    this.cartItem.size = value;
+    this.sizeError = false;
   }
 
-  setColor(e) {
-    this.cartItem.color = e.selectedItem
+  setColor(value: string) {
+    this.cartItem.color = value;
+    this.colorError = false;
   }
 
-  setLanguage(e) {
-    this.cartItem.language = e.selectedItem
+  setLanguage(value: string) {
+    this.cartItem.language = value;
+    this.languageError = false;
   }
 
   addCartProduct() {
-    let sizeValid = false;
-    let colorValid = false;
-    let languageValid = false;
+    const sizeValid = !(this.product.sizes?.length > 0) || !!this.cartItem.size;
+    const colorValid = !(this.product.colors?.length > 0) || !!this.cartItem.color;
+    const languageValid = !(this.product.languages?.length > 0) || !!this.cartItem.language;
 
-    if(this.product.sizes && this.product.sizes.length > 0){
-      sizeValid = this.sizeValidator.instance.validate().isValid;
-    } else {
-      sizeValid = true;
-    }
-
-    if(this.product.colors && this.product.colors.length > 0){
-      colorValid = this.colorValidator.instance.validate().isValid;
-    } else {
-      colorValid = true;
-    }
-
-    if(this.product.languages && this.product.languages.length > 0){
-      languageValid = this.languageValidator.instance.validate().isValid;
-    } else {
-      languageValid = true;
-    }
+    this.sizeError = !sizeValid;
+    this.colorError = !colorValid;
+    this.languageError = !languageValid;
 
     if(sizeValid && colorValid && languageValid){
       this.cartService.addCartProduct(this.cartItem);

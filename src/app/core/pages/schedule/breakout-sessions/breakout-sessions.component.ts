@@ -1,18 +1,17 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { CourseModel } from 'impactdisciplescommon/src/models/domain/course.model';
-import { TrainingRoomModel } from 'impactdisciplescommon/src/models/domain/training-room.model';
-import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
-import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
-import { alert, confirm } from 'devextreme/ui/dialog';
-import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
-import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
-import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
-import { ScheduleModel, TimeGroupsModel } from 'impactdisciplescommon/src/models/utils/schedule.model';
-import { ScheduleService } from 'impactdisciplescommon/src/services/utils/schedule.service';
-import notify from 'devextreme/ui/notify';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CourseModel } from 'src/app/common/models/domain/course.model';
+import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
+import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
+import { EventModel } from 'src/app/common/models/domain/event.model';
+import { DialogService } from 'src/app/shared/utils/services/dialog.service';
+import { EventService } from 'src/app/common/services/data/event.service';
+import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
+import { CoachModel } from 'src/app/common/models/domain/coach.model';
+import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
+import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
-import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
+import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
+import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { formatDate } from '@angular/common';
 import { ScheduleEventBusService } from '../schedule-event-bus.service';
 
@@ -46,7 +45,8 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     private scheduleEventBus: ScheduleEventBusService,
     private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService,
-    private eventService: EventService) { }
+    private eventService: EventService,
+    private dialogService: DialogService) { }
 
     async ngOnInit(): Promise<void> {
 
@@ -111,7 +111,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
           roomsList: this.roomsList
         });
       } else {
-        confirm('<i>This session is currently Full. Would you like to be added to the "Wait List"?</i>', 'Session is Full').then(async (dialogResult) => {
+        this.dialogService.confirm('<i>This session is currently Full. Would you like to be added to the "Wait List"?</i>', 'Session is Full').then(async (dialogResult) => {
           if (dialogResult) {
             if(!item.item.waitList){
               item.item.waitList = [];
@@ -126,7 +126,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
 
               this.event = e;
 
-              alert('<i>You have been successfully added to the waitList</i>', 'Registration Success').then(() => {
+              this.dialogService.alert('<i>You have been successfully added to the waitList</i>', 'Registration Success').then(() => {
                 this.scheduleEventBus.dispatchResetSchedule();
                 this.isVisible$.next(false);
               })
@@ -152,7 +152,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
       );
 
     if (conflictingCourse) {
-      confirm('<i>You are already assigned to a course at this time. Would you like to remove that course and add the new one?</i>', 'Confirm').then((dialogResult) => {
+      this.dialogService.confirm('<i>You are already assigned to a course at this time. Would you like to remove that course and add the new one?</i>', 'Confirm').then((dialogResult) => {
         if (dialogResult) {
           this.eventRegistrationService
           .unregisterForTrainingSession(this.currentUser.email, conflictingCourse.item.id, this.event.id)
@@ -160,7 +160,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
             this.eventRegistrationService
               .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
               .then(() => {
-                alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
+                this.dialogService.alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
                   this.scheduleEventBus.dispatchResetSchedule();
                   this.isVisible$.next(false);
                 })
@@ -173,7 +173,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
       this.eventRegistrationService
         .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
-          alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
+          this.dialogService.alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
             this.scheduleEventBus.dispatchResetSchedule();
             this.isVisible$.next(false);
           })
@@ -182,12 +182,12 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
   }
 
   removeCourse(course: AgendaItem) {
-    confirm('<i>Are you sure you want to remove this course from your schedule?</i>', 'Confirm').then((dialogResult) => {
+    this.dialogService.confirm('<i>Are you sure you want to remove this course from your schedule?</i>', 'Confirm').then((dialogResult) => {
       if (dialogResult) {
         this.eventRegistrationService
         .unregisterForTrainingSession(this.currentUser.email, course.id, this.event.id)
         .then(() => {
-          alert('<i>You have been successfully removed from ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Removed').then(() => {
+          this.dialogService.alert('<i>You have been successfully removed from ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Removed').then(() => {
             this.scheduleEventBus.dispatchResetSchedule();
             this.isVisible$.next(false);
           })

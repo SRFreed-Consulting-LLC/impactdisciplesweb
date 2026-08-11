@@ -1,0 +1,144 @@
+<!-- The radio case's [name]="field.id" is load-bearing, not decorative:
+     Angular's RadioControlValueAccessor groups radios for its own "uncheck
+     the rest of this group" bookkeeping by (form root, name) - not by which
+     FormControl each one is bound to. Two different 'radio' fields on the
+     same form both default to name="" without this, so Angular treats them
+     as ONE shared group internally and selecting an option in the second
+     field's radios can leave the first field's own FormControl value
+     cleared even though its radio still LOOKS checked - live-diagnosed via
+     Playwright: submitting a form with two radio-scale fields correctly
+     filled reported only the second one as satisfied. -->
+<div class="dff" [ngSwitch]="field.type" [ngStyle]="wrapperStyle">
+
+  <!-- Basic -->
+  <div *ngSwitchCase="'text'" class="dff__control">
+    <label *ngIf="!usesPlaceholder" [for]="field.id">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></label>
+    <input [id]="field.id" type="text" [formControl]="control()" [placeholder]="usesPlaceholder ? placeholderText : (field.placeholder || '')">
+    <div class="dff__error" *ngIf="hasError('required')">{{ field.label }} is required</div>
+  </div>
+
+  <div *ngSwitchCase="'paragraph'" class="dff__control">
+    <label *ngIf="!usesPlaceholder" [for]="field.id">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></label>
+    <textarea [id]="field.id" rows="4" [formControl]="control()" [placeholder]="usesPlaceholder ? placeholderText : (field.placeholder || '')"></textarea>
+    <div class="dff__error" *ngIf="hasError('required')">{{ field.label }} is required</div>
+  </div>
+
+  <div *ngSwitchCase="'number'" class="dff__control">
+    <label *ngIf="!usesPlaceholder" [for]="field.id">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></label>
+    <input [id]="field.id" type="number" [formControl]="control()" [placeholder]="usesPlaceholder ? placeholderText : (field.placeholder || '')">
+    <div class="dff__error" *ngIf="hasError('required')">{{ field.label }} is required</div>
+  </div>
+
+  <div *ngSwitchCase="'checkbox'" class="dff__control">
+    <label class="dff__checkbox-label">
+      <input type="checkbox" [formControl]="control()">
+      {{ field.label }}<span *ngIf="field.required" class="dff__required">*</span>
+    </label>
+  </div>
+
+  <div *ngSwitchCase="'checkboxes'" class="dff__control">
+    <div class="dff__group-label">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></div>
+    <label class="dff__checkbox-label" *ngFor="let option of field.options">
+      <input type="checkbox" [checked]="isChecked(option.value)" (change)="toggleOption(option.value, $any($event.target).checked)">
+      {{ option.label }}
+    </label>
+    <div class="dff__error" *ngIf="hasError('required')">{{ field.label }} is required</div>
+  </div>
+
+  <div *ngSwitchCase="'radio'" class="dff__control">
+    <div class="dff__group-label">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></div>
+    <label class="dff__radio-label" *ngFor="let option of field.options">
+      <input type="radio" [formControl]="control()" [name]="field.id" [value]="option.value">
+      {{ option.label }}
+    </label>
+    <div class="dff__error" *ngIf="hasError('required')">{{ field.label }} is required</div>
+  </div>
+
+  <div *ngSwitchCase="'dropdown'" class="dff__control">
+    <label [for]="field.id">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></label>
+    <select [id]="field.id" [formControl]="control()">
+      <option value="" disabled>Select&hellip;</option>
+      <option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</option>
+    </select>
+    <div class="dff__error" *ngIf="hasError('required')">{{ field.label }} is required</div>
+  </div>
+
+  <!-- Advanced -->
+  <div *ngSwitchCase="'email'" class="dff__control">
+    <label *ngIf="!usesPlaceholder" [for]="field.id">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></label>
+    <input [id]="field.id" type="email" [formControl]="control()" [placeholder]="usesPlaceholder ? placeholderText : (field.placeholder || '')">
+    <div class="dff__error" *ngIf="hasError('required')">{{ field.label }} is required</div>
+  </div>
+
+  <div *ngSwitchCase="'phone'" class="dff__control" [formGroup]="group()">
+    <div class="dff__group-label">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></div>
+    <input type="tel" formControlName="number" placeholder="(555) 555-5555">
+    <div class="dff__error" *ngIf="groupHasError()">{{ field.label }} is required</div>
+  </div>
+
+  <div *ngSwitchCase="'address'" class="dff__control" [formGroup]="group()">
+    <div class="dff__group-label">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></div>
+    <input type="text" formControlName="address1" placeholder="Address 1" class="dff__block-input">
+    <input type="text" formControlName="address2" placeholder="Address 2" class="dff__block-input">
+    <div class="row">
+      <div class="col-6"><input type="text" formControlName="city" placeholder="City" class="dff__block-input"></div>
+      <div class="col-3"><input type="text" formControlName="state" placeholder="State" class="dff__block-input"></div>
+      <div class="col-3"><input type="text" formControlName="zip" placeholder="Zip" class="dff__block-input"></div>
+    </div>
+    <div class="dff__error" *ngIf="groupHasError()">Please complete all required address fields</div>
+  </div>
+
+  <div *ngSwitchCase="'date'" class="dff__control">
+    <label [for]="field.id">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></label>
+    <input [id]="field.id" type="date" [formControl]="control()">
+  </div>
+
+  <div *ngSwitchCase="'time'" class="dff__control">
+    <label [for]="field.id">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></label>
+    <input [id]="field.id" type="time" [formControl]="control()">
+  </div>
+
+  <div *ngSwitchCase="'datetime'" class="dff__control">
+    <label [for]="field.id">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></label>
+    <input [id]="field.id" type="datetime-local" [formControl]="control()">
+  </div>
+
+  <div *ngSwitchCase="'url'" class="dff__control">
+    <label *ngIf="!usesPlaceholder" [for]="field.id">{{ field.label }}<span *ngIf="field.required" class="dff__required">*</span></label>
+    <input [id]="field.id" type="url" [formControl]="control()" [placeholder]="usesPlaceholder ? placeholderText : (field.placeholder || 'https://')">
+    <div class="dff__error" *ngIf="hasError('required')">{{ field.label }} is required</div>
+  </div>
+
+  <div *ngSwitchCase="'rating'" class="dff__control">
+    <div class="dff__group-label">{{ field.label }}</div>
+    <div class="dff__stars">
+      <span
+        *ngFor="let star of stars"
+        class="dff__star"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="'Rate ' + star + ' out of 5'"
+        [class.dff__star--filled]="star <= ratingValue()"
+        (click)="setRating(star)"
+        (keyup.enter)="setRating(star)">&#9733;</span>
+    </div>
+  </div>
+
+  <!-- Layout -->
+  <h3 *ngSwitchCase="'heading'" class="dff__heading">{{ field.label }}</h3>
+
+  <div *ngSwitchCase="'instructions'" class="dff__content" [innerHTML]="field.html"></div>
+
+  <div *ngSwitchCase="'image'" class="dff__image-wrap">
+    <img *ngIf="field.imageUrl" [src]="field.imageUrl" [alt]="field.imageAlt || ''" [style.width]="imageWidthCss" class="dff__image">
+  </div>
+
+  <hr *ngSwitchCase="'divider'" class="dff__divider">
+
+  <div *ngSwitchCase="'columns'" class="row">
+    <div class="col" *ngFor="let column of field.columns">
+      <app-dynamic-form-field *ngFor="let child of column.fields" [field]="child" [form]="form"></app-dynamic-form-field>
+    </div>
+  </div>
+
+</div>

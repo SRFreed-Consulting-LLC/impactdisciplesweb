@@ -558,3 +558,22 @@ main {
 	padding: 50px;
 }
 
+// Backs DialogService (replacement for devextreme/ui/dialog's confirm()/
+// alert()) -- a plain Bootstrap modal, styled with this app's own
+// .impact-btn buttons instead of Bootstrap's own button classes for visual
+// consistency with the rest of the site.
+.impact-dialog {
+	&__message {
+		font-size: 15px;
+	}
+	&__btn {
+		&--cancel, &--confirm {
+			height: 36px;
+			line-height: 32px;
+			padding: 0 24px;
+			font-size: 11px;
+			margin-left: 10px;
+		}
+	}
+}
+

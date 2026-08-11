@@ -2,22 +2,9 @@
   height: 100px;
 }
 
-::ng-deep .consultation {
-  &__button {
-    float: right;
-  }
-
-  .dx-item {
-    margin-top: 10px;
-  }
-
-  .dx-button-has-text .dx-button-content {
-    padding-block: 13px;
-    padding-inline-start: 12px;
-    padding-inline-end: 12px;
-  }
-
-  .dx-button-text{
-    color: black;
-  }
+// The .dx-item/.dx-button-* rules that used to live here targeted the
+// dx-form this page rendered directly - now backed by app-dynamic-form
+// (plain HTML, no DevExtreme), so those rules had nothing left to match.
+.consultation__button {
+  float: right;
 }

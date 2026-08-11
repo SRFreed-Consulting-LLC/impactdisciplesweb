@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { CustomerModel } from 'impactdisciplescommon/src/models/domain/utils/customer.model';
+import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { Subject, } from 'rxjs';
 
 @Component({

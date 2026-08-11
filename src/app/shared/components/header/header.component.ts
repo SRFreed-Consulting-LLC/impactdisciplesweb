@@ -1,9 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CoachModel } from 'impactdisciplescommon/src/models/domain/coach.model';
-import { CoachService } from 'impactdisciplescommon/src/services/data/coach.service';
-import { map, Observable } from 'rxjs';
-import Swiper from 'swiper';
-import { EffectFade, Pagination } from 'swiper/modules';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'app-header',

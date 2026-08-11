@@ -1,18 +1,10 @@
 <div class="header-slider-container">
-  <dx-gallery
-    #gallery
-    id="gallery"
-    class="gallery"
-    [dataSource]="images"
-    [slideshowDelay]="5000"
-    height="100%"
-    [showNavButtons]="false"
-    [showIndicator]="true"
-    [swipeEnabled]="true"
-    [animationDuration]="1000"
-  >
-    <div *dxTemplate="let galleryItem of 'item'">
-      <div class="gallery__slide" [style.backgroundImage]="'url('+galleryItem.image.url+')'">
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      <div
+        class="swiper-slide gallery__slide"
+        *ngFor="let galleryItem of images"
+        [style.backgroundImage]="'url('+galleryItem.image.url+')'">
         <div class="gallery__slide-overlay">
           <div class="gallery__slide-content">
             <h2 class="title " animate="fadeInUp">{{galleryItem.title}}</h2>
@@ -24,5 +16,6 @@
         </div>
       </div>
     </div>
-  </dx-gallery>
+    <div class="header-slider-pagination"></div>
+  </div>
 </div>

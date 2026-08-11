@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
-import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
+import { EventModel } from 'src/app/common/models/domain/event.model';
+import { EventService } from 'src/app/common/services/data/event.service';
 import { Subject, takeUntil } from 'rxjs';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import Swiper from 'swiper';

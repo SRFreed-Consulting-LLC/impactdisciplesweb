@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
+import { SeriesModel } from 'src/app/common/models/utils/series.model';
 import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
-import { ProductCategoriesService } from 'impactdisciplescommon/src/services/data/product-categories.service';
-import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
-import { QueryParam, WhereFilterOperandKeys } from 'impactdisciplescommon/src/dao/firebase.dao';
+import { TagModel } from 'src/app/common/models/domain/tag.model';
+import { ProductCategoriesService } from 'src/app/common/services/data/product-categories.service';
+import { ProductService } from 'src/app/common/services/data/product.service';
+import { QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
 
 @Component({
     selector: 'app-store-sidebar',
@@ -23,6 +23,11 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
   @Output() viewAllProductsEvents = new EventEmitter<void>();
 
   public categoryWithProducts: any;
+
+  // Replaces DxAccordion's [collapsible]="true" [multiple]="false" -- one
+  // category open at a time, clicking the open one closes it. 0 to match
+  // DevExtreme's own default selectedIndex (first item open on load).
+  public openIndex: number | null = 0;
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -109,5 +114,9 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
 
   onItemClick(id: string): void {
     this.router.navigate(['/product-details', id]);
+  }
+
+  toggleIndex(index: number): void {
+    this.openIndex = this.openIndex === index ? null : index;
   }
 }

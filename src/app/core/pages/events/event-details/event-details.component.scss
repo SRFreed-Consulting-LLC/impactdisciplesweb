@@ -108,3 +108,80 @@
     }
   }
 }
+
+// Replaces DxNumberBox's default look for the ticket-count display.
+.attendee-count {
+  width: 60px;
+  text-align: center;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  padding: 6px;
+  margin: 0 10px;
+}
+
+// Replaces DxAccordion ([multiple]="true" [selectedIndex]="0" -- each
+// attendee section independently toggleable, first one open by default)
+// wrapping each attendee's DxForm. Field styling matches checkout.component
+// .scss's &-form pattern (same DynamicFormFieldComponent-inspired look).
+.attendee-accordion-item {
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  overflow: hidden;
+
+  &__title {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background-color: #f7f7f7;
+    padding: 12px 15px;
+    font-weight: 600;
+
+    &--opened {
+      border-bottom: 1px solid #dddddd;
+    }
+  }
+
+  &__body {
+    padding: 15px;
+  }
+}
+
+.attendee-form {
+  &__field {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    input {
+      border-radius: 4px;
+      border: 1px solid #dddddd;
+      padding: 8px 9px;
+      width: 100%;
+
+      &.is-invalid {
+        border-color: #b3261e;
+        background-color: #fdf2f2;
+      }
+    }
+  }
+
+  &__required {
+    color: #b3261e;
+    margin-left: 2px;
+  }
+
+  &__error {
+    color: #b3261e;
+    font-size: 12.5px;
+    margin-top: 4px;
+  }
+}
+

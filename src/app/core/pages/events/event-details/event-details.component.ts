@@ -1,21 +1,20 @@
-import { EventRegistrationService } from './../../../../../../impactdisciplescommon/src/services/data/event-registration.service';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { EventRegistrationService } from './../../../../../../src/app/common/services/data/event-registration.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
-import { Subject, takeUntil } from 'rxjs';
-import { AgendaItem } from 'impactdisciplescommon/src/models/domain/utils/agenda-item.model';
-import { DxFormComponent } from 'devextreme-angular';
+import { EventModel } from 'src/app/common/models/domain/event.model';
+import { Subject, filter, firstValueFrom, take, takeUntil } from 'rxjs';
+import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
-import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
-import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
-import { AsyncRule } from 'devextreme/common';
-import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
+import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { EventService } from 'src/app/common/services/data/event.service';
+import { NumberUtil } from 'src/app/common/utils/number-util';
+import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
 import { Timestamp } from 'firebase/firestore';
-import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
-import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
-import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
-import notify from 'devextreme/ui/notify';
+import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
+import { EMailModel } from 'src/app/common/models/admin/mail.model';
+import { EMailService } from 'src/app/common/services/data/email.service';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
     selector: 'app-event-details',
@@ -24,7 +23,16 @@ import notify from 'devextreme/ui/notify';
     standalone: false
 })
 export class EventDetailsComponent implements OnInit, OnDestroy {
-  @ViewChildren('attendeeForms') attendeeForms: QueryList<DxFormComponent>;
+  // Replaces DxAccordion + per-attendee DxForm + QueryList<DxFormComponent> --
+  // one FormGroup per attendee, in a FormArray kept in lockstep with
+  // cartItem.attendees (see increment()/decrement()). openIndexes tracks
+  // which attendee sections are expanded, same [multiple]="true"
+  // [selectedIndex]="0" behavior as the old dx-accordion (first one open,
+  // each independently toggleable, unlike the single-open accordion used
+  // elsewhere in this app).
+  attendeesForm: FormArray = this.fb.array([]);
+  openIndexes: Set<number> = new Set([0]);
+
   event: EventModel;
   total: number = 0;
   cartItem: CartItem;
@@ -39,7 +47,9 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     private eventService: EventService,
     private cartService: CartService,
     private eventRegistrationService: EventRegistrationService,
-    private emailService: EMailService
+    private emailService: EMailService,
+    private toastService: ToastService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +69,8 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           isDigitalBook: false,
           attendees: [{ firstName: '', lastName: '', email: '' }]
         }
+        this.attendeesForm = this.fb.array([this.buildAttendeeGroup()]);
+        this.openIndexes = new Set([0]);
         if(this.event.agendaItems) {
           this.groupAgendaItemsByMonthAndDate(this.event.agendaItems);
         }
@@ -78,6 +90,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   increment() {
     this.cartItem.attendees = [...this.cartItem.attendees, { firstName: '', lastName: '', email: '' }];
     this.cartItem.orderQuantity = this.cartItem.attendees.length;
+    this.attendeesForm.push(this.buildAttendeeGroup());
     this.calculateTotal();
   }
 
@@ -85,46 +98,71 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     if (this.cartItem.attendees.length > 1) {
       this.cartItem.attendees = this.cartItem.attendees.slice(0, -1);
       this.cartItem.orderQuantity = this.cartItem.attendees.length;
+      this.attendeesForm.removeAt(this.attendeesForm.length - 1);
+      this.openIndexes.delete(this.attendeesForm.length);
       this.calculateTotal();
     }
   }
 
-  proceedToCheckout() {
-    let promises: Promise<any>[] = [];
-
-    this.attendeeForms.toArray().forEach(async form => {
-      promises.push(form.instance.validate().complete);
+  private buildAttendeeGroup(): FormGroup {
+    return this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required], [this.alreadyRegisteredValidator, this.uniqueEmailValidator]]
     });
+  }
 
-    Promise.all(promises).then(results => {
-      if(results.every(result => result?.isValid)){
+  toggleAttendee(index: number): void {
+    if (this.openIndexes.has(index)) {
+      this.openIndexes.delete(index);
+    } else {
+      this.openIndexes.add(index);
+    }
+  }
+
+  // Replaces DxForm's .instance.validate().complete -- Angular reports a
+  // control's status as 'PENDING' while its async validators are still
+  // running, so this waits for the first non-PENDING status (triggered by
+  // updateValueAndValidity(), which re-runs both sync and async validators)
+  // before reading .valid, same "wait for every attendee's async checks,
+  // then decide" shape the old Promise.all(...complete) had.
+  private async validateAttendees(): Promise<boolean> {
+    this.attendeesForm.markAllAsTouched();
+    this.attendeesForm.updateValueAndValidity();
+
+    if (this.attendeesForm.status === 'PENDING') {
+      await firstValueFrom(this.attendeesForm.statusChanges.pipe(filter(status => status !== 'PENDING'), take(1)));
+    }
+
+    return this.attendeesForm.valid;
+  }
+
+  proceedToCheckout() {
+    this.validateAttendees().then(isValid => {
+      if (isValid) {
         this.cartService.addCartProduct(this.cartItem);
         this.router.navigate(['/shopping-cart']);
       }
-    })
+    });
   }
 
   signUpForEvent() {
-    let promises: Promise<any>[] = [];
-
-    this.attendeeForms.toArray().forEach(async form => {
-      promises.push(form.instance.validate().complete);
-    });
-
-    Promise.all(promises).then(results => {
-      if(results.every(result => result?.isValid)){
+    this.validateAttendees().then(isValid => {
+      if (isValid) {
         this.registerUsers();
       }
-    })
+    });
   }
 
   registerUsers(){
-      this.attendeeForms.forEach(async attendee => {
+      this.attendeesForm.controls.forEach(async (control) => {
+        const attendeeGroup = control as FormGroup;
+        const value = attendeeGroup.getRawValue();
         let registration = {... new EventRegistrationModel()};
         registration.eventId = this.event.id;
-        registration.firstName = attendee.formData['firstName'];
-        registration.lastName = attendee.formData['lastName'];
-        registration.email = attendee.formData['email'].toLowerCase();
+        registration.firstName = value.firstName;
+        registration.lastName = value.lastName;
+        registration.email = value.email.toLowerCase();
         registration.registrationDate = Timestamp.now();
 
         await this.eventService.getById(this.event.id).then(async event => {
@@ -135,11 +173,9 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
             }).then(registration => {
               this.eventRegistrationService.update(registration.id, registration);
             }).then(() => {
-              notify({
+              this.toastService.notify({
                 message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
                 ' starting on ' + dateFromTimestamp(event.startDate),
-                position: 'top',
-                width: 600,
                 type: 'success'
               });
             });
@@ -197,28 +233,31 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  alreadyRegisteredValidation: AsyncRule['validationCallback'] = ({ value }) => {
-    return this.eventRegistrationService.getEventRegistration(value, this.event.id).then(registrants => {
-      if(registrants.length == 0){
-        return true
-      } else {
-        return false;
-      }
-    })
+  // Replaces the AsyncRule['validationCallback'] pair below with standard
+  // Angular AsyncValidatorFns (exactly what that DevExtreme type was doing
+  // under the hood) -- arrow-function class fields, same as before, so
+  // `this` stays bound when passed as a bare reference into buildAttendeeGroup().
+  alreadyRegisteredValidator = (control: AbstractControl): Promise<ValidationErrors | null> => {
+    if (!control.value || !this.event) {
+      return Promise.resolve(null);
+    }
+    return this.eventRegistrationService.getEventRegistration(control.value, this.event.id).then(registrants =>
+      registrants.length === 0 ? null : { alreadyRegistered: true }
+    );
   };
 
-  uniqueEmailValidation: AsyncRule['validationCallback'] = ({ value }) => {
-    let emailaddresses: Map<string, number> = new Map<string, number>();
-
-    this.attendeeForms.toArray().forEach(async form => {
-      emailaddresses.set(form.formData['email'], 0);
-    });
-
-    if(emailaddresses.has(value)){
-      return Promise.resolve(false);
-    } else {
-      emailaddresses.set(value, 0)
-      return Promise.resolve(true);
+  // Checks the current control's value against every OTHER attendee's email
+  // in attendeesForm (excluding itself -- the original DevExtreme version's
+  // equivalent loop included the field's own current form in the set it
+  // checked membership against, which would flag every non-empty email as
+  // a duplicate of itself; excluding self here is the behavior the
+  // "Each email registered must be unique!" message clearly intends).
+  uniqueEmailValidator = (control: AbstractControl): Promise<ValidationErrors | null> => {
+    const value = control.value;
+    if (!value) {
+      return Promise.resolve(null);
     }
+    const isDuplicate = this.attendeesForm.controls.some(group => group !== control.parent && (group as FormGroup).get('email')?.value === value);
+    return Promise.resolve(isDuplicate ? { duplicateEmail: true } : null);
   };
 }

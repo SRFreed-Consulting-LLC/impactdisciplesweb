@@ -1,0 +1,149 @@
+.dff {
+  margin-bottom: 18px;
+}
+
+.dff__control {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+  }
+
+  // Matches DevExtreme's dx.light `.dx-editor-outlined` defaults (the look
+  // every one of these forms had before migrating off dx-form) - consumed
+  // via CSS custom properties so a form's own controlStyle (set in the
+  // admin app's Form Builder) or an individual field's own override can
+  // cascade in without any merge logic here. See controlStyleVars() in
+  // form-field.model.ts for how --dff-radius/--dff-border/--dff-accent get
+  // set on this field's own wrapper (and, above that, the whole form's).
+  // Excludes type=checkbox/radio, which use accent-color below instead of
+  // a border box.
+  input:not([type='checkbox']):not([type='radio']),
+  textarea,
+  select {
+    border-radius: var(--dff-radius, 4px);
+    border: 1px solid var(--dff-border, #dddddd);
+    // Text was sitting flush against the border with no default padding at
+    // all - the other half of the DevExtreme "softness" gap alongside
+    // radius/border/accent above (dx.light's own .dx-texteditor-input rule
+    // is `padding:7px 9px 8px`, simplified to one symmetric block value -
+    // see DEFAULT_CONTROL_STYLE's own comment).
+    padding: var(--dff-padding-block, 8px) var(--dff-padding-inline, 9px);
+
+    &:focus {
+      outline: none;
+      border-color: var(--dff-accent, #337ab7);
+    }
+  }
+
+  // Native browser-drawn accent color for radio/checkbox controls - a
+  // pragmatic stand-in for DevExtreme's own custom-drawn 22px circles
+  // (`.dx-radiobutton-icon`/`.dx-checkbox-icon`, both filled with
+  // `--dx-accent` on selection) without hand-rolling replacement markup;
+  // supported in every browser this site otherwise targets.
+  input[type='checkbox'],
+  input[type='radio'] {
+    accent-color: var(--dff-accent, #337ab7);
+  }
+}
+
+.dff__required {
+  color: #b3261e;
+  margin-left: 3px;
+}
+
+.dff__error {
+  color: #b3261e;
+  font-size: 12.5px;
+  margin-top: 4px;
+}
+
+// Angular applies ng-invalid/ng-touched directly onto the native element,
+// covering both a single control (text/email/etc) and a nested group's own
+// sub-inputs (address/phone) with the same rule. !important is load-bearing
+// here, not decorative: this site's global theme CSS already styles bare
+// inputs by tag selector (that's why an unstyled <input> looks fine
+// elsewhere on this site), and that tag-selector rule's specificity ties
+// with a plain class selector here - without it, a required-but-blank
+// field failed validation with literally no visible indication of which
+// one was the problem (live-diagnosed: a missing Phone Number produced a
+// generic "fill in all required fields" toast with every field on screen
+// looking identical).
+.dff__control input.ng-invalid.ng-touched,
+.dff__control textarea.ng-invalid.ng-touched,
+.dff__control select.ng-invalid.ng-touched {
+  border: 1px solid #b3261e !important;
+  background-color: #fdf2f2 !important;
+}
+
+.dff__group-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.dff__checkbox-label,
+.dff__radio-label {
+  display: block;
+  font-weight: 400;
+  margin-bottom: 6px;
+
+  input {
+    width: auto;
+    margin-right: 8px;
+  }
+}
+
+.dff__block-input {
+  margin-bottom: 10px;
+}
+
+.dff__stars {
+  display: flex;
+  gap: 4px;
+}
+
+.dff__star {
+  font-size: 26px;
+  line-height: 1;
+  color: #d9d9d9;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dff__star--filled {
+  color: #f0b400;
+}
+
+.dff__heading {
+  margin: 4px 0 10px;
+}
+
+.dff__content {
+  margin-bottom: 10px;
+}
+
+.dff__image-wrap {
+  margin-bottom: 12px;
+}
+
+.dff__image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.dff__divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+}

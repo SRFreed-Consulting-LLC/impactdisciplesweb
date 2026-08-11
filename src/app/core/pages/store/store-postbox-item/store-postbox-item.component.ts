@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { CartItem } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
-import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
+import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { ProductModel } from 'src/app/common/models/utils/product.model';
+import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 
 @Component({

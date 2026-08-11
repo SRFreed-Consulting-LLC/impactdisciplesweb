@@ -1,21 +1,21 @@
 import { formatDate } from '@angular/common';
 import { AfterViewInit, Component } from '@angular/core';
-import notify from 'devextreme/ui/notify';
 import { Timestamp } from 'firebase/firestore';
-import { EMailModel } from 'impactdisciplescommon/src/models/admin/mail.model';
-import { EventRegistrationModel } from 'impactdisciplescommon/src/models/domain/event-registration.model';
-import { EventModel } from 'impactdisciplescommon/src/models/domain/event.model';
-import { AffilliateSaleModel } from 'impactdisciplescommon/src/models/utils/affilliate-sale.model';
-import { CartItem, CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { AffilliateSalesService } from 'impactdisciplescommon/src/services/data/affiliate-sales.service';
-import { EMailService } from 'impactdisciplescommon/src/services/data/email.service';
-import { EventRegistrationService } from 'impactdisciplescommon/src/services/data/event-registration.service';
-import { EventService } from 'impactdisciplescommon/src/services/data/event.service';
-import { NewsletterSubscriptionService } from 'impactdisciplescommon/src/services/data/newsletter-subscription.service';
-import { TaxRateSummaryService } from 'impactdisciplescommon/src/services/data/tax-rate-summary.service';
-import { dateFromTimestamp } from 'impactdisciplescommon/src/utils/date-from-timestamp';
-import { ImpactUserService } from 'impactdisciplespwacommon/src/services/impact-user.service';
+import { EMailModel } from 'src/app/common/models/admin/mail.model';
+import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
+import { EventModel } from 'src/app/common/models/domain/event.model';
+import { AffilliateSaleModel } from 'src/app/common/models/utils/affilliate-sale.model';
+import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
+import { AffilliateSalesService } from 'src/app/common/services/data/affiliate-sales.service';
+import { EMailService } from 'src/app/common/services/data/email.service';
+import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
+import { EventService } from 'src/app/common/services/data/event.service';
+import { NewsletterSubscriptionService } from 'src/app/common/services/data/newsletter-subscription.service';
+import { TaxRateSummaryService } from 'src/app/common/services/data/tax-rate-summary.service';
+import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
+import { ImpactUserService } from 'src/app/shared/utils/services/impact-user.service';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -33,7 +33,8 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private emailService: EMailService,
     private eventService: EventService,
     private affiliateSaleService: AffilliateSalesService,
-    private taxSummaryService: TaxRateSummaryService){}
+    private taxSummaryService: TaxRateSummaryService,
+    private toastService: ToastService){}
 
   async ngAfterViewInit() {
     let checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
@@ -109,11 +110,9 @@ export class CheckoutSuccessComponent implements AfterViewInit{
             }).then(registration => {
               this.eventRegistrationService.update(registration.id, registration);
             }).then(() => {
-              notify({
+              this.toastService.notify({
                 message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
                 ' starting on ' + dateFromTimestamp(event.startDate),
-                position: 'top',
-                width: 600,
                 type: 'success'
               });
 

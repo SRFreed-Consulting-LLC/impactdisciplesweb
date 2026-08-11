@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
-import notify from 'devextreme/ui/notify';
-import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
+import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class StripeService {
 
   private stripe: Promise<Stripe>;
 
-  constructor() {
+  constructor(private toastService: ToastService) {
     this.stripe = loadStripe(environment.stripeKey);
   }
 
@@ -44,17 +44,9 @@ export class StripeService {
     })
 
     if (response.error.type === "card_error" || response.error.type === "validation_error") {
-      notify({
-        message: response.error.message,
-        width: 600,
-        type: 'error'
-      });
+      this.toastService.notify({ message: response.error.message, type: 'error' });
     } else {
-      notify({
-        message: "An unexpected error occurred.",
-        width: 600,
-        type: 'error'
-      });
+      this.toastService.notify({ message: "An unexpected error occurred.", type: 'error' });
     }
   }
 }

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import notify from 'devextreme/ui/notify';
-import { CheckoutForm } from 'impactdisciplescommon/src/models/utils/cart.model';
-import { CouponModel } from 'impactdisciplescommon/src/models/utils/coupon.model';
-import { CouponService } from 'impactdisciplescommon/src/services/data/coupon.service';
-import { NumberUtil } from 'impactdisciplescommon/src/utils/number-util';
+import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
+import { CouponModel } from 'src/app/common/models/utils/coupon.model';
+import { CouponService } from 'src/app/common/services/data/coupon.service';
+import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
 
 @Component({
@@ -25,7 +25,8 @@ export class ShoppingCartComponent implements OnInit {
   constructor (
     public cartService: CartService,
     private couponService: CouponService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -82,37 +83,17 @@ export class ShoppingCartComponent implements OnInit {
 
           this.shoppingCart.couponPercent = validCoupon.percentOff;
 
-          notify({
-            message: 'Coupon applied successfully.',
-            position: 'top',
-            width: 600,
-            type: 'success'
-          });
+          this.toastService.notify({ message: 'Coupon applied successfully.', type: 'success' });
         } else {
-          notify({
-            message: 'Coupon not valid for these items.',
-            position: 'top',
-            width: 600,
-            type: 'error'
-          });
+          this.toastService.notify({ message: 'Coupon not valid for these items.', type: 'error' });
         }
 
         this.settleCart()
       } else {
-        notify({
-          message: 'Coupon not valid for these items.',
-          position: 'top',
-          width: 600,
-          type: 'error'
-        });
+        this.toastService.notify({ message: 'Coupon not valid for these items.', type: 'error' });
       }
     } else {
-        notify({
-          message: "Please Enter a Coupon Code.",
-          position: 'top',
-          width: 600,
-          type: 'success'
-        });
+        this.toastService.notify({ message: "Please Enter a Coupon Code.", type: 'success' });
 
       this.resetCartItems();
     }
@@ -160,15 +141,12 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   private settleCart(){
-    let total = 0; // Initialize the total for applicable items
     let totalDiscount = 0; // Initialize the total for applicable items
 
     this.shoppingCart.cartItems.forEach(item => {
       if(item.salePrice){
         item.price = item.salePrice;
       }
-
-      total += (item.price * item.orderQuantity);
 
       totalDiscount += (item.discount * item.orderQuantity);
     });

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PodCastModel } from 'impactdisciplescommon/src/models/domain/pod-cast.model';
+import { PodCastModel } from 'src/app/common/models/domain/pod-cast.model';
 
 
 @Component({

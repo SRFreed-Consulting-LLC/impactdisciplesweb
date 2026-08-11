@@ -1,0 +1,25 @@
+.dynamic-form__status {
+  padding: 24px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.dynamic-form__status--error {
+  color: #b3261e;
+}
+
+.dynamic-form__status--success {
+  color: #1e7d3c;
+  font-weight: 600;
+  font-size: 17px;
+  padding: 60px 24px;
+}
+
+.dynamic-form__fields {
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.dynamic-form__submit {
+  margin-top: 20px;
+}

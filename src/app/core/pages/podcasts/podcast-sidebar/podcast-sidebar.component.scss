@@ -4,42 +4,22 @@
   &__item {
     cursor: pointer;
   }
-  ::ng-deep .dx-button {
-    border: none;
-    width: 100%;
-    .dx-button-content {
-      justify-content: left;
-    }
-  }
-  
+
+  // clear-filter-button is now a plain <button> (see step 2 of the
+  // DevExtreme removal) -- .dx-button/.dx-button-content/.dx-button-text
+  // rules that targeted its old dx-button internals removed, this is the
+  // only styling that ever actually applied to it.
   ::ng-deep .clear-filter-button {
     width: fit-content;
-    .dx-button-content {
-      font-size: 12px;
-      color: #7a7a7a;
-    }
+    border: none;
+    background-color: transparent;
+    font-size: 12px;
+    color: #7a7a7a;
   }
-  
+
   .sidebar__widget-title {
     border-bottom: 1px solid variables.$border;
     padding-bottom: 10px;
-  
-  }
-  
-  ::ng-deep .view-all {
-    &__truncate {
-      margin-left: 13px;
-      font-size: 10px;
-      letter-spacing: 1.2px;
-      color: #8a8a8a;
-    }
-    .dx-button-content {
-      justify-content: right;
-    }
-    .dx-button-text {
-      font-size: 10px;
-      letter-spacing: 1.2px;
-      color: #8a8a8a;
-    }
+
   }
 }

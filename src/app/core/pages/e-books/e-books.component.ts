@@ -1,13 +1,13 @@
-import { WhereFilterOperandKeys } from './../../../../../impactdisciplescommon/src/dao/firebase.dao';
+import { WhereFilterOperandKeys } from './../../../../../src/app/common/dao/firebase.dao';
 import { ViewportScroller } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QueryParam } from 'impactdisciplescommon/src/dao/firebase.dao';
-import { TagModel } from 'impactdisciplescommon/src/models/domain/tag.model';
-import { ProductModel } from 'impactdisciplescommon/src/models/utils/product.model';
-import { SeriesModel } from 'impactdisciplescommon/src/models/utils/series.model';
-import { ProductService } from 'impactdisciplescommon/src/services/data/product.service';
-import { SeriesService } from 'impactdisciplescommon/src/services/data/series.service';
+import { QueryParam } from 'src/app/common/dao/firebase.dao';
+import { TagModel } from 'src/app/common/models/domain/tag.model';
+import { ProductModel } from 'src/app/common/models/utils/product.model';
+import { SeriesModel } from 'src/app/common/models/utils/series.model';
+import { ProductService } from 'src/app/common/services/data/product.service';
+import { SeriesService } from 'src/app/common/services/data/series.service';
 
 @Component({
     selector: 'app-e-books',

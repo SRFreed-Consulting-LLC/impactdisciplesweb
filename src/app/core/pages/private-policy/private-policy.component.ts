@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { WebConfigModel } from 'impactdisciplescommon/src/models/utils/web-config.model';
-import { WebConfigService } from 'impactdisciplescommon/src/services/data/web-config.service';
+import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
+import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 
 @Component({
     selector: 'app-private-policy',

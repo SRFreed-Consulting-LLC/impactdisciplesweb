@@ -1,4 +1,54 @@
 /* based on angular-toastr css https://github.com/Foxandxss/angular-toastr/blob/cb508fe6801d6b288d3afc525bb40fee1b101650/dist/angular-toastr.css */
+/* NOTE: everything below this point (.toast-*, .ngx-toastr) predates this app
+   ever actually using ngx-toastr -- it shipped with the purchased template
+   and was dead CSS, since the app used devextreme/ui/notify() instead. The
+   .impact-toast rules below back the real ToastService (see
+   shared/utils/services/toast.service.ts) that replaces it; the color
+   values are intentionally reused from .toast-success/.toast-error/etc.
+   below for visual consistency with what this partial already established. */
+.impact-toast-container {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.impact-toast {
+  pointer-events: auto;
+  cursor: pointer;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+  max-width: 90vw;
+  animation: impact-toast-in 0.25s ease-out;
+
+  &--success { background-color: #51A351; }
+  &--error { background-color: #BD362F; }
+  &--info { background-color: #2F96B4; }
+  &--warning { background-color: #F89406; }
+
+  &--leaving {
+    animation: impact-toast-out 0.25s ease-in forwards;
+  }
+}
+
+@keyframes impact-toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes impact-toast-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
 
 /* position */
 .toast-center-center {

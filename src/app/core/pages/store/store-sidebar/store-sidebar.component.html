@@ -13,39 +13,39 @@
   <div class="sidebar__accordion">
     <div class="sidebar__accordion-header">
       <h3>Product Categories</h3>
-      <dx-button class="clear-filter-button" (click)="onViewAllProducts()">View All</dx-button>
+      <button type="button" class="clear-filter-button" (click)="onViewAllProducts()">View All</button>
     </div>
     <div class="sidebar__accordion-content">
       <div class="accordion">
-        <dx-accordion
-          #accordion
-          [dataSource]="categoryWithProducts"
-          [collapsible]="true"
-          [multiple]="false"
-          [animationDuration]="300"
-          id="accordion-container"
-        >
-          <div *dxTemplate="let product of 'title'">
-            <div class="accordion__header">{{ product?.category?.tag }}</div>
-          </div>
-        
-          <div *dxTemplate="let item of 'item'">
+        <div class="accordion-item" [class.accordion-item--opened]="openIndex === i" *ngFor="let item of categoryWithProducts; let i = index">
+          <button
+            type="button"
+            class="accordion-item__title"
+            [class.accordion-item__title--opened]="openIndex === i"
+            (click)="toggleIndex(i)">
+            <span class="accordion__header">{{ item?.category?.tag }}</span>
+            <i class="fas" [class.fa-chevron-up]="openIndex === i" [class.fa-chevron-down]="openIndex !== i"></i>
+          </button>
+
+          <div class="accordion-item__body" *ngIf="openIndex === i">
             <div class="accordion__tags-container">
-              <dx-button 
-                *ngFor="let product of item?.displayProducts" 
-                [text]="product?.title" 
-                (onClick)="onItemClick(product?.id)">
-              </dx-button>
-        
-              <span *ngIf="item?.products?.length > 10"  class="product">... and more!</span>
-              <dx-button  
-                class="view-all" 
-                [text]="'VIEW ALL '" 
-                (onClick)="onCategoryClick(item?.category)">
-              </dx-button>
+              <button
+                type="button"
+                *ngFor="let product of item?.displayProducts"
+                (click)="onItemClick(product?.id)">
+                {{ product?.title }}
+              </button>
+
+              <span *ngIf="item?.products?.length > 10" class="product">... and more!</span>
+              <button
+                type="button"
+                class="view-all"
+                (click)="onCategoryClick(item?.category)">
+                VIEW ALL
+              </button>
             </div>
           </div>
-        </dx-accordion>
+        </div>
       </div>
     </div>
   </div>

@@ -2,6 +2,16 @@
 
 ::ng-deep .header-slider-container {
   margin-bottom: 20px;
+
+  // Swiper's own base CSS sizes .swiper-slide to 100% of .swiper-wrapper's
+  // height, which otherwise has none of its own to inherit -- explicit here
+  // as a fallback in case cascade order ever puts Swiper's base CSS after
+  // this component's .gallery__slide height rule below.
+  .swiper, .swiper-wrapper {
+    position: relative;
+    height: calc(100vh - 100px);
+  }
+
   .gallery {
     &__slide {
       height: calc(100vh - 100px);
@@ -83,22 +93,28 @@
         }
       }
     }
-    .dx-gallery-indicator {
-      bottom: 30px;
-    }
-    .dx-gallery-indicator-item, .dx-gallery-indicator-item-selected {
+  }
+
+  // Replaces DxGallery's .dx-gallery-indicator-item(-selected) dot styling
+  // with Swiper's own pagination-bullet classes -- same sizing/color.
+  .header-slider-pagination {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 1;
+
+    .swiper-pagination-bullet {
       width: 20px;
       height: 20px;
+      opacity: 1;
+      background: transparent;
+      border: 1px solid variables.$theme-color;
+      margin: 0 6px;
     }
-    .dx-gallery-indicator-item {
-      border: variables.$theme-color;
-    }
-    .dx-gallery-indicator-item-selected {
+    .swiper-pagination-bullet-active {
       background: variables.$theme-color;
     }
-    .dx-state-focused.dx-gallery .dx-gallery-indicator-item-selected {
-      background: variables.$theme-color;
-    }
-
   }
 }

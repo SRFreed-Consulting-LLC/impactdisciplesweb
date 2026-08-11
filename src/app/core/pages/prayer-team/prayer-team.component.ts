@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import notify from 'devextreme/ui/notify';
-import { PrayerTeamSubscriptionModel } from 'impactdisciplescommon/src/models/domain/prayer-team-subscription.model';
-import { PrayerTeamSubscriptionService } from 'impactdisciplescommon/src/services/data/prayer-team-subscription.service';
+import { PrayerTeamSubscriptionModel } from 'src/app/common/models/domain/prayer-team-subscription.model';
+import { PrayerTeamSubscriptionService } from 'src/app/common/services/data/prayer-team-subscription.service';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
     selector: 'app-prayer-team',
@@ -12,26 +12,16 @@ import { PrayerTeamSubscriptionService } from 'impactdisciplescommon/src/service
 export class PrayerTeamComponent {
   prayerTeamSubscription: PrayerTeamSubscriptionModel = {... new PrayerTeamSubscriptionModel()};
 
-  constructor(private prayerTeamSubscriptionService: PrayerTeamSubscriptionService, ){}
+  constructor(private prayerTeamSubscriptionService: PrayerTeamSubscriptionService, private toastService: ToastService){}
 
   handleFormSubmit() {
     this.prayerTeamSubscriptionService.createPrayerTeamSubscription(this.prayerTeamSubscription.firstName, this.prayerTeamSubscription.lastName, this.prayerTeamSubscription.email).then(sub => {
       if(sub){
-        notify({
-          message: 'Prayer Team Subscription added Successfully!',
-          position: 'top',
-          width: 600,
-          type: 'success'
-        });
+        this.toastService.notify({ message: 'Prayer Team Subscription added Successfully!', type: 'success' });
 
         return sub;
       } else {
-        notify({
-          message: 'Your email is already a member of our Prayer Team!',
-          position: 'top',
-          width: 600,
-          type: 'info'
-        });
+        this.toastService.notify({ message: 'Your email is already a member of our Prayer Team!', type: 'info' });
 
         return null;
       }

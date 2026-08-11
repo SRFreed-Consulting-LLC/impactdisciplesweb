@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import notify from 'devextreme/ui/notify';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { StripeService } from 'src/app/shared/utils/services/stripe.service';
+import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -26,7 +26,8 @@ export class GiveComponent implements OnInit {
 
   constructor (
     private stripeService: StripeService,
-    public cartService: CartService
+    public cartService: CartService,
+    private toastService: ToastService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -159,26 +160,11 @@ export class GiveComponent implements OnInit {
   // ------- UI helpers -------
   showMessage(messageText, type) {
     if(type ==='SUCCESS'){
-      notify({
-        message: messageText,
-        position: 'top',
-        width: 600,
-        type: 'success'
-      });
+      this.toastService.notify({ message: messageText, type: 'success' });
     } else if(type ==='INFO'){
-      notify({
-        message: messageText,
-        position: 'top',
-        width: 600,
-        type: 'info'
-      });
+      this.toastService.notify({ message: messageText, type: 'info' });
     } else if(type ==='ERROR'){
-      notify({
-        message: messageText,
-        position: 'top',
-        width: 600,
-        type: 'error'
-      });
+      this.toastService.notify({ message: messageText, type: 'error' });
     }
   }
 
