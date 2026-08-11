@@ -26,10 +26,10 @@ export interface CourseItem {
 })
 export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
   @Input() allCourses: ScheduleModel[];
-  @Input('event') event: EventModel;
-  @Input('courses') coursesList: CourseModel[] = [];
-  @Input('coaches') coachesList: CoachModel[] = [];
-  @Input('rooms') roomsList: TrainingRoomModel[] = [];
+  @Input() event: EventModel;
+  @Input() coursesList: CourseModel[] = [];
+  @Input() coachesList: CoachModel[] = [];
+  @Input() roomsList: TrainingRoomModel[] = [];
   customAgendaItem: any;
   courseItem: CourseModel;
   currentUser: CustomerModel | EventRegistrationModel;
