@@ -14,10 +14,6 @@ export class ExtraInfoComponent implements OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor() {
-
-  }
-
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

@@ -42,6 +42,14 @@ module.exports = defineConfig([
       // something a starter lint config should hard-error on in every file).
       "@angular-eslint/prefer-standalone": "off",
       "@angular-eslint/prefer-inject": "off",
+      // Only exempts arrow functions, not named methods -- third-party SDK
+      // config objects (e.g. the PayPal Buttons config in
+      // checkout.component.ts) require certain callback keys to exist even
+      // when this app has nothing to do for them (onCancel/onClick). Named
+      // empty methods are still flagged as before -- that's exactly what
+      // caught 2 real bugs (dead-stub methods still wired to template click
+      // handlers) during the 2026-08-11 lint cleanup.
+      "@typescript-eslint/no-empty-function": ["error", { allow: ["arrowFunctions"] }],
     },
   },
   {
