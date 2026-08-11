@@ -10,7 +10,7 @@ const state = {
   providedIn: 'root'
 })
 export class CartService {
-  public orderQuantity: number = 1;
+  public orderQuantity = 1;
 
   constructor(private toastService: ToastService){}
 

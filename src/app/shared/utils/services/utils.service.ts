@@ -12,9 +12,9 @@ import { NavigationEnd, Router } from '@angular/router';
   providedIn: 'root',
 })
 export class UtilsService {
-  public openMobileMenus: boolean = false;
-  public isVideoOpen: boolean = false;
-  public videoUrl: string = 'https://www.youtube.com/embed/EW4ZYb3mCZk';
+  public openMobileMenus = false;
+  public isVideoOpen = false;
+  public videoUrl = 'https://www.youtube.com/embed/EW4ZYb3mCZk';
   private iframeElement: HTMLIFrameElement | null = null;
 
   constructor(private router: Router) {

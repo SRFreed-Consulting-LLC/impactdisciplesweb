@@ -1,7 +1,7 @@
 import { BaseModel } from "../base.model";
 
 export class MonthlyNewsletterModel extends BaseModel{
-  isActive: boolean = false;
+  isActive = false;
   date: Date;
   title: string;
   url?: string;

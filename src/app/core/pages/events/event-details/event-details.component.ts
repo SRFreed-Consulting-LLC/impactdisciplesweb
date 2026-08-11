@@ -34,7 +34,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   openIndexes: Set<number> = new Set([0]);
 
   event: EventModel;
-  total: number = 0;
+  total = 0;
   cartItem: CartItem;
   groupedAgendaItems: { monthYear: string; days: { date: Date; items: AgendaItem[] }[] }[] = [];
 

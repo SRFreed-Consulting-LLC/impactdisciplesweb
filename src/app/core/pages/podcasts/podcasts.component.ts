@@ -17,13 +17,13 @@ export class PodcastsComponent implements OnInit, OnDestroy {
   podcasts: PodCastModel[] = [];
   filteredPodcasts: PodCastModel[] = [];
   selectedPodcast: PodCastModel;
-  isListView: boolean = false;
-  isPlaying: boolean = false;
+  isListView = false;
+  isPlaying = false;
   public webConfig: WebConfigModel;
-  public pageSize: number = 6;
+  public pageSize = 6;
   public paginate: any = {};
-  public sortBy: string = 'asc';
-  public pageNo: number = 1;
+  public sortBy = 'asc';
+  public pageNo = 1;
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -93,7 +93,7 @@ export class PodcastsComponent implements OnInit, OnDestroy {
       });
   }
 
-  getPager(totalItems: number, currentPage: number = 1, pageSize: number = 9) {
+  getPager(totalItems: number, currentPage = 1, pageSize = 9) {
     // calculate total pages
     const totalPages = Math.ceil(totalItems / pageSize);
 

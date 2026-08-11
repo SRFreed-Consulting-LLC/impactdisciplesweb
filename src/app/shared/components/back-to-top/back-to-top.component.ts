@@ -8,7 +8,7 @@ import { Component, HostListener } from '@angular/core';
 })
 export class BackToTopComponent {
 
-  scrollDisplay: string = 'none';
+  scrollDisplay = 'none';
 
   @HostListener('window:scroll', [])
   onScroll() {

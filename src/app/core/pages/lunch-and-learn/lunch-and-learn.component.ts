@@ -8,7 +8,7 @@ import { UtilsService } from 'src/app/shared/utils/services/utils.service';
     standalone: false
 })
 export class LunchAndLearnComponent  {
-  isPlaying: boolean = false;
+  isPlaying = false;
 
   constructor(public utilsService: UtilsService) { }
 

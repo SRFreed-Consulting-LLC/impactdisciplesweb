@@ -11,7 +11,7 @@ import { WebConfigService } from 'src/app/common/services/data/web-config.servic
     standalone: false
 })
 export class SeminarsComponent implements OnInit {
-  isPlaying: boolean = false;
+  isPlaying = false;
 
   public impactDisciplesInfo = impactDisciplesInfo;
 

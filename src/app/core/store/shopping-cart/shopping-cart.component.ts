@@ -16,7 +16,7 @@ import { ToastService } from 'src/app/shared/utils/services/toast.service';
 })
 export class ShoppingCartComponent implements OnInit {
   shoppingCart: CheckoutForm = {... new CheckoutForm()};
-  couponCode: string = '';
+  couponCode = '';
   itemDiscountAmount: CouponModel;
   cartDiscountAmount: CouponModel;
 
@@ -60,7 +60,7 @@ export class ShoppingCartComponent implements OnInit {
       if (coupons?.length > 0 && coupons[0]?.isActive) {
         const validCoupon = coupons[0];
 
-        let isValid: boolean = false;
+        let isValid = false;
 
         //set discount on items
         this.shoppingCart.cartItems.forEach(item => {

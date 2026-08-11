@@ -11,7 +11,7 @@ import { UtilsService } from 'src/app/shared/utils/services/utils.service';
 })
 export class EquippingGroupsChurchesComponent  {
   public webConfig: WebConfigModel = new WebConfigModel();
-  isPlaying: boolean = false;
+  isPlaying = false;
 
   constructor(public utilsService: UtilsService, private webConfigService: WebConfigService) { }
 

@@ -30,10 +30,10 @@ export class StoreComponent implements OnInit, OnDestroy {
   public products: ProductModel[] = [];
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];
-  public showSeriesInMainView: boolean = true;
+  public showSeriesInMainView = true;
   public paginate: any = {};
-  public pageNo: number = 1;
-  public pageSize: number = 10;
+  public pageNo = 1;
+  public pageSize = 10;
   public selectedFilter: FilterType;
   public FILTER_TYPE = FilterType;
   public filterOptions = [
@@ -244,7 +244,7 @@ export class StoreComponent implements OnInit, OnDestroy {
       });
   }
 
-  getPager(totalItems: number, currentPage: number = 1, pageSize: number = 9) {
+  getPager(totalItems: number, currentPage = 1, pageSize = 9) {
     // calculate total pages
     const totalPages = Math.ceil(totalItems / pageSize);
 

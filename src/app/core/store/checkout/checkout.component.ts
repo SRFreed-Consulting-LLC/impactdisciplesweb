@@ -52,7 +52,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   });
 
   checkoutForm: CheckoutForm = {... new CheckoutForm()};
-  couponCode: string = '';
+  couponCode = '';
   itemDiscountAmount: CouponModel;
   cartDiscountAmount: CouponModel;
   items = [];
@@ -68,10 +68,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   NumberUtil = NumberUtil;
 
 
-  isSetupPanelVisible: boolean = false;
-  showEstimatedTaxesSpinner: boolean = false;
-  showShippingSpinner: boolean = false;
-  isPayButtonVisible: boolean = false;
+  isSetupPanelVisible = false;
+  showEstimatedTaxesSpinner = false;
+  showShippingSpinner = false;
+  isPayButtonVisible = false;
 
   private ngUnsubscribe = new Subject<void>();
 

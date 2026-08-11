@@ -19,10 +19,10 @@ export class EBooksComponent {
   public products: ProductModel[] = [];
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];
-  public showSeriesInMainView: boolean = false;
+  public showSeriesInMainView = false;
   public paginate: any = {};
-  public pageNo: number = 1;
-  public pageSize: number = 10;
+  public pageNo = 1;
+  public pageSize = 10;
 
   constructor(
     private productService: ProductService,
@@ -96,7 +96,7 @@ export class EBooksComponent {
       });
   }
 
-  getPager(totalItems: number, currentPage: number = 1, pageSize: number = 9) {
+  getPager(totalItems: number, currentPage = 1, pageSize = 9) {
     // calculate total pages
     const totalPages = Math.ceil(totalItems / pageSize);
 

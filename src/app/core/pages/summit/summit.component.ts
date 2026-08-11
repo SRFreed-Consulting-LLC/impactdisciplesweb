@@ -18,14 +18,14 @@ export class SummitComponent implements OnInit, OnDestroy {
 
   summit: EventModel;
   coaches: CoachModel[] = [];
-  currentIndex: number = 0;
-  visibleSlides: number = 3;
+  currentIndex = 0;
+  visibleSlides = 3;
   groupedAgendaItems: { monthYear: string; days: { date: Date; items: AgendaItem[] }[] }[] = [];
 
-  public days: number = 0;
-  public hours: number = 0;
-  public minutes: number = 0;
-  public seconds: number = 0;
+  public days = 0;
+  public hours = 0;
+  public minutes = 0;
+  public seconds = 0;
 
   isPlaying = false;
 

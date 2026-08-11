@@ -13,7 +13,7 @@ import menuData from '../../../../src/app/common/services/data/nav-menu-data';
 export class NavMenuComponent implements OnInit {
   public menuItems: MenuModel[] = menuData;
 
-  isSummitPosted: boolean = false;
+  isSummitPosted = false;
 
   constructor(private router: Router) {}
 

@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class TimeFormatPipe implements PipeTransform {
 
-  transform(value: string, showAmPm: boolean = true): string {
+  transform(value: string, showAmPm = true): string {
     if (!value) return '';
 
     const parts = value.split(':').map(Number);

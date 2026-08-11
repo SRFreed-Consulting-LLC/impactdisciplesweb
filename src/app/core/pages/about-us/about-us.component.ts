@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     standalone: false
 })
 export class AboutUsComponent  {
-  isPlaying: boolean = false;
+  isPlaying = false;
 
   constructor() { }
 

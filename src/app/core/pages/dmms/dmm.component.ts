@@ -15,10 +15,10 @@ import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data
 export class BlogComponent implements OnInit, OnDestroy {
   public dmms: DMMModel[] = [];
   public filteredDmms: DMMModel[] = [];
-  public pageSize: number = 6;
+  public pageSize = 6;
   public paginate: any = {};
-  public sortBy: string = 'asc';
-  public pageNo: number = 1;
+  public sortBy = 'asc';
+  public pageNo = 1;
   public impactDisciplesInfo = impactDisciplesInfo;
 
   private ngUnsubscribe = new Subject<void>();
@@ -65,7 +65,7 @@ export class BlogComponent implements OnInit, OnDestroy {
       });
   }
 
-  getPager(totalItems: number, currentPage: number = 1, pageSize: number = 9) {
+  getPager(totalItems: number, currentPage = 1, pageSize = 9) {
     // calculate total pages
     const totalPages = Math.ceil(totalItems / pageSize);
 

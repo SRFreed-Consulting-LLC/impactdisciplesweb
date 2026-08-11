@@ -16,7 +16,7 @@ import { EffectFade, Pagination } from 'swiper/modules';
 export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
-  public canRegisterForDMS: boolean = true;
+  public canRegisterForDMS = true;
   public dms: EventModel;
   public impactDisciplesInfo = impactDisciplesInfo;
   @Input() images: string[] = [
@@ -29,12 +29,12 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
 
   eventsList: EventModel[] = [];
 
-  isSummitPosted: boolean = false;
+  isSummitPosted = false;
 
   onlineEventsList: EventModel[];
 
-  currentIndex: number = 0;
-  visibleSlides: number = 4;
+  currentIndex = 0;
+  visibleSlides = 4;
 
   private ngUnsubscribe = new Subject<void>();
 

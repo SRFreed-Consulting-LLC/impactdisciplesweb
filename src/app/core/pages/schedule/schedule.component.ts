@@ -46,7 +46,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe = new Subject<void>();
 
-  visible: boolean = false;
+  visible = false;
 
   constructor(
     private eventService: EventService,

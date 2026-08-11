@@ -11,7 +11,7 @@ export class HeaderComponent {
   @Input() pretitle: string;
   @Input() title: string;
   @Input() description: string;
-  @Input() showHr: boolean = false;
+  @Input() showHr = false;
   @Input() buttonLink: any;
   @Input() buttonText: string;
   @Input() buttonIcon: string;
@@ -21,8 +21,8 @@ export class HeaderComponent {
   @Input() buttonLink3: any;
   @Input() buttonText3: string;
   @Input() buttonIcon3: string;
-  @Input() buttonClick: boolean = false;
-  @Input() buttonClick2: boolean = false;
+  @Input() buttonClick = false;
+  @Input() buttonClick2 = false;
   @Output() buttonClickAction = new EventEmitter<any>();
   @Output() buttonClickAction2 = new EventEmitter<any>();
 

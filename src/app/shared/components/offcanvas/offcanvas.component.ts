@@ -12,7 +12,7 @@ import { mobileMenuData } from '../../../../../src/app/common/services/data/nav-
 
 export class OffcanvasComponent {
   mobileMenuData: MobileMenuModel[] = mobileMenuData;
-  activeMenu: string = "";
+  activeMenu = "";
 
   constructor(public utilsService: UtilsService){}
 

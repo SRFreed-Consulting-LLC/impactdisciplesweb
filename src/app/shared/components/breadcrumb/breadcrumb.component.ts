@@ -7,11 +7,11 @@ import { Component, Input } from '@angular/core';
     standalone: false
 })
 export class BreadcrumbComponent {
-  @Input() previousLinkName: string = '';
-  @Input() previousLink: string = '';
-  @Input() previousLinkId: string = '';
-  @Input() currentPageName: string = '';
-  @Input() bgColor: string = '';
-  @Input() bgImg: string = '';
-  @Input() isDark: boolean = false;
+  @Input() previousLinkName = '';
+  @Input() previousLink = '';
+  @Input() previousLinkId = '';
+  @Input() currentPageName = '';
+  @Input() bgColor = '';
+  @Input() bgImg = '';
+  @Input() isDark = false;
 }

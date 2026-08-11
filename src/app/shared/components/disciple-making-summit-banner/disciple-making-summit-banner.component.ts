@@ -10,13 +10,13 @@ import { Subject, takeUntil } from 'rxjs';
     standalone: false
 })
 export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
-  @Input() large: boolean = false;
+  @Input() large = false;
 
   public dms: EventModel;
-  public days: number = 0;
-  public hours: number = 0;
-  public minutes: number = 0;
-  public seconds: number = 0;
+  public days = 0;
+  public hours = 0;
+  public minutes = 0;
+  public seconds = 0;
 
   private intervalId: any;
   private ngUnsubscribe = new Subject<void>();

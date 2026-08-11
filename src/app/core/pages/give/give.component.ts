@@ -13,12 +13,12 @@ import { environment } from 'src/environments/environment';
 })
 export class GiveComponent implements OnInit {
   public impactDisciplesInfo = impactDisciplesInfo;
-  isFormVisible: string = '';
-  status: string = "REQUEST";
+  isFormVisible = '';
+  status = "REQUEST";
   elements;
-  loading: boolean = false;
-  oneTimeAmount: number = 0;
-  monthlyAmount: number = 0;
+  loading = false;
+  oneTimeAmount = 0;
+  monthlyAmount = 0;
 
   public environment = environment;
 

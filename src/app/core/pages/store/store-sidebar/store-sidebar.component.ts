@@ -16,7 +16,7 @@ import { QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.
 export class StoreSidebarComponent implements OnInit, OnDestroy {
   @Input() showSeriesInSidebar = false;
   @Input() seriesItems: SeriesModel[] = [];
-  @Input() ebooksOnly: boolean = false;
+  @Input() ebooksOnly = false;
   @Output() categoryFilterEvent = new EventEmitter<TagModel>();
   @Output() seriesFilterEvent = new EventEmitter<SeriesModel>();
   @Output() searchEvent = new EventEmitter<string>();

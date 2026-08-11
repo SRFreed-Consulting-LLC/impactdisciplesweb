@@ -10,7 +10,7 @@ import { UtilsService } from 'src/app/shared/utils/services/utils.service';
     standalone: false
 })
 export class HomeHeaderComponent {
-  public sticky: boolean = true;
+  public sticky = true;
   public impactDisciplesInfo = impactDisciplesInfo;
   
   @HostListener('window:scroll') onscroll() {

@@ -5,7 +5,7 @@ import { Directive, ElementRef, Renderer2, Input, OnInit } from '@angular/core';
     standalone: false
 })
 export class AnimateDirective implements OnInit {
-  @Input('animate') animationClass: string = 'fadeInUp'; // Default animation class
+  @Input('animate') animationClass = 'fadeInUp'; // Default animation class
 
   private observer: IntersectionObserver;
 

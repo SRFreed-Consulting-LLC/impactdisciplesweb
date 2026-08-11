@@ -9,9 +9,9 @@ import { EventService } from 'src/app/common/services/data/event.service';
 })
 export class HomeComponent implements OnInit {
 
-  isPlaying: boolean = false;
+  isPlaying = false;
 
-  isSummitPosted: boolean = false;
+  isSummitPosted = false;
 
   constructor(private eventService: EventService) { }
 

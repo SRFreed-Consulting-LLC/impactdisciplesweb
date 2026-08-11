@@ -9,7 +9,7 @@ import { Subject, } from 'rxjs';
     standalone: false
 })
 export class ExtraInfoComponent implements OnDestroy {
-  isLoggedIn: boolean = false;
+  isLoggedIn = false;
   user: CustomerModel;
 
   private ngUnsubscribe = new Subject<void>();
