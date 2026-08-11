@@ -51,7 +51,7 @@ export class EMailService extends BaseService<EMailModel>{
     return this.add(mail);
   }
 
-  sendTemplateEmail(to:string, templateId: string, model: any): Promise<EMailModel>{
+  sendTemplateEmail(to:string, templateId: string, model: Record<string, string>): Promise<EMailModel>{
     const mail = {... new EMailModel()}
     mail.to = to;
     mail.date = Timestamp.now();
@@ -65,7 +65,7 @@ export class EMailService extends BaseService<EMailModel>{
     return this.add(mail);
   }
 
-  sendHTMLEMailFromTemplate(to:string, templateId: string, model: any){
+  sendHTMLEMailFromTemplate(to:string, templateId: string, model: Record<string, string>){
     return this.templateService.getAllByValue('name', templateId).then(template => {
       const mail = {... new EMailModel()}
       mail.to = to;
@@ -79,7 +79,7 @@ export class EMailService extends BaseService<EMailModel>{
 
       const mailMessage: MessageModel = {... new MessageModel()};
 
-      mailMessage.subject = template[0].subject.replace("{{eventName}}", model.eventName);
+      mailMessage.subject = template[0].subject.replace("{{eventName}}", model['eventName']);
       mailMessage.html = html;
 
       mail.message = mailMessage;
@@ -88,7 +88,7 @@ export class EMailService extends BaseService<EMailModel>{
     })
   }
 
-  sendHTMLEMailByIdFromTemplate(to:string, templateId: string, model: any){
+  sendHTMLEMailByIdFromTemplate(to:string, templateId: string, model: Record<string, string>){
     return this.templateService.getById(templateId).then(template => {
       const mail = {... new EMailModel()}
       mail.to = to;

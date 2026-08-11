@@ -23,5 +23,10 @@ export class MessageModel{
 
 export class TemplateModel {
   name: string
-  data: string;
+  // The template-substitution model, not a literal string despite the name -
+  // was typed string with `any` actually being assigned here for its only
+  // real usage (email.service.ts's sendTemplateEmail()); fixed the type to
+  // match reality rather than guessing at a stringify that could change
+  // whatever server-side process consumes this doc.
+  data: Record<string, string>;
 }

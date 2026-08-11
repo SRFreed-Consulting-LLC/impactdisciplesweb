@@ -25,10 +25,10 @@ export class PodCastService extends BaseService<PodCastModel>{
     return data;
   };
 
-  videos = signal<any[]>([]);
+  videos = signal<unknown[]>([]);
 
   async getVideoInfo(){
-    this.videos = signal<any[]>([]);
+    this.videos = signal<unknown[]>([]);
 
     const keysResponse = await fetch(environment.youtubeKeyUrl);
 
@@ -51,7 +51,7 @@ export class PodCastService extends BaseService<PodCastModel>{
   }
 
   private async callYoutube(playlistId: string, pageToken?: string){
-    const videos: any[] = [];
+    const videos: unknown[] = [];
 
     let playListItemsUrl = `https://www.googleapis.com/youtube/v3/playlistItems?key=${this.API_KEY}&part=snippet,contentDetails&maxResults=50&&playlistId=${playlistId}`;
 

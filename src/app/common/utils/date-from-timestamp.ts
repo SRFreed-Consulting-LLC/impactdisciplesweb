@@ -22,7 +22,7 @@ export const dateFromTimestamp = (item) => {
   return isValid(normalizedDate) ? normalizedDate : null;
 };
 
-const parseStringDate = (dateString: string): null | Date => {
+const parseStringDate = (dateString: string): null | Date | string => {
   if (!dateString) {
     return null;
   }
@@ -30,5 +30,5 @@ const parseStringDate = (dateString: string): null | Date => {
     const date = parse(dateString, 'MM/dd/yyyy', new Date());
     return isValid(date) ? date : null;
   }
-  return dateString as any;
+  return dateString;
 };
