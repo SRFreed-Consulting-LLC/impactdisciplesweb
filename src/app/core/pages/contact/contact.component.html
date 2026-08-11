@@ -59,10 +59,7 @@
 							     contact.component.ts -- clicking "Send Message" did nothing at
 							     all. Converted to the same admin-authored dynamic-form engine
 							     already live on Seminar Request/Lunch-and-Learn Request, which
-							     actually writes a form_submissions record and shows a toast.
-							     Requires a "Contact Us" FormDefinitionModel to exist in the
-							     `forms` collection (name/email/subject/message fields, all
-							     required) -- see README/PR notes for how to create it. -->
+							     actually writes a form_submissions record and shows a toast. -->
 							<app-dynamic-form [formId]="formId" [submitButtonText]="'Send Message'"></app-dynamic-form>
 					</div>
 				</div>

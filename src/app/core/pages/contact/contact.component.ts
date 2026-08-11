@@ -8,13 +8,12 @@ import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data
 // "Send Message" did nothing at all), so this isn't just a UI swap, it's
 // the first time this form has ever actually worked.
 //
-// TODO: formId below is a placeholder. A "Contact Us" FormDefinitionModel
-// (fields: name/email/subject/message, all required, matching the old
-// dx-form's dataFields) needs to be created in the impactdisciplesdev
-// project's `forms` collection via impactdisciples-admin's Web Manager >
-// Form Builder before this will actually render anything - creating it
-// directly via a script was blocked by this session's own write-permission
-// guard against the live database. Replace this id once that form exists.
+// formId below points at the real "Contact Us" FormDefinitionModel in the
+// impactdisciplesdev project's `forms` collection (fields: Name/Email side
+// by side, Subject and Message full-width, all four required - matching
+// the old dx-form's dataFields and colSpan layout exactly). It's editable
+// going forward via impactdisciples-admin's Web Manager > Form Builder,
+// same as every other formId in this app.
 @Component({
     selector: 'app-contact',
     templateUrl: './contact.component.html',
@@ -23,5 +22,5 @@ import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data
 })
 export class ContactComponent {
   public impactDisciplesInfo = impactDisciplesInfo;
-  readonly formId = 'REPLACE_WITH_CONTACT_US_FORM_ID';
+  readonly formId = 'N0ynW6zeYKdXQS2EkBii';
 }
