@@ -269,7 +269,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       breakdown: breakdown
     }
 
-    const items: ITransactionItem[] = this.checkoutForm.cartItems.map(item => <ITransactionItem>{
+    const items: ITransactionItem[] = this.checkoutForm.cartItems.map(item => ({
       name: item.itemName,
       quantity: item.orderQuantity.toString(),
       category: 'DIGITAL_GOODS',
@@ -277,12 +277,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         currency_code: this.currency,
         value: (item.salePrice ? item.salePrice : item.price).toFixed(2).toString()
       },
-    })
+    } as ITransactionItem))
 
     this.payPalConfig = {
       currency: this.currency,
       clientId: this.webConfig.paypalClientId,
-      createOrderOnClient: () => <ICreateOrderRequest> {
+      createOrderOnClient: () => ({
           intent: 'CAPTURE',
           purchase_units: [
             {
@@ -290,7 +290,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               items: items
             }
           ]
-        },
+        } as ICreateOrderRequest),
         advanced: {
           commit: 'true',
         },
