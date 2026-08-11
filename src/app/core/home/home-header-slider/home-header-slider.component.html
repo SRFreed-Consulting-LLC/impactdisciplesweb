@@ -7,11 +7,11 @@
         [style.backgroundImage]="'url('+galleryItem.image.url+')'">
         <div class="gallery__slide-overlay">
           <div class="gallery__slide-content">
-            <h2 class="title " animate="fadeInUp">{{galleryItem.title}}</h2>
-            <hr animate="fadeInLeftToRight" class="slider-hr">
-            <p class="text" animate="fadeInUpTwo">{{galleryItem.text}}</p>
-            <a target="" *ngIf="galleryItem.ctaDestination !== 'external'" animate="fadeInUpThree" [routerLink]="galleryItem.ctaDestination" class="impact-btn">{{galleryItem.ctaTitle}}</a>
-            <a target="none" *ngIf="galleryItem.ctaDestination === 'external'" animate="fadeInUpThree" [href]="galleryItem.ctaUrl" class="impact-btn">{{galleryItem.ctaTitle}}</a>
+            <h2 class="title " appAnimate="fadeInUp">{{galleryItem.title}}</h2>
+            <hr appAnimate="fadeInLeftToRight" class="slider-hr">
+            <p class="text" appAnimate="fadeInUpTwo">{{galleryItem.text}}</p>
+            <a target="" *ngIf="galleryItem.ctaDestination !== 'external'" appAnimate="fadeInUpThree" [routerLink]="galleryItem.ctaDestination" class="impact-btn">{{galleryItem.ctaTitle}}</a>
+            <a target="none" *ngIf="galleryItem.ctaDestination === 'external'" appAnimate="fadeInUpThree" [href]="galleryItem.ctaUrl" class="impact-btn">{{galleryItem.ctaTitle}}</a>
           </div>
         </div>
       </div>

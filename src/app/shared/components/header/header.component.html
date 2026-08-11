@@ -1,24 +1,24 @@
 <div class="impact-header" [style.backgroundImage]="'url(' + backgroundUrl + ')'">
   <div class="impact-header__content">
-    <p *ngIf="pretitle" animate="fadeInUp" class="pretitle">{{ pretitle }}</p>
-    <p *ngIf="title" animate="fadeInUpTwo" class="title">{{ title }}</p>
-    <p *ngIf="description" animate="fadeInUpThree" class="description">{{ description }}</p>
-    <hr *ngIf="showHr" animate="fadeInLeftToRight" class="slider-hr slider-hr-w100">
+    <p *ngIf="pretitle" appAnimate="fadeInUp" class="pretitle">{{ pretitle }}</p>
+    <p *ngIf="title" appAnimate="fadeInUpTwo" class="title">{{ title }}</p>
+    <p *ngIf="description" appAnimate="fadeInUpThree" class="description">{{ description }}</p>
+    <hr *ngIf="showHr" appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w100">
     <div class="buttons">
-      <a *ngIf="buttonLink && !buttonClick" animate="fadeInUpFour" [href]="buttonLink" class="impact-btn">
+      <a *ngIf="buttonLink && !buttonClick" appAnimate="fadeInUpFour" [href]="buttonLink" class="impact-btn">
         <i [ngClass]="buttonIcon ? buttonIcon : 'd-none'"></i>
         {{ buttonText }}
       </a>
-      <a *ngIf="buttonLink2 && !buttonClick2" animate="fadeInUpFour" [href]="buttonLink2" class="impact-btn">
+      <a *ngIf="buttonLink2 && !buttonClick2" appAnimate="fadeInUpFour" [href]="buttonLink2" class="impact-btn">
         <i [ngClass]="buttonIcon2 ? buttonIcon2 : 'd-none'"></i>
         {{ buttonText2 }}
       </a>
-      <a *ngIf="buttonLink3" animate="fadeInUpFour" [href]="buttonLink3" class="impact-btn">
+      <a *ngIf="buttonLink3" appAnimate="fadeInUpFour" [href]="buttonLink3" class="impact-btn">
         <i [ngClass]="buttonIcon3 ? buttonIcon3 : 'd-none'"></i>
         {{ buttonText3 }}
       </a>
-      <a *ngIf="buttonClick && !buttonLink" animate="fadeInUpFour" (click)="onButtonClick()" class="impact-btn">{{ buttonText }}</a>
-      <a *ngIf="buttonClick2 && !buttonLink2" animate="fadeInUpFour" (click)="onButtonClick2()" class="impact-btn">{{ buttonText2 }}</a>
+      <a *ngIf="buttonClick && !buttonLink" appAnimate="fadeInUpFour" (click)="onButtonClick()" class="impact-btn">{{ buttonText }}</a>
+      <a *ngIf="buttonClick2 && !buttonLink2" appAnimate="fadeInUpFour" (click)="onButtonClick2()" class="impact-btn">{{ buttonText2 }}</a>
     </div>
   </div>
 </div>
