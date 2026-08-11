@@ -6,7 +6,7 @@
       </a>
     </li>
 
-    <li *ngFor="let page of paginate.pages" [ngClass]="{ active: paginate.currentPage == page }">
+    <li *ngFor="let page of paginate.pages" [ngClass]="{ active: paginate.currentPage === page }">
       <a
         class="cursor-pointer"
         (click)="pageSet(page)"
@@ -15,7 +15,7 @@
       </a>
     </li>
 
-    <li [ngClass]="{ disabled: paginate.currentPage == paginate.totalPages }">
+    <li [ngClass]="{ disabled: paginate.currentPage === paginate.totalPages }">
       <a class="cursor-pointer" (click)="pageSet(paginate.currentPage + 1)">
         <i class="fal fa-angle-right"></i>
       </a>

@@ -86,7 +86,7 @@
                 </div>
               </form>
               <button type="button" *ngIf="this.calculateOrderTotal() > 0" class="mt-20 impact-btn impact-btn-blue" (click)="setView('billing')">Continue to Billing</button>
-              <button type="button" *ngIf="this.calculateOrderTotal() == 0" class="mt-20 impact-btn impact-btn-blue" (click)="submitRequest()">Submit</button>
+              <button type="button" *ngIf="this.calculateOrderTotal() === 0" class="mt-20 impact-btn impact-btn-blue" (click)="submitRequest()">Submit</button>
             </div>
           </div>
 
@@ -169,9 +169,9 @@
                   <div class="col-lg-6">Shipping</div>
                   <div *ngIf="this.checkoutForm.shippingRate > 0" class="col-lg-4"></div>
                   <div *ngIf="this.checkoutForm.shippingRate > 0" class="col-lg-2 text-end">{{this.checkoutForm.shippingRate | currency}}</div>
-                  <div *ngIf="!this.checkoutForm.shippingRate || this.checkoutForm.shippingRate == 0" class="col-lg-6 text-end shipping-text">
+                  <div *ngIf="!this.checkoutForm.shippingRate || this.checkoutForm.shippingRate === 0" class="col-lg-6 text-end shipping-text">
                     <span class="impact-spinner impact-spinner--sm" *ngIf="showShippingSpinner"></span>
-                    <span *ngIf="!showShippingSpinner && !this.checkoutForm.shippingRate || this.checkoutForm.shippingRate == 0" class="checkout-form__amount">Calculated at Next Step</span>
+                    <span *ngIf="!showShippingSpinner && !this.checkoutForm.shippingRate || this.checkoutForm.shippingRate === 0" class="checkout-form__amount">Calculated at Next Step</span>
                     <span *ngIf="!showShippingSpinner && this.checkoutForm.shippingRate > 0" class="checkout-form__amount shipping-text">{{this.checkoutForm.shippingRate | currency}}</span>
                   </div>
                 </div>
@@ -184,12 +184,12 @@
                   <div class="col-lg-6">Estimated Tax</div>
                   <div *ngIf="this.checkoutForm.estimatedTaxes > 0" class="col-lg-4"></div>
                   <div *ngIf="this.checkoutForm.estimatedTaxes > 0" class="col-lg-2 text-end">{{this.checkoutForm.estimatedTaxes | currency}}</div>
-                  <div *ngIf="(!this.checkoutForm.estimatedTaxes || this.checkoutForm.estimatedTaxes == 0) && this.checkoutForm.shippingAddress.state == 'Georgia'" class="col-lg-6 text-end shipping-text">
+                  <div *ngIf="(!this.checkoutForm.estimatedTaxes || this.checkoutForm.estimatedTaxes === 0) && this.checkoutForm.shippingAddress.state === 'Georgia'" class="col-lg-6 text-end shipping-text">
                     <span class="impact-spinner impact-spinner--sm" *ngIf="showEstimatedTaxesSpinner"></span>
-                    <span *ngIf="!showEstimatedTaxesSpinner && (!this.checkoutForm.estimatedTaxes || this.checkoutForm.estimatedTaxes == 0)" class="checkout-form__amount">Calculated at Next Step</span>
+                    <span *ngIf="!showEstimatedTaxesSpinner && (!this.checkoutForm.estimatedTaxes || this.checkoutForm.estimatedTaxes === 0)" class="checkout-form__amount">Calculated at Next Step</span>
                     <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.estimatedTaxes > 0" class="checkout-form__amount shipping-text">{{this.checkoutForm.estimatedTaxes | currency}}</span>
                   </div>
-                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state != 'Georgia'" class="col-lg-6 text-end shipping-text">
+                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state !== 'Georgia'" class="col-lg-6 text-end shipping-text">
                     Only required if in Georgia
                   </div>
                 </div>

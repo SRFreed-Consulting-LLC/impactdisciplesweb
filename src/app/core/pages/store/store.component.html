@@ -23,7 +23,7 @@
         class="store__container-filter"
         [value]="selectedFilter"
         (change)="filterProducts($any(+$any($event.target).value))">
-        <option value="" disabled [selected]="selectedFilter == null" hidden>Select a filter</option>
+        <option value="" disabled [selected]="selectedFilter === null" hidden>Select a filter</option>
         <option *ngFor="let opt of filterOptions" [value]="opt.value">{{ opt.text }}</option>
       </select>
       <div class="store__container-views">

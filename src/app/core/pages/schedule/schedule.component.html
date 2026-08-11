@@ -47,7 +47,7 @@
                               <div *ngIf="!timeGroup.items[0].item.isCourse" class="title">{{ timeGroup.items[0].item.text }}</div>
                               <div class="room" *ngIf="timeGroup.items[0].item.room">Room: {{ getRoomName(timeGroup.items[0].item.room) }}</div>
 
-                              <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length == 1">
+                              <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length === 1">
                                 <b>Speaker:</b> {{ getCoachName(timeGroup.items[0].item.coaches[0]) }}
                               </div>
                               <div class="coach" *ngIf="timeGroup.items[0].item.coaches && timeGroup.items[0].item.coaches.length > 1">

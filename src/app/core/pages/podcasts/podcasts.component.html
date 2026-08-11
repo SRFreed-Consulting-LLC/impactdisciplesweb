@@ -27,7 +27,7 @@
       <h1>{{ selectedPodcast?.title }}</h1>
       <div class="video-wrapper">
         <youtube-player
-          *ngIf="selectedPodcast?.videoType == 'Youtube'"
+          *ngIf="selectedPodcast?.videoType === 'Youtube'"
           [videoId]="selectedPodcast?.videoId"
           suggestedQuality="highres">
         </youtube-player>

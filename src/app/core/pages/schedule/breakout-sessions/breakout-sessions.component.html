@@ -9,7 +9,7 @@
     <div *ngFor="let monthGroup of allCourses; let i = index">
       <div *ngFor="let dayGroup of monthGroup.days">
         <div *ngFor="let timeGroup of dayGroup.timeGroups" id="accordion-container">
-          <div *ngIf="selectedTimegroup.date == timeGroup.date">
+          <div *ngIf="selectedTimegroup.date === timeGroup.date">
             <div *ngFor="let course of timeGroup.items">
               <div class="sessions__item" (click)="viewCourse(course)" [ngClass]="{ 'assigned-user': course.isAssignedToUser }" >
                 <div class="sessions__item-title">{{ getCourseTitle(getCourse(course.item.course)) }}</div>

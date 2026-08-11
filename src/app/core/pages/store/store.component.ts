@@ -34,7 +34,7 @@ export class StoreComponent implements OnInit, OnDestroy {
   public paginate: any = {};
   public pageNo = 1;
   public pageSize = 10;
-  public selectedFilter: FilterType;
+  public selectedFilter: FilterType = null;
   public FILTER_TYPE = FilterType;
   public filterOptions = [
     { text: 'View All', value: FilterType.viewAll },
