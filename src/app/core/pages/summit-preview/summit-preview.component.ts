@@ -121,7 +121,7 @@ export class SummitPreviewComponent implements OnInit, OnDestroy {
 
       acc[monthYearKey][dateKey].push(item);
       return acc;
-    }, {} as { [monthYear: string]: { [date: string]: AgendaItem[] } });
+    }, {} as Record<string, Record<string, AgendaItem[]>>);
 
     this.groupedAgendaItems = Object.keys(groupedByMonthYear).map(monthYear => ({
       monthYear: monthYear,

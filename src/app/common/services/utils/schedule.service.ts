@@ -99,7 +99,7 @@ export class ScheduleService {
       // Initialize isAssignedToUser as false
       acc[dateKey].push({ isAssignedToUser: false, item });
       return acc;
-    }, {} as { [date: string]: UpdatedAgendaItemModel[] });
+    }, {} as Record<string, UpdatedAgendaItemModel[]>);
 
     return Object.keys(groupedByDate).map((dateKey) => ({
       date: new Date(dateKey),

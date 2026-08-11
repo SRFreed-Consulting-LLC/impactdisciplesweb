@@ -31,7 +31,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   // each independently toggleable, unlike the single-open accordion used
   // elsewhere in this app).
   attendeesForm: FormArray = this.fb.array([]);
-  openIndexes: Set<number> = new Set([0]);
+  openIndexes = new Set<number>([0]);
 
   event: EventModel;
   total = 0;
@@ -215,7 +215,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
 
       acc[monthYearKey][dateKey].push(item);
       return acc;
-    }, {} as { [monthYear: string]: { [date: string]: AgendaItem[] } });
+    }, {} as Record<string, Record<string, AgendaItem[]>>);
 
     this.groupedAgendaItems = Object.keys(groupedByMonthYear).map(monthYear => ({
       monthYear: monthYear,
