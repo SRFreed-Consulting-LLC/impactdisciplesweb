@@ -149,8 +149,4 @@ export class CheckoutSuccessComponent implements AfterViewInit{
       this.emailService.sendHTMLEMailByIdFromTemplate(checkoutForm.email, followUp.followUpEmailId, form);
     })
   }
-
-  sendLibraryDownloadEmail(){
-
-  }
 }
