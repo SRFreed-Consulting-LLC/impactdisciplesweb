@@ -121,13 +121,7 @@
         </p>
       </div>
       <div class="content__form">
-        <dx-form [formData]="consultationRequest" [colCount]="2">
-          <dxi-item dataField="firstName" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'First Name' }"></dxi-item>
-          <dxi-item dataField="lastName" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Last Name' }"></dxi-item>
-          <dxi-item dataField="email" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Email' }" [colSpan]="2"></dxi-item>
-          <dxi-item dataField="message" editorType="dxTextArea" [label]="{ visible: false }" [editorOptions]="{ placeholder: 'Message' }" [colSpan]="2"></dxi-item>
-        </dx-form>
-        <button class="impact-btn impact-btn-blue mt-30" (click)="handleFormSubmit()">GET MY FREE CONSULTATION</button>
+        <app-dynamic-form [formId]="consultationRequestFormId" [submitButtonText]="'GET MY FREE CONSULTATION'"></app-dynamic-form>
       </div>
     </div>
   </div>
