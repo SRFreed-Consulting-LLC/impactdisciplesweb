@@ -10,6 +10,7 @@ import { ProductService } from 'src/app/common/services/data/product.service';
 import { SalesService } from 'src/app/common/services/data/sales.service';
 import { SeriesService } from 'src/app/common/services/data/series.service';
 import { Subject, takeUntil } from 'rxjs';
+import { NumberUtil } from 'src/app/common/utils/number-util';
 
 export enum FilterType {
   viewAll = 0,
@@ -92,8 +93,9 @@ export class StoreComponent implements OnInit, OnDestroy {
         });
 
         if (selectedSale) {
+          const percentOff = NumberUtil.clampPercent(selectedSale.percentOff);
           this.products.forEach(product => {
-            product.salePrice = product.cost - (selectedSale.percentOff / 100 * product.cost);
+            product.salePrice = product.cost - (percentOff / 100 * product.cost);
           });
         }
 

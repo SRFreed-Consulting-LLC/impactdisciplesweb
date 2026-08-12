@@ -107,8 +107,9 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     })
 
     if(selectedSale){
-      this.product.salePrice = this.product.cost - (selectedSale.percentOff / 100 * this.product.cost)
-      this.cartItem.salePrice = this.cartItem.price - (selectedSale.percentOff / 100 * this.cartItem.price)
+      const percentOff = NumberUtil.clampPercent(selectedSale.percentOff);
+      this.product.salePrice = this.product.cost - (percentOff / 100 * this.product.cost)
+      this.cartItem.salePrice = this.cartItem.price - (percentOff / 100 * this.cartItem.price)
     }
   }
 

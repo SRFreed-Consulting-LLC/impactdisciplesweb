@@ -14,6 +14,7 @@ import { Timestamp } from 'firebase/firestore';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
 import { EMailModel } from 'src/app/common/models/admin/mail.model';
 import { EMailService } from 'src/app/common/services/data/email.service';
+import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
@@ -49,6 +50,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     private eventRegistrationService: EventRegistrationService,
     private emailService: EMailService,
     private toastService: ToastService,
+    private loggerService: LoggerService,
     private fb: FormBuilder
   ) {}
 
@@ -165,13 +167,19 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
         registration.email = value.email.toLowerCase();
         registration.registrationDate = Timestamp.now();
 
+        // Every `return` below matters: without it the inner chain isn't
+        // linked to the outer one and this .catch() would never see its
+        // rejections (2026-08-12 fullsweep fix - see the matching comment on
+        // CheckoutSuccessComponent.registerEventUsers()). Other attendees in
+        // the surrounding forEach are unaffected either way, since each runs
+        // its own independent async closure.
         await this.eventService.getById(this.event.id).then(async event => {
-          await this.eventRegistrationService.add(registration).then(registration => {
-            this.sendRegistrationSuccessEmail(registration, event).then(email => {
+          return this.eventRegistrationService.add(registration).then(registration => {
+            return this.sendRegistrationSuccessEmail(registration, event).then(email => {
               registration.receiptEmailId = email.id;
               return registration;
             }).then(registration => {
-              this.eventRegistrationService.update(registration.id, registration);
+              return this.eventRegistrationService.update(registration.id, registration);
             }).then(() => {
               this.toastService.notify({
                 message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
@@ -179,8 +187,21 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
                 type: 'success'
               });
             });
-          })
-        })
+          });
+        }).catch((err) => {
+          this.loggerService.logMessage(
+            'EVENT_REGISTRATION',
+            registration.email,
+            'Failed to register attendee for event.',
+            { err, eventId: this.event.id, eventName: this.event.eventName }
+          ).subscribe((errorCode) => {
+            this.toastService.notify({
+              message: 'We hit a problem registering ' + registration.firstName + ' ' + registration.lastName +
+                ' for ' + this.event.eventName + '. Please try again or contact us - reference code: ' + errorCode,
+              type: 'error'
+            });
+          });
+        });
 
         this.cartService.clearCartNoConfirmation();
       })

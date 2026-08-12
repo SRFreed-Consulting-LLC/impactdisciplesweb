@@ -10,6 +10,7 @@ import { AffilliateSalesService } from 'src/app/common/services/data/affiliate-s
 import { EMailService } from 'src/app/common/services/data/email.service';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { EventService } from 'src/app/common/services/data/event.service';
+import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { SubscriptionService } from 'src/app/common/services/data/subscription.service';
 import { TaxRateSummaryService } from 'src/app/common/services/data/tax-rate-summary.service';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
@@ -34,7 +35,8 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private eventService: EventService,
     private affiliateSaleService: AffilliateSalesService,
     private taxSummaryService: TaxRateSummaryService,
-    private toastService: ToastService){}
+    private toastService: ToastService,
+    private loggerService: LoggerService){}
 
   async ngAfterViewInit() {
     const checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
@@ -102,23 +104,46 @@ export class CheckoutSuccessComponent implements AfterViewInit{
         registration.receipt = confirmationId;
         registration.registrationDate = Timestamp.now();
 
+        // Runs after checkout has already succeeded (the order is saved) -
+        // a failure here loses just this one attendee's event registration,
+        // not the whole order, so it must surface on its own rather than
+        // vanish as an unhandled rejection. Every `return` below matters:
+        // without it the inner chain isn't linked to the outer one and this
+        // .catch() would never see its rejections. Other attendees/events in
+        // the surrounding forEach loops are unaffected either way, since each
+        // runs its own independent async closure.
         await this.eventService.getById(event.id).then(async event => {
-          await this.eventRegistrationService.add(registration).then(registration => {
-            this.sendRegistrationSuccessEmail(registration, event).then(email => {
+          return this.eventRegistrationService.add(registration).then(registration => {
+            return this.sendRegistrationSuccessEmail(registration, event).then(email => {
               registration.receiptEmailId = email.id;
               return registration;
             }).then(registration => {
-              this.eventRegistrationService.update(registration.id, registration);
+              return this.eventRegistrationService.update(registration.id, registration);
             }).then(() => {
               this.toastService.notify({
                 message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
                 ' starting on ' + dateFromTimestamp(event.startDate),
                 type: 'success'
               });
-
             });
-          })
-        })
+          });
+        }).catch((err) => {
+          // `event` here is the outer CartItem (events.forEach), not the
+          // EventModel the inner .then() shadowed the name with - use
+          // itemName, the field CartItem actually has.
+          this.loggerService.logMessage(
+            'EVENT_REGISTRATION',
+            registration.email,
+            'Failed to register attendee for event after checkout succeeded.',
+            { err, eventId: event.id, eventName: event.itemName, confirmationId }
+          ).subscribe((errorCode) => {
+            this.toastService.notify({
+              message: 'Your order was placed, but we hit a problem registering ' + registration.firstName + ' ' + registration.lastName +
+                ' for ' + event.itemName + '. Please contact us to complete this registration - reference code: ' + errorCode,
+              type: 'error'
+            });
+          });
+        });
 
         this.cartService.clearCartNoConfirmation();
       })

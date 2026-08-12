@@ -68,7 +68,7 @@ export class ShoppingCartComponent implements OnInit {
             isValid = true;
 
             if(!item.salePrice){
-              item.discount = parseFloat(((item.price * validCoupon.percentOff) / 100).toFixed(2));
+              item.discount = parseFloat(((item.price * NumberUtil.clampPercent(validCoupon.percentOff)) / 100).toFixed(2));
 
               item.discountPrice = item.price - item.discount;
             }
@@ -81,7 +81,7 @@ export class ShoppingCartComponent implements OnInit {
 
           this.shoppingCart.couponCode = validCoupon.code;
 
-          this.shoppingCart.couponPercent = validCoupon.percentOff;
+          this.shoppingCart.couponPercent = NumberUtil.clampPercent(validCoupon.percentOff);
 
           this.toastService.notify({ message: 'Coupon applied successfully.', type: 'success' });
         } else {

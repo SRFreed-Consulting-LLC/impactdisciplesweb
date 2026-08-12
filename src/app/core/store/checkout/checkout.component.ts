@@ -17,6 +17,7 @@ import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { PurchasesService } from 'src/app/common/services/data/purchases.service';
 import { SaleModel } from 'src/app/common/models/utils/sale.model';
 import { EMailService } from 'src/app/common/services/data/email.service';
+import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { IClientAuthorizeCallbackData, ICreateOrderRequest, IPayPalConfig, ITransactionItem, IUnitAmount, IUnitBreakdown } from 'ngx-paypal';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
@@ -90,6 +91,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private webConfigService: WebConfigService,
     private router: Router,
     private toastService: ToastService,
+    private loggerService: LoggerService,
     private fb: FormBuilder) {}
 
   async ngOnInit(): Promise<void> {
@@ -190,9 +192,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     } else {
       this.sales.forEach(sale => {
         if(sale.isShipping){
-          this.checkoutForm.shippingDiscount = sale.percentOff / 100 * this.checkoutForm.shippingRate;
+          const percentOff = NumberUtil.clampPercent(sale.percentOff);
+          this.checkoutForm.shippingDiscount = percentOff / 100 * this.checkoutForm.shippingRate;
 
-          this.checkoutForm.shippingDiscountReason = sale.percentOff + "% Off"
+          this.checkoutForm.shippingDiscountReason = percentOff + "% Off"
         }
       })
     }
@@ -418,6 +421,29 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.sendProductPurchaseSuccessEmail(this.checkoutForm);
 
       this.router.navigate(['/checkout-success'], { queryParams: { savedForm: this.checkoutForm.id }});
+    }).catch((err) => {
+      // Runs after payment (PayPal or a $0/coupon order) has already been
+      // finalized - a failure here means the customer was charged (or their
+      // free order was accepted) but no purchase record was saved, so this
+      // must never fail silently. Log it (gives a support reference code)
+      // and tell the customer plainly that payment went through rather than
+      // implying the order itself failed - see item #10 of the 2026-08-12
+      // fullsweep fix-first pass.
+      this.setLoading(false);
+
+      this.loggerService.logMessage(
+        'CHECKOUT',
+        this.checkoutForm.email,
+        'Failed to save purchase after payment was captured/finalized.',
+        { err, receipt: this.checkoutForm.receipt, payPalReceiptId: this.checkoutForm.payPalReceipt?.id }
+      ).subscribe((errorCode) => {
+        this.toastService.notify({
+          message: 'Your payment went through, but we hit a problem saving your order. ' +
+            'Please contact us so we can complete it manually - reference code: ' + errorCode +
+            (this.checkoutForm.payPalReceipt?.id ? ' (payment ref: ' + this.checkoutForm.payPalReceipt.id + ')' : ''),
+          type: 'error'
+        });
+      });
     })
   }
 
