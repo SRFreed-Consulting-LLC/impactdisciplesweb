@@ -25,31 +25,34 @@
       </div>
     </div>
     <div class="video">
-      <div
-        *ngIf="!isPlaying"
-        class="video__container"
-        style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2FDMCHURCH%20for%20youtube%20cover.png?alt=media&token=0a4ead1b-4289-4185-8019-c0def5c536e3)"
-      >
-        <div class="container">
-          <div class="video__content text-center">
-            <div class="video__button">
-              <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
-                <i class="fas fa-play"></i>
-              </a>
+      @if (!isPlaying) {
+        <div
+          class="video__container"
+          style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2FDMCHURCH%20for%20youtube%20cover.png?alt=media&token=0a4ead1b-4289-4185-8019-c0def5c536e3)"
+          >
+          <div class="container">
+            <div class="video__content text-center">
+              <div class="video__button">
+                <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
+                  <i class="fas fa-play"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
 
-      <div *ngIf="isPlaying" class="video__container">
-        <div class="video__player-wrapper">
-          <youtube-player
-            [videoId]="'7FqlKpxX8Eg'"
-            [playerVars]="{ autoplay: 1 }"
-            class="video__player"
-          ></youtube-player>
+      @if (isPlaying) {
+        <div class="video__container">
+          <div class="video__player-wrapper">
+            <youtube-player
+              [videoId]="'7FqlKpxX8Eg'"
+              [playerVars]="{ autoplay: 1 }"
+              class="video__player"
+            ></youtube-player>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
   <div class="equipping-groups__about">
@@ -59,7 +62,7 @@
         <p>
           Ready to align your ministry around the mission of making disciples?
           The Disciple-Making Church Equipping Group is a brand-new online experience designed to
-          equip your leadership with clarity, confidence, and a practical pathway forward.work. It consists of reading, video training, tailored projects, and online meetings with your trainer and peer group.</p>
+        equip your leadership with clarity, confidence, and a practical pathway forward.work. It consists of reading, video training, tailored projects, and online meetings with your trainer and peer group.</p>
         <h5>COST</h5>
         <p>We offer 2 options to pay for this service:</p>
         <div>

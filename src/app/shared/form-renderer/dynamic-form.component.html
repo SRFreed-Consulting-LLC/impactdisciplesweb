@@ -1,23 +1,29 @@
 <div class="dynamic-form">
-  <div *ngIf="loading" class="dynamic-form__status">Loading form&hellip;</div>
+  @if (loading) {
+    <div class="dynamic-form__status">Loading form&hellip;</div>
+  }
 
-  <div *ngIf="!loading && notFound" class="dynamic-form__status dynamic-form__status--error">
-    This form isn't available right now.
-  </div>
-
-  <ng-container *ngIf="!loading && !notFound && formDef">
-    <div *ngIf="submitted" class="dynamic-form__status dynamic-form__status--success">
-      Thank you! Your submission has been received.
+  @if (!loading && notFound) {
+    <div class="dynamic-form__status dynamic-form__status--error">
+      This form isn't available right now.
     </div>
+  }
 
-    <form *ngIf="!submitted" [formGroup]="form" (ngSubmit)="onSubmit()" [style.background-color]="formDef.backgroundColor || null" [ngStyle]="controlStyleVars" class="dynamic-form__fields">
-      <ng-container *ngFor="let field of fields">
-        <app-dynamic-form-field [field]="field" [form]="form"></app-dynamic-form-field>
-      </ng-container>
-
-      <button type="submit" class="impact-btn impact-btn-blue dynamic-form__submit" [disabled]="submitting">
-        {{ submitting ? 'Submitting…' : submitButtonText }}
-      </button>
-    </form>
-  </ng-container>
+  @if (!loading && !notFound && formDef) {
+    @if (submitted) {
+      <div class="dynamic-form__status dynamic-form__status--success">
+        Thank you! Your submission has been received.
+      </div>
+    }
+    @if (!submitted) {
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" [style.background-color]="formDef.backgroundColor || null" [ngStyle]="controlStyleVars" class="dynamic-form__fields">
+        @for (field of fields; track field) {
+          <app-dynamic-form-field [field]="field" [form]="form"></app-dynamic-form-field>
+        }
+        <button type="submit" class="impact-btn impact-btn-blue dynamic-form__submit" [disabled]="submitting">
+          {{ submitting ? 'Submitting…' : submitButtonText }}
+        </button>
+      </form>
+    }
+  }
 </div>

@@ -9,12 +9,16 @@
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center" [ngClass]="{'text-white': isDark}">
                   <li class="breadcrumb-item" [ngClass]="{'text-white': isDark}">
-                    <a *ngIf="previousLinkId" [routerLink]="[previousLink, previousLinkId]" [ngClass]="{'text-white': isDark}">
-                      {{ previousLinkName }}
-                    </a>
-                    <a *ngIf="!previousLinkId" [routerLink]="previousLink" [ngClass]="{'text-white': isDark}">
-                      {{ previousLinkName }}
-                    </a>
+                    @if (previousLinkId) {
+                      <a [routerLink]="[previousLink, previousLinkId]" [ngClass]="{'text-white': isDark}">
+                        {{ previousLinkName }}
+                      </a>
+                    }
+                    @if (!previousLinkId) {
+                      <a [routerLink]="previousLink" [ngClass]="{'text-white': isDark}">
+                        {{ previousLinkName }}
+                      </a>
+                    }
                   </li>
                   <li class="breadcrumb-item active" aria-current="page" [ngClass]="{'text-white': isDark}">
                     {{ currentPageName }}

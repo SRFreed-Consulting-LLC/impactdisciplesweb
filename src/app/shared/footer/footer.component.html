@@ -14,34 +14,34 @@
             </div>
             <div class="footer__widget-content">
               <p>&#64;2024 Ken Adams All Right reserved.</p>
-                <div class="footer__contact">
-                  <ul>
-                    <li>
-                      <div class="icon">
-                        <i class="fal fa-map-marker-alt"></i>
-                      </div>
-                      <div class="text">
-                        <span>Address: {{ impactDisciplesInfo.address }}</span>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="icon">
-                        <i class="fal fa-envelope-open-text"></i>
-                      </div>
-                      <div class="text">
-                        <span>Email: {{ impactDisciplesInfo.email }}</span>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="icon">
-                        <i class="fal fa-phone-alt"></i>
-                      </div>
-                      <div class="text">
-                        <span>Phone Number: {{ impactDisciplesInfo.phone }}</span>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
+              <div class="footer__contact">
+                <ul>
+                  <li>
+                    <div class="icon">
+                      <i class="fal fa-map-marker-alt"></i>
+                    </div>
+                    <div class="text">
+                      <span>Address: {{ impactDisciplesInfo.address }}</span>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="icon">
+                      <i class="fal fa-envelope-open-text"></i>
+                    </div>
+                    <div class="text">
+                      <span>Email: {{ impactDisciplesInfo.email }}</span>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="icon">
+                      <i class="fal fa-phone-alt"></i>
+                    </div>
+                    <div class="text">
+                      <span>Phone Number: {{ impactDisciplesInfo.phone }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -130,21 +130,31 @@
         <div class="col-xl-6 col-lg-5">
           <div class="footer__social f-right">
             <ul>
-              <li *ngIf="impactDisciplesInfo.facebook">
-                <a [href]="impactDisciplesInfo.facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-              </li>
-              <li *ngIf="impactDisciplesInfo.twitter">
-                <a [href]="impactDisciplesInfo.twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-              </li>
-              <li *ngIf="impactDisciplesInfo.youtube">
-                <a [href]="impactDisciplesInfo.youtube" target="_blank"><i class="fab fa-youtube"></i></a>
-              </li>
-              <li *ngIf="impactDisciplesInfo.linkedin">
-                <a [href]="impactDisciplesInfo.linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-              </li>
-              <li *ngIf="impactDisciplesInfo.instagram">
-                <a [href]="impactDisciplesInfo.instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-              </li>
+              @if (impactDisciplesInfo.facebook) {
+                <li>
+                  <a [href]="impactDisciplesInfo.facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                </li>
+              }
+              @if (impactDisciplesInfo.twitter) {
+                <li>
+                  <a [href]="impactDisciplesInfo.twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                </li>
+              }
+              @if (impactDisciplesInfo.youtube) {
+                <li>
+                  <a [href]="impactDisciplesInfo.youtube" target="_blank"><i class="fab fa-youtube"></i></a>
+                </li>
+              }
+              @if (impactDisciplesInfo.linkedin) {
+                <li>
+                  <a [href]="impactDisciplesInfo.linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </li>
+              }
+              @if (impactDisciplesInfo.instagram) {
+                <li>
+                  <a [href]="impactDisciplesInfo.instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                </li>
+              }
             </ul>
           </div>
         </div>

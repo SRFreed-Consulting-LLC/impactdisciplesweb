@@ -26,31 +26,34 @@
     </div>
 
     <div class="video">
-      <div
-        *ngIf="!isPlaying"
-        class="video__container"
-        style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Flunch-and-learn-thumbnail.jpg?alt=media&token=88186f35-4e15-4ba1-b115-e02c613b513d)"
-      >
-        <div class="container">
-          <div class="video__content text-center">
-            <div class="video__button">
-              <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
-                <i class="fas fa-play"></i>
-              </a>
+      @if (!isPlaying) {
+        <div
+          class="video__container"
+          style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Flunch-and-learn-thumbnail.jpg?alt=media&token=88186f35-4e15-4ba1-b115-e02c613b513d)"
+          >
+          <div class="container">
+            <div class="video__content text-center">
+              <div class="video__button">
+                <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
+                  <i class="fas fa-play"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
 
-      <div *ngIf="isPlaying" class="video__container">
-        <div class="video__player-wrapper">
-          <youtube-player
-            [videoId]="'HxKSa24hF60'"
-            [playerVars]="{ autoplay: 1 }"
-            class="video__player"
-          ></youtube-player>
+      @if (isPlaying) {
+        <div class="video__container">
+          <div class="video__player-wrapper">
+            <youtube-player
+              [videoId]="'HxKSa24hF60'"
+              [playerVars]="{ autoplay: 1 }"
+              class="video__player"
+            ></youtube-player>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>

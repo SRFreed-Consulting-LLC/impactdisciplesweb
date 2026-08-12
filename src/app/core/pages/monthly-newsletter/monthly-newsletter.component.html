@@ -18,10 +18,12 @@
               <div class="col-6"><h4>Date</h4></div>
               <div class="col-6"><h4>Newsletter</h4></div>
             </div>
-            <div class="row" *ngFor="let nl of newletters">
-              <div class="col-6"><h5>{{nl.date | date: 'MMM yyyy'}}</h5></div>
-              <div class="col-6"><h5><a href="{{nl.url}}" target="_blank" rel="noopener noreferrer" style="border-bottom: 1px solid black;">{{nl.title}}</a></h5></div>
-            </div>
+            @for (nl of newletters; track nl) {
+              <div class="row">
+                <div class="col-6"><h5>{{nl.date | date: 'MMM yyyy'}}</h5></div>
+                <div class="col-6"><h5><a href="{{nl.url}}" target="_blank" rel="noopener noreferrer" style="border-bottom: 1px solid black;">{{nl.title}}</a></h5></div>
+              </div>
+            }
           </div>
         </div>
       </div>

@@ -7,211 +7,296 @@
     <div class="container-xxl">
 
       <!-- checkout no items in cart block -->
-      <div *ngIf="checkoutForm?.cartItems?.length === 0;else checkoutBlock" class="text-center pt-80 pb-30">
-        <h3 class="py-2">No items found in cart to checkout</h3>
-        <a routerLink="/shop" class="os-btn os-btn-black">
-          Return to shop
-        </a>
-      </div>
-
-      <ng-template #checkoutBlock>
+      @if (checkoutForm?.cartItems?.length === 0) {
+        <div class="text-center pt-80 pb-30">
+          <h3 class="py-2">No items found in cart to checkout</h3>
+          <a routerLink="/shop" class="os-btn os-btn-black">
+            Return to shop
+          </a>
+        </div>
+      } @else {
         <div class="row">
-          <div *ngIf="isShippingView" class="col-lg-6 pb-70">
-            <div>
-              <form class="checkout-form" [formGroup]="customerForm">
-                <div class="row">
-                  <div class="col-12"><h4>Customer Information</h4></div>
-                  <div class="col-md-6 checkout-form__field">
-                    <label for="checkout-firstName">First Name<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-firstName" type="text" formControlName="firstName" [class.is-invalid]="customerForm.get('firstName').invalid && customerForm.get('firstName').touched">
-                    <div class="checkout-form__error" *ngIf="customerForm.get('firstName').invalid && customerForm.get('firstName').touched">First Name is required</div>
+          @if (isShippingView) {
+            <div class="col-lg-6 pb-70">
+              <div>
+                <form class="checkout-form" [formGroup]="customerForm">
+                  <div class="row">
+                    <div class="col-12"><h4>Customer Information</h4></div>
+                    <div class="col-md-6 checkout-form__field">
+                      <label for="checkout-firstName">First Name<span class="checkout-form__required">*</span></label>
+                      <input id="checkout-firstName" type="text" formControlName="firstName" [class.is-invalid]="customerForm.get('firstName').invalid && customerForm.get('firstName').touched">
+                      @if (customerForm.get('firstName').invalid && customerForm.get('firstName').touched) {
+                        <div class="checkout-form__error">First Name is required</div>
+                      }
+                    </div>
+                    <div class="col-md-6 checkout-form__field">
+                      <label for="checkout-lastName">Last Name<span class="checkout-form__required">*</span></label>
+                      <input id="checkout-lastName" type="text" formControlName="lastName" [class.is-invalid]="customerForm.get('lastName').invalid && customerForm.get('lastName').touched">
+                      @if (customerForm.get('lastName').invalid && customerForm.get('lastName').touched) {
+                        <div class="checkout-form__error">Last Name is required</div>
+                      }
+                    </div>
+                    <div class="col-md-6 checkout-form__field">
+                      <label for="checkout-email">Email Address<span class="checkout-form__required">*</span></label>
+                      <input id="checkout-email" type="email" formControlName="email" [class.is-invalid]="customerForm.get('email').invalid && customerForm.get('email').touched">
+                      @if (customerForm.get('email').invalid && customerForm.get('email').touched) {
+                        <div class="checkout-form__error">Email Address is required</div>
+                      }
+                    </div>
+                    <div class="col-md-6 checkout-form__field" formGroupName="phone">
+                      <label for="checkout-phone">Phone Number<span class="checkout-form__required">*</span></label>
+                      <input id="checkout-phone" type="tel" formControlName="number" [class.is-invalid]="customerForm.get('phone.number').invalid && customerForm.get('phone.number').touched">
+                      @if (customerForm.get('phone.number').invalid && customerForm.get('phone.number').touched) {
+                        <div class="checkout-form__error">Phone Number is required</div>
+                      }
+                    </div>
+                    <div class="col-12 checkout-form__field checkout-form__field--checkbox">
+                      <label>
+                        <input type="checkbox" formControlName="isNewsletter">
+                        Sign up for our Newsletter to receive emails about our next Events!
+                      </label>
+                    </div>
                   </div>
-                  <div class="col-md-6 checkout-form__field">
-                    <label for="checkout-lastName">Last Name<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-lastName" type="text" formControlName="lastName" [class.is-invalid]="customerForm.get('lastName').invalid && customerForm.get('lastName').touched">
-                    <div class="checkout-form__error" *ngIf="customerForm.get('lastName').invalid && customerForm.get('lastName').touched">Last Name is required</div>
-                  </div>
-                  <div class="col-md-6 checkout-form__field">
-                    <label for="checkout-email">Email Address<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-email" type="email" formControlName="email" [class.is-invalid]="customerForm.get('email').invalid && customerForm.get('email').touched">
-                    <div class="checkout-form__error" *ngIf="customerForm.get('email').invalid && customerForm.get('email').touched">Email Address is required</div>
-                  </div>
-                  <div class="col-md-6 checkout-form__field" formGroupName="phone">
-                    <label for="checkout-phone">Phone Number<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-phone" type="tel" formControlName="number" [class.is-invalid]="customerForm.get('phone.number').invalid && customerForm.get('phone.number').touched">
-                    <div class="checkout-form__error" *ngIf="customerForm.get('phone.number').invalid && customerForm.get('phone.number').touched">Phone Number is required</div>
-                  </div>
-                  <div class="col-12 checkout-form__field checkout-form__field--checkbox">
-                    <label>
-                      <input type="checkbox" formControlName="isNewsletter">
-                      Sign up for our Newsletter to receive emails about our next Events!
-                    </label>
-                  </div>
-                </div>
-
-                <div class="row" *ngIf="isShippingAddressNeeded()" [formGroup]="shippingAddressForm">
-                  <div class="col-12"><h4>Shipping Address</h4></div>
-                  <div class="col-12 checkout-form__field">
-                    <label for="checkout-address1">Address<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-address1" type="text" formControlName="address1" placeholder="Street Address" [class.is-invalid]="shippingAddressForm.get('address1').invalid && shippingAddressForm.get('address1').touched">
-                    <div class="checkout-form__error" *ngIf="shippingAddressForm.get('address1').invalid && shippingAddressForm.get('address1').touched">Address is required</div>
-                  </div>
-                  <div class="col-12 checkout-form__field">
-                    <input type="text" formControlName="address2" placeholder="Apartment, Suite, Unit, etc.">
-                  </div>
-                  <div class="col-md-6 checkout-form__field">
-                    <label for="checkout-city">City<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-city" type="text" formControlName="city" placeholder="City" [class.is-invalid]="shippingAddressForm.get('city').invalid && shippingAddressForm.get('city').touched">
-                    <div class="checkout-form__error" *ngIf="shippingAddressForm.get('city').invalid && shippingAddressForm.get('city').touched">City is required</div>
-                  </div>
-                  <div class="col-md-3 checkout-form__field">
-                    <label for="checkout-state">State<span class="checkout-form__required">*</span></label>
-                    <select id="checkout-state" formControlName="state" [class.is-invalid]="shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched">
-                      <option value="" disabled>Select...</option>
-                      <option *ngFor="let state of states" [value]="state">{{ state }}</option>
-                    </select>
-                    <div class="checkout-form__error" *ngIf="shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched">State is required</div>
-                  </div>
-                  <div class="col-md-3 checkout-form__field">
-                    <label for="checkout-zip">Zip Code<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-zip" type="text" formControlName="zip" placeholder="Zip Code" [class.is-invalid]="shippingAddressForm.get('zip').invalid && shippingAddressForm.get('zip').touched">
-                    <div class="checkout-form__error" *ngIf="shippingAddressForm.get('zip').invalid && shippingAddressForm.get('zip').touched">Zip Code is required</div>
-                  </div>
-                  <div class="col-md-6 checkout-form__field">
-                    <label for="checkout-country">Country<span class="checkout-form__required">*</span></label>
-                    <select id="checkout-country" formControlName="country">
-                      <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
-                    </select>
-                  </div>
-                </div>
-              </form>
-              <button type="button" *ngIf="this.calculateOrderTotal() > 0" class="mt-20 impact-btn impact-btn-blue" (click)="setView('billing')">Continue to Billing</button>
-              <button type="button" *ngIf="this.calculateOrderTotal() === 0" class="mt-20 impact-btn impact-btn-blue" (click)="submitRequest()">Submit</button>
-            </div>
-          </div>
-
-          <div *ngIf="isBillingView" class="col-lg-6 pb-70">
-            <div class="checkout__customer-info mb-50">
-              <div class="checkout__customer-info-block customer">
-                <span>Customer</span>
-                <div class="customer-details">
-                  <span>{{ checkoutForm?.firstName + ' ' + checkoutForm.lastName}}</span>
-                  <span>{{ checkoutForm.email}}</span>
-                  <span>{{checkoutForm.phone.number}}</span>
-                </div>
-                <a (click)="setView('shipping')" (keydown.enter)="setView('shipping')" (keydown.space)="setView('shipping')" tabindex="0" role="button">Change</a>
-              </div>
-              <div *ngIf="isShippingAddressNeeded()" class="checkout__customer-info-block">
-                <span>Ship To</span>
-                <span class="info">
-                  {{ checkoutForm?.shippingAddress?.address1 }}
-                  {{ checkoutForm?.shippingAddress?.address2 }}
-                  {{ checkoutForm?.shippingAddress?.city }},
-                  {{ checkoutForm?.shippingAddress?.state }}
-                  {{ checkoutForm?.shippingAddress?.zip }}
-                  {{ checkoutForm?.shippingAddress?.country }}
-                </span>
-                <a (click)="setView('shipping')" (keydown.enter)="setView('shipping')" (keydown.space)="setView('shipping')" tabindex="0" role="button">Change</a>
-              </div>
-            </div>
-
-            <!-- checkout payment -->
-            <div class="payment-method mb-80">
-              <div class="col-12 mt-3 pt-3 paypal-background">
-                <ngx-paypal  *ngIf="!showEstimatedTaxesSpinner && !showShippingSpinner && calculateOrderTotal() > 0" [config]="payPalConfig"></ngx-paypal>
+                  @if (isShippingAddressNeeded()) {
+                    <div class="row" [formGroup]="shippingAddressForm">
+                      <div class="col-12"><h4>Shipping Address</h4></div>
+                      <div class="col-12 checkout-form__field">
+                        <label for="checkout-address1">Address<span class="checkout-form__required">*</span></label>
+                        <input id="checkout-address1" type="text" formControlName="address1" placeholder="Street Address" [class.is-invalid]="shippingAddressForm.get('address1').invalid && shippingAddressForm.get('address1').touched">
+                        @if (shippingAddressForm.get('address1').invalid && shippingAddressForm.get('address1').touched) {
+                          <div class="checkout-form__error">Address is required</div>
+                        }
+                      </div>
+                      <div class="col-12 checkout-form__field">
+                        <input type="text" formControlName="address2" placeholder="Apartment, Suite, Unit, etc.">
+                      </div>
+                      <div class="col-md-6 checkout-form__field">
+                        <label for="checkout-city">City<span class="checkout-form__required">*</span></label>
+                        <input id="checkout-city" type="text" formControlName="city" placeholder="City" [class.is-invalid]="shippingAddressForm.get('city').invalid && shippingAddressForm.get('city').touched">
+                        @if (shippingAddressForm.get('city').invalid && shippingAddressForm.get('city').touched) {
+                          <div class="checkout-form__error">City is required</div>
+                        }
+                      </div>
+                      <div class="col-md-3 checkout-form__field">
+                        <label for="checkout-state">State<span class="checkout-form__required">*</span></label>
+                        <select id="checkout-state" formControlName="state" [class.is-invalid]="shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched">
+                          <option value="" disabled>Select...</option>
+                          @for (state of states; track state) {
+                            <option [value]="state">{{ state }}</option>
+                          }
+                        </select>
+                        @if (shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched) {
+                          <div class="checkout-form__error">State is required</div>
+                        }
+                      </div>
+                      <div class="col-md-3 checkout-form__field">
+                        <label for="checkout-zip">Zip Code<span class="checkout-form__required">*</span></label>
+                        <input id="checkout-zip" type="text" formControlName="zip" placeholder="Zip Code" [class.is-invalid]="shippingAddressForm.get('zip').invalid && shippingAddressForm.get('zip').touched">
+                        @if (shippingAddressForm.get('zip').invalid && shippingAddressForm.get('zip').touched) {
+                          <div class="checkout-form__error">Zip Code is required</div>
+                        }
+                      </div>
+                      <div class="col-md-6 checkout-form__field">
+                        <label for="checkout-country">Country<span class="checkout-form__required">*</span></label>
+                        <select id="checkout-country" formControlName="country">
+                          @for (country of countries; track country) {
+                            <option [value]="country">{{ country }}</option>
+                          }
+                        </select>
+                      </div>
+                    </div>
+                  }
+                </form>
+                @if (this.calculateOrderTotal() > 0) {
+                  <button type="button" class="mt-20 impact-btn impact-btn-blue" (click)="setView('billing')">Continue to Billing</button>
+                }
+                @if (this.calculateOrderTotal() === 0) {
+                  <button type="button" class="mt-20 impact-btn impact-btn-blue" (click)="submitRequest()">Submit</button>
+                }
               </div>
             </div>
-          </div>
-
+          }
+          @if (isBillingView) {
+            <div class="col-lg-6 pb-70">
+              <div class="checkout__customer-info mb-50">
+                <div class="checkout__customer-info-block customer">
+                  <span>Customer</span>
+                  <div class="customer-details">
+                    <span>{{ checkoutForm?.firstName + ' ' + checkoutForm.lastName}}</span>
+                    <span>{{ checkoutForm.email}}</span>
+                    <span>{{checkoutForm.phone.number}}</span>
+                  </div>
+                  <a (click)="setView('shipping')" (keydown.enter)="setView('shipping')" (keydown.space)="setView('shipping')" tabindex="0" role="button">Change</a>
+                </div>
+                @if (isShippingAddressNeeded()) {
+                  <div class="checkout__customer-info-block">
+                    <span>Ship To</span>
+                    <span class="info">
+                      {{ checkoutForm?.shippingAddress?.address1 }}
+                      {{ checkoutForm?.shippingAddress?.address2 }}
+                      {{ checkoutForm?.shippingAddress?.city }},
+                      {{ checkoutForm?.shippingAddress?.state }}
+                      {{ checkoutForm?.shippingAddress?.zip }}
+                      {{ checkoutForm?.shippingAddress?.country }}
+                    </span>
+                    <a (click)="setView('shipping')" (keydown.enter)="setView('shipping')" (keydown.space)="setView('shipping')" tabindex="0" role="button">Change</a>
+                  </div>
+                }
+              </div>
+              <!-- checkout payment -->
+              <div class="payment-method mb-80">
+                <div class="col-12 mt-3 pt-3 paypal-background">
+                  @if (!showEstimatedTaxesSpinner && !showShippingSpinner && calculateOrderTotal() > 0) {
+                    <ngx-paypal  [config]="payPalConfig"></ngx-paypal>
+                  }
+                </div>
+              </div>
+            </div>
+          }
           <div class="col-lg-6 pb-70">
             <div class="checkout__your-order mb-30">
               <h3>Your order</h3>
-
               <div class="your-order-table mt-20">
                 <div class="row">
                   <div class="col-lg-6"><b>Item</b></div>
                   <div class="col-lg-4"></div>
                   <div class="col-lg-2 text-end"><b>Total</b></div>
                 </div>
-                <div *ngFor="let cartItem of checkoutForm.cartItems" class="row">
-                  <div class="col-lg-6">
-                    {{ cartItem?.itemName }}  <span *ngIf="cartItem.language"> - {{cartItem.language}}</span>
+                @for (cartItem of checkoutForm.cartItems; track cartItem) {
+                  <div class="row">
+                    <div class="col-lg-6">
+                      {{ cartItem?.itemName }}  @if (cartItem.language) {
+                      <span> - {{cartItem.language}}</span>
+                    }
                     <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong>
-
                   </div>
                   <div class="col-lg-4">
-                    <div *ngIf="cartItem.isEvent">
-                      <div *ngFor="let attendee of cartItem.attendees">
-                        {{ attendee.firstName }} {{ attendee.lastName }}
+                    @if (cartItem.isEvent) {
+                      <div>
+                        @for (attendee of cartItem.attendees; track attendee) {
+                          <div>
+                            {{ attendee.firstName }} {{ attendee.lastName }}
+                          </div>
+                        }
                       </div>
-                    </div>
-                    <div *ngIf="!cartItem.isEvent">
-                      <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">{{ cartItem.price? (cartItem?.price | currency) : (0 | currency) }}</span>
-                      <span *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="after-discount">{{ (cartItem?.discountPrice) | currency }}</span>
-                    </div>
+                    }
+                    @if (!cartItem.isEvent) {
+                      <div>
+                        @if (cartItem?.discountPrice === null || cartItem?.discountPrice === undefined) {
+                          <span class="amount">{{ cartItem.price? (cartItem?.price | currency) : (0 | currency) }}</span>
+                        }
+                        @if (cartItem?.discountPrice || cartItem?.discountPrice === 0) {
+                          <span class="after-discount">{{ (cartItem?.discountPrice) | currency }}</span>
+                        }
+                      </div>
+                    }
                   </div>
                   <div class="col-lg-2 text-end">
-                    <span *ngIf="cartItem?.discountPrice === null || cartItem?.discountPrice === undefined" class="amount">{{ cartItem.price? ((cartItem?.price * cartItem?.orderQuantity) | currency) : (0 | currency) }}</span>
-                    <span *ngIf="cartItem?.discountPrice || cartItem?.discountPrice === 0" class="amount after-discount" style="margin-right: 0px;">{{ (cartItem?.discountPrice * cartItem?.orderQuantity) | currency }}</span>
+                    @if (cartItem?.discountPrice === null || cartItem?.discountPrice === undefined) {
+                      <span class="amount">{{ cartItem.price? ((cartItem?.price * cartItem?.orderQuantity) | currency) : (0 | currency) }}</span>
+                    }
+                    @if (cartItem?.discountPrice || cartItem?.discountPrice === 0) {
+                      <span class="amount after-discount" style="margin-right: 0px;">{{ (cartItem?.discountPrice * cartItem?.orderQuantity) | currency }}</span>
+                    }
                   </div>
                 </div>
+              }
+              <div class="row">
+                <div class="col-lg-6">Subtotal</div>
+                <div class="col-lg-4"></div>
+                <div class="col-lg-2 text-end"> {{ this.calculateSubTotal() | currency }}</div>
+              </div>
+              @if (this.calculateTotalDiscount() > 0) {
                 <div class="row">
-                  <div class="col-lg-6">Subtotal</div>
-                  <div class="col-lg-4"></div>
-                  <div class="col-lg-2 text-end"> {{ this.calculateSubTotal() | currency }}</div>
-                </div>
-                <div class="row" *ngIf="this.calculateTotalDiscount() > 0">
                   <div class="col-lg-6">Discount</div>
                   <div class="col-lg-4"></div>
                   <div class="col-lg-2 text-end"> {{ this.calculateTotalDiscount() | currency }}</div>
                 </div>
-                <div class="row" *ngIf="isShippingAddressNeeded()">
+              }
+              @if (isShippingAddressNeeded()) {
+                <div class="row">
                   <div class="col-lg-6">Shipping</div>
-                  <div *ngIf="this.checkoutForm.shippingRate > 0" class="col-lg-4"></div>
-                  <div *ngIf="this.checkoutForm.shippingRate > 0" class="col-lg-2 text-end">{{this.checkoutForm.shippingRate | currency}}</div>
-                  <div *ngIf="!this.checkoutForm.shippingRate || this.checkoutForm.shippingRate === 0" class="col-lg-6 text-end shipping-text">
-                    <span class="impact-spinner impact-spinner--sm" *ngIf="showShippingSpinner"></span>
-                    <span *ngIf="!showShippingSpinner && !this.checkoutForm.shippingRate || this.checkoutForm.shippingRate === 0" class="checkout-form__amount">Calculated at Next Step</span>
-                    <span *ngIf="!showShippingSpinner && this.checkoutForm.shippingRate > 0" class="checkout-form__amount shipping-text">{{this.checkoutForm.shippingRate | currency}}</span>
-                  </div>
+                  @if (this.checkoutForm.shippingRate > 0) {
+                    <div class="col-lg-4"></div>
+                  }
+                  @if (this.checkoutForm.shippingRate > 0) {
+                    <div class="col-lg-2 text-end">{{this.checkoutForm.shippingRate | currency}}</div>
+                  }
+                  @if (!this.checkoutForm.shippingRate || this.checkoutForm.shippingRate === 0) {
+                    <div class="col-lg-6 text-end shipping-text">
+                      @if (showShippingSpinner) {
+                        <span class="impact-spinner impact-spinner--sm"></span>
+                      }
+                      @if (!showShippingSpinner && !this.checkoutForm.shippingRate || this.checkoutForm.shippingRate === 0) {
+                        <span class="checkout-form__amount">Calculated at Next Step</span>
+                      }
+                      @if (!showShippingSpinner && this.checkoutForm.shippingRate > 0) {
+                        <span class="checkout-form__amount shipping-text">{{this.checkoutForm.shippingRate | currency}}</span>
+                      }
+                    </div>
+                  }
                 </div>
-                <div class="row" *ngIf="this.checkoutForm.shippingDiscount > 0">
+              }
+              @if (this.checkoutForm.shippingDiscount > 0) {
+                <div class="row">
                   <div class="col-lg-6">Shipping Discount</div>
                   <div class="col-lg-4 text-end">{{this.checkoutForm.shippingDiscountReason}}</div>
-                  <div *ngIf="this.checkoutForm.shippingRate" class="col-lg-2 text-end"> - {{this.checkoutForm.shippingDiscount | currency}}</div>
+                  @if (this.checkoutForm.shippingRate) {
+                    <div class="col-lg-2 text-end"> - {{this.checkoutForm.shippingDiscount | currency}}</div>
+                  }
                 </div>
-                <div class="row" *ngIf="isShippingAddressNeeded() && this.calculateSubTotal() > 0">
+              }
+              @if (isShippingAddressNeeded() && this.calculateSubTotal() > 0) {
+                <div class="row">
                   <div class="col-lg-6">Estimated Tax</div>
-                  <div *ngIf="this.checkoutForm.estimatedTaxes > 0" class="col-lg-4"></div>
-                  <div *ngIf="this.checkoutForm.estimatedTaxes > 0" class="col-lg-2 text-end">{{this.checkoutForm.estimatedTaxes | currency}}</div>
-                  <div *ngIf="(!this.checkoutForm.estimatedTaxes || this.checkoutForm.estimatedTaxes === 0) && this.checkoutForm.shippingAddress.state === 'Georgia'" class="col-lg-6 text-end shipping-text">
-                    <span class="impact-spinner impact-spinner--sm" *ngIf="showEstimatedTaxesSpinner"></span>
-                    <span *ngIf="!showEstimatedTaxesSpinner && (!this.checkoutForm.estimatedTaxes || this.checkoutForm.estimatedTaxes === 0)" class="checkout-form__amount">Calculated at Next Step</span>
-                    <span *ngIf="!showEstimatedTaxesSpinner && this.checkoutForm.estimatedTaxes > 0" class="checkout-form__amount shipping-text">{{this.checkoutForm.estimatedTaxes | currency}}</span>
-                  </div>
-                  <div *ngIf="!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state !== 'Georgia'" class="col-lg-6 text-end shipping-text">
-                    Only required if in Georgia
-                  </div>
+                  @if (this.checkoutForm.estimatedTaxes > 0) {
+                    <div class="col-lg-4"></div>
+                  }
+                  @if (this.checkoutForm.estimatedTaxes > 0) {
+                    <div class="col-lg-2 text-end">{{this.checkoutForm.estimatedTaxes | currency}}</div>
+                  }
+                  @if ((!this.checkoutForm.estimatedTaxes || this.checkoutForm.estimatedTaxes === 0) && this.checkoutForm.shippingAddress.state === 'Georgia') {
+                    <div class="col-lg-6 text-end shipping-text">
+                      @if (showEstimatedTaxesSpinner) {
+                        <span class="impact-spinner impact-spinner--sm"></span>
+                      }
+                      @if (!showEstimatedTaxesSpinner && (!this.checkoutForm.estimatedTaxes || this.checkoutForm.estimatedTaxes === 0)) {
+                        <span class="checkout-form__amount">Calculated at Next Step</span>
+                      }
+                      @if (!showEstimatedTaxesSpinner && this.checkoutForm.estimatedTaxes > 0) {
+                        <span class="checkout-form__amount shipping-text">{{this.checkoutForm.estimatedTaxes | currency}}</span>
+                      }
+                    </div>
+                  }
+                  @if (!this.checkoutForm.estimatedTaxes && this.checkoutForm.shippingAddress.state !== 'Georgia') {
+                    <div class="col-lg-6 text-end shipping-text">
+                      Only required if in Georgia
+                    </div>
+                  }
                 </div>
-                <div class="row order-total">
-                  <div class="col-lg-6 col-sm-3 order-total__title">Order Total</div>
-                  <div class="col-lg-6 col-sm-3 text-end order-total__amount"><strong>{{ calculateOrderTotal() | currency}}</strong></div>
-                </div>
+              }
+              <div class="row order-total">
+                <div class="col-lg-6 col-sm-3 order-total__title">Order Total</div>
+                <div class="col-lg-6 col-sm-3 text-end order-total__amount"><strong>{{ calculateOrderTotal() | currency}}</strong></div>
               </div>
             </div>
           </div>
         </div>
-      </ng-template>
-    </div>
-  </section>
+      </div>
+    }
+
+  </div>
+</section>
 </div>
 
-<div class="impact-load-panel" *ngIf="isSetupPanelVisible">
-  <div class="impact-load-panel__backdrop"></div>
-  <div class="impact-load-panel__content">
-    <span class="impact-spinner"></span>
-    <div class="impact-load-panel__message">Please wait while setting up payment!</div>
+@if (isSetupPanelVisible) {
+  <div class="impact-load-panel">
+    <div class="impact-load-panel__backdrop"></div>
+    <div class="impact-load-panel__content">
+      <span class="impact-spinner"></span>
+      <div class="impact-load-panel__message">Please wait while setting up payment!</div>
+    </div>
   </div>
-</div>
+}
 
 <app-footer></app-footer>

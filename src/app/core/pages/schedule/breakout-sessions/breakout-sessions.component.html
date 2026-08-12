@@ -5,69 +5,89 @@
       <button type="button" class="impact-modal__close" (click)="onCancel()" aria-label="Close">&times;</button>
     </div>
     <div class="impact-modal__body">
-  <div class="sessions"  style="margin-top: 20px;">
-    <div *ngFor="let monthGroup of allCourses; let i = index">
-      <div *ngFor="let dayGroup of monthGroup.days">
-        <div *ngFor="let timeGroup of dayGroup.timeGroups" id="accordion-container">
-          <div *ngIf="selectedTimegroup.date === timeGroup.date">
-            <div *ngFor="let course of timeGroup.items">
-              <div class="sessions__item" (click)="viewCourse(course)" (keydown.enter)="viewCourse(course)" (keydown.space)="viewCourse(course)" tabindex="0" role="button" [ngClass]="{ 'assigned-user': course.isAssignedToUser }" >
-                <div class="sessions__item-title">{{ getCourseTitle(getCourse(course.item.course)) }}</div>
-                <div class="sessions__item-details">
-                  <div class="sessions__item-details-item">
-                    <div class="row course-popup-content" style="width: 100%;">
-                      <div class="col-lg-8 col-sm-12 alignText-start" style="padding-bottom: 10px;">
-                        <div class="course-popup-content__description">
-                          {{ getCourse(course.item.course).longDescription || getCourse(course.item.course).shortDescription }}
-                        </div>
-                      </div>
-                      <div class="col-lg-4 col-sm-12 alignText-start">
-                        <div class="sessions__item-details-item">
-                          <i class="fa-solid fa-calendar-day"></i>
-                            <span>{{ course.item.startDate | date: 'EEEE, MMMM d, y' }}</span>
-                        </div>
-                        <div class="sessions__item-details-item">
-                          <i class="fa-regular fa-clock"></i>
-                          <span>{{ course.item.startDate | date: 'h:mm a' }} - {{ course.item.endDate | date: 'h:mm a' }}</span>
-                        </div>
-                        <div class="sessions__item-details-item" *ngIf="course.item.room">
-                          <i class="fa-solid fa-location-dot"></i>
-                          <span>{{ getRoomName(course.item.room) }}</span>
-                        </div>
-                        <div class="sessions__item-details-item">
-                          <i class="fa-solid fa-users"></i>
-                          <span>Capacity: {{viewCourseCapcaity(course.item.id)}} / {{ course.item.maxParticipants }}</span>
-                          <span *ngIf="viewCourseCapcaity(course.item.id) >= course.item.maxParticipants" style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;Full</span>
-                        </div>
-                        <div style="align-items: center; text-align: center;">
-                          <button type="button" *ngIf="!course?.isAssignedToUser" class="course-popup-content__button-add" (click)="addCourse(course.item)">Sign up</button>
-                          <button type="button" *ngIf="course?.isAssignedToUser" class="course-popup-content__button-remove" (click)="removeCourse(course.item)">Remove</button>
-                        </div>
-                      </div>
-                      <div class="col-12 alignText-start">
-                        <div class="coaches">
-                          <div class="coaches__wrapper">
-                            <div *ngFor="let coach of course?.item.coaches" class="coach">
-                              <div class="coach__img">
-                                <img loading="lazy" class="transform" [src]="getCoachImg(coach)" [alt]="getCoachName(coach)" width="40">
-                              </div>
-                              <div class="coach__details">
-                                <div class="name">{{ getCoachName(coach) }}</div>
-                                <div class="title">{{ getCoachTitle(coach) }}</div>
+      <div class="sessions"  style="margin-top: 20px;">
+        @for (monthGroup of allCourses; track monthGroup; let i = $index) {
+          <div>
+            @for (dayGroup of monthGroup.days; track dayGroup) {
+              <div>
+                @for (timeGroup of dayGroup.timeGroups; track timeGroup) {
+                  <div id="accordion-container">
+                    @if (selectedTimegroup.date === timeGroup.date) {
+                      <div>
+                        @for (course of timeGroup.items; track course) {
+                          <div>
+                            <div class="sessions__item" (click)="viewCourse(course)" (keydown.enter)="viewCourse(course)" (keydown.space)="viewCourse(course)" tabindex="0" role="button" [ngClass]="{ 'assigned-user': course.isAssignedToUser }" >
+                              <div class="sessions__item-title">{{ getCourseTitle(getCourse(course.item.course)) }}</div>
+                              <div class="sessions__item-details">
+                                <div class="sessions__item-details-item">
+                                  <div class="row course-popup-content" style="width: 100%;">
+                                    <div class="col-lg-8 col-sm-12 alignText-start" style="padding-bottom: 10px;">
+                                      <div class="course-popup-content__description">
+                                        {{ getCourse(course.item.course).longDescription || getCourse(course.item.course).shortDescription }}
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12 alignText-start">
+                                      <div class="sessions__item-details-item">
+                                        <i class="fa-solid fa-calendar-day"></i>
+                                        <span>{{ course.item.startDate | date: 'EEEE, MMMM d, y' }}</span>
+                                      </div>
+                                      <div class="sessions__item-details-item">
+                                        <i class="fa-regular fa-clock"></i>
+                                        <span>{{ course.item.startDate | date: 'h:mm a' }} - {{ course.item.endDate | date: 'h:mm a' }}</span>
+                                      </div>
+                                      @if (course.item.room) {
+                                        <div class="sessions__item-details-item">
+                                          <i class="fa-solid fa-location-dot"></i>
+                                          <span>{{ getRoomName(course.item.room) }}</span>
+                                        </div>
+                                      }
+                                      <div class="sessions__item-details-item">
+                                        <i class="fa-solid fa-users"></i>
+                                        <span>Capacity: {{viewCourseCapcaity(course.item.id)}} / {{ course.item.maxParticipants }}</span>
+                                        @if (viewCourseCapcaity(course.item.id) >= course.item.maxParticipants) {
+                                          <span style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;Full</span>
+                                        }
+                                      </div>
+                                      <div style="align-items: center; text-align: center;">
+                                        @if (!course?.isAssignedToUser) {
+                                          <button type="button" class="course-popup-content__button-add" (click)="addCourse(course.item)">Sign up</button>
+                                        }
+                                        @if (course?.isAssignedToUser) {
+                                          <button type="button" class="course-popup-content__button-remove" (click)="removeCourse(course.item)">Remove</button>
+                                        }
+                                      </div>
+                                    </div>
+                                    <div class="col-12 alignText-start">
+                                      <div class="coaches">
+                                        <div class="coaches__wrapper">
+                                          @for (coach of course?.item.coaches; track coach) {
+                                            <div class="coach">
+                                              <div class="coach__img">
+                                                <img loading="lazy" class="transform" [src]="getCoachImg(coach)" [alt]="getCoachName(coach)" width="40">
+                                              </div>
+                                              <div class="coach__details">
+                                                <div class="name">{{ getCoachName(coach) }}</div>
+                                                <div class="title">{{ getCoachTitle(coach) }}</div>
+                                              </div>
+                                            </div>
+                                          }
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+                        }
                       </div>
-                    </div>
+                    }
                   </div>
-                </div>
+                }
               </div>
-            </div>
+            }
           </div>
-        </div>
+        }
       </div>
     </div>
-    </div>
   </div>
-</div>

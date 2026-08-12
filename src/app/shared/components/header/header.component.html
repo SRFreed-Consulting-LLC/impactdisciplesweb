@@ -1,24 +1,42 @@
 <div class="impact-header" [style.backgroundImage]="'url(' + backgroundUrl + ')'">
   <div class="impact-header__content">
-    <p *ngIf="pretitle" appAnimate="fadeInUp" class="pretitle">{{ pretitle }}</p>
-    <p *ngIf="title" appAnimate="fadeInUpTwo" class="title">{{ title }}</p>
-    <p *ngIf="description" appAnimate="fadeInUpThree" class="description">{{ description }}</p>
-    <hr *ngIf="showHr" appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w100">
+    @if (pretitle) {
+      <p appAnimate="fadeInUp" class="pretitle">{{ pretitle }}</p>
+    }
+    @if (title) {
+      <p appAnimate="fadeInUpTwo" class="title">{{ title }}</p>
+    }
+    @if (description) {
+      <p appAnimate="fadeInUpThree" class="description">{{ description }}</p>
+    }
+    @if (showHr) {
+      <hr appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w100">
+    }
     <div class="buttons">
-      <a *ngIf="buttonLink && !buttonClick" appAnimate="fadeInUpFour" [href]="buttonLink" class="impact-btn">
-        <i [ngClass]="buttonIcon ? buttonIcon : 'd-none'"></i>
-        {{ buttonText }}
-      </a>
-      <a *ngIf="buttonLink2 && !buttonClick2" appAnimate="fadeInUpFour" [href]="buttonLink2" class="impact-btn">
-        <i [ngClass]="buttonIcon2 ? buttonIcon2 : 'd-none'"></i>
-        {{ buttonText2 }}
-      </a>
-      <a *ngIf="buttonLink3" appAnimate="fadeInUpFour" [href]="buttonLink3" class="impact-btn">
-        <i [ngClass]="buttonIcon3 ? buttonIcon3 : 'd-none'"></i>
-        {{ buttonText3 }}
-      </a>
-      <a *ngIf="buttonClick && !buttonLink" appAnimate="fadeInUpFour" (click)="onButtonClick()" (keydown.enter)="onButtonClick()" (keydown.space)="onButtonClick()" tabindex="0" role="button" class="impact-btn">{{ buttonText }}</a>
-      <a *ngIf="buttonClick2 && !buttonLink2" appAnimate="fadeInUpFour" (click)="onButtonClick2()" (keydown.enter)="onButtonClick2()" (keydown.space)="onButtonClick2()" tabindex="0" role="button" class="impact-btn">{{ buttonText2 }}</a>
+      @if (buttonLink && !buttonClick) {
+        <a appAnimate="fadeInUpFour" [href]="buttonLink" class="impact-btn">
+          <i [ngClass]="buttonIcon ? buttonIcon : 'd-none'"></i>
+          {{ buttonText }}
+        </a>
+      }
+      @if (buttonLink2 && !buttonClick2) {
+        <a appAnimate="fadeInUpFour" [href]="buttonLink2" class="impact-btn">
+          <i [ngClass]="buttonIcon2 ? buttonIcon2 : 'd-none'"></i>
+          {{ buttonText2 }}
+        </a>
+      }
+      @if (buttonLink3) {
+        <a appAnimate="fadeInUpFour" [href]="buttonLink3" class="impact-btn">
+          <i [ngClass]="buttonIcon3 ? buttonIcon3 : 'd-none'"></i>
+          {{ buttonText3 }}
+        </a>
+      }
+      @if (buttonClick && !buttonLink) {
+        <a appAnimate="fadeInUpFour" (click)="onButtonClick()" (keydown.enter)="onButtonClick()" (keydown.space)="onButtonClick()" tabindex="0" role="button" class="impact-btn">{{ buttonText }}</a>
+      }
+      @if (buttonClick2 && !buttonLink2) {
+        <a appAnimate="fadeInUpFour" (click)="onButtonClick2()" (keydown.enter)="onButtonClick2()" (keydown.space)="onButtonClick2()" tabindex="0" role="button" class="impact-btn">{{ buttonText2 }}</a>
+      }
     </div>
   </div>
 </div>

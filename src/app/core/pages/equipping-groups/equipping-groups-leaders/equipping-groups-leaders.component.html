@@ -25,31 +25,34 @@
       </div>
     </div>
     <div class="video">
-      <div
-        *ngIf="!isPlaying"
-        class="video__container"
-        style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2FDMC%20LEADER%20for%20youtube.png?alt=media&token=5abf0844-f9a8-4a73-b50d-1b8ac36e8c40)"
-      >
-        <div class="container">
-          <div class="video__content text-center">
-            <div class="video__button">
-              <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
-                <i class="fas fa-play"></i>
-              </a>
+      @if (!isPlaying) {
+        <div
+          class="video__container"
+          style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2FDMC%20LEADER%20for%20youtube.png?alt=media&token=5abf0844-f9a8-4a73-b50d-1b8ac36e8c40)"
+          >
+          <div class="container">
+            <div class="video__content text-center">
+              <div class="video__button">
+                <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
+                  <i class="fas fa-play"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
 
-      <div *ngIf="isPlaying" class="video__container">
-        <div class="video__player-wrapper">
-          <youtube-player
-            [videoId]="'L_OHs9Cn6bQ'"
-            [playerVars]="{ autoplay: 1 }"
-            class="video__player"
-          ></youtube-player>
+      @if (isPlaying) {
+        <div class="video__container">
+          <div class="video__player-wrapper">
+            <youtube-player
+              [videoId]="'L_OHs9Cn6bQ'"
+              [playerVars]="{ autoplay: 1 }"
+              class="video__player"
+            ></youtube-player>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
   <div class="equipping-groups__about">

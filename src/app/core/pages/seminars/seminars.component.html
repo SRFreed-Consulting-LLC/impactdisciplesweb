@@ -33,7 +33,7 @@
         <li class="perks">A Proven Church Multiplication Strategy</li>
         <li class="perks">Tools + Resources for Multiplication</li>
         <li class="perks">Contact us for Follow-up Support</li>
-      </ul> 
+      </ul>
       <a href="/store" class="impact-btn">GET STARTED</a>
     </div>
   </div>
@@ -50,31 +50,34 @@
     </div>
 
     <div class="video">
-      <div
-        *ngIf="!isPlaying"
-        class="video__container"
-        style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-video-thumbnail.png?alt=media&token=9fb83005-f1c7-4973-884c-98436560271b)"
-      >
-        <div class="container">
-          <div class="video__content text-center">
-            <div class="video__button">
-              <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
-                <i class="fas fa-play"></i>
-              </a>
+      @if (!isPlaying) {
+        <div
+          class="video__container"
+          style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fseminar-video-thumbnail.png?alt=media&token=9fb83005-f1c7-4973-884c-98436560271b)"
+          >
+          <div class="container">
+            <div class="video__content text-center">
+              <div class="video__button">
+                <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
+                  <i class="fas fa-play"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
 
-      <div *ngIf="isPlaying" class="video__container">
-        <div class="video__player-wrapper">
-          <youtube-player
-            [videoId]="'Civbm8KNXhE'"
-            [playerVars]="{ autoplay: 1 }"
-            class="video__player"
-          ></youtube-player>
+      @if (isPlaying) {
+        <div class="video__container">
+          <div class="video__player-wrapper">
+            <youtube-player
+              [videoId]="'Civbm8KNXhE'"
+              [playerVars]="{ autoplay: 1 }"
+              class="video__player"
+            ></youtube-player>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
   <hr appAnimate="fadeInLeftToRight" class="solid-line mt-60 mb-60">

@@ -1,15 +1,23 @@
 <div class="product">
   <a class="product__image" [routerLink]="['/product-details', product?.id]">
-    <i *ngIf="product.salePrice && product.salePrice > 0" class="fas fa-tag"></i>
+    @if (product.salePrice && product.salePrice > 0) {
+      <i class="fas fa-tag"></i>
+    }
     <img loading="lazy" [src]="product?.imageUrl?.url" alt="product">
   </a>
   <div class="product__content">
     <hr class="slider-hr-solid">
     <div class="product__content-sales-price">
-      <h5 *ngIf="product.salePrice && product.salePrice > 0"><s>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</s></h5>
-      <h5 *ngIf="product.salePrice && product.salePrice > 0"><strong>${{ product.salePrice? product.salePrice.toFixed(2) : '0.00' }}</strong></h5>
+      @if (product.salePrice && product.salePrice > 0) {
+        <h5><s>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</s></h5>
+      }
+      @if (product.salePrice && product.salePrice > 0) {
+        <h5><strong>${{ product.salePrice? product.salePrice.toFixed(2) : '0.00' }}</strong></h5>
+      }
     </div>
-    <h5 *ngIf="!product.salePrice"><strong>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</strong></h5>
+    @if (!product.salePrice) {
+      <h5><strong>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</strong></h5>
+    }
     <h4><a [routerLink]="['/product-details', product?.id]">{{product?.title}}</a></h4>
     <div class="product__content-buttons">
       <a [routerLink]="['/product-details', product?.id]" class="impact-btn">view</a>

@@ -1,85 +1,103 @@
 <nav>
   <ul>
-    <li *ngFor="let item of menuItems; let index = index" [ngClass]="getMenuClasses(item)">
-      <ng-container *ngIf="item.visible && !item.external">
-        <a *ngIf="!hasQuery(item.link)" [routerLink]="item.link">{{ item.title }}</a>
-        <a
-          *ngIf="hasQuery(item.link)"
-          [attr.href]="item.link"
-          (click)="go($event, item.link)"
-        >
-          {{ item.title }}
-        </a>
-      </ng-container>
-      <a
-        [href]="item.link"
-        target="_blank"
-        *ngIf="item.visible && item.external"
-        style="color: #4b92fe;"
-      >
-        {{ item.title }}
-      </a>
-
-      <ul *ngIf="item.hasDropdown && !item.megamenu" class="submenu transition-3">
-        <li *ngFor="let menu of item.dropdownItems; let index = index">
-          <ng-container *ngIf="menu.visible && !menu.external">
-            <a *ngIf="!hasQuery(menu.link)" [routerLink]="menu.link">{{ menu.title }}</a>
-
+    @for (item of menuItems; track item; let index = $index) {
+      <li [ngClass]="getMenuClasses(item)">
+        @if (item.visible && !item.external) {
+          @if (!hasQuery(item.link)) {
+            <a [routerLink]="item.link">{{ item.title }}</a>
+          }
+          @if (hasQuery(item.link)) {
             <a
-              *ngIf="hasQuery(menu.link)"
-              [attr.href]="menu.link"
-              (click)="go($event, menu.link)"
-            >
-              {{ menu.title }}
+              [attr.href]="item.link"
+              (click)="go($event, item.link)"
+              >
+              {{ item.title }}
             </a>
-          </ng-container>
-
+          }
+        }
+        @if (item.visible && item.external) {
           <a
-            [href]="menu.link"
+            [href]="item.link"
             target="_blank"
-            *ngIf="menu.visible && menu.external"
             style="color: #4b92fe;"
-          >
-            {{ menu.title }}
-          </a>
-        </li>
-      </ul>
-
-      <ul
-        *ngIf="item.hasDropdown && item.megamenu"
-        class="submenu transition-3"
-        [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap-light.PNG?alt=media&token=8801ee61-cd27-47a4-970b-285916eb22af)'"
-      >
-        <li *ngFor="let m_mnu of item.dropdownItems; let index = index" class="has-dropdown">
-          <ng-container *ngIf="item.visible">
-            <a *ngIf="!hasQuery(m_mnu.link)" [routerLink]="m_mnu.link">{{ m_mnu.title }}</a>
-
-            <a
-              *ngIf="hasQuery(m_mnu.link)"
-              [attr.href]="m_mnu.link"
-              (click)="go($event, m_mnu.link)"
             >
-              {{ m_mnu.title }}
-            </a>
-          </ng-container>
-
-          <ul>
-            <li *ngFor="let m of m_mnu.dropdownMenu; let index = index">
-              <ng-container *ngIf="m.visible">
-                <a *ngIf="!hasQuery(m.link)" [routerLink]="m.link">{{ m.title }}</a>
-
-                <a
-                  *ngIf="hasQuery(m.link)"
-                  [attr.href]="m.link"
-                  (click)="go($event, m.link)"
-                >
-                  {{ m.title }}
-                </a>
-              </ng-container>
-            </li>
+            {{ item.title }}
+          </a>
+        }
+        @if (item.hasDropdown && !item.megamenu) {
+          <ul class="submenu transition-3">
+            @for (menu of item.dropdownItems; track menu; let index = $index) {
+              <li>
+                @if (menu.visible && !menu.external) {
+                  @if (!hasQuery(menu.link)) {
+                    <a [routerLink]="menu.link">{{ menu.title }}</a>
+                  }
+                  @if (hasQuery(menu.link)) {
+                    <a
+                      [attr.href]="menu.link"
+                      (click)="go($event, menu.link)"
+                      >
+                      {{ menu.title }}
+                    </a>
+                  }
+                }
+                @if (menu.visible && menu.external) {
+                  <a
+                    [href]="menu.link"
+                    target="_blank"
+                    style="color: #4b92fe;"
+                    >
+                    {{ menu.title }}
+                  </a>
+                }
+              </li>
+            }
           </ul>
-        </li>
-      </ul>
-    </li>
+        }
+        @if (item.hasDropdown && item.megamenu) {
+          <ul
+            class="submenu transition-3"
+            [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap-light.PNG?alt=media&token=8801ee61-cd27-47a4-970b-285916eb22af)'"
+            >
+            @for (m_mnu of item.dropdownItems; track m_mnu; let index = $index) {
+              <li class="has-dropdown">
+                @if (item.visible) {
+                  @if (!hasQuery(m_mnu.link)) {
+                    <a [routerLink]="m_mnu.link">{{ m_mnu.title }}</a>
+                  }
+                  @if (hasQuery(m_mnu.link)) {
+                    <a
+                      [attr.href]="m_mnu.link"
+                      (click)="go($event, m_mnu.link)"
+                      >
+                      {{ m_mnu.title }}
+                    </a>
+                  }
+                }
+                <ul>
+                  @for (m of m_mnu.dropdownMenu; track m; let index = $index) {
+                    <li>
+                      @if (m.visible) {
+                        @if (!hasQuery(m.link)) {
+                          <a [routerLink]="m.link">{{ m.title }}</a>
+                        }
+                        @if (hasQuery(m.link)) {
+                          <a
+                            [attr.href]="m.link"
+                            (click)="go($event, m.link)"
+                            >
+                            {{ m.title }}
+                          </a>
+                        }
+                      }
+                    </li>
+                  }
+                </ul>
+              </li>
+            }
+          </ul>
+        }
+      </li>
+    }
   </ul>
 </nav>

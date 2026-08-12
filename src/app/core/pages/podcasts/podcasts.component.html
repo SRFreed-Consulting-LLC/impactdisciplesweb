@@ -18,21 +18,28 @@
   ></app-header>
   <div class="podcasts__container">
     <app-podcast-sidebar [podcasts]="podcasts" (searchEvent)="searchPodcasts($event)" (clearFiltersEvent)="clearFilters()" (selectPodcast)="selectPodcast($event)"></app-podcast-sidebar>
-    <div *ngIf="isListView" class="podcasts__container-list">
-      <div *ngFor="let podcast of filteredPodcasts">
-        <app-podcast-postbox-item [podcast]="podcast" (selectPodcast)="selectPodcast($event)"></app-podcast-postbox-item>
+    @if (isListView) {
+      <div class="podcasts__container-list">
+        @for (podcast of filteredPodcasts; track podcast) {
+          <div>
+            <app-podcast-postbox-item [podcast]="podcast" (selectPodcast)="selectPodcast($event)"></app-podcast-postbox-item>
+          </div>
+        }
       </div>
-    </div>
-    <div *ngIf="selectedPodcast && !this.isListView" class="podcasts__container-selected">
-      <h1>{{ selectedPodcast?.title }}</h1>
-      <div class="video-wrapper">
-        <youtube-player
-          *ngIf="selectedPodcast?.videoType === 'Youtube'"
-          [videoId]="selectedPodcast?.videoId"
-          suggestedQuality="highres">
-        </youtube-player>
+    }
+    @if (selectedPodcast && !this.isListView) {
+      <div class="podcasts__container-selected">
+        <h1>{{ selectedPodcast?.title }}</h1>
+        <div class="video-wrapper">
+          @if (selectedPodcast?.videoType === 'Youtube') {
+            <youtube-player
+              [videoId]="selectedPodcast?.videoId"
+              suggestedQuality="highres">
+            </youtube-player>
+          }
+        </div>
       </div>
-    </div>
+    }
   </div>
 </div>
 

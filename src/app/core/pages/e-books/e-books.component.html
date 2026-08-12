@@ -17,7 +17,9 @@
     ></app-store-sidebar>
     <div class="e-books__container-content">
       <div class="e-books__container-list">
-        <app-store-postbox-item *ngFor="let product of filteredProductItems" [product]="product"></app-store-postbox-item>
+        @for (product of filteredProductItems; track product) {
+          <app-store-postbox-item [product]="product"></app-store-postbox-item>
+        }
       </div>
       <div class="e-books__container-pagination">
         <app-pagination [data]="filteredProductItems" [paginate]="paginate" (setPage)="setPage($event)">

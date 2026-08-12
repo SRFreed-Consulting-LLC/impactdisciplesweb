@@ -1,56 +1,88 @@
 <app-home-header></app-home-header>
 
 <div class="events">
-  <app-header *ngIf="dms"
-    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa'"
-    [pretitle]="'JOIN US FOR OUR ANNUAL EVENT'"
-    [title]="'Disciple-Making Summit'"
-    [buttonText]="'REGISTER NOW'"
-    [buttonLink]="'/event-details/' + dms?.id"
-  ></app-header>
-  <app-header *ngIf="!dms"
-    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa'"
-    [pretitle]="'JOIN US FOR OUR ANNUAL EVENT'"
-    [title]="'Disciple-Making Summit'"
-  ></app-header>
+  @if (dms) {
+    <app-header
+      [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa'"
+      [pretitle]="'JOIN US FOR OUR ANNUAL EVENT'"
+      [title]="'Disciple-Making Summit'"
+      [buttonText]="'REGISTER NOW'"
+      [buttonLink]="'/event-details/' + dms?.id"
+    ></app-header>
+  }
+  @if (!dms) {
+    <app-header
+      [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa'"
+      [pretitle]="'JOIN US FOR OUR ANNUAL EVENT'"
+      [title]="'Disciple-Making Summit'"
+    ></app-header>
+  }
   <div class="events__intro"></div>
   <div class="events__person">
     <h2>In Person Events</h2>
     <div class="events__person-list">
-      <a class="events__person-item" *ngFor="let event of eventsList" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
-        <img loading="lazy" [src]="event.imageUrl.url" alt="blog" *ngIf="event.imageUrl">
-        <div class="content">
-          <h4><a>{{ event.eventName }}</a></h4>
-          <div class="content__details">
-            <span *ngIf="event.startDate">{{ event.startDate.toString()| date: 'M/d' }} </span>
-            <span *ngIf="event.endDate">- {{ event.endDate.toString() | date: 'M/d' }} </span>
-            <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
+      @for (event of eventsList; track event) {
+        <a class="events__person-item" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
+          @if (event.imageUrl) {
+            <img loading="lazy" [src]="event.imageUrl.url" alt="blog">
+          }
+          <div class="content">
+            <h4><a>{{ event.eventName }}</a></h4>
+            <div class="content__details">
+              @if (event.startDate) {
+                <span>{{ event.startDate.toString()| date: 'M/d' }} </span>
+              }
+              @if (event.endDate) {
+                <span>- {{ event.endDate.toString() | date: 'M/d' }} </span>
+              }
+              @if (event.location) {
+                <span>/ {{ event.location.toString() | location : 'cityState' | async }}</span>
+              }
+            </div>
+            @if (event.description) {
+              <p class="content__description">{{ event.description }}</p>
+            }
+            <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin">REGISTER NOW</a>
           </div>
-          <p *ngIf="event.description" class="content__description">{{ event.description }}</p>
-          <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin">REGISTER NOW</a>
-        </div>
-      </a>
+        </a>
+      }
     </div>
   </div>
-  <div *ngIf="onlineEventsList && onlineEventsList.length > 0" class="events__online">
-    <h2>Online Events</h2>
-    <div class="events__online-list">
-      <a class="events__online-item" *ngFor="let event of onlineEventsList" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
-        <img loading="lazy" [src]="event.imageUrl.url" alt="blog" *ngIf="event.imageUrl">
-        <div class="content">
-          <h4><a>{{ event.eventName }}</a></h4>
-          <div class="content__details">
-            <span *ngIf="event.startDate">{{ event.startDate.toString()| date: 'M/d' }} </span>
-            <span *ngIf="event.endDate">- {{ event.endDate.toString() | date: 'M/d' }} </span>
-            <span *ngIf="event.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
-          </div>
-          <p *ngIf="event.description" class="content__description">{{ event.description }}</p>
-          <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin">REGISTER NOW</a>
-        </div>
-      </a>
+  @if (onlineEventsList && onlineEventsList.length > 0) {
+    <div class="events__online">
+      <h2>Online Events</h2>
+      <div class="events__online-list">
+        @for (event of onlineEventsList; track event) {
+          <a class="events__online-item" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
+            @if (event.imageUrl) {
+              <img loading="lazy" [src]="event.imageUrl.url" alt="blog">
+            }
+            <div class="content">
+              <h4><a>{{ event.eventName }}</a></h4>
+              <div class="content__details">
+                @if (event.startDate) {
+                  <span>{{ event.startDate.toString()| date: 'M/d' }} </span>
+                }
+                @if (event.endDate) {
+                  <span>- {{ event.endDate.toString() | date: 'M/d' }} </span>
+                }
+                @if (event.location) {
+                  <span>/ {{ event.location.toString() | location : 'cityState' | async }}</span>
+                }
+              </div>
+              @if (event.description) {
+                <p class="content__description">{{ event.description }}</p>
+              }
+              <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin">REGISTER NOW</a>
+            </div>
+          </a>
+        }
+      </div>
     </div>
-  </div>
-  <app-disciple-making-summit-banner *ngIf="isSummitPosted"></app-disciple-making-summit-banner>
+  }
+  @if (isSummitPosted) {
+    <app-disciple-making-summit-banner></app-disciple-making-summit-banner>
+  }
   <app-subscribe-area></app-subscribe-area>
 </div>
 

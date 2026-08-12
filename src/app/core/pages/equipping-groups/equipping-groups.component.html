@@ -26,31 +26,34 @@
       </div>
     </div>
     <div class="video">
-      <div
-        *ngIf="!isPlaying"
-        class="video__container"
-        style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2FGENERIC%20EQUPPING%20GROUP%20PHOTO.png?alt=media&token=b4e0ab45-0a02-45b3-9f2b-464fae27f7fa)"
-      >
-        <div class="container">
-          <div class="video__content text-center">
-            <div class="video__button">
-              <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
-                <i class="fas fa-play"></i>
-              </a>
+      @if (!isPlaying) {
+        <div
+          class="video__container"
+          style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2FGENERIC%20EQUPPING%20GROUP%20PHOTO.png?alt=media&token=b4e0ab45-0a02-45b3-9f2b-464fae27f7fa)"
+          >
+          <div class="container">
+            <div class="video__content text-center">
+              <div class="video__button">
+                <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
+                  <i class="fas fa-play"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
 
-      <div *ngIf="isPlaying" class="video__container">
-        <div class="video__player-wrapper">
-          <youtube-player
-            [videoId]="'q-NGIqAAupg'"
-            [playerVars]="{ autoplay: 1 }"
-            class="video__player"
-          ></youtube-player>
+      @if (isPlaying) {
+        <div class="video__container">
+          <div class="video__player-wrapper">
+            <youtube-player
+              [videoId]="'q-NGIqAAupg'"
+              [playerVars]="{ autoplay: 1 }"
+              class="video__player"
+            ></youtube-player>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
   <div class="equipping-groups__about">
@@ -59,9 +62,9 @@
       <div class="mt-10" style="width: 50%;">
         <div class="row align-items-center pb-10">
           <div class="col-md-4 col-sm-6 align-items-start my-3">
-              <a [href]="'/equipping-groups-churches'" class="impact-btn-outlined">
-                Disciple-Making Church
-              </a>
+            <a [href]="'/equipping-groups-churches'" class="impact-btn-outlined">
+              Disciple-Making Church
+            </a>
           </div>
           <div class="col-md-8 col-sm-6">
             Designed for churches ready to move from good intentions to intentional disciple-making. This equipping group helps pastors and key leaders align their church around a shared mission, model, and practical pathway to build a sustainable disciple-making culture—together.
@@ -69,9 +72,9 @@
         </div>
         <div class="row align-items-center pb-20">
           <div class="col-md-4 col-sm-6 align-items-start my-3">
-              <a [href]="'/equipping-groups-pastors'" class="impact-btn-outlined">
-                Disciple-Making Pastor
-              </a>
+            <a [href]="'/equipping-groups-pastors'" class="impact-btn-outlined">
+              Disciple-Making Pastor
+            </a>
           </div>
           <div class="col-md-8 col-sm-6">
             Created specifically for pastors who want to lead with greater clarity, confidence, and multiplication. Rooted in 30+ years of real-world experience, this equipping group focuses on the six priorities every Disciple-Making Pastor must embrace to lead their congregation toward a movement of disciples who make disciples.
@@ -79,9 +82,9 @@
         </div>
         <div class="row align-items-center">
           <div class="col-md-4 col-sm-6 align-items-start my-3">
-              <a [href]="'/equipping-groups-leaders'" class="impact-btn-outlined">
-                Disciple-Making Leader
-              </a>
+            <a [href]="'/equipping-groups-leaders'" class="impact-btn-outlined">
+              Disciple-Making Leader
+            </a>
           </div>
           <div class="col-md-8 col-sm-6">
             Built for everyday leaders who want to live out and lead the mission of making disciples in their ministry context. This equipping group focuses on personal spiritual growth, practical disciple-making tools, and faithfulness over the long haul—no formal ministry role required.

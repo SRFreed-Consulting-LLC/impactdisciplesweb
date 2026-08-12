@@ -21,27 +21,39 @@
         [value]="selectedFilter"
         (change)="filterProducts($any(+$any($event.target).value))">
         <option value="" disabled [selected]="selectedFilter === null" hidden>Select a filter</option>
-        <option *ngFor="let opt of filterOptions" [value]="opt.value">{{ opt.text }}</option>
+        @for (opt of filterOptions; track opt) {
+          <option [value]="opt.value">{{ opt.text }}</option>
+        }
       </select>
       <div class="store__container-views">
-        <div *ngIf="!showSeriesInMainView" class="products">
-          <app-store-postbox-item *ngFor="let product of filteredProductItems" [product]="product"></app-store-postbox-item>
-        </div>
-        <div *ngIf="showSeriesInMainView" class="series">
-          <h1>SHOP BY SERIES</h1>
-          <div class="series__list">
-            <div class="series__list-item" *ngFor="let series of seriesItems">
-              <img loading="lazy" [src]="series?.imageUrl?.url" alt="blog-1"/>
-              <button type="button" class="impact-btn impact-btn-blue" (click)="filterProductsBySeries(series)">{{ series.name }}</button>
+        @if (!showSeriesInMainView) {
+          <div class="products">
+            @for (product of filteredProductItems; track product) {
+              <app-store-postbox-item [product]="product"></app-store-postbox-item>
+            }
+          </div>
+        }
+        @if (showSeriesInMainView) {
+          <div class="series">
+            <h1>SHOP BY SERIES</h1>
+            <div class="series__list">
+              @for (series of seriesItems; track series) {
+                <div class="series__list-item">
+                  <img loading="lazy" [src]="series?.imageUrl?.url" alt="blog-1"/>
+                  <button type="button" class="impact-btn impact-btn-blue" (click)="filterProductsBySeries(series)">{{ series.name }}</button>
+                </div>
+              }
             </div>
           </div>
-        </div>
+        }
       </div>
 
-      <div *ngIf="!showSeriesInMainView" class="store__container-pagination">
-        <app-pagination [data]="filteredProductItems" [paginate]="paginate" (setPage)="setPage($event)">
-        </app-pagination>
-      </div>
+      @if (!showSeriesInMainView) {
+        <div class="store__container-pagination">
+          <app-pagination [data]="filteredProductItems" [paginate]="paginate" (setPage)="setPage($event)">
+          </app-pagination>
+        </div>
+      }
     </div>
   </div>
 </div>

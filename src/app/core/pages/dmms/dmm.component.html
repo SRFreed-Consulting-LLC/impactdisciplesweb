@@ -15,9 +15,11 @@
         <div class="col-xl-9 col-lg-8">
           <div class="blog__wrapper">
             <div class="row">
-              <div *ngFor="let blog of filteredDmms" class="col-xl-12 col-lg-12 col-md-12">
-                <app-dmm-postbox-item [blog]="blog"></app-dmm-postbox-item>
-              </div>
+              @for (blog of filteredDmms; track blog) {
+                <div class="col-xl-12 col-lg-12 col-md-12">
+                  <app-dmm-postbox-item [blog]="blog"></app-dmm-postbox-item>
+                </div>
+              }
             </div>
             <div class="row">
               <div class="col-xl-12">

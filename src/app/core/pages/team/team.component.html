@@ -16,14 +16,16 @@
   <div class="team__meet">
     <h2>MEET THE TEAM</h2>
     <div class="team__meet-items">
-      <div class="item" *ngFor="let coach of coaches">
-        <img loading="lazy" src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
-        <div class="item__content">
-          <h5>{{ coach.firstName }} {{ coach.lastName }}</h5>
-          <p>{{ coach.title }}</p>
-          <p><a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-blue">Get to know</a></p>
+      @for (coach of coaches; track coach) {
+        <div class="item">
+          <img loading="lazy" src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
+          <div class="item__content">
+            <h5>{{ coach.firstName }} {{ coach.lastName }}</h5>
+            <p>{{ coach.title }}</p>
+            <p><a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-blue">Get to know</a></p>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>

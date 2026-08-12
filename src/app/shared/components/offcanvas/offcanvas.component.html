@@ -9,22 +9,30 @@
     <!-- side-mobile-menu start -->
     <nav class="side-mobile-menu d-block d-lg-none mm-menu">
       <ul>
-        <ng-container *ngFor="let menu of mobileMenuData; let i = index">
-          <li *ngIf="menu.dropdownMenu" [ngClass]="'menu-item-has-children has-droupdown ' + (activeMenu === menu.title ? 'active' : '')">
-            <a (click)="handleOpenMenu(menu.title)" (keydown.enter)="handleOpenMenu(menu.title)" (keydown.space)="handleOpenMenu(menu.title)" tabindex="0" role="button">{{ menu.title }}</a>
-            <ul [ngClass]="'sub-menu ' + (activeMenu === menu.title ? 'active' : '')">
-              <li *ngFor="let sub_m of menu.dropdownMenu; let index = index">
-                <a [routerLink]="sub_m.link">{{ sub_m.title }}</a>
-              </li>
-            </ul>
-          </li>
-          <li *ngIf="!menu.dropdownMenu && !menu.external">
-            <a [routerLink]="menu.link">{{ menu.title }}</a>
-          </li>
-          <li *ngIf="!menu.dropdownMenu && menu.external">
-            <a [href]="menu.link">{{ menu.title }}</a>
-          </li>
-        </ng-container>
+        @for (menu of mobileMenuData; track menu; let i = $index) {
+          @if (menu.dropdownMenu) {
+            <li [ngClass]="'menu-item-has-children has-droupdown ' + (activeMenu === menu.title ? 'active' : '')">
+              <a (click)="handleOpenMenu(menu.title)" (keydown.enter)="handleOpenMenu(menu.title)" (keydown.space)="handleOpenMenu(menu.title)" tabindex="0" role="button">{{ menu.title }}</a>
+              <ul [ngClass]="'sub-menu ' + (activeMenu === menu.title ? 'active' : '')">
+                @for (sub_m of menu.dropdownMenu; track sub_m; let index = $index) {
+                  <li>
+                    <a [routerLink]="sub_m.link">{{ sub_m.title }}</a>
+                  </li>
+                }
+              </ul>
+            </li>
+          }
+          @if (!menu.dropdownMenu && !menu.external) {
+            <li>
+              <a [routerLink]="menu.link">{{ menu.title }}</a>
+            </li>
+          }
+          @if (!menu.dropdownMenu && menu.external) {
+            <li>
+              <a [href]="menu.link">{{ menu.title }}</a>
+            </li>
+          }
+        }
       </ul>
     </nav>
 

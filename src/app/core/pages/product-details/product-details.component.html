@@ -23,9 +23,15 @@
             <div class="product__modal-content product__modal-content-2">
               <h4><a [routerLink]="['/shop/shop-details', product?.id]">{{product?.title}}</a></h4>
               <div class="product__price-2 mb-25">
-                <h5 *ngIf="product?.salePrice && product?.salePrice > 0"><s>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</s></h5>
-                <h5 *ngIf="product?.salePrice && product?.salePrice > 0"><strong>ON SALE! ${{ product.salePrice? product?.salePrice.toFixed(2) : '0.00' }}</strong></h5>
-                <h5 *ngIf="!product?.salePrice"><span>${{product?.cost? product?.cost.toFixed(2) : 0}}</span></h5>
+                @if (product?.salePrice && product?.salePrice > 0) {
+                  <h5><s>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</s></h5>
+                }
+                @if (product?.salePrice && product?.salePrice > 0) {
+                  <h5><strong>ON SALE! ${{ product.salePrice? product?.salePrice.toFixed(2) : '0.00' }}</strong></h5>
+                }
+                @if (!product?.salePrice) {
+                  <h5><span>${{product?.cost? product?.cost.toFixed(2) : 0}}</span></h5>
+                }
               </div>
 
 
@@ -56,39 +62,61 @@
               </div>
               <div>
                 <div class="row mb-25">
-                  <div class="col-6" *ngIf="product?.sizes && product?.sizes.length > 0">
-                    <label for="product-size">Size</label>
-                    <select id="product-size" [class.is-invalid]="sizeError" (change)="setSize($any($event.target).value)">
-                      <option value="" [selected]="!cartItem.size" disabled hidden>Select...</option>
-                      <option *ngFor="let size of product.sizes" [value]="size" [selected]="size === cartItem.size">{{ size }}</option>
-                    </select>
-                    <div class="field-error" *ngIf="sizeError">Size is required</div>
-                  </div>
-                  <div class="col-6" *ngIf="product?.colors && product?.colors.length > 0">
-                    <label for="product-color">Color</label>
-                    <select id="product-color" [class.is-invalid]="colorError" (change)="setColor($any($event.target).value)">
-                      <option value="" [selected]="!cartItem.color" disabled hidden>Select...</option>
-                      <option *ngFor="let color of product.colors" [value]="color" [selected]="color === cartItem.color">{{ color }}</option>
-                    </select>
-                    <div class="field-error" *ngIf="colorError">Color is required</div>
-                  </div>
-                  <div class="col-6" *ngIf="product?.languages && product?.languages.length > 0">
-                    <label for="product-language">Language</label>
-                    <select id="product-language" [class.is-invalid]="languageError" (change)="setLanguage($any($event.target).value)">
-                      <option value="" [selected]="!cartItem.language" disabled hidden>Select...</option>
-                      <option *ngFor="let language of product.languages" [value]="language" [selected]="language === cartItem.language">{{ language }}</option>
-                    </select>
-                    <div class="field-error" *ngIf="languageError">Language is required</div>
-                  </div>
+                  @if (product?.sizes && product?.sizes.length > 0) {
+                    <div class="col-6">
+                      <label for="product-size">Size</label>
+                      <select id="product-size" [class.is-invalid]="sizeError" (change)="setSize($any($event.target).value)">
+                        <option value="" [selected]="!cartItem.size" disabled hidden>Select...</option>
+                        @for (size of product.sizes; track size) {
+                          <option [value]="size" [selected]="size === cartItem.size">{{ size }}</option>
+                        }
+                      </select>
+                      @if (sizeError) {
+                        <div class="field-error">Size is required</div>
+                      }
+                    </div>
+                  }
+                  @if (product?.colors && product?.colors.length > 0) {
+                    <div class="col-6">
+                      <label for="product-color">Color</label>
+                      <select id="product-color" [class.is-invalid]="colorError" (change)="setColor($any($event.target).value)">
+                        <option value="" [selected]="!cartItem.color" disabled hidden>Select...</option>
+                        @for (color of product.colors; track color) {
+                          <option [value]="color" [selected]="color === cartItem.color">{{ color }}</option>
+                        }
+                      </select>
+                      @if (colorError) {
+                        <div class="field-error">Color is required</div>
+                      }
+                    </div>
+                  }
+                  @if (product?.languages && product?.languages.length > 0) {
+                    <div class="col-6">
+                      <label for="product-language">Language</label>
+                      <select id="product-language" [class.is-invalid]="languageError" (change)="setLanguage($any($event.target).value)">
+                        <option value="" [selected]="!cartItem.language" disabled hidden>Select...</option>
+                        @for (language of product.languages; track language) {
+                          <option [value]="language" [selected]="language === cartItem.language">{{ language }}</option>
+                        }
+                      </select>
+                      @if (languageError) {
+                        <div class="field-error">Language is required</div>
+                      }
+                    </div>
+                  }
                 </div>
               </div>
               <div>
                 <div class="product__tag mb-25">
                   <span>Tags:</span>
-                  <span *ngFor="let tag of product?.tags; let i = index">
-                    <a class="cursor-pointer">{{ tag?.tag }}</a>
-                    <span *ngIf="i < product.tags.length - 1">, </span>
-                  </span>
+                  @for (tag of product?.tags; track tag; let i = $index) {
+                    <span>
+                      <a class="cursor-pointer">{{ tag?.tag }}</a>
+                      @if (i < product.tags.length - 1) {
+                        <span>, </span>
+                      }
+                    </span>
+                  }
                 </div>
                 <div class="product__share">
                   <span>Share :</span>
@@ -117,18 +145,20 @@
               </div>
               <div class="postbox__related-item">
                 <div class="row">
-                  <div *ngFor="let p of relatedProducts" class="col-xl-6 col-lg-6 col-md-6">
-                    <div class="blog__item mb-30">
-                      <div class="blog__thumb fix">
-                        <a [routerLink]="['/product-details', p?.id]">
-                          <img loading="lazy" [src]="p?.imageUrl?.url" alt="blog" height="250px">
-                        </a>
-                      </div>
-                      <div class="blog__content">
-                        <h5><a [routerLink]="['/product-details', p?.id]">{{p?.title}}</a></h5>
+                  @for (p of relatedProducts; track p) {
+                    <div class="col-xl-6 col-lg-6 col-md-6">
+                      <div class="blog__item mb-30">
+                        <div class="blog__thumb fix">
+                          <a [routerLink]="['/product-details', p?.id]">
+                            <img loading="lazy" [src]="p?.imageUrl?.url" alt="blog" height="250px">
+                          </a>
+                        </div>
+                        <div class="blog__content">
+                          <h5><a [routerLink]="['/product-details', p?.id]">{{p?.title}}</a></h5>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  }
                 </div>
               </div>
               <div class="postbox__line mt-65"></div>

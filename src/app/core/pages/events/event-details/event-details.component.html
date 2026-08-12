@@ -3,121 +3,160 @@
 <main class="event-details">
   <section class="pb-70 mt-60">
     <img class="top-img" [src]="event?.imageUrl?.url" alt="Summit">
-      <div class="row event-details__row">
-        <!-- event details - agenda -->
-        <div class="col-lg-6">
-          <div class="event-details__left">
-            <img loading="lazy" class="left-img" [src]="event?.imageUrl?.url" alt="Summit">
+    <div class="row event-details__row">
+      <!-- event details - agenda -->
+      <div class="col-lg-6">
+        <div class="event-details__left">
+          <img loading="lazy" class="left-img" [src]="event?.imageUrl?.url" alt="Summit">
 
-            <ng-template #noAgenda class="your-order-table table-responsive">
-              <h3>Agenda</h3>
-              <div class="no-agenda mt-30">
-                Check back for more updates!
-              </div>
-            </ng-template>
 
-            <div *ngIf="event?.agendaItems else noAgenda" class="your-order-table table-responsive">
-              <ng-container *ngFor="let monthGroup of groupedAgendaItems">
+          @if (event?.agendaItems) {
+            <div class="your-order-table table-responsive">
+              @for (monthGroup of groupedAgendaItems; track monthGroup) {
                 <h3 class="mt-30">Agenda -<strong> {{ monthGroup.monthYear }}</strong></h3>
                 <table class="agenda">
                   <tbody>
-                    <ng-container *ngFor="let dayGroup of monthGroup.days">
+                    @for (dayGroup of monthGroup.days; track dayGroup) {
                       <tr>
                         <div class="agenda__date">
                           <div>{{ dayGroup.date | date: 'EEE' }}</div>
                           <div class="agenda__date-number">{{ dayGroup.date | date: 'd' }}</div>
                         </div>
                         <td>
-                          <tr class="row" *ngFor="let item of dayGroup.items" class="agenda__group">
-                            <td class="col-8" *ngIf="item.isCourse">{{ item.course | courseName | async }}</td>
-                            <td class="col-8" *ngIf="!item.isCourse">{{ item.text }}</td>
-                            <td class="agenda__group-time col-4">{{ item.startDate | date: 'shortTime'}} - {{ item.endDate | date: 'shortTime' }}</td>
-                          </tr>
+                          @for (item of dayGroup.items; track item) {
+                            <tr class="row" class="agenda__group">
+                              @if (item.isCourse) {
+                                <td class="col-8">{{ item.course | courseName | async }}</td>
+                              }
+                              @if (!item.isCourse) {
+                                <td class="col-8">{{ item.text }}</td>
+                              }
+                              <td class="agenda__group-time col-4">{{ item.startDate | date: 'shortTime'}} - {{ item.endDate | date: 'shortTime' }}</td>
+                            </tr>
+                          }
                         </td>
                       </tr>
-                    </ng-container>
+                    }
                   </tbody>
                 </table>
-              </ng-container>
+              }
             </div>
-          </div>
+          } @else {
+            <h3>Agenda</h3>
+            <div class="no-agenda mt-30">
+              Check back for more updates!
+            </div>
+          }
         </div>
+      </div>
 
-        <!-- event details - details -->
-        <div class="col-lg-6 right-col">
-          <div class="row event-details__right">
+      <!-- event details - details -->
+      <div class="col-lg-6 right-col">
+        <div class="row event-details__right">
 
-            <h2>{{ event?.eventName }}</h2>
-            <span class="event-details__right-subtitle">
-              <span *ngIf="event?.startDate" class="date">{{ event.startDate.toString()| date: 'M/d' }} </span>
-              <span *ngIf="event?.endDate" class="date">- {{ event.endDate.toString() | date: 'M/d' }} </span>
-              <span *ngIf="event?.location">/ {{ event.location.toString() | location : 'cityState' | async }}</span>
-            </span>
-            <p *ngIf="event?.description" class="events-list__content-description">{{ event.description }}</p>
-            <a *ngIf="event?.isSummit" [routerLink]="['/summit', event?.startDate?.toString() | date: 'yyyy']">View More Details</a>
+          <h2>{{ event?.eventName }}</h2>
+          <span class="event-details__right-subtitle">
+            @if (event?.startDate) {
+              <span class="date">{{ event.startDate.toString()| date: 'M/d' }} </span>
+            }
+            @if (event?.endDate) {
+              <span class="date">- {{ event.endDate.toString() | date: 'M/d' }} </span>
+            }
+            @if (event?.location) {
+              <span>/ {{ event.location.toString() | location : 'cityState' | async }}</span>
+            }
+          </span>
+          @if (event?.description) {
+            <p class="events-list__content-description">{{ event.description }}</p>
+          }
+          @if (event?.isSummit) {
+            <a [routerLink]="['/summit', event?.startDate?.toString() | date: 'yyyy']">View More Details</a>
+          }
 
-            <div *ngIf="event && !event.isOnline">
-              <div *ngIf="!event.isKajabiCourse">
-                <div class="mt-20 mb-30">
-                  <h4>ADD TICKETS:</h4>
-                  <div class="event-details__right-ticket-number">
-                    <button class="os-btn" (click)="decrement()"> <i class="fas fa-minus"></i></button>
-                    <input type="text" readonly class="attendee-count" [value]="cartItem?.attendees?.length">
-                    <button class="os-btn" (click)="increment()"><i class="fas fa-plus"></i></button>
-                  </div>
-                </div>
-
-                <h3>Tickets</h3>
-                <div class="attendee-accordion">
-                  <div class="attendee-accordion-item" *ngFor="let attendeeGroup of attendeesForm.controls; let i = index" [formGroup]="$any(attendeeGroup)">
-                    <button type="button" class="attendee-accordion-item__title" [class.attendee-accordion-item__title--opened]="openIndexes.has(i)" (click)="toggleAttendee(i)">
-                      Attendee {{ i + 1 }} <span class="attendee-form__required">*</span>
-                    </button>
-                    <div class="attendee-accordion-item__body mb-25" *ngIf="openIndexes.has(i)">
-                      <div class="attendee-form__field">
-                        <label [attr.for]="'attendee-firstName-' + i">First Name<span class="attendee-form__required">*</span></label>
-                        <input [id]="'attendee-firstName-' + i" type="text" formControlName="firstName" [class.is-invalid]="attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched">
-                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched">First Name is required</div>
-                      </div>
-                      <div class="attendee-form__field">
-                        <label [attr.for]="'attendee-lastName-' + i">Last Name<span class="attendee-form__required">*</span></label>
-                        <input [id]="'attendee-lastName-' + i" type="text" formControlName="lastName" [class.is-invalid]="attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched">
-                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched">Last Name is required</div>
-                      </div>
-                      <div class="attendee-form__field">
-                        <label [attr.for]="'attendee-email-' + i">Email<span class="attendee-form__required">*</span></label>
-                        <input [id]="'attendee-email-' + i" type="email" formControlName="email" [class.is-invalid]="attendeeGroup.get('email').invalid && attendeeGroup.get('email').touched">
-                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('required')">Email Address is required</div>
-                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('alreadyRegistered')">A Person with this email address has already registered!</div>
-                        <div class="attendee-form__error" *ngIf="attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('duplicateEmail')">Each email registered must be unique!</div>
-                      </div>
+          @if (event && !event.isOnline) {
+            <div>
+              @if (!event.isKajabiCourse) {
+                <div>
+                  <div class="mt-20 mb-30">
+                    <h4>ADD TICKETS:</h4>
+                    <div class="event-details__right-ticket-number">
+                      <button class="os-btn" (click)="decrement()"> <i class="fas fa-minus"></i></button>
+                      <input type="text" readonly class="attendee-count" [value]="cartItem?.attendees?.length">
+                      <button class="os-btn" (click)="increment()"><i class="fas fa-plus"></i></button>
                     </div>
                   </div>
+                  <h3>Tickets</h3>
+                  <div class="attendee-accordion">
+                    @for (attendeeGroup of attendeesForm.controls; track attendeeGroup; let i = $index) {
+                      <div class="attendee-accordion-item" [formGroup]="$any(attendeeGroup)">
+                        <button type="button" class="attendee-accordion-item__title" [class.attendee-accordion-item__title--opened]="openIndexes.has(i)" (click)="toggleAttendee(i)">
+                          Attendee {{ i + 1 }} <span class="attendee-form__required">*</span>
+                        </button>
+                        @if (openIndexes.has(i)) {
+                          <div class="attendee-accordion-item__body mb-25">
+                            <div class="attendee-form__field">
+                              <label [attr.for]="'attendee-firstName-' + i">First Name<span class="attendee-form__required">*</span></label>
+                              <input [id]="'attendee-firstName-' + i" type="text" formControlName="firstName" [class.is-invalid]="attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched">
+                              @if (attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched) {
+                                <div class="attendee-form__error">First Name is required</div>
+                              }
+                            </div>
+                            <div class="attendee-form__field">
+                              <label [attr.for]="'attendee-lastName-' + i">Last Name<span class="attendee-form__required">*</span></label>
+                              <input [id]="'attendee-lastName-' + i" type="text" formControlName="lastName" [class.is-invalid]="attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched">
+                              @if (attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched) {
+                                <div class="attendee-form__error">Last Name is required</div>
+                              }
+                            </div>
+                            <div class="attendee-form__field">
+                              <label [attr.for]="'attendee-email-' + i">Email<span class="attendee-form__required">*</span></label>
+                              <input [id]="'attendee-email-' + i" type="email" formControlName="email" [class.is-invalid]="attendeeGroup.get('email').invalid && attendeeGroup.get('email').touched">
+                              @if (attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('required')) {
+                                <div class="attendee-form__error">Email Address is required</div>
+                              }
+                              @if (attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('alreadyRegistered')) {
+                                <div class="attendee-form__error">A Person with this email address has already registered!</div>
+                              }
+                              @if (attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('duplicateEmail')) {
+                                <div class="attendee-form__error">Each email registered must be unique!</div>
+                              }
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                  @if (!total || total === 0) {
+                    <div class="cart-page-total">
+                      <a class="os-btn" (click)="signUpForEvent()" (keydown.enter)="signUpForEvent()" (keydown.space)="signUpForEvent()" tabindex="0" role="button">Sign UP</a>
+                    </div>
+                  }
+                  @if (total && total > 0) {
+                    <div class="cart-page-total">
+                      <h2>Cart totals</h2>
+                      <ul class="mb-20">
+                        <li>Ticket Price <span>${{ event?.costInDollars }}</span></li>
+                        <li>Total <span>${{ total }}</span></li>
+                      </ul>
+                      <a class="impact-btn impact-btn-blue-border" (click)="proceedToCheckout()" (keydown.enter)="proceedToCheckout()" (keydown.space)="proceedToCheckout()" tabindex="0" role="button">Add To Cart</a>
+                    </div>
+                  }
                 </div>
-
-                <div *ngIf="!total || total === 0" class="cart-page-total">
-                  <a class="os-btn" (click)="signUpForEvent()" (keydown.enter)="signUpForEvent()" (keydown.space)="signUpForEvent()" tabindex="0" role="button">Sign UP</a>
+              }
+              @if (event.isKajabiCourse) {
+                <div class="row">
+                  <div class="col-6 mt-20 mb-30">
+                    <button class="os-btn" style="line-height: 20px;" (click)="window.open(event.kajabiPurchaseURL)">Pay up front and Save</button>
+                  </div>
+                  <div class="col-6 mt-20 mb-30">
+                    <button class="os-btn" style="line-height: 20px;" (click)="window.open(event.kajabiSubscribeURL)">Monthly Subscription</button>
+                  </div>
                 </div>
-
-                <div *ngIf="total && total > 0" class="cart-page-total">
-                  <h2>Cart totals</h2>
-                  <ul class="mb-20">
-                    <li>Ticket Price <span>${{ event?.costInDollars }}</span></li>
-                    <li>Total <span>${{ total }}</span></li>
-                  </ul>
-                  <a class="impact-btn impact-btn-blue-border" (click)="proceedToCheckout()" (keydown.enter)="proceedToCheckout()" (keydown.space)="proceedToCheckout()" tabindex="0" role="button">Add To Cart</a>
-                </div>
-              </div>
-              <div *ngIf="event.isKajabiCourse" class="row">
-                <div class="col-6 mt-20 mb-30">
-                  <button class="os-btn" style="line-height: 20px;" (click)="window.open(event.kajabiPurchaseURL)">Pay up front and Save</button>
-                </div>
-                <div class="col-6 mt-20 mb-30">
-                  <button class="os-btn" style="line-height: 20px;" (click)="window.open(event.kajabiSubscribeURL)">Monthly Subscription</button>
-                </div>
-              </div>
+              }
             </div>
-            <div *ngIf="event && event.isOnline" class="row">
+          }
+          @if (event && event.isOnline) {
+            <div class="row">
               <div class="col-6 mt-20 mb-30">
                 <button class="os-btn" style="line-height: 20px;" (click)="window.open(event.kajabiPurchaseURL)">Pay up front and Save</button>
               </div>
@@ -125,9 +164,10 @@
                 <button class="os-btn" style="line-height: 20px;" (click)="window.open(event.kajabiSubscribeURL)">Monthly Subscription</button>
               </div>
             </div>
-          </div>
+          }
         </div>
       </div>
+    </div>
 
   </section>
 </main>

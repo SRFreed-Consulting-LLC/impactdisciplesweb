@@ -4,37 +4,43 @@
 <div class="page-wrapper teams">
   <main class="grey-bg">
     <div class="container teams__container">
-        <div class="row teams__wrapper">
+      <div class="row teams__wrapper">
 
-              <div class="col-lg-12">
-                <div class="row">
-                  <div class="col-xl-2"></div>
-                  <div class="col-xl-8">
-                    <div class="section__wrapper mb-40">
-                      <h1 class="testimonial__title center">WHAT THEY <strong>SAY</strong></h1>
-                      <p>Here is what some of our clients have to say about us. Feel free to reach out to us if you would like to hear more testimonies on specific aspects of our services. We would love to connect you with churches and ministries who have benefitted from our partnership.</p>
-                    </div>
-                  </div>
-                  <div class="col-xl-2"></div>
-                </div>
-
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-xl-2"></div>
+            <div class="col-xl-8">
+              <div class="section__wrapper mb-40">
+                <h1 class="testimonial__title center">WHAT THEY <strong>SAY</strong></h1>
+                <p>Here is what some of our clients have to say about us. Feel free to reach out to us if you would like to hear more testimonies on specific aspects of our services. We would love to connect you with churches and ministries who have benefitted from our partnership.</p>
+              </div>
+            </div>
+            <div class="col-xl-2"></div>
           </div>
-          <div class="row pb-30 pt-30">
-            <div class="col-lg-12">
-              <div *ngFor="let item of testimonials">
+
+        </div>
+        <div class="row pb-30 pt-30">
+          <div class="col-lg-12">
+            @for (item of testimonials; track item) {
+              <div>
                 <div class="testimonial__image text-center mb-50">
                   <img loading="lazy" src="../../../../assets/icons/stars.png" alt="user">
                 </div>
                 <div class="testimonial__content">
-                  <h4 *ngIf="item.quote">"{{ item.quote }}"</h4>
+                  @if (item.quote) {
+                    <h4>"{{ item.quote }}"</h4>
+                  }
                   <p>{{item.text}}</p>
                   <p [ngClass]="item.title ? 'mb-0' : ''"><strong>{{ item.author }}</strong></p>
-                  <p *ngIf="item.title">{{ item.title }}</p>
+                  @if (item.title) {
+                    <p>{{ item.title }}</p>
+                  }
                 </div>
               </div>
-            </div>
+            }
           </div>
         </div>
+      </div>
 
     </div>
   </main>
