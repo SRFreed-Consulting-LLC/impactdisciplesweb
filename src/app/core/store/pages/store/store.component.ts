@@ -1,9 +1,7 @@
-import { ViewportScroller } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { TagModel } from 'src/app/common/models/domain/tag.model';
-import { Pager } from 'src/app/common/models/utils/pager.model';
 import { ProductModel } from 'src/app/common/models/utils/product.model';
 import { SeriesModel } from 'src/app/common/models/utils/series.model';
 import { ProductService } from 'src/app/common/services/data/product.service';
@@ -21,12 +19,17 @@ export enum FilterType {
 }
 
 // store's browse page. Same conceptual behavior as the original
-// store.component.ts (browse / filter / search / paginate active products,
-// apply an active sale's price where relevant) but the pager, active-sale
-// lookup, and CartItem construction all now come from the shared
-// ProductCatalogService instead of being reimplemented here -- see the
-// plan's Services section. The original store.component.ts/e-books.component.ts
-// are untouched; this is a self-contained copy-and-refactor, not an edit.
+// store.component.ts (browse / filter / search active products, apply an
+// active sale's price where relevant) but the active-sale lookup and
+// CartItem construction come from the shared ProductCatalogService instead
+// of being reimplemented here -- see the plan's Services section. The
+// original store.component.ts/e-books.component.ts are untouched; this is
+// a self-contained copy-and-refactor, not an edit.
+//
+// No pagination here (by design - see user request to remove store
+// paging): the full filtered/sorted list renders in one view.
+// e-books.component.ts still uses ProductCatalogService.getPager() for its
+// own page, untouched by this.
 @Component({
   selector: 'app-store',
   templateUrl: './store.component.html',
@@ -38,14 +41,14 @@ export class StoreComponent implements OnInit, OnDestroy {
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];
   public showSeriesInMainView = true;
-  public paginate: Pager = {};
-  public pageNo = 1;
-  public pageSize = 10;
   public selectedFilter: FilterType = null;
   public FILTER_TYPE = FilterType;
+  // Display text deliberately drops "View"/"View by" (e.g. "View All" ->
+  // "All") - the dropdown now has its own "Sort By" label doing that job,
+  // see store.component.html.
   public filterOptions = [
-    { text: 'View All', value: FilterType.viewAll },
-    { text: 'View by Series', value: FilterType.viewBySeries },
+    { text: 'All', value: FilterType.viewAll },
+    { text: 'Series', value: FilterType.viewBySeries },
     { text: 'A-Z', value: FilterType.aToZ },
     { text: 'Price Low to High', value: FilterType.priceLowToHigh },
     { text: 'Price High to Low', value: FilterType.priceHighToLow }
@@ -64,11 +67,13 @@ export class StoreComponent implements OnInit, OnDestroy {
     private seriesService: SeriesService,
     private catalog: ProductCatalogService,
     private route: ActivatedRoute,
-    private router: Router,
-    private viewScroller: ViewportScroller
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    // Legacy cleanup - an old bookmarked/shared link from when this page
+    // paginated (?page=N) just gets the stray param stripped now; nothing
+    // reads it anymore.
     this.route.queryParams.subscribe(params => {
       if (params['page']) {
         this.router.navigate([], {
@@ -95,31 +100,36 @@ export class StoreComponent implements OnInit, OnDestroy {
     });
   }
 
-  // These four -- the sidebar's direct actions -- paginate inline against
-  // the *current* pageNo instead of going through setProducts()/setPage().
-  // That's deliberate, not an oversight: setPage() navigates with a `page`
-  // query param, which re-fires this component's own queryParamMap
-  // subscription (ngOnInit) and calls applyCategoryFromUrl() again --
-  // since none of these four actions correspond to a `?category=...` URL,
-  // that second call resets showSeriesInMainView back to true, silently
-  // undoing the very click that just set it false. The original
-  // store.component.ts avoids this the same way (its viewAllProducts/
-  // filterProductsByCategory/filterProductsBySeries/showFreeItems all
-  // paginate inline too) -- only searchProducts() and the FilterType
-  // switch's aToZ/price/category/series branches go through setProducts().
+  // These four -- the sidebar's direct actions -- assign the filtered list
+  // straight to filteredProductItems instead of going through
+  // setProducts(). That's deliberate, not an oversight: setProducts() used
+  // to navigate with a `page` query param before pagination was removed,
+  // which re-fired this component's own queryParamMap subscription
+  // (ngOnInit) and called applyCategoryFromUrl() again -- since none of
+  // these four actions correspond to a `?category=...` URL, that second
+  // call resets showSeriesInMainView back to true, silently undoing the
+  // very click that just set it false. Kept these four separate (rather
+  // than folding them back into setProducts() now that it no longer
+  // navigates) to preserve that same safety margin. The original
+  // store.component.ts avoids the same class of bug the same way (its
+  // viewAllProducts/filterProductsByCategory/filterProductsBySeries/
+  // showFreeItems are all direct assignments too) -- only searchProducts()
+  // and the FilterType switch's aToZ/price/category/series branches go
+  // through setProducts().
   viewAllProducts(): void {
     this.showSeriesInMainView = false;
-    this.paginateInline([...this.products]);
+    this.selectedFilter = FilterType.viewAll;
+    this.filteredProductItems = [...this.products];
   }
 
   filterProductsByCategory(category: TagModel): void {
     this.showSeriesInMainView = false;
-    this.paginateInline(this.catalog.filterByCategory(this.products, category.id));
+    this.filteredProductItems = this.catalog.filterByCategory(this.products, category.id);
   }
 
   filterProductsBySeries(series: SeriesModel): void {
     this.showSeriesInMainView = false;
-    this.paginateInline(this.catalog.filterBySeries(this.products, series.id));
+    this.filteredProductItems = this.catalog.filterBySeries(this.products, series.id);
   }
 
   // The header's button used to filter this page in place to free items
@@ -130,19 +140,8 @@ export class StoreComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('/e-books');
   }
 
-  private paginateInline(products: ProductModel[]): void {
-    this.paginate = this.catalog.getPager(products.length, Number(+this.pageNo), this.pageSize);
-    this.filteredProductItems = products.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
-  }
-
   setProducts(products: ProductModel[]): void {
     this.filteredProductItems = products;
-    this.setPage(1);
-    this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
-      this.pageNo = params['page'] ? params['page'] : this.pageNo;
-      this.paginate = this.catalog.getPager(products.length, Number(+this.pageNo), this.pageSize);
-      this.filteredProductItems = products.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
-    });
   }
 
   searchProducts(searchTerm: string): void {
@@ -205,15 +204,6 @@ export class StoreComponent implements OnInit, OnDestroy {
     this.selectedFilter = null;
     this.showSeriesInMainView = true;
     this.filterProducts(FilterType.viewBySeries);
-  }
-
-  setPage(page: number): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { page },
-      queryParamsHandling: 'merge',
-      skipLocationChange: false
-    }).finally(() => this.viewScroller.setOffset([120, 120]));
   }
 
   ngOnDestroy(): void {

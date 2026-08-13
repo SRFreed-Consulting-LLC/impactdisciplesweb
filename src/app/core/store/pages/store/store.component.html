@@ -16,15 +16,19 @@
       (viewAllProductsEvents)="viewAllProducts()"
     ></app-store-sidebar>
     <div class="store__container-content">
-      <select
-        class="store__container-filter"
-        [value]="selectedFilter"
-        (change)="filterProducts($any(+$any($event.target).value))">
-        <option value="" disabled [selected]="selectedFilter === null" hidden>Select a filter</option>
-        @for (opt of filterOptions; track opt) {
-          <option [value]="opt.value">{{ opt.text }}</option>
-        }
-      </select>
+      <div class="store__container-sort">
+        <label for="storeSort" class="store__container-sort-label">Sort By</label>
+        <select
+          id="storeSort"
+          class="store__container-filter"
+          [value]="selectedFilter"
+          (change)="filterProducts($any(+$any($event.target).value))">
+          <option value="" disabled [selected]="selectedFilter === null" hidden>Select a filter</option>
+          @for (opt of filterOptions; track opt) {
+            <option [value]="opt.value">{{ opt.text }}</option>
+          }
+        </select>
+      </div>
 
       <div class="store__container-views">
         @if (!showSeriesInMainView) {
@@ -51,12 +55,6 @@
           </div>
         }
       </div>
-
-      @if (!showSeriesInMainView) {
-        <div class="store__container-pagination">
-          <app-pagination [data]="filteredProductItems" [paginate]="paginate" (setPage)="setPage($event)"></app-pagination>
-        </div>
-      }
     </div>
   </div>
 </div>

@@ -69,11 +69,13 @@ export class ProductCatalogService {
   }
 
   sortByPriceAsc(products: ProductModel[]): ProductModel[] {
-    return [...products].sort((a, b) => {
-      if (a.cost == null) return -1;
-      if (b.cost == null) return 1;
-      return a.cost - b.cost;
-    });
+    // Was: a missing cost unconditionally sorted first regardless of the
+    // other side's cost (even against another missing-cost item), which
+    // was also inconsistent with sortByPriceDesc's own null handling
+    // (coerced to 0, i.e. sorts as the cheapest item either direction) -
+    // found auditing all filter dropdown options together. Matching that
+    // same ?? 0 treatment here instead.
+    return [...products].sort((a, b) => (a.cost ?? 0) - (b.cost ?? 0));
   }
 
   sortByPriceDesc(products: ProductModel[]): ProductModel[] {
