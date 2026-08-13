@@ -38,7 +38,13 @@ export class SummitComponent implements OnInit, OnDestroy {
       const year = Number(params.get('year'));
 
       const query = [
-        new QueryParam('startDate', WhereFilterOperandKeys.more, (year) + '-01-01'),
+        // Was comparing startDate (a Firestore Timestamp field) against a
+        // plain string ("2026-01-01") - Firestore inequality filters only
+        // match same-typed values, so this silently matched zero documents
+        // regardless of data, always falling into the "No summit event
+        // found" branch below. A real Date converts to a Timestamp the same
+        // way Firestore's own SDK does when passed to where().
+        new QueryParam('startDate', WhereFilterOperandKeys.more, new Date(year + '-01-01')),
         new QueryParam('isSummit', WhereFilterOperandKeys.equal, true),
         new QueryParam('isActive', WhereFilterOperandKeys.equal, true)
       ]
