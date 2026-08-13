@@ -17,13 +17,10 @@
       <div class="header__content-cart">
         <ul>
           <li>
-            <a href="/shopping-cart" class="cursor-pointer"><i class="ion-bag"></i> Cart
-              <span>({{ cartService.totalPriceQuantity().quantity }})</span>
+            <a class="cursor-pointer" (click)="openCartDrawer()" (keydown.enter)="openCartDrawer()" (keydown.space)="openCartDrawer()" tabindex="0" role="button">
+              <i class="ion-bag"></i> Cart
+              <span>({{ cart.quantity }}) — {{ cart.total | currency }}</span>
             </a>
-          </li>
-          <li class="d-none d-lg-block"> <a class="cursor-pointer"><i class="far fa-bars"></i></a>
-            <!-- extra info -->
-              <app-extra-info></app-extra-info>
           </li>
         </ul>
       </div>

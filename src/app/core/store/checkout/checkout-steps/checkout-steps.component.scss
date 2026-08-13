@@ -1,0 +1,41 @@
+.checkout-steps-new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+  color: #999;
+}
+
+.checkout-steps-new__step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.checkout-steps-new__step--active {
+  color: #1f1f1f;
+  font-weight: 700;
+}
+
+.checkout-steps-new__step--done {
+  color: #2e7d32;
+}
+
+.checkout-steps-new__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-size: 0.8rem;
+}
+
+.checkout-steps-new__sep {
+  width: 40px;
+  height: 1px;
+  background: #ddd;
+}

@@ -1,0 +1,46 @@
+<app-home-header></app-home-header>
+
+<div class="e-books">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fstore-header.PNG?alt=media&token=3c39ab6a-0a64-496a-bd7e-631f17f1a51c'"
+    [pretitle]="'DISCIPLE-MAKING RESOURCES'"
+    [title]="'E-BOOKS'"
+    [buttonClick]="true"
+    [buttonText]="'FREE E-BOOKS'"
+    (buttonClickAction)="showFreeItems()"
+  ></app-header>
+  <div class="e-books__container">
+    <app-store-sidebar
+      [ebooksOnly]="true"
+      (searchEvent)="searchProducts($event)"
+      (categoryFilterEvent)="filterProductsByCategory($event)"
+      (viewAllProductsEvents)="viewAllProducts()"
+    ></app-store-sidebar>
+    <div class="e-books__container-content">
+      <select
+        class="e-books__container-filter"
+        [value]="selectedFilter"
+        (change)="filterProducts($any(+$any($event.target).value))">
+        <option value="" disabled [selected]="selectedFilter === null" hidden>Select a filter</option>
+        @for (opt of filterOptions; track opt) {
+          <option [value]="opt.value">{{ opt.text }}</option>
+        }
+      </select>
+      <div class="e-books__container-list">
+        @for (product of filteredProductItems; track product.id) {
+          <app-store-postbox-item [product]="product"></app-store-postbox-item>
+        }
+        @if (filteredProductItems.length === 0) {
+          <p class="text-center pt-30">No e-books found.</p>
+        }
+      </div>
+      <div class="e-books__container-pagination">
+        <app-pagination [data]="filteredProductItems" [paginate]="paginate" (setPage)="setPage($event)">
+        </app-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>
+<app-cart-drawer></app-cart-drawer>

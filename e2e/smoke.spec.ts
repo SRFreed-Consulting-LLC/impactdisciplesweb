@@ -11,7 +11,7 @@ const routesByModule: { module: string; path: string }[] = [
   { module: 'HomeModule', path: '/' },
   { module: 'EventsFeatureModule', path: '/events' },
   { module: 'TeamFeatureModule', path: '/team' },
-  { module: 'StoreFeatureModule', path: '/store' },
+  { module: 'StoreNewFeatureModule', path: '/store' },
   { module: 'ContentFeatureModule', path: '/about-us' },
   { module: 'AccountFeatureModule', path: '/account' },
   { module: 'BlogFeatureModule', path: '/podcasts' },
@@ -64,7 +64,7 @@ test('header renders with the trimmed HeaderComponent (no dead coach/swiper impo
   expect(errors).toEqual([]);
 });
 
-test('shopping cart page loads after the checkout.component.ts / cart.service.ts cleanup', async ({ page }) => {
+test('shopping cart page loads (now served by the reimagined store/cart/checkout)', async ({ page }) => {
   const errors = collectConsoleErrors(page);
 
   await page.goto('/shopping-cart');

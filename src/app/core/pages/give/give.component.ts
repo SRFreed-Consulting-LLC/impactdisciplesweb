@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
-import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { StripeService } from 'src/app/shared/utils/services/stripe.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { environment } from 'src/environments/environment';
@@ -26,7 +25,6 @@ export class GiveComponent implements OnInit {
 
   constructor (
     private stripeService: StripeService,
-    public cartService: CartService,
     private toastService: ToastService
   ) {}
 

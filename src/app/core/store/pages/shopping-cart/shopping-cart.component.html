@@ -1,0 +1,147 @@
+<app-home-header></app-home-header>
+
+<div class="shopping-cart">
+  <app-breadcrumb
+    [currentPageName]="'Shopping Cart'"
+    [bgColor]="'#1F1F1F'"
+    [previousLink]="'/store'"
+    [previousLinkName]="'Store'"
+    [isDark]="true">
+  </app-breadcrumb>
+
+  <section class="cart-area pt-100 pb-100">
+    <div class="container">
+
+      @if (lineItems.length === 0) {
+        <div class="text-center pt-50">
+          <h3>No Cart Items Found</h3>
+          <a routerLink="/store" class="os-btn os-btn-black">Continue Shopping</a>
+        </div>
+      } @else {
+        <div class="row">
+          <div class="coupon-info">
+            <form action="#">
+              <div class="row">
+                <div class="col-lg-8 col-sm-0"></div>
+                <div class="col-lg-4 col-sm-12">
+                  <p class="checkout-coupon d-flex align-items-center">
+                    <input class="mb-0" type="text" [(ngModel)]="couponCode" name="couponCode" placeholder="Coupon Code" />
+                    <button class="impact-btn impact-btn-blue ml-10" (click)="applyCoupon()">Apply</button>
+                  </p>
+                </div>
+              </div>
+              @if (couponMessage) {
+                <div class="row">
+                  <div class="col-12 text-end">
+                    <span [class.text-danger]="couponMessageType === 'error'" [class.text-success]="couponMessageType === 'success'">
+                      {{ couponMessage }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </form>
+          </div>
+
+          <div class="col-12">
+            <div class="table-content table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="product-thumbnail">Images</th>
+                    <th class="cart-product-name">Product</th>
+                    <th class="product-price">Unit Price</th>
+                    <th class="product-quantity">Quantity</th>
+                    <th class="product-subtotal">Total</th>
+                    <th class="product-remove">Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (line of lineItems; track line.item.id) {
+                    <tr>
+                      <td class="product-thumbnail" data-title="Image">
+                        <a [routerLink]="['/product-details', line.item.id]">
+                          <img loading="lazy" [src]="line.item.img?.url" [alt]="line.item.itemName">
+                        </a>
+                      </td>
+                      <td class="product-name" data-title="Product">
+                        <a [routerLink]="['/product-details', line.item.id]">
+                          <strong>{{ line.item.itemName }}</strong>
+                        </a>
+                        @if (line.item.size || line.item.color || line.item.language) {
+                          <div>
+                            <span>{{ line.item.language ? line.item.language : '' }} &nbsp;&nbsp;&nbsp;</span>
+                            <span>{{ line.item.size ? line.item.size : '' }} &nbsp;&nbsp;&nbsp;</span>
+                            <span>{{ line.item.color ? line.item.color : '' }}</span>
+                          </div>
+                        }
+                        @if (line.discountReason === 'sale') {
+                          <div class="badge-sale">✓ Sale price applied</div>
+                        }
+                        @if (line.discountReason === 'coupon') {
+                          <div class="badge-coupon">✓ Coupon applied</div>
+                        }
+                        @if (lineNotes.get(line.item.id)) {
+                          <div class="badge-info">ⓘ {{ lineNotes.get(line.item.id) }}</div>
+                        }
+                      </td>
+                      <td class="product-price" data-title="Unit Price">
+                        <span class="amount">{{ line.unitPrice | currency }}</span>
+                      </td>
+                      <td class="product-quantity" data-title="Quantity">
+                        <div class="cart-plus-minus">
+                          <input type="text" [value]="line.item.orderQuantity" readonly />
+                          <div (click)="decrement(line.item)" (keydown.enter)="decrement(line.item)" (keydown.space)="decrement(line.item)" tabindex="0" role="button" class="dec qtybutton">-</div>
+                          <div (click)="increment(line.item)" (keydown.enter)="increment(line.item)" (keydown.space)="increment(line.item)" tabindex="0" role="button" class="inc qtybutton">+</div>
+                        </div>
+                      </td>
+                      <td class="product-subtotal" data-title="Total">
+                        <span class="amount">{{ line.lineTotal | currency }}</span>
+                      </td>
+                      <td class="product-remove" data-title="Remove">
+                        <a (click)="remove(line.item)" (keydown.enter)="remove(line.item)" (keydown.space)="remove(line.item)" tabindex="0" role="button" class="cursor-pointer">
+                          <i class="fa fa-times"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="3"><strong>SubTotal:</strong></td>
+                    <td colspan="1"></td>
+                    <td colspan="2"><strong><span class="code-text">{{ subtotal | currency }}</span></strong></td>
+                  </tr>
+                  @if (discount > 0) {
+                    <tr>
+                      <td colspan="3"><strong>Discount:</strong></td>
+                      <td colspan="1"></td>
+                      <td colspan="2"><strong>- {{ discount | currency }}</strong></td>
+                    </tr>
+                  }
+                  <tr>
+                    <td colspan="3"><strong>Cart Total:</strong></td>
+                    <td colspan="1"></td>
+                    <td colspan="2"><strong>{{ total | currency }}</strong></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="row align-items-center justify-content-between">
+              <div class="col-lg-8 col-sm-12 mt-50">
+                <button (click)="cartService.clearCart()" class="impact-btn impact-btn-blue-border">
+                  Clear cart
+                </button>
+              </div>
+              <div class="col-lg-3 col-sm-12 mt-50">
+                <a class="impact-btn impact-btn-blue" (click)="checkout()" (keydown.enter)="checkout()" (keydown.space)="checkout()" tabindex="0" role="button">Proceed to checkout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+</div>
+
+<app-footer></app-footer>
+<app-cart-drawer></app-cart-drawer>

@@ -5,7 +5,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { Subject, filter, firstValueFrom, take, takeUntil } from 'rxjs';
 import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
-import { CartService } from 'src/app/shared/utils/services/cart.service';
+// Uses the store's cart (not the old, now-retired CartService) so a paid
+// event registration lands in the same cart/checkout the store itself now
+// uses -- /shopping-cart and /checkout are the same routes either way, just
+// served by the new implementation now (see app-routing.module.ts).
+// CheckoutComponent/CheckoutSuccessComponent already handle isEvent
+// cart items correctly (ported from the original checkout's own event
+// handling), so this is a drop-in swap: same addCartProduct()/
+// clearCartNoConfirmation() calls, same CartItem shape.
+import { CartService } from 'src/app/core/store/services/cart.service';
 import { CartItem } from 'src/app/common/models/utils/cart.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';

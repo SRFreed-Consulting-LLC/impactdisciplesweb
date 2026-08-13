@@ -1,0 +1,8 @@
+@if (loading) {
+  <span class="store-spinner" [class.store-spinner--sm]="size === 'sm'">
+    <span class="impact-spinner" [class.impact-spinner--sm]="size === 'sm'"></span>
+    @if (label) {
+      <span class="store-spinner__label">{{ label }}</span>
+    }
+  </span>
+}

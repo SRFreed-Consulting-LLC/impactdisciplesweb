@@ -1,0 +1,58 @@
+// Ported verbatim from the original e-books.component.scss -- component-
+// scoped CSS providing the flex grid layout for the e-book list.
+@use '../../../../../assets/styles/theme/scss/variables';
+
+::ng-deep .e-books {
+  &__container {
+    display: flex;
+    padding: 50px;
+
+    @media #{variables.$xxs,variables.$xs} {
+      flex-direction: column;
+      padding: 10px;
+    }
+    &-content {
+      display: flex;
+      flex-direction: column;
+    }
+    // New for store's parity fix (e-books gains the same sort/filter
+    // dropdown /store has) -- not in the original e-books, styled to
+    // match store.component.scss's equivalent &-filter rule exactly.
+    &-filter {
+      width: 250px;
+      margin: 0 0 25px 25px;
+      border-radius: 4px;
+      border: 1px solid #dddddd;
+      padding: 8px 9px;
+      background-color: #ffffff;
+      @media #{variables.$xxs,variables.$xs} {
+        margin: 20px 0;
+        width: 100%;
+      }
+    }
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 0 25px 0 50px;
+      padding: 25px 50px;
+      background: #fff;
+      align-items: stretch;
+      @media #{variables.$xxs,variables.$xs} {
+        gap: 15px;
+        margin: 10px 0 0 0;
+        padding: 0;
+        justify-content: center;
+      }
+    }
+    &-pagination {
+      margin: 20px 50px;
+      @media #{variables.$xxs,variables.$xs} {
+        margin: 20px 5px;
+      }
+      li {
+        background-color: #ffffff;
+      }
+    }
+  }
+}

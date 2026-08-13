@@ -1,17 +1,12 @@
+// Ported from the original checkout-success.component.scss, with the
+// empty &__header spacer block dropped (it rendered as a blank 100px
+// strip with no background image behind it -- pure unwanted whitespace,
+// see checkout-success.component.html) and explicit vertical padding
+// added on &__success-text instead of relying on ambient section spacing.
 ::ng-deep .checkout-success {
-  &__header {
-    height: 100px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  &__email-text {
-    display: flex;
-    align-items: center;
-  }
-
   &__success-text {
+    padding: 40px 0 20px;
+
     h1 {
       font-size: 80px;
     }
@@ -19,6 +14,11 @@
       font-size: 20px;
       margin-bottom: 0px;
     }
+  }
+
+  &__email-text {
+    display: flex;
+    align-items: center;
   }
 }
 

@@ -1,0 +1,75 @@
+<div #drawer class="offcanvas offcanvas-end cart-drawer" tabindex="-1" id="cartDrawerNew" aria-labelledby="cartDrawerNewLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="cartDrawerNewLabel">Your Cart ({{ lineItems.length }})</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    @if (lineItems.length === 0) {
+      <div class="text-center pt-30">
+        <p>Your cart is empty.</p>
+        <a routerLink="/store" class="os-btn os-btn-black">Continue Shopping</a>
+      </div>
+    } @else {
+      <div class="cart-drawer__items">
+        @for (line of lineItems; track line.item.id) {
+          <div class="cart-drawer__item">
+            <img [src]="line.item.img?.url" [alt]="line.item.itemName" loading="lazy">
+            <div class="cart-drawer__item-details">
+              <strong>{{ line.item.itemName }}</strong>
+              <div class="cart-drawer__qty">
+                <button type="button" (click)="decrement(line.item)">-</button>
+                <span>{{ line.item.orderQuantity }}</span>
+                <button type="button" (click)="increment(line.item)">+</button>
+                <span class="cart-drawer__line-total">{{ line.lineTotal | currency }}</span>
+              </div>
+              @if (line.discountReason === 'sale') {
+                <div class="cart-drawer__badge cart-drawer__badge--sale">✓ Sale price applied</div>
+              }
+              @if (line.discountReason === 'coupon') {
+                <div class="cart-drawer__badge cart-drawer__badge--coupon">✓ Coupon applied</div>
+              }
+              @if (lineNotes.get(line.item.id)) {
+                <div class="cart-drawer__badge cart-drawer__badge--info">ⓘ {{ lineNotes.get(line.item.id) }}</div>
+              }
+            </div>
+            <button type="button" class="cart-drawer__remove" (click)="remove(line.item)" aria-label="Remove item">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="cart-drawer__coupon">
+        <input type="text" [(ngModel)]="couponCode" placeholder="Coupon code" name="couponCode">
+        <button type="button" class="impact-btn impact-btn-blue-border" (click)="applyCoupon()">Apply</button>
+      </div>
+      @if (couponMessage) {
+        <div class="cart-drawer__coupon-message" [class.cart-drawer__coupon-message--error]="couponMessageType === 'error'">
+          {{ couponMessage }}
+        </div>
+      }
+
+      <div class="cart-drawer__totals">
+        <div class="d-flex justify-content-between">
+          <span>Subtotal</span>
+          <span>{{ subtotal | currency }}</span>
+        </div>
+        @if (discount > 0) {
+          <div class="d-flex justify-content-between">
+            <span>Discount</span>
+            <span>-{{ discount | currency }}</span>
+          </div>
+        }
+        <div class="d-flex justify-content-between cart-drawer__total">
+          <strong>Total</strong>
+          <strong>{{ total | currency }}</strong>
+        </div>
+      </div>
+
+      <div class="cart-drawer__actions">
+        <button type="button" class="impact-btn impact-btn-blue-border" (click)="closeAndGoToCart()">View Full Cart</button>
+        <button type="button" class="impact-btn impact-btn-blue" (click)="closeAndGoToCheckout()">Checkout</button>
+      </div>
+    }
+  </div>
+</div>

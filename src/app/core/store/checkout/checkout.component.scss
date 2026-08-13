@@ -1,9 +1,15 @@
+// Ported verbatim from the original checkout.component.scss --
+// component-scoped CSS for the customer-info recap blocks, order-summary
+// table, checkout form fields, and the spinner/load-panel this component's
+// template still uses in a couple of spots (SpinnerComponent replaces
+// the old raw setLoading()/DOM-manipulation pattern, but reuses these same
+// .impact-spinner/.impact-load-panel classes for its visuals).
 @use '../../../../assets/styles/theme/scss/variables';
 
 ::ng-deep .checkout {
   &__customer-info {
     padding: 10px;
-	  border: 3px solid #eaedff;
+    border: 3px solid #eaedff;
     &-block {
       display: flex;
       align-items: center;
@@ -33,7 +39,7 @@
   }
   &__your-order {
     padding: 30px 40px 45px;
-	  border: 3px solid #eaedff;
+    border: 3px solid #eaedff;
     .your-order-table {
       .row {
         border-bottom: 1px solid #eaedff;
@@ -63,12 +69,12 @@
         margin-right: 10px;
         align-items: center;
         display: flex;
-      } 
+      }
       .discount-amount {
         font-weight: 800;
         color: #29e829;
       }
-      
+
       .before-discount {
         text-decoration: line-through;
       }
@@ -79,10 +85,6 @@
       }
     }
   }
-  // Replaces DxForm's [formData]-bound shipping/customer-info form -- plain
-  // Reactive Forms + native inputs, styled to match DynamicFormFieldComponent's
-  // conventions (src/app/shared/form-renderer/dynamic-form-field.component.scss)
-  // for visual consistency with the rest of the site's non-DevExtreme forms.
   &-form {
     h4 {
       margin: 20px 0 15px;
@@ -99,7 +101,12 @@
         margin-bottom: 6px;
       }
 
-      input, select {
+      // Excludes checkbox/radio inputs -- without this, the generic
+      // width:100%/padding meant for text inputs was also being applied to
+      // the newsletter checkbox itself, stretching it to the full row width
+      // with 8px/9px of padding around it. That, not just this field's
+      // margin-bottom, was the real cause of the oversized checkbox row.
+      input:not([type="checkbox"]):not([type="radio"]), select {
         border-radius: 4px;
         border: 1px solid #dddddd;
         padding: 8px 9px;
@@ -114,6 +121,10 @@
       &--checkbox {
         flex-direction: row;
         align-items: center;
+        // Half the normal field's margin-bottom -- this row has no visible
+        // label/border box around it like the text fields above it do, so
+        // the same 18px reads as noticeably more empty space.
+        margin-bottom: 10px;
 
         label {
           display: flex;
@@ -126,6 +137,13 @@
             word-break: break-word;
             white-space: normal;
           }
+        }
+
+        input[type="checkbox"] {
+          width: 16px;
+          height: 16px;
+          margin: 0;
+          flex-shrink: 0;
         }
       }
     }
@@ -141,18 +159,12 @@
       margin-top: 4px;
     }
 
-    // Replaces the "dx-button-text" class the shipping/tax rows used to
-    // borrow from DevExtreme purely for its (nonexistent) styling -- plain
-    // text either way, kept as its own class for clarity/future styling.
     &__amount {
       font-weight: 400;
     }
   }
-
 }
 
-// Replaces DxLoadIndicator (inline, e.g. next to "Calculated at Next Step")
-// and DxLoadPanel (full setup-payment overlay) with a plain CSS spinner.
 .impact-spinner {
   display: inline-block;
   width: 24px;
@@ -176,12 +188,6 @@
   }
 }
 
-// DxLoadPanel's [position]="{ of: '#checkoutBlock' }" targeted an
-// <ng-template #checkoutBlock> reference variable, which never actually
-// renders a DOM id="checkoutBlock" -- that selector never matched anything,
-// so the panel was already effectively falling back to a default/centered
-// position. This is a plain viewport-centered overlay, which is what that
-// broken selector was amounting to in practice anyway.
 .impact-load-panel {
   position: fixed;
   inset: 0;

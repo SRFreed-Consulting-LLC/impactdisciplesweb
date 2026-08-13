@@ -1,0 +1,11 @@
+// Intentionally minimal -- reuses the site-wide .impact-spinner class from
+// src/assets/styles/theme (already used by the original checkout page).
+.store-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.store-spinner__label {
+  font-size: 0.9rem;
+}

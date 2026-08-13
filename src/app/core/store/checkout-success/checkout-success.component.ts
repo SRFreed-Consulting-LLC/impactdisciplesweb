@@ -15,19 +15,33 @@ import { SubscriptionService } from 'src/app/common/services/data/subscription.s
 import { TaxRateSummaryService } from 'src/app/common/services/data/tax-rate-summary.service';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
 import { ImpactUserService } from 'src/app/shared/utils/services/impact-user.service';
-import { CartService } from 'src/app/shared/utils/services/cart.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { environment } from 'src/environments/environment';
+import { CartService } from '../services/cart.service';
 
+const CHECKOUT_STORAGE_KEY = 'checkoutForm';
+
+// Copy of the original checkout-success.component.ts (which this module
+// has now replaced -- see store-feature.module.ts). Two deliberate fixes vs.
+// the original:
+//  1. Cart-clearing happens once, unconditionally, after the side-effect
+//     fan-out -- the original calls clearCartNoConfirmation() from three
+//     separate branches (including once per event attendee in a loop).
+//  2. Every side-effect call (newsletter, affiliate sale, digital-library
+//     registration, tax summary, follow-up email) is now wrapped the same
+//     way the original already wraps event registration and the order
+//     save itself -- logged via LoggerService + a toast with a support
+//     reference code, instead of being fire-and-forget promises with no
+//     .catch at all.
 @Component({
-    selector: 'app-checkout-success',
-    templateUrl: './checkout-success.component.html',
-    styleUrls: ['./checkout-success.component.scss'],
-    standalone: false
+  selector: 'app-checkout-success',
+  templateUrl: './checkout-success.component.html',
+  styleUrls: ['./checkout-success.component.scss'],
+  standalone: false
 })
-export class CheckoutSuccessComponent implements AfterViewInit{
-
-  constructor(public cartService: CartService,
+export class CheckoutSuccessComponent implements AfterViewInit {
+  constructor(
+    public cartService: CartService,
     private newsletterSubscriptionService: SubscriptionService,
     private eventRegistrationService: EventRegistrationService,
     private impactService: ImpactUserService,
@@ -36,67 +50,88 @@ export class CheckoutSuccessComponent implements AfterViewInit{
     private affiliateSaleService: AffilliateSalesService,
     private taxSummaryService: TaxRateSummaryService,
     private toastService: ToastService,
-    private loggerService: LoggerService){}
+    private loggerService: LoggerService
+  ) {}
 
-  async ngAfterViewInit() {
-    const checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem("checkoutForm"));
+  async ngAfterViewInit(): Promise<void> {
+    const checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem(CHECKOUT_STORAGE_KEY));
 
-    if(checkoutForm){
-      if(checkoutForm.isNewsletter){
-        this.newsletterSubscriptionService.createSubscription('newsletter', checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email);
-      }
-
-      if(checkoutForm.couponCode){
-        this.recordAffiliateSale(checkoutForm);
-      }
-
-      const events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
-      const products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
-      const digitalBooks: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook);
-
-      const followUpEmails: CartItem[] = checkoutForm.cartItems.filter(item => item.followUpEmailId);
-
-
-      if(digitalBooks.length > 0){
-        this.impactService.registerImpactUser(checkoutForm)
-      }
-
-      if(events.length > 0){
-        this.registerEventUsers(checkoutForm.payPalReceipt?.id? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events)
-      }
-
-      if(products.length > 0) {
-        if(checkoutForm.total > 0){
-          this.taxSummaryService.recordStateTaxesCollected(checkoutForm);
-        }
-        this.cartService.clearCartNoConfirmation();
-      }
-
-      if(followUpEmails.length > 0) {
-        this.sendProductFollowUpEmail(checkoutForm, followUpEmails);
-      }
-
-      localStorage.removeItem('checkoutForm');
+    if (!checkoutForm) {
+      return;
     }
 
+    if (checkoutForm.isNewsletter) {
+      this.runSideEffect(
+        'NEWSLETTER_SUBSCRIBE',
+        checkoutForm,
+        () => this.newsletterSubscriptionService.createSubscription('newsletter', checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email),
+        'signing you up for the newsletter'
+      );
+    }
 
+    if (checkoutForm.couponCode) {
+      this.runSideEffect('AFFILIATE_SALE', checkoutForm, () => this.recordAffiliateSale(checkoutForm), 'recording your coupon/affiliate sale');
+    }
+
+    const events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
+    const products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
+    const digitalBooks: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook);
+    const followUpEmails: CartItem[] = checkoutForm.cartItems.filter(item => item.followUpEmailId);
+
+    if (digitalBooks.length > 0) {
+      this.runSideEffect('DIGITAL_LIBRARY_REGISTER', checkoutForm, () => this.impactService.registerImpactUser(checkoutForm), 'setting up your Digital Library access');
+    }
+
+    if (events.length > 0) {
+      await this.registerEventUsers(checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events);
+    }
+
+    if (products.length > 0 && checkoutForm.total > 0) {
+      this.runSideEffect('TAX_SUMMARY', checkoutForm, () => this.taxSummaryService.recordStateTaxesCollected(checkoutForm), 'recording collected sales tax');
+    }
+
+    if (followUpEmails.length > 0) {
+      this.sendProductFollowUpEmail(checkoutForm, followUpEmails);
+    }
+
+    // Once, unconditionally -- the original calls this from three separate
+    // branches (including once per event attendee in a loop).
+    this.cartService.clearCartNoConfirmation();
+    localStorage.removeItem(CHECKOUT_STORAGE_KEY);
   }
 
-  recordAffiliateSale(checkoutForm:CheckoutForm) {
-    const sale: AffilliateSaleModel = {... new AffilliateSaleModel()};
+  private runSideEffect(code: string, checkoutForm: CheckoutForm, action: () => Promise<unknown> | void, humanDescription: string): void {
+    Promise.resolve(action()).catch(err => {
+      this.loggerService.logMessage(
+        code,
+        checkoutForm.email,
+        `Order was placed, but a follow-up step failed: ${humanDescription}.`,
+        { err, receipt: checkoutForm.receipt }
+      ).subscribe(errorCode => {
+        this.toastService.notify({
+          message: `Your order was placed, but we hit a problem ${humanDescription}. ` +
+            'Please contact us so we can complete it manually - reference code: ' + errorCode,
+          type: 'error'
+        });
+      });
+    });
+  }
+
+  private recordAffiliateSale(checkoutForm: CheckoutForm): Promise<AffilliateSaleModel> {
+    const sale: AffilliateSaleModel = { ...new AffilliateSaleModel() };
     sale.code = checkoutForm.couponCode;
     sale.date = Timestamp.now();
     sale.email = checkoutForm.email;
     sale.totalAfterDiscount = checkoutForm.total - checkoutForm.discount;
     sale.totalBeforeDiscount = checkoutForm.total;
     sale.receipt = checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : '';
-    this.affiliateSaleService.add(sale);
+    return this.affiliateSaleService.add(sale);
   }
 
-  registerEventUsers(confirmationId, events: CartItem[]){
-    events.forEach(event => {
-      event.attendees.forEach(async attendee => {
-        const registration = {... new EventRegistrationModel()};
+  private async registerEventUsers(confirmationId: string, events: CartItem[]): Promise<void> {
+    for (const event of events) {
+      for (const attendee of event.attendees ?? []) {
+        const registration = { ...new EventRegistrationModel() };
         registration.eventId = event.id;
         registration.firstName = attendee.firstName;
         registration.lastName = attendee.lastName;
@@ -104,74 +139,61 @@ export class CheckoutSuccessComponent implements AfterViewInit{
         registration.receipt = confirmationId;
         registration.registrationDate = Timestamp.now();
 
-        // Runs after checkout has already succeeded (the order is saved) -
-        // a failure here loses just this one attendee's event registration,
-        // not the whole order, so it must surface on its own rather than
-        // vanish as an unhandled rejection. Every `return` below matters:
-        // without it the inner chain isn't linked to the outer one and this
-        // .catch() would never see its rejections. Other attendees/events in
-        // the surrounding forEach loops are unaffected either way, since each
-        // runs its own independent async closure.
-        await this.eventService.getById(event.id).then(async event => {
-          return this.eventRegistrationService.add(registration).then(registration => {
-            return this.sendRegistrationSuccessEmail(registration, event).then(email => {
-              registration.receiptEmailId = email.id;
-              return registration;
-            }).then(registration => {
-              return this.eventRegistrationService.update(registration.id, registration);
-            }).then(() => {
-              this.toastService.notify({
-                message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
-                ' starting on ' + dateFromTimestamp(event.startDate),
-                type: 'success'
-              });
-            });
+        try {
+          const eventModel = await this.eventService.getById(event.id);
+          const savedRegistration = await this.eventRegistrationService.add(registration);
+          const emailResult = await this.sendRegistrationSuccessEmail(savedRegistration, eventModel);
+          savedRegistration.receiptEmailId = emailResult.id;
+          await this.eventRegistrationService.update(savedRegistration.id, savedRegistration);
+
+          this.toastService.notify({
+            message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + eventModel.eventName +
+              ' starting on ' + dateFromTimestamp(eventModel.startDate),
+            type: 'success'
           });
-        }).catch((err) => {
-          // `event` here is the outer CartItem (events.forEach), not the
-          // EventModel the inner .then() shadowed the name with - use
-          // itemName, the field CartItem actually has.
+        } catch (err) {
           this.loggerService.logMessage(
-            'EVENT_REGISTRATION',
+            'EVENT_REGISTRATION_NEW',
             registration.email,
             'Failed to register attendee for event after checkout succeeded.',
             { err, eventId: event.id, eventName: event.itemName, confirmationId }
-          ).subscribe((errorCode) => {
+          ).subscribe(errorCode => {
             this.toastService.notify({
               message: 'Your order was placed, but we hit a problem registering ' + registration.firstName + ' ' + registration.lastName +
                 ' for ' + event.itemName + '. Please contact us to complete this registration - reference code: ' + errorCode,
               type: 'error'
             });
           });
-        });
-
-        this.cartService.clearCartNoConfirmation();
-      })
-    })
+        }
+      }
+    }
   }
 
-  sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
+  private sendRegistrationSuccessEmail(registration: EventRegistrationModel, event: EventModel): Promise<EMailModel> {
     const form = {};
     form['firstName'] = registration.firstName;
     form['lastName'] = registration.lastName;
     form['email'] = registration.email?.toLowerCase();
     form['eventName'] = event.eventName;
-    form['startDate'] = formatDate(event.startDate as string, 'longDate', 'en-us') + " at " + formatDate(event.startDate as string, 'shortTime', 'en-US');
-    form['editRegistration'] = "<a href='"+environment.domain+"/events/" + event.id + "/registrations/" +registration.id +"'>Register for Breakout</a>"
+    form['startDate'] = formatDate(event.startDate as string, 'longDate', 'en-us') + ' at ' + formatDate(event.startDate as string, 'shortTime', 'en-US');
+    form['editRegistration'] = "<a href='" + environment.domain + '/events/' + event.id + '/registrations/' + registration.id + "'>Register for Breakout</a>";
 
     return this.emailService.sendHTMLEMailFromTemplate(registration.email, event.emailTemplate, form);
   }
 
-  sendProductFollowUpEmail(checkoutForm:CheckoutForm, followUpEmails: CartItem[]) {
+  private sendProductFollowUpEmail(checkoutForm: CheckoutForm, followUpEmails: CartItem[]): void {
     followUpEmails.forEach(followUp => {
-
-      console.log('checkoutForm', checkoutForm)
       const form = {};
       form['firstName'] = checkoutForm.firstName;
       form['lastName'] = checkoutForm.lastName;
       form['email'] = checkoutForm.email?.toLowerCase();
 
-      this.emailService.sendHTMLEMailByIdFromTemplate(checkoutForm.email, followUp.followUpEmailId, form);
-    })
+      this.runSideEffect(
+        'FOLLOW_UP_EMAIL',
+        checkoutForm,
+        () => this.emailService.sendHTMLEMailByIdFromTemplate(checkoutForm.email, followUp.followUpEmailId, form),
+        'sending a follow-up email'
+      );
+    });
   }
 }

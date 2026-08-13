@@ -1,0 +1,13 @@
+<div class="checkout-steps-new">
+  <div class="checkout-steps-new__step" [class.checkout-steps-new__step--active]="current === 'shipping'" [class.checkout-steps-new__step--done]="current !== 'shipping'">
+    <span class="checkout-steps-new__num">1</span> Shipping
+  </div>
+  <div class="checkout-steps-new__sep"></div>
+  <div class="checkout-steps-new__step" [class.checkout-steps-new__step--active]="current === 'payment'" [class.checkout-steps-new__step--done]="current === 'confirm'">
+    <span class="checkout-steps-new__num">2</span> Payment
+  </div>
+  <div class="checkout-steps-new__sep"></div>
+  <div class="checkout-steps-new__step" [class.checkout-steps-new__step--active]="current === 'confirm'">
+    <span class="checkout-steps-new__num">3</span> Confirm
+  </div>
+</div>

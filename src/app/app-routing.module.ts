@@ -37,9 +37,13 @@ const routes: Routes = [
     matcher: firstSegmentMatcher(['team', 'team-details']),
     loadChildren: () => import('./core/team.module').then(m => m.TeamFeatureModule)
   },
+  // The reimagined store/cart/checkout (originally built and run side by
+  // side with the old implementation for comparison -- see the plan doc,
+  // "Reimagine Store / Cart / Checkout") now serves these canonical paths
+  // directly; the old store-feature.module.ts it replaced is deleted.
   {
     matcher: firstSegmentMatcher(['store', 'spanish-resources', 'product-details', 'shopping-cart', 'checkout', 'checkout-success', 'e-books']),
-    loadChildren: () => import('./core/store-feature.module').then(m => m.StoreFeatureModule)
+    loadChildren: () => import('./core/store/store-feature.module').then(m => m.StoreFeatureModule)
   },
   {
     matcher: firstSegmentMatcher([
