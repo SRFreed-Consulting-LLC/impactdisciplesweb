@@ -6,7 +6,7 @@
   "hosting": [
     {
       "target": "production",
-      "public": "dist/impactdisciplesweb",
+      "public": "maintenance",
       "ignore": [
         "firebase.json",
         "**/.*",
