@@ -54,7 +54,6 @@ export class CheckoutForm extends BaseModel {
   paymentIntent?: PaymentIntent | string;
   payPalReceipt?: IClientAuthorizeCallbackData;
   dateProcessed?: Timestamp;
-  processedStatus?: string;
 
   //total sale amount
   total?: number = 0;
