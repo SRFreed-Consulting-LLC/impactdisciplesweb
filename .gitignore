@@ -41,6 +41,14 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Firebase/GCP service account keys -- these grant full admin read/write on
+# a Firebase project's data and must never be committed. Belt-and-suspenders:
+# they shouldn't be placed inside the repo at all (keep them outside, e.g. a
+# scratch/temp directory), but this catches it if one lands here anyway.
+*firebase-adminsdk*.json
+*serviceAccountKey*.json
+*service-account*.json
+
 # Playwright
 /test-results
 /playwright-report
