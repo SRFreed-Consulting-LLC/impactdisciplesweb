@@ -148,16 +148,20 @@ export class CartService {
       total: this.pricingService.cartTotal(this.cart)
     };
     localStorage.setItem(SUMMARY_STORAGE_KEY, JSON.stringify(summary));
-    window.dispatchEvent(new CustomEvent<CartSummary>(CART_CHANGED_EVENT, { detail: summary }));
 
-    // Deferred to a microtask, not emitted synchronously: persist() can be
-    // called from within another component's own lifecycle hook (e.g.
-    // CheckoutSuccessComponent.ngAfterViewInit() clearing the cart) --
-    // emitting synchronously there updates sibling components (the cart
-    // drawer, the header's badge) that Angular already checked earlier in
-    // that same change-detection pass, which is a textbook
-    // NG0100 ExpressionChangedAfterItHasBeenCheckedError. Queueing the
-    // emission lets it land in its own, later change-detection cycle.
-    queueMicrotask(() => this.cartChanged.next(this.cart));
+    // Both the window CustomEvent (HomeHeaderComponent's badge) and the
+    // in-module cartChanged$ (the cart drawer) are deferred to a
+    // microtask, not emitted synchronously: persist() can be called from
+    // within another component's own lifecycle hook (e.g.
+    // CheckoutSuccessComponent.ngAfterViewInit() clearing the cart after a
+    // completed order) -- emitting synchronously there updates sibling
+    // components that Angular already checked earlier in that same
+    // change-detection pass, which is a textbook NG0100
+    // ExpressionChangedAfterItHasBeenCheckedError. Queueing both emissions
+    // lets them land in their own, later change-detection cycle.
+    queueMicrotask(() => {
+      window.dispatchEvent(new CustomEvent<CartSummary>(CART_CHANGED_EVENT, { detail: summary }));
+      this.cartChanged.next(this.cart);
+    });
   }
 }

@@ -104,7 +104,7 @@
                   </div>
                 }
               </form>
-              <button type="button" class="mt-20 impact-btn impact-btn-blue" (click)="goToPayment()">
+              <button type="button" class="mt-20 impact-btn impact-btn-blue" [disabled]="submitting" (click)="goToPayment()">
                 Continue to Payment
               </button>
             </div>
@@ -142,13 +142,15 @@
                 <app-spinner [loading]="showEstimatedTaxesSpinner || showShippingSpinner" label="Setting up payment..."></app-spinner>
 
                 @if (!showEstimatedTaxesSpinner && !showShippingSpinner) {
-                  @if (orderTotal() > 0) {
+                  @if (payPalConfig) {
                     <div class="col-12 mt-3 pt-3 paypal-background">
                       <ngx-paypal [config]="payPalConfig"></ngx-paypal>
+                      <app-spinner [loading]="submitting" label="Finishing your order..."></app-spinner>
                     </div>
-                  } @else {
-                    <button type="button" class="impact-btn impact-btn-blue" [disabled]="submitting" (click)="submitRequest()">
-                      Submit Order
+                  } @else if (orderError) {
+                    <div class="checkout-form__error mb-20">We could not start checkout.</div>
+                    <button type="button" class="impact-btn impact-btn-blue" (click)="retryOrder()">
+                      Try Again
                     </button>
                   }
                 }

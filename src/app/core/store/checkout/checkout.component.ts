@@ -1,23 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Timestamp } from 'firebase/firestore';
-import { IClientAuthorizeCallbackData, ICreateOrderRequest, IPayPalConfig, ITransactionItem, IUnitAmount, IUnitBreakdown } from 'ngx-paypal';
+import { IOnApproveCallbackData, IPayPalConfig } from 'ngx-paypal';
 import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { SaleModel } from 'src/app/common/models/utils/sale.model';
 import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
-import { PurchasesService } from 'src/app/common/services/data/purchases.service';
 import { SalesService } from 'src/app/common/services/data/sales.service';
 import { ShippingService } from 'src/app/common/services/data/shipping.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { EMailService } from 'src/app/common/services/data/email.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
-import { TaxRateService } from 'src/app/common/services/utils/tax-rate.service';
 import { EnumHelper } from 'src/app/common/utils/enum_helper';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { CartService } from '../services/cart.service';
 import { PricingService } from '../services/pricing.service';
+import { CheckoutOrderService, CheckoutOrderRequest } from '../services/checkout-order.service';
 import { CheckoutStep } from './checkout-steps/checkout-steps.component';
 
 const CHECKOUT_STORAGE_KEY = 'checkoutForm';
@@ -40,6 +38,15 @@ const CHECKOUT_STORAGE_KEY = 'checkoutForm';
 //    actual current capability -- Stripe is explicitly deferred (see plan's
 //    Payments/guardrails section), so this stays an apples-to-apples
 //    comparison with the original on payment options.
+//  - Pricing/tax/discount is no longer computed client-side and trusted at
+//    face value -- ported from the separate checkout-server-side-pricing
+//    branch (see CheckoutOrderService's own comment for the full story).
+//    This component now only ever sends item ids/quantities/selections to
+//    the server (buildOrderRequest()) and displays back whatever the
+//    server decided the order actually costs (startOrder()) -- it never
+//    computes a chargeable total itself and never writes the "purchases"
+//    record directly; only the server does that, after real payment
+//    (or a genuinely-free order) is verified.
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
@@ -73,11 +80,10 @@ export class CheckoutComponent implements OnInit {
   sales: SaleModel[] = [];
   webConfig: WebConfigModel;
 
-  NumberUtil = NumberUtil;
-
   submitting = false;
   showEstimatedTaxesSpinner = false;
   showShippingSpinner = false;
+  orderError = false;
 
   public payPalConfig?: IPayPalConfig;
   currency = 'USD';
@@ -85,9 +91,8 @@ export class CheckoutComponent implements OnInit {
   constructor(
     public cartService: CartService,
     private pricingService: PricingService,
-    private purchasesService: PurchasesService,
+    private checkoutOrderService: CheckoutOrderService,
     private shippingService: ShippingService,
-    private taxService: TaxRateService,
     private emailService: EMailService,
     private salesService: SalesService,
     private webConfigService: WebConfigService,
@@ -147,15 +152,32 @@ export class CheckoutComponent implements OnInit {
 
     this.applyFormValuesToCheckoutForm();
     this.currentStep = 'payment';
+    this.orderError = false;
     this.submitting = true;
+    this.showEstimatedTaxesSpinner = true;
+    this.showShippingSpinner = true;
 
-    await Promise.all([this.calculateShippingCost(), this.calculateEstimatedTax()]);
+    // Shipping rate is still fetched (and its discount optimistically
+    // guessed) client-side here, same as before -- it's just a real-time
+    // rate lookup, not a price the customer could tamper with in a way
+    // that matters. It's sent to the server below as part of the order
+    // request; the server trusts the rate itself but always recomputes the
+    // discount on it. See checkout-pricing.functions.ts's own comment.
+    await this.calculateShippingCost();
+    await this.startOrder();
 
-    if (this.orderTotal() > 0) {
-      this.createPaypalConfig();
-    } else {
-      this.submitRequest();
-    }
+    this.showEstimatedTaxesSpinner = false;
+    this.showShippingSpinner = false;
+    this.submitting = false;
+  }
+
+  async retryOrder(): Promise<void> {
+    this.orderError = false;
+    this.submitting = true;
+    this.showEstimatedTaxesSpinner = true;
+    this.showShippingSpinner = true;
+
+    await this.startOrder();
 
     this.showEstimatedTaxesSpinner = false;
     this.showShippingSpinner = false;
@@ -179,17 +201,7 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  private calculateEstimatedTax = async (): Promise<void> => {
-    if (this.subtotal() > 0 && this.checkoutForm.shippingAddress.state === 'Georgia') {
-      this.showEstimatedTaxesSpinner = true;
-      this.checkoutForm = await this.taxService.calculateTaxRate(this.checkoutForm);
-    } else {
-      this.checkoutForm.estimatedTaxes = 0;
-    }
-  };
-
   private calculateShippingCost = async (): Promise<void> => {
-    this.showShippingSpinner = true;
     this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
 
     if (this.subtotal() > this.webConfig.freeShippingAmount) {
@@ -205,45 +217,103 @@ export class CheckoutComponent implements OnInit {
     }
   };
 
-  private createPaypalConfig(): void {
-    const itemUnitTotal: IUnitAmount = { currency_code: this.currency, value: this.subtotal().toFixed(2).toString() };
-    const discountTotal: IUnitAmount = { currency_code: this.currency, value: this.totalDiscount()?.toFixed(2).toString() };
-    const shippingTotal: IUnitAmount = { currency_code: this.currency, value: this.checkoutForm.shippingRate.toFixed(2).toString() };
-    const shippingDiscountTotal: IUnitAmount = {
-      currency_code: this.currency,
-      value: (this.subtotal() > this.webConfig.freeShippingAmount ? this.checkoutForm.shippingRate : 0).toFixed(2).toString()
+  // Asks the server to price the order and, for a paid order, start a
+  // PayPal order for it. Never computes or trusts a client-side total --
+  // the server fetches real product/event data and coupon/sale rules
+  // itself (see checkout-pricing.functions.ts) and this only ever displays
+  // what comes back.
+  private async startOrder(): Promise<void> {
+    try {
+      const result = await this.checkoutOrderService.createOrder(this.buildOrderRequest());
+
+      if (result.free) {
+        // Free (fully covered by a coupon, or genuinely $0) -- the server
+        // already wrote the purchase record, since there's no payment to
+        // capture first.
+        await this.finishCheckout(result.checkoutForm);
+      } else {
+        this.checkoutForm.discount = result.breakdown.totalDiscount;
+        this.checkoutForm.estimatedTaxes = result.breakdown.estimatedTaxes;
+        this.checkoutForm.taxRate = result.breakdown.taxRate;
+        this.checkoutForm.taxSource = result.breakdown.taxSource;
+        this.checkoutForm.shippingDiscount = result.breakdown.shippingDiscount;
+        this.checkoutForm.shippingDiscountReason = result.breakdown.shippingDiscountReason;
+        this.createPaypalConfig(result.orderId);
+      }
+    } catch (err) {
+      this.orderError = true;
+      this.toastService.notify({ message: 'We could not start checkout. Please try again.', type: 'error' });
+      this.loggerService.logMessage(
+        'CHECKOUT', this.checkoutForm.email, 'Failed to create order.', { err: String(err) }
+      ).subscribe();
+    }
+  }
+
+  // Only ids/quantities/selections -- see checkout-order.service.ts's own
+  // comment on why a price is never included here.
+  private buildOrderRequest(): CheckoutOrderRequest {
+    return {
+      cartItems: this.checkoutForm.cartItems.map(item => ({
+        id: item.id,
+        isEvent: item.isEvent,
+        isEBook: item.isEBook,
+        isDigitalBook: item.isDigitalBook,
+        orderQuantity: item.orderQuantity,
+        size: item.size,
+        color: item.color,
+        language: item.language,
+        attendees: item.attendees,
+        followUpEmailId: item.followUpEmailId
+      })),
+      couponCode: this.checkoutForm.couponCode,
+      firstName: this.checkoutForm.firstName,
+      lastName: this.checkoutForm.lastName,
+      email: this.checkoutForm.email,
+      phone: this.checkoutForm.phone,
+      isNewsletter: this.checkoutForm.isNewsletter,
+      isShippingSameAsBilling: this.checkoutForm.isShippingSameAsBilling,
+      billingAddress: this.checkoutForm.billingAddress,
+      shippingAddress: this.checkoutForm.shippingAddress,
+      shippingRate: this.checkoutForm.shippingRate,
+      shippingRateId: this.checkoutForm.shippingRateId
     };
-    const taxesTotal: IUnitAmount = { currency_code: this.currency, value: this.checkoutForm.estimatedTaxes?.toFixed(2).toString() };
+  }
 
-    const breakdown: IUnitBreakdown = {
-      item_total: itemUnitTotal,
-      shipping: shippingTotal,
-      shipping_discount: shippingDiscountTotal,
-      tax_total: taxesTotal,
-      discount: discountTotal
-    };
-
-    const amount: IUnitAmount = { currency_code: this.currency, value: this.orderTotal().toFixed(2).toString(), breakdown };
-
-    const items: ITransactionItem[] = this.checkoutForm.cartItems.map(item => ({
-      name: item.itemName,
-      quantity: item.orderQuantity.toString(),
-      category: 'DIGITAL_GOODS',
-      unit_amount: { currency_code: this.currency, value: this.pricingService.effectiveUnitPrice(item).toFixed(2).toString() }
-    } as ITransactionItem));
-
+  private createPaypalConfig(orderId: string): void {
     this.payPalConfig = {
       currency: this.currency,
       clientId: this.webConfig.paypalClientId,
-      createOrderOnClient: () => ({
-        intent: 'CAPTURE',
-        purchase_units: [{ amount, items }]
-      } as ICreateOrderRequest),
+      createOrderOnServer: () => Promise.resolve(orderId),
       advanced: { commit: 'true' },
       style: { label: 'paypal', layout: 'vertical', color: 'blue', shape: 'rect' },
       onApprove: () => {},
-      onClientAuthorization: (data) => {
-        this.submitRequest(data);
+      authorizeOnServer: (data: IOnApproveCallbackData) => {
+        this.submitting = true;
+
+        return this.checkoutOrderService.captureOrder(orderId, data.payerID).then(result => {
+          if (result.recordingFailed) {
+            // Payment was already captured by PayPal -- only the purchase
+            // record failed to save. Must not be shown as a normal
+            // failure; the customer was actually charged. See
+            // CaptureOrderResult's own comment.
+            this.toastService.notify({
+              message: 'Your payment went through, but we hit a problem saving your order. ' +
+                'Please contact us so we can complete it manually - reference code: ' + result.errorCode +
+                (result.payPalOrderId ? ' (payment ref: ' + result.payPalOrderId + ')' : ''),
+              type: 'error'
+            });
+            return Promise.resolve();
+          }
+
+          return this.finishCheckout(result.checkoutForm);
+        }).catch(err => {
+          this.toastService.notify({ message: 'There was an error processing your payment. Please try again.', type: 'error' });
+          this.loggerService.logMessage(
+            'CHECKOUT', this.checkoutForm.email, 'Failed to capture PayPal payment.', { err: String(err), orderId }
+          ).subscribe();
+        }).finally(() => {
+          this.submitting = false;
+        });
       },
       onCancel: () => {},
       onError: () => {
@@ -272,60 +342,16 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  submitRequest(data?: IClientAuthorizeCallbackData): void {
-    this.submitting = true;
-
-    if (data) {
-      this.checkoutForm.payPalReceipt = data;
-      this.checkoutForm.receipt = data.id;
-    } else if (this.checkoutForm.couponCode) {
-      this.checkoutForm.receipt = 'COUPON';
-    } else {
-      this.checkoutForm.receipt = 'FREE ONLY';
-    }
-
-    // total = subtotal here, not the grand order total -- matches the
-    // original store's CheckoutForm.total semantic exactly (see
-    // affiliate-sale recording in checkout-success, which computes
-    // totalAfterDiscount = total - discount). Preserved deliberately so
-    // this stays a compatible Firestore `purchases` document shape.
-    this.checkoutForm.discount = this.totalDiscount();
-    this.checkoutForm.total = this.subtotal();
-    this.checkoutForm.processedStatus = 'NEW';
-    this.checkoutForm.dateProcessed = Timestamp.now();
-
-    this.checkoutForm.cartItems.forEach(item => {
-      item.dateProcessed = Timestamp.now();
-      item.processedStatus = 'NEW';
-      item.price = item.price && NumberUtil.isNumber(item.price) ? item.price : 0;
-    });
-
-    this.purchasesService.add(this.checkoutForm).then(() => {
-      localStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(this.checkoutForm));
-      this.sendProductPurchaseSuccessEmail(this.checkoutForm);
-      this.currentStep = 'confirm';
-      this.router.navigateByUrl('/checkout-success');
-    }).catch(err => {
-      // Same must-not-fail-silently handling as the original checkout --
-      // this runs after payment (PayPal or a $0/coupon order) has already
-      // been finalized, so a failure here means the customer was
-      // charged/accepted but no purchase record was saved.
-      this.submitting = false;
-
-      this.loggerService.logMessage(
-        'CHECKOUT_NEW',
-        this.checkoutForm.email,
-        'Failed to save purchase after payment was captured/finalized.',
-        { err, receipt: this.checkoutForm.receipt, payPalReceiptId: this.checkoutForm.payPalReceipt?.id }
-      ).subscribe(errorCode => {
-        this.toastService.notify({
-          message: 'Your payment went through, but we hit a problem saving your order. ' +
-            'Please contact us so we can complete it manually - reference code: ' + errorCode +
-            (this.checkoutForm.payPalReceipt?.id ? ' (payment ref: ' + this.checkoutForm.payPalReceipt.id + ')' : ''),
-          type: 'error'
-        });
-      });
-    });
+  // No Firestore write happens here any more -- the server already made
+  // it, only after a real payment was verified (or the order was
+  // genuinely free). This just reflects that already-saved record back
+  // into the UI/localStorage and moves on to the confirmation page.
+  private async finishCheckout(checkoutForm: CheckoutForm): Promise<void> {
+    this.checkoutForm = checkoutForm;
+    localStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(checkoutForm));
+    this.sendProductPurchaseSuccessEmail(checkoutForm);
+    this.currentStep = 'confirm';
+    this.router.navigateByUrl('/checkout-success');
   }
 
   private sendProductPurchaseSuccessEmail(cart: CheckoutForm) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collectionData, deleteDoc, doc, getDoc, getDocs, limit, query, setDoc, where } from '@angular/fire/firestore';
+import { addDoc, collectionData, deleteDoc, doc, docData, getDoc, getDocs, limit, query, setDoc, where } from '@angular/fire/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -115,6 +115,27 @@ export class FirebaseDAO<T extends BaseModel> {
       }),
       catchError(err => {
         console.error(`FirebaseDAO.streamByValue('${table}', '${field}') failed:`, err);
+        return of([]);
+      })
+    );
+  }
+
+  // Distinct from streamById() below (callback/onSnapshot-based) -- this is
+  // an Observable, single-document counterpart to streamByValue() above.
+  // Added for BaseService.streamById() (see its own comment): querying a
+  // collection by an 'id' field via streamByValue() briefly emits an empty
+  // array before the real snapshot arrives (and permanently emits one for
+  // a bad/deleted id), which is a real latent crash source for any caller
+  // that assumes element 0 exists as soon as the stream fires.
+  public streamByDocId(id: string, table: string, fromFirestore?): Observable<T[]>{
+    return docData(doc(this.fs, '/' + table + '/' + id), {idField: 'id'}).pipe(
+      map(data => {
+        if (!data) return [];
+        const val = data as T;
+        return [fromFirestore ? fromFirestore(val) : val];
+      }),
+      catchError(err => {
+        console.error(`FirebaseDAO.streamByDocId('${table}', '${id}') failed:`, err);
         return of([]);
       })
     );

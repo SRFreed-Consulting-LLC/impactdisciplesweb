@@ -44,8 +44,15 @@ export class BaseService<T extends BaseModel> {
     return this.dao.streamByValue(this.table, field, value, this.fromFirestore, limitCount)
   }
 
+  // streamByDocId(), not streamByValue(this.table, 'id', id, ...) --
+  // querying a collection by an 'id' field briefly emits an empty array
+  // before the real snapshot arrives (and permanently emits one for a
+  // bad/deleted id), which crashed callers that assumed element 0 exists
+  // as soon as the stream fires (see product-details.component.ts's own
+  // comment on the null-check this required). Reading the document
+  // directly by id doesn't have that gap.
   streamById(id: string): Observable<T[]>{
-    return this.dao.streamByValue(this.table, 'id', id, this.fromFirestore);
+    return this.dao.streamByDocId(id, this.table, this.fromFirestore);
   }
 
   streamRecord(id: string, callBack): Unsubscribe{

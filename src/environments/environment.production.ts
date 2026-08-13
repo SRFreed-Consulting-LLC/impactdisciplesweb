@@ -15,6 +15,8 @@ export const environment = {
   freeEbookUrl: "https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/EBooks%2FM-7-Journal.pdf?alt=media&token=50e3282f-6fa1-46aa-ad3a-a486e4024af1",
   stripeURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/create_payment_intent",
   stripeCancelURL: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/cancel_payment_intent",
+  createPaypalOrderUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/create_paypal_order",
+  capturePaypalOrderUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/capture_paypal_order",
   shippingUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_shipping_rates",
   youtubeKeyUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_youtube_keys",
   unsubscribeUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/unsubscribe_from_email_list",

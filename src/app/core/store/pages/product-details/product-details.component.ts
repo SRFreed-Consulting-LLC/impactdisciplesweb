@@ -53,6 +53,15 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     this.productService.streamById(productId).pipe(takeUntil(this.ngUnsubscribe)).subscribe(products => {
       this.product = products[0];
 
+      // streamById() can emit an empty array -- briefly while the first
+      // real snapshot is still in flight, or permanently for a bad/deleted
+      // product id -- leaving this.product undefined. Both
+      // applyActiveProductSale() and productToCartItem() below dereference
+      // it immediately, so this isn't optional.
+      if (!this.product) {
+        return;
+      }
+
       this.catalog.applyActiveProductSale([this.product], sales);
       this.cartItem = this.catalog.productToCartItem(this.product);
 
