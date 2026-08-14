@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
-import { FirebaseDAO, QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
+import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
 import { SubscriptionModel, SubscriptionType } from 'src/app/common/models/domain/subscription.model';
-import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
 import { BaseService } from './base.service';
 import { environment } from 'src/environments/environment';
 import { EMailService } from './email.service';
 
-// Replaces NewsletterSubscriptionService + PrayerTeamSubscriptionService -
-// both collections (newsletter_subscriptions, prayer_team_subscriptions)
-// merged into one (`subscriptions`), shared with the admin app's own copy
-// of this service (see SubscriptionModel's own comment). This is the
-// repo where public signups actually happen (footer, subscribe-area, the
-// Prayer Team page, checkout) - the admin app's identical service only
-// covers staff manually adding a subscriber.
+// Newsletter/Prayer Team subscriber state used to live in its own
+// `subscriptions` collection, written straight from this service via the
+// client SDK (createSubscription() used to do a query + add() against
+// `this.table`). It's now 2 booleans + dates on the matching "customers"
+// doc in the admin project instead (see the admin repo's customer.model.ts
+// and subscriptions.functions.ts) - this app has no direct write access to
+// "customers" (that's the admin repo's collection, not this app's own), so
+// createSubscription() now POSTs to the admin repo's
+// subscribe_to_email_list Cloud Function instead of writing to Firestore
+// directly. SubscriptionModel/BaseService/`this.table` are kept only for
+// shape/typing continuity in the 4 call sites (footer, subscribe-area,
+// prayer-team, checkout-success) - nothing reads/writes the `subscriptions`
+// table itself any more.
 @Injectable({
   providedIn: 'root'
 })
@@ -21,49 +26,36 @@ export class SubscriptionService extends BaseService<SubscriptionModel> {
   constructor(public override dao: FirebaseDAO<SubscriptionModel>, private emailService: EMailService) {
     super(dao)
     this.table = "subscriptions"
-    this.fromFirestore = SubscriptionService.fromFirestore
   }
 
-  static readonly fromFirestore = (data): SubscriptionModel => {
-    data.date = dateFromTimestamp(data.date as Timestamp)
+  // Returns the subscriber (so callers can pass it to sendConfirmationEmail)
+  // on a fresh subscribe, or null if this email was already subscribed to
+  // this type - same true/null contract the old query-then-add() version
+  // had, just backed by the Cloud Function's `alreadySubscribed` response
+  // field instead of a client-side Firestore query.
+  async createSubscription(type: SubscriptionType, firstName: string, lastName: string, email: string): Promise<SubscriptionModel | null> {
+    const response = await fetch(environment.subscribeUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, firstName, lastName, email })
+    });
 
-    return data;
-  };
+    if (!response.ok) {
+      throw new Error('Failed to subscribe: ' + response.status);
+    }
 
-  // Dedupe now also matches on `type`, not just name+email (the old per-
-  // collection behavior) - the same person can independently be a
-  // newsletter subscriber AND a prayer team member as two separate docs;
-  // matching on name+email alone would incorrectly no-op a second
-  // subscription of a different type for someone already on the other list.
-  createSubscription(type: SubscriptionType, firstName: string, lastName: string, email: string) {
-    const qp: QueryParam[] = [
-      new QueryParam('email', WhereFilterOperandKeys.equal, email),
-      new QueryParam('lastName', WhereFilterOperandKeys.equal, lastName),
-      new QueryParam('firstName', WhereFilterOperandKeys.equal, firstName),
-      new QueryParam('type', WhereFilterOperandKeys.equal, type)
-    ];
+    const result: { subscribed: boolean; alreadySubscribed: boolean } = await response.json();
+    if (result.alreadySubscribed) {
+      return null;
+    }
 
-    return this.queryAllByMultiValue(qp).then(item => {
-      if(!item || item.length == 0){
-        const subscriber: SubscriptionModel = {...new SubscriptionModel()};
-        subscriber.type = type;
-        subscriber.firstName = firstName;
-        subscriber.lastName = lastName;
-        subscriber.email = email;
-        subscriber.date = Timestamp.now();
-        return this.add(subscriber);
-      }
-
-      return Promise.resolve(null);
-    })
+    return { ...new SubscriptionModel(), type, firstName, lastName, email, date: Timestamp.now() };
   }
 
   // Content branches on `type` - preserves each type's exact previous
   // subject/body/format (Newsletter: HTML, includes a free ebook link;
-  // Prayer: plain text, no ebook link). The unsubscribe link now points at
-  // the merged collection AND carries `type` (not just `email`) - see the
-  // admin repo's subscriptions.functions.ts for why that's required now
-  // that both types share one collection.
+  // Prayer: plain text, no ebook link). Unaffected by the write-path change
+  // above - this only ever sent an email, never touched Firestore itself.
   sendConfirmationEmail(subscription: SubscriptionModel){
     if (subscription.type === 'prayer') {
       const subject = 'Thank you for Joining our Prayer Team! ';
@@ -73,7 +65,7 @@ export class SubscriptionService extends BaseService<SubscriptionModel> {
 
       text += "<br><br><br><div>If you believe you received this confirmation by mistake, please click " +
         "<b><a href='" + environment.unsubscribeUrl + "?email="+ subscription.email +
-        "&list=subscriptions&type=prayer'>here</a></b> to remove your address.</div>"
+        "&type=prayer'>here</a></b> to remove your address.</div>"
 
       this.emailService.sendTextEmail(subscription.email, subject, text);
       return;
@@ -87,7 +79,7 @@ export class SubscriptionService extends BaseService<SubscriptionModel> {
 
     text += "<br><br><br><div>If you believe you received this confirmation by mistake, please click " +
       "<b><a href='" + environment.unsubscribeUrl + "?email="+ subscription.email +
-      "&list=subscriptions&type=newsletter'>here</a></b> to remove your address.</div>"
+      "&type=newsletter'>here</a></b> to remove your address.</div>"
 
     this.emailService.sendHtmlEmail(subscription.email, subject, text);
   }
