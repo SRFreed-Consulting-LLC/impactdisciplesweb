@@ -398,12 +398,15 @@ a:hover > .id-media img,
   color: var(--c-ink);
 }
 
+// Empty states are a standing requirement: every list on the site says what it
+// would be showing rather than rendering nothing. A dashed box reads as "this
+// is deliberately empty" where the accent rail of `.id-note` reads as "notice".
 .id-note--empty {
-  border-left-color: var(--c-line-strong);
-  background: var(--c-surface);
+  border: var(--bw) dashed var(--c-line-strong);
+  background: transparent;
   color: var(--c-ink-muted);
   text-align: center;
-  padding-block: var(--sp-7);
+  padding: var(--sp-7) var(--sp-5);
 }
 
 // -----------------------------------------------------------------------------

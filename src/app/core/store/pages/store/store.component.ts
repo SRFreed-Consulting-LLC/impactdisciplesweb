@@ -165,9 +165,7 @@ export class StoreComponent implements OnInit, OnDestroy {
         break;
       case FilterType.viewBySeries:
         this.selectedFilter = FilterType.viewBySeries;
-        this.seriesService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe(seriesItems => {
-          this.seriesItems = seriesItems.sort((a, b) => a.order - b.order);
-        });
+        this.loadSeries();
         this.showSeriesInMainView = true;
         break;
       case FilterType.aToZ:
@@ -193,17 +191,32 @@ export class StoreComponent implements OnInit, OnDestroy {
     }
   }
 
+  // The store used to open on "Shop by Series", so a visitor landing on /store
+  // saw a wall of series covers and not a single product until they picked one.
+  // It now opens on the full product list, and series moves to a strip beneath
+  // the grid (still a real way in, still reachable from the sort dropdown).
   applyCategoryFromUrl(): void {
     const category = this.route.snapshot.queryParamMap.get('category');
+
+    this.loadSeries();
 
     if (category === 'spanish-resources') {
       this.filterProductsByCategory({ tag: 'Spanish Resources', id: this.SPANISH_CATEGORY_ID } as TagModel);
       return;
     }
 
-    this.selectedFilter = null;
-    this.showSeriesInMainView = true;
-    this.filterProducts(FilterType.viewBySeries);
+    this.selectedFilter = FilterType.viewAll;
+    this.viewAllProducts();
+  }
+
+  // Series are needed for the strip below the grid whether or not the visitor
+  // has chosen the "Series" sort, so the fetch no longer hangs off that branch.
+  private loadSeries(): void {
+    if (this.seriesItems.length) return;
+
+    this.seriesService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe(seriesItems => {
+      this.seriesItems = seriesItems.sort((a, b) => a.order - b.order);
+    });
   }
 
   ngOnDestroy(): void {

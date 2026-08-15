@@ -1,63 +1,107 @@
 <app-home-header></app-home-header>
 
-<div class="store">
+<main class="id-main">
   <app-header
+    [compact]="true"
     [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fstore-header.PNG?alt=media&token=3c39ab6a-0a64-496a-bd7e-631f17f1a51c'"
-    [pretitle]="'DISCIPLE-MAKING RESOURCES'"
-    [title]="'IMPACT BOOKS'"
+    [pretitle]="'Disciple-making resources'"
+    [title]="'Impact Books'"
     [buttonClick]="true"
-    [buttonText]="'Free EBooks'"
+    [buttonText]="'Free e-books'"
     (buttonClickAction)="goToEbooks()"
   ></app-header>
-  <div class="store__container">
-    <app-store-sidebar
-      (searchEvent)="searchProducts($event)"
-      (categoryFilterEvent)="filterProductsByCategory($event)"
-      (viewAllProductsEvents)="viewAllProducts()"
-    ></app-store-sidebar>
-    <div class="store__container-content">
-      <div class="store__container-sort">
-        <label for="storeSort" class="store__container-sort-label">Sort By</label>
-        <select
-          id="storeSort"
-          class="store__container-filter"
-          [value]="selectedFilter"
-          (change)="filterProducts($any(+$any($event.target).value))">
-          <option value="" disabled [selected]="selectedFilter === null" hidden>Select a filter</option>
-          @for (opt of filterOptions; track opt) {
-            <option [value]="opt.value">{{ opt.text }}</option>
-          }
-        </select>
-      </div>
 
-      <div class="store__container-views">
-        @if (!showSeriesInMainView) {
-          <div class="products">
-            @for (product of filteredProductItems; track product.id) {
-              <app-store-postbox-item [product]="product"></app-store-postbox-item>
+  <section class="id-section">
+    <div class="id-container id-with-sidebar">
+      <app-store-sidebar
+        (searchEvent)="searchProducts($event)"
+        (categoryFilterEvent)="filterProductsByCategory($event)"
+        (viewAllProductsEvents)="viewAllProducts()"
+      ></app-store-sidebar>
+
+      <div>
+        <div class="id-store__toolbar">
+          <p class="id-store__count">
+            @if (showSeriesInMainView) {
+              {{ seriesItems.length }} series
+            } @else {
+              {{ filteredProductItems.length }}
+              {{ filteredProductItems.length === 1 ? 'product' : 'products' }}
             }
-            @if (filteredProductItems.length === 0) {
-              <p class="text-center pt-30">No products found.</p>
-            }
+          </p>
+
+          <div class="id-store__sort">
+            <label for="storeSort">Sort by</label>
+            <select
+              id="storeSort"
+              class="id-select"
+              [value]="selectedFilter"
+              (change)="filterProducts($any(+$any($event.target).value))">
+              <option value="" disabled [selected]="selectedFilter === null" hidden>Choose…</option>
+              @for (opt of filterOptions; track opt.value) {
+                <option [value]="opt.value">{{ opt.text }}</option>
+              }
+            </select>
           </div>
-        }
+        </div>
+
         @if (showSeriesInMainView) {
-          <div class="series">
-            <h1>SHOP BY SERIES</h1>
-            <div class="series__list">
+          @if (seriesItems.length) {
+            <div class="id-series-grid">
               @for (series of seriesItems; track series.id) {
-                <div class="series__list-item">
-                  <img loading="lazy" [src]="series?.imageUrl?.url" alt="series"/>
-                  <button type="button" class="impact-btn impact-btn-blue" (click)="filterProductsBySeries(series)">{{ series.name }}</button>
-                </div>
+                <button type="button" class="id-series-card" (click)="filterProductsBySeries(series)">
+                  <span class="id-media" style="--ratio: 4 / 3; border-radius: var(--card-radius)">
+                    @if (series.imageUrl?.url) {
+                      <img loading="lazy" [src]="series.imageUrl.url" [alt]="series.name">
+                    }
+                  </span>
+                  <span class="id-h5">{{ series.name }}</span>
+                </button>
               }
             </div>
-          </div>
+          } @else {
+            <p class="id-note id-note--empty">No series to show yet.</p>
+          }
+        } @else {
+          @if (filteredProductItems.length) {
+            <ul class="id-grid id-grid--4" style="--min: 210px">
+              @for (product of filteredProductItems; track product.id) {
+                <li><app-store-postbox-item [product]="product"></app-store-postbox-item></li>
+              }
+            </ul>
+          } @else {
+            <div class="id-note id-note--empty">
+              <p>No products match that search.</p>
+              <p style="margin-top: var(--sp-3)">
+                <button type="button" class="id-btn id-btn--ghost id-btn--sm" (click)="viewAllProducts()">
+                  Show everything
+                </button>
+              </p>
+            </div>
+          }
+
+          <!-- Series stays a real way into the catalogue, but below the
+               products rather than instead of them. -->
+          @if (seriesItems.length) {
+            <section style="margin-top: var(--sp-8)">
+              <div class="id-section-head">
+                <p class="id-section-head__eyebrow">Another way in</p>
+                <h2 class="id-section-head__title">Shop by series</h2>
+              </div>
+              <div class="id-cluster">
+                @for (series of seriesItems; track series.id) {
+                  <button type="button" class="id-btn id-btn--ghost id-btn--sm" (click)="filterProductsBySeries(series)">
+                    {{ series.name }}
+                  </button>
+                }
+              </div>
+            </section>
+          }
         }
       </div>
     </div>
-  </div>
-</div>
+  </section>
+</main>
 
 <app-footer></app-footer>
 <app-cart-drawer></app-cart-drawer>

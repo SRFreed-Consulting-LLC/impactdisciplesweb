@@ -1,31 +1,43 @@
-<section class="dms" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fsummit-banner-large.PNG?alt=media&token=74f6f522-2b3e-48f0-bdb9-2b363abbe80e)'">
-  <div class="dms__overlay">
-    <div class="dms__title">
-      <h2 appAnimate="fadeInUp">DISCIPLE-MAKING <span>SUMMIT</span></h2>
+<section
+  class="id-section id-section--tight id-summit-band"
+  [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fsummit-banner-large.PNG?alt=media&token=74f6f522-2b3e-48f0-bdb9-2b363abbe80e)'">
+  <span class="id-summit-band__scrim" aria-hidden="true"></span>
+
+  <div class="id-container id-summit-band__inner">
+    <div class="id-stack id-stack--tight">
+      <p class="id-label" style="color: var(--c-accent)">Annual event</p>
+      <h2 class="id-h3" style="color: #fff">Disciple-Making Summit</h2>
     </div>
-    <div class="dms__countdown">
-      <div class="time-part">
-        <span class="number">{{ days }}</span>
-        <span class="label">DAYS</span>
+
+    <!-- A zeroed clock reads as broken, so the countdown only renders while
+         there is actually something to count down to. -->
+    @if (counting) {
+      <div class="id-countdown" role="timer" aria-label="Time until the Summit">
+        <div class="id-countdown__part">
+          <span class="id-countdown__num">{{ days }}</span>
+          <span class="id-countdown__label">Days</span>
+        </div>
+        <div class="id-countdown__part">
+          <span class="id-countdown__num">{{ hours }}</span>
+          <span class="id-countdown__label">Hours</span>
+        </div>
+        <div class="id-countdown__part">
+          <span class="id-countdown__num">{{ minutes }}</span>
+          <span class="id-countdown__label">Minutes</span>
+        </div>
+        <div class="id-countdown__part">
+          <span class="id-countdown__num">{{ seconds }}</span>
+          <span class="id-countdown__label">Seconds</span>
+        </div>
       </div>
-      <span class="colon">:</span>
-      <div class="time-part">
-        <span class="number">{{ hours }}</span>
-        <span class="label">HOURS</span>
-      </div>
-      <span class="colon">:</span>
-      <div class="time-part">
-        <span class="number">{{ minutes }}</span>
-        <span class="label">MINUTES</span>
-      </div>
-      <span class="colon">:</span>
-      <div class="time-part">
-        <span class="number">{{ seconds }}</span>
-        <span class="label">SECONDS</span>
-      </div>
-    </div>
-    <div class="dms__button">
-      <a target="__blank" appAnimate="fadeInUpFour" href="/summit/2026"  class="impact-btn impact-btn-blue">REGISTER NOW</a>
-    </div>
+    } @else if (dms) {
+      <p style="color: rgba(255,255,255,.86); max-width: 30ch">
+        {{ dms.startDate.toString() | date: 'MMMM d, y' }} · {{ dms.eventName }}
+      </p>
+    }
+
+    <a [routerLink]="['/summit', summitYear]" class="id-btn id-btn--lg">
+      {{ counting ? 'Register now' : 'See the details' }}
+    </a>
   </div>
 </section>

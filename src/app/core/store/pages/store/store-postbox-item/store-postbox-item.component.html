@@ -1,27 +1,37 @@
-<div class="product">
-  <a class="product__image" [routerLink]="['/product-details', product?.id]">
+<div class="id-card">
+  <!-- `contain`, not `cover`: the catalogue mixes book covers, journals and
+       apparel shots at different aspect ratios, and cropping them to a common
+       box cuts the title off the front of a book. -->
+  <a class="id-media id-media--book id-media--contain id-product__cover" [routerLink]="['/product-details', product?.id]">
+    @if (product?.imageUrl?.url) {
+      <img loading="lazy" [src]="product.imageUrl.url" [alt]="product.title">
+    }
     @if (product.salePrice && product.salePrice > 0) {
-      <i class="fas fa-tag"></i>
+      <span class="id-tag id-tag--sale" style="position: absolute; top: var(--sp-3); left: var(--sp-3)">Sale</span>
     }
-    <img loading="lazy" [src]="product?.imageUrl?.url" alt="product">
   </a>
-  <div class="product__content">
-    <hr class="slider-hr-solid">
-    <div class="product__content-sales-price">
-      @if (product.salePrice && product.salePrice > 0) {
-        <h5><s>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</s></h5>
-      }
-      @if (product.salePrice && product.salePrice > 0) {
-        <h5><strong>${{ product.salePrice? product.salePrice.toFixed(2) : '0.00' }}</strong></h5>
-      }
-    </div>
-    @if (!product.salePrice) {
-      <h5><strong>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</strong></h5>
-    }
-    <h4><a [routerLink]="['/product-details', product?.id]">{{product?.title}}</a></h4>
-    <div class="product__content-buttons">
-      <a [routerLink]="['/product-details', product?.id]" class="impact-btn">view</a>
-      <a (click)="addCartProduct()" (keydown.enter)="addCartProduct()" (keydown.space)="addCartProduct()" tabindex="0" role="button" class="impact-icon-btn impact-icon-btn-blue"><i class="fas fa-cart-plus"></i>ADD</a>
+
+  <div class="id-card__body" style="--card-pad: var(--sp-4); gap: var(--sp-2)">
+    <h3 class="id-product__title">
+      <a [routerLink]="['/product-details', product?.id]" style="text-decoration: none">{{ product?.title }}</a>
+    </h3>
+
+    <div class="id-product__foot">
+      <p class="id-price">
+        @if (product.salePrice && product.salePrice > 0) {
+          <span class="id-price__was">${{ product.cost ? product.cost.toFixed(2) : '0.00' }}</span>
+          <span>${{ product.salePrice.toFixed(2) }}</span>
+        } @else if (product.cost) {
+          <span>${{ product.cost.toFixed(2) }}</span>
+        } @else {
+          <span>Free</span>
+        }
+      </p>
+
+      <button type="button" class="id-btn id-btn--sm" (click)="addCartProduct()">
+        <i class="fas fa-cart-plus" aria-hidden="true"></i>
+        Add
+      </button>
     </div>
   </div>
 </div>

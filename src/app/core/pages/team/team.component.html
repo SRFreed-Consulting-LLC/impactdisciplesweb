@@ -1,32 +1,82 @@
 <app-home-header></app-home-header>
 
-<div class="team">
+<main class="id-main">
   <app-header
     [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fteam-header.PNG?alt=media&token=96b45f4e-2a72-4068-944a-ae188c4f3090'"
-    [title]="'Receive A Free Consultation'"
-    [description]="'Your first consultation is on us. Fill out a brief survey and one of our consultants will contact you shortly!'"
+    [pretitle]="'Your first one is on us'"
+    [title]="'Receive a free consultation'"
+    [description]="'Tell us where your church is and one of our consultants will be in touch. No cost, no pitch — a conversation about your next step.'"
     [buttonLink]="'/consultation-survey'"
-    [buttonText]="'Get My Free Consultation'"
+    [buttonText]="'Get my free consultation'"
   ></app-header>
-  <div class="team__options">
-    <div class="item"><a [routerLink]="['/about-us']">About Us</a></div>
-    <div class="item item-middle"><a [routerLink]="['/customer-reviews']">Customer Reviews</a></div>
-    <div class="item"><a [routerLink]="['/contact']">Contact Us</a></div>
-  </div>
-  <div class="team__meet">
-    <h2>MEET THE TEAM</h2>
-    <div class="team__meet-items">
-      @for (coach of coaches; track coach) {
-        <div class="item">
-          <img loading="lazy" src="{{coach.photoUrl.url}}" alt="{{coach.firstName}}">
-          <div class="item__content">
-            <h5>{{ coach.firstName }} {{ coach.lastName }}</h5>
-            <p>{{ coach.title }}</p>
-            <p><a [routerLink]="['/team-details', coach.id]" class="impact-btn impact-btn-blue">Get to know</a></p>
-          </div>
+
+  <section class="id-section">
+    <div class="id-container">
+      <div class="id-section-head id-section-head--between">
+        <div class="id-stack id-stack--tight">
+          <p class="id-section-head__eyebrow">The people</p>
+          <h2 class="id-section-head__title">Meet the team</h2>
+          <p class="id-section-head__sub">
+            Consultants and coaches who have pastored, planted and led — they have
+            sat where you are sitting.
+          </p>
+        </div>
+        <div class="id-cluster">
+          <a routerLink="/about-us" class="id-btn id-btn--ghost id-btn--sm">About us</a>
+          <a routerLink="/customer-reviews" class="id-btn id-btn--ghost id-btn--sm">Reviews</a>
+          <a routerLink="/contact" class="id-btn id-btn--ghost id-btn--sm">Contact</a>
+        </div>
+      </div>
+
+      @if (coaches && coaches.length) {
+        <ul class="id-team-grid">
+          @for (coach of coaches; track coach.id) {
+            <li>
+              <a class="id-person" [routerLink]="['/team-details', coach.id]">
+                <span class="id-media id-media--portrait" style="border-radius: var(--card-radius)">
+                  @if (coach.photoUrl?.url) {
+                    <img loading="lazy" [src]="coach.photoUrl.url" [alt]="coach.firstName + ' ' + coach.lastName">
+                  }
+                </span>
+                <span class="id-stack id-stack--tight">
+                  <span class="id-person__name">{{ coach.firstName }} {{ coach.lastName }}</span>
+                  <span class="id-person__role">{{ coach.title }}</span>
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      } @else if (coaches) {
+        <p class="id-note id-note--empty">No team members to show yet. Check back soon.</p>
+      } @else {
+        <div class="id-cluster" style="justify-content: center; padding-block: var(--sp-8)">
+          <span class="id-spinner" role="status" aria-label="Loading team"></span>
         </div>
       }
     </div>
-  </div>
-</div>
+  </section>
+
+  <section class="id-section id-section--surface id-section--tight">
+    <div class="id-container">
+      <div class="id-split" style="--split: 1.2fr 1fr">
+        <div class="id-quote">
+          <p class="id-quote__text">
+            Our staff left with language for discipleship we didn't have before —
+            and a plan we've actually kept.
+          </p>
+          <p class="id-quote__by">Lead Pastor · Cross Pointe Community Church</p>
+        </div>
+        <div class="id-stack id-stack--tight">
+          <h3 class="id-h4">Not sure who to talk to?</h3>
+          <p class="id-muted">
+            Start with the survey. We'll read it and put you with the consultant
+            who fits your situation.
+          </p>
+          <p><a routerLink="/consultation-survey" class="id-btn">Start the survey</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
 <app-footer></app-footer>

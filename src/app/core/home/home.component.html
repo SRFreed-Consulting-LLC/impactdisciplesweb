@@ -1,38 +1,62 @@
 <app-home-header></app-home-header>
-<!-- <app-nav-bar></app-nav-bar> -->
-<app-home-header-slider></app-home-header-slider>
-<app-home-services></app-home-services>
-<app-disciple-making-summit-banner></app-disciple-making-summit-banner>
-<div class="video">
-  <div class="video__title">
-    <h1>OUR VISION</h1>
-    <hr appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w100 slider-hr-thick">
-    <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples of Jesus Christ. </p>
-  </div>
-  @if (!isPlaying) {
-    <div class="video__container" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap.jpg?alt=media&token=9db9c6f4-c852-4722-807e-5fa5d93f881a)">
-      <div class="container">
-        <div class="video__content text-center">
-          <div class="video__button">
-            <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
-              <i class="fas fa-play"></i>
-            </a>
+
+<main class="id-main">
+  <app-home-header-slider></app-home-header-slider>
+
+  <app-home-services></app-home-services>
+
+  @if (isSummitPosted) {
+    <app-disciple-making-summit-banner></app-disciple-making-summit-banner>
+  }
+
+  <!-- Vision ---------------------------------------------------------------->
+  <section class="id-section id-section--inverted">
+    <div class="id-container">
+      <div class="id-split" style="--split: 1fr 1.25fr">
+        <div class="id-stack">
+          <p class="id-label" style="color: var(--c-accent)">Why we exist</p>
+          <h2 class="id-h2">Our vision</h2>
+          <p class="id-lead" style="color: var(--c-inv-ink-muted)">
+            Impact Discipleship Ministries exists to inspire people and churches
+            to be and build disciples of Jesus Christ.
+          </p>
+          <p style="color: var(--c-inv-ink-muted); max-width: 46ch">
+            Thirty years of pastoring turned into a simple, reproducible way of
+            making disciples — and a team that will walk your church through it.
+          </p>
+          <div class="id-cluster">
+            <a routerLink="/about-us" class="id-btn">About the ministry</a>
+            <a routerLink="/consultation-survey" class="id-btn id-btn--ghost id-btn--on-dark">Free consultation</a>
           </div>
+        </div>
+
+        <div class="id-embed">
+          @if (!isPlaying) {
+            <button
+              type="button"
+              class="id-video-poster"
+              (click)="playVideo()"
+              aria-label="Play the vision film"
+              style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap.jpg?alt=media&token=9db9c6f4-c852-4722-807e-5fa5d93f881a)">
+              <span class="id-video-poster__btn" aria-hidden="true">
+                <i class="fas fa-play"></i>
+              </span>
+            </button>
+          } @else {
+            <youtube-player
+              [videoId]="'HxKSa24hF60'"
+              suggestedQuality="highres"
+              [playerVars]="{ autoplay: 1 }"
+            ></youtube-player>
+          }
         </div>
       </div>
     </div>
-  }
-  @if (isPlaying) {
-    <div id="video-overlay">
-      <youtube-player
-        [videoId]="'HxKSa24hF60'"
-        [height]="400"
-        suggestedQuality="highres"
-        [playerVars]="{ autoplay: 1 }"
-      ></youtube-player>
-    </div>
-  }
-</div>
-<app-book-banner></app-book-banner>
-<app-subscribe-area></app-subscribe-area>
+  </section>
+
+  <app-book-banner></app-book-banner>
+
+  <app-subscribe-area></app-subscribe-area>
+</main>
+
 <app-footer></app-footer>

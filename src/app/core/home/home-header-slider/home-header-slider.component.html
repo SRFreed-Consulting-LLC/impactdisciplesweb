@@ -1,26 +1,45 @@
-<div class="header-slider-container">
+<section class="id-slider header-slider-container" aria-label="Featured">
   <div class="swiper">
     <div class="swiper-wrapper">
-      @for (galleryItem of images; track galleryItem) {
-        <div
-          class="swiper-slide gallery__slide"
-          [style.backgroundImage]="'url('+galleryItem.image.url+')'">
-          <div class="gallery__slide-overlay">
-            <div class="gallery__slide-content">
-              <h2 class="title " appAnimate="fadeInUp">{{galleryItem.title}}</h2>
-              <hr appAnimate="fadeInLeftToRight" class="slider-hr">
-              <p class="text" appAnimate="fadeInUpTwo">{{galleryItem.text}}</p>
+      @for (galleryItem of images; track galleryItem.id) {
+        <div class="swiper-slide id-slide" [style.backgroundImage]="'url(' + galleryItem.image.url + ')'">
+          <span class="id-slide__scrim" aria-hidden="true"></span>
+          <div class="id-container id-slide__inner">
+            <h2 class="id-slide__title" appAnimate="fadeInUp">{{ galleryItem.title }}</h2>
+            @if (galleryItem.text) {
+              <p class="id-slide__text" appAnimate="fadeInUpTwo">{{ galleryItem.text }}</p>
+            }
+            @if (galleryItem.ctaTitle) {
               @if (galleryItem.ctaDestination !== 'external') {
-                <a target="" appAnimate="fadeInUpThree" [routerLink]="galleryItem.ctaDestination" class="impact-btn">{{galleryItem.ctaTitle}}</a>
+                <a
+                  appAnimate="fadeInUpThree"
+                  [routerLink]="galleryItem.ctaDestination"
+                  class="id-btn id-btn--lg">{{ galleryItem.ctaTitle }}</a>
+              } @else {
+                <a
+                  appAnimate="fadeInUpThree"
+                  [href]="galleryItem.ctaUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="id-btn id-btn--lg">{{ galleryItem.ctaTitle }}</a>
               }
-              @if (galleryItem.ctaDestination === 'external') {
-                <a target="none" appAnimate="fadeInUpThree" [href]="galleryItem.ctaUrl" class="impact-btn">{{galleryItem.ctaTitle}}</a>
-              }
-            </div>
+            }
           </div>
         </div>
       }
     </div>
-    <div class="header-slider-pagination"></div>
+    <div class="header-slider-pagination id-slider__dots"></div>
   </div>
-</div>
+
+  @if (!images.length) {
+    <div class="id-slide id-slide--fallback">
+      <div class="id-container id-slide__inner">
+        <h2 class="id-slide__title">Be a disciple. Build disciples.</h2>
+        <p class="id-slide__text">
+          Training, coaching and resources for pastors, leaders and churches.
+        </p>
+        <a routerLink="/events" class="id-btn id-btn--lg">See what's coming up</a>
+      </div>
+    </div>
+  }
+</section>

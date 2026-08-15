@@ -5,6 +5,154 @@
 // =============================================================================
 
 // -----------------------------------------------------------------------------
+// HOME — hero slider, summit countdown band, video poster
+// -----------------------------------------------------------------------------
+.id-slider {
+  position: relative;
+
+  .swiper {
+    overflow: hidden;
+  }
+}
+
+.id-slide {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(26rem, 62vh, 40rem);
+  padding-block: var(--sp-8);
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  isolation: isolate;
+}
+
+.id-slide--fallback {
+  background: linear-gradient(150deg, var(--c-accent), color-mix(in srgb, var(--c-accent) 40%, #000));
+}
+
+.id-slide__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    100deg,
+    var(--c-scrim-strong) 0%,
+    color-mix(in srgb, var(--c-scrim) 55%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+// This element is also `.id-container`, so it must keep the container's own
+// max-width — narrowing it here instead would centre the whole text block in
+// the viewport rather than aligning it to the page grid. The measure is set on
+// the children.
+.id-slide__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-4);
+}
+
+.id-slide__title {
+  font-size: var(--t-6);
+  color: #fff;
+  max-width: 18ch;
+}
+
+.id-slide__text {
+  font-size: var(--t-1);
+  line-height: var(--lh-snug);
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 38rem;
+}
+
+.id-slider__dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--sp-5);
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-2);
+
+  .swiper-pagination-bullet {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: var(--r-pill);
+    background: rgba(255, 255, 255, 0.45);
+    opacity: 1;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease), width var(--dur-fast) var(--ease);
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 1.6rem;
+    background: #fff;
+  }
+}
+
+.id-summit-band {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  isolation: isolate;
+}
+
+.id-summit-band__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--c-scrim-strong);
+}
+
+.id-summit-band__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5) var(--sp-6);
+  color: #fff;
+
+  .id-countdown__label {
+    color: rgba(255, 255, 255, 0.72);
+  }
+}
+
+.id-video-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--c-surface-2);
+}
+
+.id-video-poster__btn {
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+  font-size: 1.25rem;
+  transition: transform var(--dur) var(--ease);
+}
+
+.id-video-poster:hover .id-video-poster__btn {
+  transform: scale(1.08);
+}
+
+// -----------------------------------------------------------------------------
 // STORE
 // -----------------------------------------------------------------------------
 .id-store__toolbar {
@@ -103,10 +251,64 @@
   position: relative;
 }
 
+// Category groups are native <details>; the summary IS the rail link.
+.id-rail__group > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.id-rail__group > summary::-webkit-details-marker {
+  display: none;
+}
+
+.id-rail__group[open] > summary {
+  color: var(--c-ink);
+  font-weight: var(--fw-medium);
+}
+
+.id-rail__sub {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-1) 0 var(--sp-3) var(--sp-3);
+  border-left: var(--bw) solid var(--c-line);
+  margin-left: var(--sp-1);
+}
+
+.id-rail__sublink {
+  display: block;
+  width: 100%;
+  padding: var(--sp-2) 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: var(--t-sm);
+  color: var(--c-ink-muted);
+
+  &:hover {
+    color: var(--c-accent);
+  }
+}
+
+.id-rail__sublink--all {
+  color: var(--c-accent);
+  font-weight: var(--fw-medium);
+}
+
 // Product tile
+.id-product__cover {
+  background: var(--c-surface-2);
+  padding: var(--sp-4);
+}
+
 .id-product__title {
-  font-size: var(--t-1);
+  font-size: var(--t-sm);
   line-height: var(--lh-snug);
+  font-weight: var(--fw-medium);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .id-product__meta {

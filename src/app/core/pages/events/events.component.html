@@ -1,89 +1,147 @@
 <app-home-header></app-home-header>
 
-<div class="events">
-  @if (dms) {
-    <app-header
-      [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa'"
-      [pretitle]="'JOIN US FOR OUR ANNUAL EVENT'"
-      [title]="'Disciple-Making Summit'"
-      [buttonText]="'REGISTER NOW'"
-      [buttonLink]="'/event-details/' + dms?.id"
-    ></app-header>
-  }
-  @if (!dms) {
-    <app-header
-      [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa'"
-      [pretitle]="'JOIN US FOR OUR ANNUAL EVENT'"
-      [title]="'Disciple-Making Summit'"
-    ></app-header>
-  }
-  <div class="events__intro"></div>
-  <div class="events__person">
-    <h2>In Person Events</h2>
-    <div class="events__person-list">
-      @for (event of eventsList; track event) {
-        <a class="events__person-item" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
-          @if (event.imageUrl) {
-            <img loading="lazy" [src]="event.imageUrl.url" alt="blog">
+<main class="id-main">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa'"
+    [pretitle]="'Upcoming training'"
+    [title]="'Get trained this year'"
+    [description]="'Seminars, equipping groups and the annual Summit — in person and online.'"
+    [buttonLink]="dms ? '/event-details/' + dms.id : null"
+    [buttonText]="dms ? 'Register for the Summit' : null"
+  ></app-header>
+
+  <!-- In person -------------------------------------------------------------
+       A short list is laid out as a list, not as a three-across grid with
+       holes in it. On the live site one active in-person event renders as a
+       single card in a row built for three, which reads as a broken page. -->
+  <section class="id-section">
+    <div class="id-container">
+      <div class="id-section-head">
+        <p class="id-section-head__eyebrow">At a church near you</p>
+        <h2 class="id-section-head__title">In person</h2>
+      </div>
+
+      @if (eventsList && eventsList.length) {
+        <ul class="id-event-list">
+          @for (event of eventsList; track event.id) {
+            <li>
+              <a
+                class="id-event id-card"
+                style="--card-pad: var(--sp-5); padding: var(--sp-5)"
+                [routerLink]="event.isSummit
+                  ? ['/summit', (event.startDate.toString() | date: 'yyyy')]
+                  : ['/event-details', event.id]">
+                <span class="id-media id-media--wide" style="border-radius: var(--r-sm)">
+                  @if (event.imageUrl?.url) {
+                    <img loading="lazy" [src]="event.imageUrl.url" [alt]="event.eventName">
+                  }
+                </span>
+
+                <span class="id-event__body">
+                  @if (event.isSummit) { <span class="id-tag">Annual event</span> }
+                  <span class="id-event__title">{{ event.eventName }}</span>
+                  <span class="id-event__meta">
+                    @if (event.startDate) {
+                      <span>{{ event.startDate.toString() | date: 'MMM d' }}@if (event.endDate) { – {{ event.endDate.toString() | date: 'MMM d' }}}</span>
+                    }
+                    @if (event.location) {
+                      <span>{{ event.location.toString() | location : 'cityState' | async }}</span>
+                    }
+                  </span>
+                  @if (event.description) {
+                    <span class="id-event__desc">{{ event.description }}</span>
+                  }
+                </span>
+
+                <span class="id-event__cta">
+                  <span class="id-btn">Register</span>
+                </span>
+              </a>
+            </li>
           }
-          <div class="content">
-            <h4><a>{{ event.eventName }}</a></h4>
-            <div class="content__details">
-              @if (event.startDate) {
-                <span>{{ event.startDate.toString()| date: 'M/d' }} </span>
-              }
-              @if (event.endDate) {
-                <span>- {{ event.endDate.toString() | date: 'M/d' }} </span>
-              }
-              @if (event.location) {
-                <span>/ {{ event.location.toString() | location : 'cityState' | async }}</span>
-              }
-            </div>
-            @if (event.description) {
-              <p class="content__description">{{ event.description }}</p>
-            }
-            <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin">REGISTER NOW</a>
-          </div>
-        </a>
+        </ul>
+      } @else if (eventsList) {
+        <div class="id-note id-note--empty">
+          <p>No in-person events are on the calendar right now.</p>
+          <p style="margin-top: var(--sp-3)">
+            <a routerLink="/seminars" class="id-btn id-btn--ghost id-btn--sm">Host one at your church</a>
+          </p>
+        </div>
       }
     </div>
-  </div>
-  @if (onlineEventsList && onlineEventsList.length > 0) {
-    <div class="events__online">
-      <h2>Online Events</h2>
-      <div class="events__online-list">
-        @for (event of onlineEventsList; track event) {
-          <a class="events__online-item" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
-            @if (event.imageUrl) {
-              <img loading="lazy" [src]="event.imageUrl.url" alt="blog">
-            }
-            <div class="content">
-              <h4><a>{{ event.eventName }}</a></h4>
-              <div class="content__details">
-                @if (event.startDate) {
-                  <span>{{ event.startDate.toString()| date: 'M/d' }} </span>
-                }
-                @if (event.endDate) {
-                  <span>- {{ event.endDate.toString() | date: 'M/d' }} </span>
-                }
-                @if (event.location) {
-                  <span>/ {{ event.location.toString() | location : 'cityState' | async }}</span>
-                }
-              </div>
-              @if (event.description) {
-                <p class="content__description">{{ event.description }}</p>
-              }
-              <a [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]" class="impact-btn impact-btn-thin">REGISTER NOW</a>
-            </div>
-          </a>
-        }
+  </section>
+
+  <!-- Online ---------------------------------------------------------------->
+  <section class="id-section id-section--surface">
+    <div class="id-container">
+      <div class="id-section-head">
+        <p class="id-section-head__eyebrow">From anywhere</p>
+        <h2 class="id-section-head__title">Online</h2>
+      </div>
+
+      @if (onlineEventsList && onlineEventsList.length) {
+        <ul class="id-event-list">
+          @for (event of onlineEventsList; track event.id) {
+            <li>
+              <a
+                class="id-event id-card"
+                style="--card-bg: var(--c-bg); padding: var(--sp-5)"
+                [routerLink]="event.isSummit
+                  ? ['/summit', (event.startDate.toString() | date: 'yyyy')]
+                  : ['/event-details', event.id]">
+                <span class="id-media id-media--wide" style="border-radius: var(--r-sm)">
+                  @if (event.imageUrl?.url) {
+                    <img loading="lazy" [src]="event.imageUrl.url" [alt]="event.eventName">
+                  }
+                </span>
+
+                <span class="id-event__body">
+                  <span class="id-tag id-tag--quiet">Online</span>
+                  <span class="id-event__title">{{ event.eventName }}</span>
+                  <span class="id-event__meta">
+                    @if (event.startDate) {
+                      <span>{{ event.startDate.toString() | date: 'MMM d' }}@if (event.endDate) { – {{ event.endDate.toString() | date: 'MMM d' }}}</span>
+                    }
+                  </span>
+                  @if (event.description) {
+                    <span class="id-event__desc">{{ event.description }}</span>
+                  }
+                </span>
+
+                <span class="id-event__cta">
+                  <span class="id-btn">Register</span>
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      } @else if (onlineEventsList) {
+        <p class="id-note id-note--empty">No online events are scheduled at the moment.</p>
+      }
+    </div>
+  </section>
+
+  <section class="id-section id-section--tight">
+    <div class="id-container">
+      <div class="id-card" style="padding: var(--card-pad)">
+        <div class="id-split" style="--split: 1.4fr auto">
+          <div class="id-stack id-stack--tight">
+            <h3 class="id-h4">Nothing fits your calendar?</h3>
+            <p class="id-muted">
+              We'll bring a Disciple-Making Church seminar to your church on a date
+              that works. Tell us what you're after and we'll come back with options.
+            </p>
+          </div>
+          <div class="id-cluster">
+            <a routerLink="/seminars" class="id-btn">Host a seminar</a>
+            <a routerLink="/contact" class="id-btn id-btn--ghost">Ask a question</a>
+          </div>
+        </div>
       </div>
     </div>
-  }
-  @if (isSummitPosted) {
-    <app-disciple-making-summit-banner></app-disciple-making-summit-banner>
-  }
+  </section>
+
   <app-subscribe-area></app-subscribe-area>
-</div>
+</main>
 
 <app-footer></app-footer>

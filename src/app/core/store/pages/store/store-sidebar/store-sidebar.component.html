@@ -1,57 +1,74 @@
-<div class="sidebar">
-  <div class="sidebar__search">
-    <form (submit)="onSearch(searchInput.value)">
+<!-- On narrow screens the whole rail collapses into one disclosure so it doesn't
+     push the products below the fold; from 900px up it is always open. -->
+<aside class="id-rail">
+  <div class="id-rail__search">
+    <form (submit)="onSearch(searchInput.value)" role="search">
+      <label class="id-sr-only" for="storeSearch">Search products</label>
       <input
-        type="text"
+        id="storeSearch"
+        class="id-input"
+        type="search"
         #searchInput
-        placeholder="Search..."
-        (input)="onSearchInputChange(searchInput.value)"
-        />
-        <button type="submit"><i class="far fa-search"></i></button>
-      </form>
-    </div>
-    <div class="sidebar__accordion">
-      <div class="sidebar__accordion-header">
-        <h3>Product Categories</h3>
-        <button type="button" class="clear-filter-button" (click)="onViewAllProducts()">View All</button>
-      </div>
-      <div class="sidebar__accordion-content">
-        <div class="accordion">
-          @for (item of categoryWithProducts; track item; let i = $index) {
-            <div class="accordion-item" [class.accordion-item--opened]="openIndex === i">
-              <button
-                type="button"
-                class="accordion-item__title"
-                [class.accordion-item__title--opened]="openIndex === i"
-                (click)="toggleIndex(i)">
-                <span class="accordion__header">{{ item?.category?.tag }}</span>
-                <i class="fas" [class.fa-chevron-up]="openIndex === i" [class.fa-chevron-down]="openIndex !== i"></i>
-              </button>
-              @if (openIndex === i) {
-                <div class="accordion-item__body">
-                  <div class="accordion__tags-container">
-                    @for (product of item?.displayProducts; track product) {
-                      <button
-                        type="button"
-                        (click)="onItemClick(product?.id)">
-                        {{ product?.title }}
-                      </button>
-                    }
-                    @if (item?.products?.length > 10) {
-                      <span class="product">... and more!</span>
-                    }
-                    <button
-                      type="button"
-                      class="view-all"
-                      (click)="onCategoryClick(item?.category)">
-                      VIEW ALL
-                    </button>
-                  </div>
-                </div>
-              }
-            </div>
-          }
-        </div>
-      </div>
-    </div>
+        placeholder="Search products…"
+        (input)="onSearchInputChange(searchInput.value)">
+    </form>
   </div>
+
+  <div>
+    <div class="id-cluster id-cluster--between" style="margin-bottom: var(--sp-2)">
+      <h2 class="id-rail__title" style="margin: 0; border: 0; padding: 0">Categories</h2>
+      <button type="button" class="id-btn id-btn--quiet" style="font-size: var(--t-xs)" (click)="onViewAllProducts()">
+        View all
+      </button>
+    </div>
+
+    @if (categoryWithProducts?.length) {
+      <ul class="id-rail__list">
+        @for (item of categoryWithProducts; track item.category.id; let i = $index) {
+          <li>
+            <details class="id-rail__group" [open]="openIndex === i">
+              <summary class="id-rail__link" (click)="toggleIndex(i)">
+                <span>{{ item?.category?.tag }}</span>
+                <span class="id-rail__count">{{ item?.products?.length || 0 }}</span>
+              </summary>
+
+              <ul class="id-rail__sub">
+                @for (product of item?.displayProducts; track product.id) {
+                  <li>
+                    <button type="button" class="id-rail__sublink" (click)="onItemClick(product?.id)">
+                      {{ product?.title }}
+                    </button>
+                  </li>
+                }
+                @if (item?.products?.length > 10) {
+                  <li>
+                    <button type="button" class="id-rail__sublink id-rail__sublink--all" (click)="onCategoryClick(item?.category)">
+                      View all {{ item.products.length }} →
+                    </button>
+                  </li>
+                }
+              </ul>
+            </details>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="id-muted" style="font-size: var(--t-sm)">Loading categories…</p>
+    }
+  </div>
+
+  @if (showSeriesInSidebar && seriesItems?.length) {
+    <div>
+      <h2 class="id-rail__title">Series</h2>
+      <ul class="id-rail__list">
+        @for (series of seriesItems; track series.id) {
+          <li>
+            <button type="button" class="id-rail__link" (click)="seriesFilterEvent.emit(series)">
+              <span>{{ series.name }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</aside>
