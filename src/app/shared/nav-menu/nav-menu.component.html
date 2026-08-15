@@ -1,103 +1,53 @@
-<nav>
-  <ul>
-    @for (item of menuItems; track item; let index = $index) {
-      <li [ngClass]="getMenuClasses(item)">
-        @if (item.visible && !item.external) {
-          @if (!hasQuery(item.link)) {
-            <a [routerLink]="item.link">{{ item.title }}</a>
-          }
-          @if (hasQuery(item.link)) {
+<nav class="id-nav" aria-label="Primary">
+  <ul class="id-nav__list">
+    @for (item of menuItems; track item.title) {
+      @if (item.visible) {
+        <li class="id-nav__item">
+          @if (item.external) {
             <a
-              [attr.href]="item.link"
-              (click)="go($event, item.link)"
-              >
+              class="id-nav__link id-nav__link--external"
+              [href]="item.link"
+              target="_blank"
+              rel="noopener">{{ item.title }}</a>
+          } @else if (item.hasDropdown) {
+            <!-- A group heading with children. It still navigates on click for
+                 the ones that have their own landing page; the submenu opens on
+                 hover and on keyboard focus (see :focus-within in _shell.scss),
+                 so it is reachable without a pointer. -->
+            <a
+              class="id-nav__link"
+              [routerLink]="item.link || null"
+              routerLinkActive="is-active"
+              [attr.aria-haspopup]="true">
               {{ item.title }}
+              <span class="id-nav__caret" aria-hidden="true"></span>
             </a>
+            <ul class="id-nav__sub">
+              @for (child of item.dropdownItems; track child.title) {
+                @if (child.visible) {
+                  <li>
+                    @if (child.external) {
+                      <a [href]="child.link" target="_blank" rel="noopener">{{ child.title }} ↗</a>
+                    } @else if (hasQuery(child.link)) {
+                      <a [attr.href]="child.link" (click)="go($event, child.link)">{{ child.title }}</a>
+                    } @else {
+                      <a [routerLink]="child.link" routerLinkActive="is-active">{{ child.title }}</a>
+                    }
+                  </li>
+                }
+              }
+            </ul>
+          } @else if (hasQuery(item.link)) {
+            <a class="id-nav__link" [attr.href]="item.link" (click)="go($event, item.link)">{{ item.title }}</a>
+          } @else {
+            <a
+              class="id-nav__link"
+              [routerLink]="item.link"
+              routerLinkActive="is-active"
+              [routerLinkActiveOptions]="{ exact: item.link === '/' }">{{ item.title }}</a>
           }
-        }
-        @if (item.visible && item.external) {
-          <a
-            [href]="item.link"
-            target="_blank"
-            style="color: #4b92fe;"
-            >
-            {{ item.title }}
-          </a>
-        }
-        @if (item.hasDropdown && !item.megamenu) {
-          <ul class="submenu transition-3">
-            @for (menu of item.dropdownItems; track menu; let index = $index) {
-              <li>
-                @if (menu.visible && !menu.external) {
-                  @if (!hasQuery(menu.link)) {
-                    <a [routerLink]="menu.link">{{ menu.title }}</a>
-                  }
-                  @if (hasQuery(menu.link)) {
-                    <a
-                      [attr.href]="menu.link"
-                      (click)="go($event, menu.link)"
-                      >
-                      {{ menu.title }}
-                    </a>
-                  }
-                }
-                @if (menu.visible && menu.external) {
-                  <a
-                    [href]="menu.link"
-                    target="_blank"
-                    style="color: #4b92fe;"
-                    >
-                    {{ menu.title }}
-                  </a>
-                }
-              </li>
-            }
-          </ul>
-        }
-        @if (item.hasDropdown && item.megamenu) {
-          <ul
-            class="submenu transition-3"
-            [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap-light.PNG?alt=media&token=8801ee61-cd27-47a4-970b-285916eb22af)'"
-            >
-            @for (m_mnu of item.dropdownItems; track m_mnu; let index = $index) {
-              <li class="has-dropdown">
-                @if (item.visible) {
-                  @if (!hasQuery(m_mnu.link)) {
-                    <a [routerLink]="m_mnu.link">{{ m_mnu.title }}</a>
-                  }
-                  @if (hasQuery(m_mnu.link)) {
-                    <a
-                      [attr.href]="m_mnu.link"
-                      (click)="go($event, m_mnu.link)"
-                      >
-                      {{ m_mnu.title }}
-                    </a>
-                  }
-                }
-                <ul>
-                  @for (m of m_mnu.dropdownMenu; track m; let index = $index) {
-                    <li>
-                      @if (m.visible) {
-                        @if (!hasQuery(m.link)) {
-                          <a [routerLink]="m.link">{{ m.title }}</a>
-                        }
-                        @if (hasQuery(m.link)) {
-                          <a
-                            [attr.href]="m.link"
-                            (click)="go($event, m.link)"
-                            >
-                            {{ m.title }}
-                          </a>
-                        }
-                      }
-                    </li>
-                  }
-                </ul>
-              </li>
-            }
-          </ul>
-        }
-      </li>
+        </li>
+      }
     }
   </ul>
 </nav>

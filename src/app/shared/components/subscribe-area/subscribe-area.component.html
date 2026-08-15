@@ -1,58 +1,62 @@
-<section class="subscribe__area pb-20">
-  <div class="container-img pb-60" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fnewsletter-banner.PNG?alt=media&token=928f4a44-6a3a-420b-8bf2-9aa127c1f48a)'">
-    <div class="subscribe__inner pt-40 pr-20 pl-20">
-      <div class="row justify-content-center text-center">
-        <h2 class="subscribe__title">STAY IN THE LOOP</h2>
-        <p class="subscribe__description">Join our mailing list and receive the latest news and updates from our team.</p>
-        <div class="subscribe__content text-center pt-30">
-          <div class="subscribe__form">
-            <form (ngSubmit)="handleFormSubmit()">
-              <div class="row d-flex justify-content-center">
-                <div class="col-lg-3 col-xs-12">                  
-                  <input required type="name" name="name" [(ngModel)]="subscription.firstName" placeholder="First Name">
-                </div>
-                <div class="col-lg-3">
-                  <input required type="name" name="name" [(ngModel)]="subscription.lastName" placeholder="Last Name">
-                </div>
-              </div>
-              <div class="row d-flex justify-content-center">
-                <div class="col-lg-6">
-                  <input required type="email" name="email" [(ngModel)]="subscription.email" placeholder="Email">
-                </div>
-              </div>
-              <div class="row d-flex justify-content-center">
-                <div class="col-lg-6">
-                  <button class="impact-btn impact-btn-blue" type="submit">subscribe</button>
-                </div>
-              </div>
-            </form>
-            <!-- <form (ngSubmit)="handleFormSubmit()">
-              <div class="row">
-                <div class="col-3"></div>
-                <div class="col-3">
-                  <input required type="name" name="name" [(ngModel)]="subscription.firstName" placeholder="First Name">
-                </div>
-                <div class="col-3">
-                  <input required type="name" name="name" [(ngModel)]="subscription.lastName" placeholder="Last Name">
-                </div>
-                <div class="col-3"></div>
-              </div>
-              <div class="row">
-                <div class="col-3"></div>
-                <div class="col-6">
-                  <input required type="email" name="email" [(ngModel)]="subscription.email" placeholder="Email">
-                </div>
-                <div class="col-3"></div>
-              </div>
-              <div class="row">
-                <div class="col-12 text-center">
-                  <button class="subscribe__button os-btn os-btn-2 os-btn-3" type="submit">subscribe</button>
-                </div>
-              </div>
-            </form> -->
-          </div>
-        </div>
+<!-- The single newsletter ask on any page. The footer used to repeat the same
+     three fields immediately below this band; it now links here instead. -->
+<section class="id-section id-section--inverted id-subscribe">
+  <div class="id-container">
+    <div class="id-split" style="--split: 1fr 1.1fr">
+      <div class="id-stack id-stack--tight">
+        <p class="id-label" style="color: var(--c-accent)">Newsletter</p>
+        <h2 class="id-h3">Stay in the loop</h2>
+        <p style="color: var(--c-inv-ink-muted); max-width: 40ch">
+          Join over 1,000 people who get free and fresh disciple-making content
+          delivered automatically each time we publish.
+        </p>
       </div>
+
+      <form class="id-stack id-stack--tight" (ngSubmit)="handleFormSubmit()">
+        <div class="id-subscribe__form">
+          <label class="id-sr-only" for="sub-first">First name</label>
+          <input
+            id="sub-first"
+            class="id-input"
+            required
+            type="text"
+            name="firstName"
+            autocomplete="given-name"
+            [(ngModel)]="subscription.firstName"
+            placeholder="First name">
+
+          <label class="id-sr-only" for="sub-last">Last name</label>
+          <input
+            id="sub-last"
+            class="id-input"
+            required
+            type="text"
+            name="lastName"
+            autocomplete="family-name"
+            [(ngModel)]="subscription.lastName"
+            placeholder="Last name">
+
+          <span></span>
+
+          <label class="id-sr-only" for="sub-email">Email address</label>
+          <input
+            id="sub-email"
+            class="id-input"
+            required
+            type="email"
+            name="email"
+            autocomplete="email"
+            [(ngModel)]="subscription.email"
+            placeholder="Email address"
+            style="grid-column: 1 / -1">
+
+          <button class="id-btn id-btn--lg" type="submit" style="grid-column: 1 / -1">Subscribe</button>
+        </div>
+
+        <p class="id-label" style="color: var(--c-inv-ink-muted); text-transform: none; letter-spacing: 0">
+          We send roughly twice a month. Unsubscribe any time.
+        </p>
+      </form>
     </div>
   </div>
 </section>

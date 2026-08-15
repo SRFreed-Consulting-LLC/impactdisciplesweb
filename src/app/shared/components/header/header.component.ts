@@ -23,13 +23,28 @@ export class HeaderComponent {
   @Input() buttonIcon3: string;
   @Input() buttonClick = false;
   @Input() buttonClick2 = false;
+
+  /** Shorter banner for pages that lead with content rather than a picture. */
+  @Input() compact = false;
+
   @Output() buttonClickAction = new EventEmitter<void>();
   @Output() buttonClickAction2 = new EventEmitter<void>();
 
-  onButtonClick () {
+  // The old template rendered an empty `.buttons` div on every page that
+  // passed no button at all, which left a gap under the title.
+  get hasButtons(): boolean {
+    return !!(
+      this.buttonLink || this.buttonLink2 || this.buttonLink3 ||
+      (this.buttonClick && this.buttonText) ||
+      (this.buttonClick2 && this.buttonText2)
+    );
+  }
+
+  onButtonClick() {
     this.buttonClickAction.emit();
   }
-  onButtonClick2 () {
+
+  onButtonClick2() {
     this.buttonClickAction2.emit();
   }
 }

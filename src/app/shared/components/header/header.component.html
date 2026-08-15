@@ -1,42 +1,58 @@
-<div class="impact-header" [style.backgroundImage]="'url(' + backgroundUrl + ')'">
-  <div class="impact-header__content">
-    @if (pretitle) {
-      <p appAnimate="fadeInUp" class="pretitle">{{ pretitle }}</p>
-    }
-    @if (title) {
-      <p appAnimate="fadeInUpTwo" class="title">{{ title }}</p>
-    }
-    @if (description) {
-      <p appAnimate="fadeInUpThree" class="description">{{ description }}</p>
-    }
-    @if (showHr) {
-      <hr appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w100">
-    }
-    <div class="buttons">
-      @if (buttonLink && !buttonClick) {
-        <a appAnimate="fadeInUpFour" [href]="buttonLink" class="impact-btn">
-          <i [ngClass]="buttonIcon ? buttonIcon : 'd-none'"></i>
-          {{ buttonText }}
-        </a>
+<!-- Page hero. Keeps the same @Input surface as before so the twenty-odd pages
+     that already use <app-header> don't all have to change at once; only the
+     markup and styling are new. `compact` gives pages that lead with content
+     rather than with a picture a shorter banner. -->
+<section
+  class="id-hero"
+  [class.id-hero--on-image]="!!backgroundUrl"
+  [class.id-hero--compact]="compact">
+  @if (backgroundUrl) {
+    <div class="id-hero__bg" [style.backgroundImage]="'url(' + backgroundUrl + ')'" role="presentation"></div>
+    <div class="id-hero__scrim" role="presentation"></div>
+  }
+
+  <div class="id-container">
+    <div class="id-hero__inner">
+      @if (pretitle) {
+        <p class="id-label id-section-head__eyebrow" appAnimate="fadeInUp">{{ pretitle }}</p>
       }
-      @if (buttonLink2 && !buttonClick2) {
-        <a appAnimate="fadeInUpFour" [href]="buttonLink2" class="impact-btn">
-          <i [ngClass]="buttonIcon2 ? buttonIcon2 : 'd-none'"></i>
-          {{ buttonText2 }}
-        </a>
+      @if (title) {
+        <h1 class="id-hero__title" appAnimate="fadeInUpTwo">{{ title }}</h1>
       }
-      @if (buttonLink3) {
-        <a appAnimate="fadeInUpFour" [href]="buttonLink3" class="impact-btn">
-          <i [ngClass]="buttonIcon3 ? buttonIcon3 : 'd-none'"></i>
-          {{ buttonText3 }}
-        </a>
+      @if (description) {
+        <p class="id-hero__sub" appAnimate="fadeInUpThree">{{ description }}</p>
       }
-      @if (buttonClick && !buttonLink) {
-        <a appAnimate="fadeInUpFour" (click)="onButtonClick()" (keydown.enter)="onButtonClick()" (keydown.space)="onButtonClick()" tabindex="0" role="button" class="impact-btn">{{ buttonText }}</a>
-      }
-      @if (buttonClick2 && !buttonLink2) {
-        <a appAnimate="fadeInUpFour" (click)="onButtonClick2()" (keydown.enter)="onButtonClick2()" (keydown.space)="onButtonClick2()" tabindex="0" role="button" class="impact-btn">{{ buttonText2 }}</a>
+
+      @if (hasButtons) {
+        <div class="id-cluster" appAnimate="fadeInUpFour" style="margin-top: var(--sp-2)">
+          @if (buttonLink && !buttonClick) {
+            <a [href]="buttonLink" class="id-btn id-btn--lg">
+              @if (buttonIcon) { <i [ngClass]="buttonIcon" aria-hidden="true"></i> }
+              {{ buttonText }}
+            </a>
+          }
+          @if (buttonClick && !buttonLink) {
+            <button type="button" class="id-btn id-btn--lg" (click)="onButtonClick()">{{ buttonText }}</button>
+          }
+
+          @if (buttonLink2 && !buttonClick2) {
+            <a [href]="buttonLink2" class="id-btn id-btn--lg id-btn--ghost">
+              @if (buttonIcon2) { <i [ngClass]="buttonIcon2" aria-hidden="true"></i> }
+              {{ buttonText2 }}
+            </a>
+          }
+          @if (buttonClick2 && !buttonLink2) {
+            <button type="button" class="id-btn id-btn--lg id-btn--ghost" (click)="onButtonClick2()">{{ buttonText2 }}</button>
+          }
+
+          @if (buttonLink3) {
+            <a [href]="buttonLink3" class="id-btn id-btn--lg id-btn--ghost">
+              @if (buttonIcon3) { <i [ngClass]="buttonIcon3" aria-hidden="true"></i> }
+              {{ buttonText3 }}
+            </a>
+          }
+        </div>
       }
     </div>
   </div>
-</div>
+</section>

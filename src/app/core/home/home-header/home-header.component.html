@@ -1,37 +1,36 @@
-<div class="header">
-  <div [ngClass]="['header__area', sticky ? 'sticky' : '']">
-    <div class="header__content">
-      <div class="header__content-logo">
-        <a routerLink="/">
-          <img
-            [src]="impactDisciplesInfo.logo"
-            alt="logo"
-            height="60px"
-            width="65px"
-            >
-        </a>
-      </div>
-      <div class="header__content-main d-none d-lg-block">
-        <app-nav-menu></app-nav-menu>
-      </div>
-      <div class="header__content-cart">
-        <ul>
-          <li>
-            <a class="cursor-pointer" (click)="openCartDrawer()" (keydown.enter)="openCartDrawer()" (keydown.space)="openCartDrawer()" tabindex="0" role="button">
-              <i class="ion-bag"></i> Cart
-              <span>({{ cart.quantity }}) — {{ cart.total | currency }}</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="header__mobile-menu-btn d-lg-none">
-        <a (click)="utilsService.handleOpenMobileMenu()" (keydown.enter)="utilsService.handleOpenMobileMenu()" (keydown.space)="utilsService.handleOpenMobileMenu()" tabindex="0" role="button" class="mobile-menu-toggle cursor-pointer">
-          <i class="fas fa-bars"></i>
-        </a>
-      </div>
+<header class="id-header">
+  <div class="id-container id-header__inner">
+    <a routerLink="/" class="id-header__logo" aria-label="Impact Discipleship Ministries — home">
+      <img [src]="impactDisciplesInfo.logo" alt="" width="56" height="56">
+      <span class="id-header__wordmark">Impact<br>Discipleship</span>
+    </a>
+
+    <span class="id-header__spacer"></span>
+
+    <app-nav-menu></app-nav-menu>
+
+    <div class="id-header__actions">
+      <button
+        type="button"
+        class="id-cart-btn"
+        (click)="openCartDrawer()"
+        [attr.aria-label]="'Open cart, ' + cart.quantity + ' items, ' + (cart.total | currency)">
+        <i class="ion-bag" aria-hidden="true"></i>
+        <span class="id-cart-btn__count">{{ cart.quantity }}</span>
+        <span class="id-cart-btn__total">{{ cart.total | currency }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="id-burger"
+        aria-label="Open menu"
+        [attr.aria-expanded]="utilsService.openMobileMenus"
+        aria-controls="site-drawer"
+        (click)="utilsService.handleOpenMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
-</div>
+</header>
 
-<!-- mobile offcanvas start -->
 <app-offcanvas></app-offcanvas>

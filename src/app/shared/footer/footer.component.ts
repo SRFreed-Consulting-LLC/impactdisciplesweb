@@ -13,6 +13,9 @@ import { ToastService } from 'src/app/shared/utils/services/toast.service';
 export class FooterComponent {
   public impactDisciplesInfo = impactDisciplesInfo;
 
+  // The copyright line was hardcoded to 2024 and had gone stale.
+  public readonly year = new Date().getFullYear();
+
   subscription: SubscriptionModel = {... new SubscriptionModel(), type: 'newsletter'};
 
   constructor(private subscriptionService: SubscriptionService, private toastService: ToastService){}
