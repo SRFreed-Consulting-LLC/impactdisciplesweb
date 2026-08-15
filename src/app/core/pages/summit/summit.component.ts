@@ -27,6 +27,20 @@ export class SummitComponent implements OnInit, OnDestroy {
   public minutes = 0;
   public seconds = 0;
 
+  /** Only true while there is actually something ahead to count down to. */
+  public counting = false;
+
+  /**
+   * False until the Firestore lookup has come back, so the template can tell
+   * "still loading" apart from "there is no published summit for this year".
+   * Without it, /summit/2027 rendered its not-found state as a bare promo
+   * image with no date, no explanation and no way to register.
+   */
+  public loaded = false;
+
+  /** The year segment from the route, used in the empty state's copy. */
+  public year: number = new Date().getFullYear();
+
   isPlaying = false;
 
   private intervalId: number;
@@ -36,6 +50,8 @@ export class SummitComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap.subscribe(async params => {
       const year = Number(params.get('year'));
+      this.year = year || new Date().getFullYear();
+      this.loaded = false;
 
       const query = [
         // Was comparing startDate (a Firestore Timestamp field) against a
@@ -50,15 +66,19 @@ export class SummitComponent implements OnInit, OnDestroy {
       ]
 
       this.summit = await this.eventService.queryAllByMultiValue(query).then(events => {
-        if(events && events.length == 1){
-          return events[0]
-        } else {
-          console.error('No summit event found for ' + year);
-
-          return null;
+        // `events.length == 1` meant that a year with more than one published
+        // summit fell through to the not-found state. Take the earliest match
+        // instead; the year filter already narrows it to one season.
+        if (events?.length) {
+          return [...events].sort((a, b) =>
+            new Date(a.startDate.toString()).getTime() - new Date(b.startDate.toString()).getTime()
+          )[0];
         }
 
+        return null;
       });
+
+      this.loaded = true;
 
       if(this.summit?.agendaItems) {
         this.groupAgendaItemsByMonthAndDate(this.summit.agendaItems);
@@ -80,21 +100,39 @@ export class SummitComponent implements OnInit, OnDestroy {
   }
 
   private startCountdown(): void {
-    const endDate = new Date(this.summit?.startDate.toString()).getTime();
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = undefined;
+    }
 
-    this.intervalId = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = endDate - now;
+    if (!this.summit?.startDate) {
+      this.counting = false;
+      return;
+    }
 
-      if (distance < 0) {
+    const target = new Date(this.summit.startDate.toString()).getTime();
+
+    const tick = () => {
+      const distance = target - Date.now();
+
+      if (distance <= 0) {
+        // The summit has started or is over. A clock reading all zeroes looks
+        // like a bug, so the template swaps it for the date instead.
+        this.counting = false;
         clearInterval(this.intervalId);
-      } else {
-        this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        this.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        this.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        this.seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        this.intervalId = undefined;
+        return;
       }
-    }, 1000);
+
+      this.counting = true;
+      this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      this.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      this.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      this.seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    };
+
+    tick();
+    this.intervalId = setInterval(tick, 1000) as unknown as number;
   }
 
   prevSlide() {

@@ -75,6 +75,22 @@
   }
 }
 
+// A ghost button takes its colour from the page ink, which is invisible when
+// it sits on hero photography or an inverted band. Both contexts are known, so
+// the button adapts rather than every caller having to remember a modifier.
+.id-hero--on-image .id-btn--ghost,
+.id-section--inverted .id-btn--ghost,
+.id-slide .id-btn--ghost {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+
+  &:hover {
+    color: var(--c-ink);
+    background: #fff;
+    border-color: #fff;
+  }
+}
+
 .id-btn--on-dark {
   background: var(--c-inv-ink);
   border-color: var(--c-inv-ink);

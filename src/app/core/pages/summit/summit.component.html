@@ -1,191 +1,269 @@
 <app-home-header></app-home-header>
 
-@if (!summit) {
-  <div class="summit page-wrapper">
-    <main class="grey-bg">
-      <div class="summit__container container">
-        <!--SUMMIT HEADER -->
-        <img class="summit__header" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Summit%2027%20Event.png?alt=media&token=72af5029-2943-42eb-b9b7-f2c2a7066645" alt="Disciple-Making Summit">
-      </div>
-    </main>
-  </div>
-}
-<!-- SUMMITEQUIPPING GROUPS -->
-@if (summit) {
-  <div class="summit page-wrapper">
-    <main class="grey-bg">
-      <div class="summit__container container">
-        <!--SUMMIT HEADER -->
-        <img class="summit__header" [src]="summit?.imageUrl?.url" [alt]="summit?.eventName || 'Disciple-Making Summit'">
-        <div class="summit__register-button">
-          <a  [routerLink]="['/event-details', summit?.id]" class="impact-btn">REGISTER NOW</a>
+<main class="id-main">
+  @if (!loaded) {
+    <div class="id-section id-center">
+      <span class="id-spinner" role="status" aria-label="Loading the Summit"></span>
+    </div>
+  } @else if (!summit) {
+    <!-- No published summit for this year. The live site rendered a bare promo
+         image here with no date, no explanation and no way to register, which
+         is what /summit/2027 does today because the 2027 event exists but is
+         still inactive. -->
+    <section class="id-hero id-hero--on-image"
+      style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fevents-header-DMS.PNG?alt=media&token=c55ab61c-e442-47fd-8543-37e2ba861dfa); background-size: cover; background-position: center">
+      <span class="id-hero__scrim" aria-hidden="true"></span>
+      <div class="id-container">
+        <div class="id-hero__inner">
+          <p class="id-label id-section-head__eyebrow">Disciple-Making Summit</p>
+          <h1 class="id-hero__title">{{ year }} details are on the way</h1>
+          <p class="id-hero__sub">
+            We haven't published the {{ year }} programme yet. Leave your email and
+            we'll tell you the moment registration opens.
+          </p>
+          <div class="id-cluster">
+            <a routerLink="/newsletter" class="id-btn id-btn--lg">Tell me when it opens</a>
+            <a routerLink="/events" class="id-btn id-btn--lg id-btn--ghost">See other events</a>
+          </div>
         </div>
-        <!--SUMMIT INFO-->
-        <section class="summit__info mb-30">
-          <div class="row summit__info-container">
-            <div class="col-xl-4 col-md-4 summit__info-text">
-              <i class="fa-solid fa-calendar-days"></i>
-              {{ summit?.startDate?.toString() | date: 'MMMM d'}} - {{ summit?.endDate.toString() | date: 'MMMM d'}}, {{ summit?.startDate.toString() | date: 'yyyy'}}
-            </div>
-            <div class="col-xl-4 col-md-4 summit__info-text">
-              <i class="fa-solid fa-location-dot"></i>
-              <a [href]="'https://www.google.com/maps/search/?api=1&query=' + (summit?.location?.toString() | location: 'address' | async)" target="_blank">
-                {{ summit?.location?.toString() | location: 'address' | async }}
-              </a>
-            </div>
-            <div class="col-xl-4 col-md-4 summit__info-text">
-              <i class="fa-solid fa-clock"></i>
-              Check-In: {{ summit?.checkIn?.toString() | timeFormat }} | Start Time: {{ summit?.startDate.toString() | date: 'h:mm a' }}
-            </div>
-          </div>
-        </section>
-        <!--SUMMIT COUNTDOWN-->
-        <section class="mt-80 mb-60">
-          <div class="col-xl-12">
-            <div class="col-xl-12 countdown-timer mb-30">
-              <div class="time-part">
-                <span class="number">{{ days }}</span>
-                <span class="label">DAYS</span>
-              </div>
-              <span class="colon">:</span>
-              <div class="time-part">
-                <span class="number">{{ hours }}</span>
-                <span class="label">HOURS</span>
-              </div>
-              <span class="colon">:</span>
-              <div class="time-part">
-                <span class="number">{{ minutes }}</span>
-                <span class="label">MINUTES</span>
-              </div>
-              <span class="colon">:</span>
-              <div class="time-part">
-                <span class="number">{{ seconds }}</span>
-                <span class="label">SECONDS</span>
-              </div>
-            </div>
-          </div>
-        </section>
-        <!--SUMMIT DESCRIPTION AND VIDEO-->
-        <div class="banner__area-2 mb-80">
-          <div class="container-fluid p-0">
-            <div class="row g-0 justify-content-center">
-              <div class="story__text-area col-xl-6 col-lg-6 d-flex">
-                <h4 class="story__title mb-10">REGISTER FOR <strong>SUMMIT</strong></h4>
-                <p>
-                  From its start in 2021, the Disciple-Making Summit has had a singular mission—calling disciple-makers, leaders, and pastors across nation and around the world to come together to focus on our main purpose. Jesus told us in Matthew 28:19 to “Go and make disciples…” We are here to do just that.
-                  <br>
-                    <br>
-                      Join the movement and come together with us for one weekend and learn more about how you can make and multiply disciples of Jesus.
-                      <br>
-                        <br>
-                          This is a weekend for everyone – bring yourself, your small group, your youth group, your church staff – we promise that you will leave inspired and more equipped to make disciples in the coming year.
-                        </p>
-                      </div>
-                      <div class="col-xl-5 col-lg-5 mt-80">
-                        <youtube-player [videoId]="'MUPDplOSOR4'" [width]="458" [height]="224" suggestedQuality="highres" [playerVars]="{'autoplay': 0}"></youtube-player>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!--SUMMIT COACHES-->
-                <section class="mb-80">
-                  <div class="row justify-content-around speakers">
-                    <div class="col-lg-12">
-                      <h3><strong>FEATURED SPEAKERS</strong></h3>
-                      <div class="slider-container mt-10">
-                        <div class="slider" [style.transform]="getTransform()">
-                          @for (coach of coaches; track coach) {
-                            <div class="slide teams-list__team">
-                              <div class="teams-list__team-image fix">
-                                <a [routerLink]="['/team-details', coach.id]" class="w-img">
-                                  <img loading="lazy" class="transform" [src]="coach.photoUrl.url" [alt]="coach.firstName">
-                                </a>
-                              </div>
-                              <div class="teams-list__content">
-                                <h4><a [routerLink]="['/team-details', coach.id]">{{ coach.firstName }} {{ coach.lastName }}</a></h4>
-                                <div class="teams-list__meta">
-                                  <span>{{ coach.title }}</span>
-                                </div>
-                                @if (coach.url) {
-                                  <div>
-                                    <a href="{{coach.url}}" class="coach-link">Link to page</a>
-                                  </div>
-                                }
-                              </div>
-                            </div>
-                          }
-                        </div>
-                        <button class="prev" (click)="prevSlide()">&#10094;</button>
-                        <button class="next" (click)="nextSlide()">&#10095;</button>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-                <hr>
-                  <!--SUMMIT FAQ-->
-                  <section class="faq">
-                    <div class="row justify-content-around mt-50">
-                      <div class="col-lg-7">
-                        <div class="event-details__left">
-                          @if (summit?.agendaItems) {
-                            <div class="your-order-table table-responsive">
-                              @for (monthGroup of groupedAgendaItems; track monthGroup) {
-                                <h3 class="mt-30">Agenda -<strong> {{ monthGroup.monthYear }}</strong></h3>
-                                <table class="agenda">
-                                  <tbody>
-                                    @for (dayGroup of monthGroup.days; track dayGroup) {
-                                      <tr>
-                                        <div class="agenda__date">
-                                          <div>{{ dayGroup.date | date: 'EEE' }}</div>
-                                          <div class="agenda__date-number">{{ dayGroup.date | date: 'd' }}</div>
-                                        </div>
-                                        <td>
-                                          @for (item of dayGroup.items; track item) {
-                                            <tr class="row" class="agenda__group">
-                                              @if (item.isCourse) {
-                                                <td class="col-8">{{ item.course | courseName | async }}</td>
-                                              }
-                                              @if (!item.isCourse) {
-                                                <td class="col-8">{{ item.text }}</td>
-                                              }
-                                              <td class="agenda__group-time col-4">{{ item.startDate | date: 'shortTime'}} - {{ item.endDate | date: 'shortTime' }}</td>
-                                            </tr>
-                                          }
-                                        </td>
-                                      </tr>
-                                    }
-                                  </tbody>
-                                </table>
-                              }
-                            </div>
-                          } @else {
-                            <h3>Agenda</h3>
-                            <div class="no-agenda mt-30">
-                              Check back for more updates!
-                            </div>
-                          }
-                        </div>
-                      </div>
-                      <div class="col-lg-4 justify-content-center">
-                        <div class="faq__column">
-                          <h3 class="faq__title"><strong>FAQs</strong></h3>
-                          <hr>
-                            @for (faq of summit?.faqList; track faq) {
-                              <div class="faq__container">
-                                <i class="fa-solid fa-angles-right faq__icon"></i>
-                                <div>
-                                  <strong class="faq__question">{{ faq.question }}</strong>
-                                  <p class="faq__answer" [innerHTML]="faq.answer"></p>
-                                </div>
-                              </div>
-                            }
-                          </div>
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </main>
-              </div>
-            }
+      </div>
+    </section>
 
-            <app-footer></app-footer>
+    <section class="id-section">
+      <div class="id-container id-container--narrow id-stack">
+        <h2 class="id-h3">What the Summit is</h2>
+        <p class="id-lead">
+          Since 2021 the Disciple-Making Summit has called disciple-makers, leaders
+          and pastors together around one purpose — going and making disciples.
+        </p>
+        <p>
+          Two days, four main sessions and twenty-one breakouts. Bring yourself,
+          your small group, your youth group or your whole church staff.
+        </p>
+        <p>
+          <a routerLink="/summit/2026" class="id-btn id-btn--ghost">Look at last year's programme</a>
+        </p>
+      </div>
+    </section>
+
+    <app-subscribe-area></app-subscribe-area>
+  } @else {
+    <!-- Hero ---------------------------------------------------------------->
+    <section class="id-hero id-hero--on-image">
+      @if (summit.imageUrl?.url) {
+        <div class="id-hero__bg" [style.backgroundImage]="'url(' + summit.imageUrl.url + ')'" role="presentation"></div>
+      }
+      <div class="id-hero__scrim" role="presentation"></div>
+
+      <div class="id-container">
+        <div class="id-hero__inner">
+          <p class="id-label id-section-head__eyebrow">
+            {{ summit.startDate.toString() | date: 'MMMM d' }} –
+            {{ summit.endDate.toString() | date: 'MMMM d, y' }}
+          </p>
+          <h1 class="id-hero__title">{{ summit.eventName }}</h1>
+          <a [routerLink]="['/event-details', summit.id]" class="id-btn id-btn--lg">Register now</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Facts + countdown ---------------------------------------------------->
+    <section class="id-section id-section--tight">
+      <div class="id-container id-stack">
+        <div class="id-factbar">
+          <div class="id-factbar__item">
+            <span class="id-label">Dates</span>
+            <span>
+              {{ summit.startDate.toString() | date: 'MMMM d' }} –
+              {{ summit.endDate.toString() | date: 'MMMM d, y' }}
+            </span>
+          </div>
+          <div class="id-factbar__item">
+            <span class="id-label">Venue</span>
+            <a
+              [href]="'https://www.google.com/maps/search/?api=1&query=' + (summit.location?.toString() | location: 'address' | async)"
+              target="_blank"
+              rel="noopener">
+              {{ summit.location?.toString() | location: 'address' | async }}
+            </a>
+          </div>
+          <div class="id-factbar__item">
+            <span class="id-label">Doors</span>
+            <span>
+              Check-in {{ summit.checkIn?.toString() | timeFormat }} ·
+              Starts {{ summit.startDate.toString() | date: 'h:mm a' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="id-cluster id-cluster--between">
+          @if (counting) {
+            <div class="id-countdown" role="timer" aria-label="Time until the Summit">
+              <div class="id-countdown__part">
+                <span class="id-countdown__num">{{ days }}</span>
+                <span class="id-countdown__label">Days</span>
+              </div>
+              <div class="id-countdown__part">
+                <span class="id-countdown__num">{{ hours }}</span>
+                <span class="id-countdown__label">Hours</span>
+              </div>
+              <div class="id-countdown__part">
+                <span class="id-countdown__num">{{ minutes }}</span>
+                <span class="id-countdown__label">Minutes</span>
+              </div>
+              <div class="id-countdown__part">
+                <span class="id-countdown__num">{{ seconds }}</span>
+                <span class="id-countdown__label">Seconds</span>
+              </div>
+            </div>
+          } @else {
+            <p class="id-tag id-tag--quiet">This Summit has already taken place</p>
+          }
+
+          <a [routerLink]="['/event-details', summit.id]" class="id-btn id-btn--lg">Register</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About + video --------------------------------------------------------->
+    <section class="id-section id-section--surface">
+      <div class="id-container">
+        <div class="id-split" style="--split: 1fr 1fr">
+          <div class="id-stack">
+            <p class="id-label id-label--accent">Why come</p>
+            <h2 class="id-h3">Register for Summit</h2>
+            <p>
+              From its start in 2021, the Disciple-Making Summit has had a singular
+              mission — calling disciple-makers, leaders and pastors across the nation
+              and around the world to come together and focus on our main purpose.
+              Jesus told us in Matthew 28:19 to "Go and make disciples…". We are here
+              to do just that.
+            </p>
+            <p>
+              This is a weekend for everyone. Bring yourself, your small group, your
+              youth group, your church staff — you will leave inspired and better
+              equipped to make disciples in the coming year.
+            </p>
+          </div>
+
+          <div class="id-embed">
+            @if (!isPlaying) {
+              <button
+                type="button"
+                class="id-video-poster"
+                (click)="playVideo()"
+                aria-label="Play the Summit film">
+                <span class="id-video-poster__btn" aria-hidden="true"><i class="fas fa-play"></i></span>
+              </button>
+            } @else {
+              <youtube-player [videoId]="'MUPDplOSOR4'" suggestedQuality="highres" [playerVars]="{ autoplay: 1 }"></youtube-player>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Speakers -------------------------------------------------------------->
+    @if (coaches?.length) {
+      <section class="id-section">
+        <div class="id-container">
+          <div class="id-section-head">
+            <p class="id-section-head__eyebrow">Who's teaching</p>
+            <h2 class="id-section-head__title">Featured speakers</h2>
+          </div>
+
+          <!-- A scroll-snap rail rather than a JS carousel with prev/next
+               buttons: it works with a trackpad, a touchscreen and the
+               keyboard, and needs no index arithmetic to stay in bounds. -->
+          <div class="id-rail-scroll">
+            @for (coach of coaches; track coach.id) {
+              <a class="id-person" [routerLink]="['/team-details', coach.id]">
+                <span class="id-media id-media--portrait" style="border-radius: var(--card-radius)">
+                  @if (coach.photoUrl?.url) {
+                    <img loading="lazy" [src]="coach.photoUrl.url" [alt]="coach.firstName + ' ' + coach.lastName">
+                  }
+                </span>
+                <span class="id-stack id-stack--tight">
+                  <span class="id-person__name">{{ coach.firstName }} {{ coach.lastName }}</span>
+                  <span class="id-person__role">{{ coach.title }}</span>
+                </span>
+              </a>
+            }
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- Agenda + FAQ ---------------------------------------------------------->
+    <section class="id-section id-section--surface">
+      <div class="id-container">
+        <div class="id-split id-split--start" style="--split: 1.5fr 1fr">
+          <div>
+            <div class="id-section-head">
+              <p class="id-section-head__eyebrow">Two days</p>
+              <h2 class="id-section-head__title">Agenda</h2>
+            </div>
+
+            @if (groupedAgendaItems?.length) {
+              @for (monthGroup of groupedAgendaItems; track monthGroup.monthYear) {
+                @for (dayGroup of monthGroup.days; track dayGroup.date) {
+                  <div class="id-agenda-day">
+                    <div class="id-datemark">
+                      <span class="id-datemark__month">{{ dayGroup.date | date: 'EEE' }}</span>
+                      <span class="id-datemark__day">{{ dayGroup.date | date: 'd' }}</span>
+                    </div>
+
+                    <div>
+                      @for (item of dayGroup.items; track item) {
+                        <div class="id-agenda-item">
+                          <span>
+                            @if (item.isCourse) {
+                              {{ item.course | courseName | async }}
+                            } @else {
+                              {{ item.text }}
+                            }
+                          </span>
+                          <span class="id-agenda-item__time">
+                            {{ item.startDate | date: 'shortTime' }} – {{ item.endDate | date: 'shortTime' }}
+                          </span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              }
+            } @else {
+              <p class="id-note id-note--empty">
+                The agenda isn't published yet. Check back for updates.
+              </p>
+            }
+          </div>
+
+          <div>
+            <div class="id-section-head">
+              <p class="id-section-head__eyebrow">Before you come</p>
+              <h2 class="id-section-head__title">FAQs</h2>
+            </div>
+
+            @if (summit.faqList?.length) {
+              <div class="id-accordion">
+                @for (faq of summit.faqList; track faq.question) {
+                  <details class="id-disclosure">
+                    <summary>{{ faq.question }}</summary>
+                    <div class="id-disclosure__body id-rich" [innerHTML]="faq.answer"></div>
+                  </details>
+                }
+              </div>
+            } @else {
+              <p class="id-note id-note--empty">No questions posted yet.</p>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <app-subscribe-area></app-subscribe-area>
+  }
+</main>
+
+<app-footer></app-footer>

@@ -722,9 +722,11 @@
     scroll-snap-align: start;
   }
 
+  // Deliberately still a rail on desktop. Forcing every speaker into one row
+  // squeezed thirteen of them into ~100px columns and stacked their roles one
+  // word per line; a rail keeps each card readable however many there are.
   @media (min-width: 1024px) {
-    grid-auto-columns: minmax(0, 1fr);
-    overflow-x: visible;
+    grid-auto-columns: minmax(0, 15rem);
   }
 }
 

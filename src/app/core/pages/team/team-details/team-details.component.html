@@ -1,23 +1,46 @@
 <app-home-header></app-home-header>
 
-<main class="team-details">
-  <section class="pb-70 mt-60">
-    <div >
-      <div class="row justify-content-center">
-        <div class="col-xl-4 image-column">
-          <div class="team-details__team-image fix">
-            <img loading="lazy" class="transform" [src]="teamMember?.photoUrl?.url" [alt]="teamMember?.firstName">
+<main class="id-main">
+  <section class="id-section">
+    <div class="id-container">
+      <nav aria-label="Breadcrumb" style="margin-bottom: var(--sp-6)">
+        <ol class="id-breadcrumb">
+          <li><a routerLink="/">Home</a></li>
+          <li><a routerLink="/team">Team</a></li>
+          <li aria-current="page">{{ teamMember?.firstName }} {{ teamMember?.lastName }}</li>
+        </ol>
+      </nav>
+
+      @if (teamMember) {
+        <div class="id-team-detail">
+          <div class="id-stack">
+            <div class="id-media id-media--portrait" style="border-radius: var(--card-radius)">
+              @if (teamMember.photoUrl?.url) {
+                <img [src]="teamMember.photoUrl.url" [alt]="teamMember.firstName + ' ' + teamMember.lastName">
+              }
+            </div>
+            <a routerLink="/consultation-survey" class="id-btn id-btn--block">Book a consultation</a>
+            <a routerLink="/team" class="id-btn id-btn--ghost id-btn--block">Back to the team</a>
+          </div>
+
+          <div class="id-stack">
+            <div class="id-stack id-stack--tight">
+              <p class="id-label id-label--accent">{{ teamMember.title }}</p>
+              <h1 class="id-h1">{{ teamMember.firstName }} {{ teamMember.lastName }}</h1>
+            </div>
+
+            @if (teamMember.bio) {
+              <div class="id-rich" [innerHTML]="teamMember.bio"></div>
+            } @else {
+              <p class="id-muted">No biography has been added yet.</p>
+            }
           </div>
         </div>
-        <div class="col-xl-6 text-center">
-          <h1>{{ teamMember?.firstName }} {{ teamMember?.lastName }}</h1>
-          <hr class="custom-hr">
-          <h5>{{ teamMember?.title }}</h5>
-          <p class="mt-50 pl-50 pr-50" [innerHTML]="teamMember?.bio"></p>
-          <!--TODO: implement donations specific to team member-->
-          <!-- <a class="os-btn mt-20">Donate to {{ teamMember?.firstName }}'s Ministry</a> -->
+      } @else {
+        <div class="id-center" style="padding-block: var(--sp-8)">
+          <span class="id-spinner" role="status" aria-label="Loading"></span>
         </div>
-      </div>
+      }
     </div>
   </section>
 </main>
