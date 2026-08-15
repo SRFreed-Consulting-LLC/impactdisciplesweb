@@ -1,0 +1,710 @@
+// =============================================================================
+// PAGE COMPOSITIONS — the layouts that only occur on one or two routes and so
+// don't earn a place in the primitive vocabulary, but still need to be styled
+// once rather than per-direction.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// STORE
+// -----------------------------------------------------------------------------
+.id-store__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-bottom: var(--sp-4);
+  border-bottom: var(--rule) solid var(--c-line);
+  margin-bottom: var(--sp-6);
+}
+
+.id-store__count {
+  font-family: var(--f-label);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: var(--label-case);
+  color: var(--c-ink-muted);
+}
+
+.id-store__sort {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+
+  label {
+    font-size: var(--t-sm);
+    color: var(--c-ink-muted);
+    white-space: nowrap;
+  }
+
+  select {
+    min-width: 12rem;
+  }
+}
+
+// Category rail. On small screens the whole rail becomes one disclosure so it
+// doesn't push the products below the fold.
+.id-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.id-rail__title {
+  font-family: var(--f-label);
+  font-size: var(--label-size);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--label-track);
+  text-transform: var(--label-case);
+  color: var(--c-ink-muted);
+  padding-bottom: var(--sp-2);
+  border-bottom: var(--bw-strong) solid var(--c-accent);
+  margin-bottom: var(--sp-3);
+}
+
+.id-rail__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.id-rail__link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-2) 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: var(--t-sm);
+  color: var(--c-ink-muted);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--c-accent);
+  }
+}
+
+.id-rail__link.is-active {
+  color: var(--c-ink);
+  font-weight: var(--fw-medium);
+}
+
+.id-rail__count {
+  flex: 0 0 auto;
+  font-size: var(--t-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-ink-faint);
+}
+
+.id-rail__search {
+  position: relative;
+}
+
+// Product tile
+.id-product__title {
+  font-size: var(--t-1);
+  line-height: var(--lh-snug);
+}
+
+.id-product__meta {
+  font-family: var(--f-label);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-ink-faint);
+}
+
+.id-product__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-top: auto;
+  padding-top: var(--sp-3);
+}
+
+// Series strip
+.id-series-grid {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+}
+
+.id-series-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+// -----------------------------------------------------------------------------
+// PRODUCT DETAIL
+// -----------------------------------------------------------------------------
+.id-pdp {
+  display: grid;
+  gap: var(--sp-7);
+  grid-template-columns: 1fr;
+
+  @media (min-width: 900px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.id-pdp__gallery {
+  position: sticky;
+  top: calc(var(--header-h) + var(--sp-5));
+}
+
+.id-pdp__buy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.id-qty {
+  display: inline-flex;
+  align-items: center;
+  border: var(--bw) solid var(--c-line-strong);
+  border-radius: var(--field-radius);
+  overflow: hidden;
+
+  button {
+    width: 2.5rem;
+    height: 2.75rem;
+    border: 0;
+    background: transparent;
+    font-size: 1.1rem;
+    line-height: 1;
+
+    &:hover {
+      background: var(--c-surface);
+    }
+  }
+
+  input {
+    width: 3rem;
+    height: 2.75rem;
+    border: 0;
+    border-inline: var(--bw) solid var(--c-line);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    background: transparent;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.id-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.id-swatch {
+  padding: 0.4rem 0.8rem;
+  border: var(--bw) solid var(--c-line-strong);
+  border-radius: var(--field-radius);
+  background: transparent;
+  font-size: var(--t-sm);
+
+  &.is-active {
+    border-color: var(--c-accent);
+    background: var(--c-accent-soft);
+    color: var(--c-accent);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// CART & CHECKOUT
+// -----------------------------------------------------------------------------
+.id-checkout {
+  display: grid;
+  gap: var(--sp-7);
+  grid-template-columns: 1fr;
+
+  @media (min-width: 960px) {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.id-summary {
+  position: sticky;
+  top: calc(var(--header-h) + var(--sp-5));
+  padding: var(--card-pad);
+  background: var(--c-surface);
+  border: var(--bw) solid var(--c-line);
+  border-radius: var(--card-radius);
+}
+
+.id-summary__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-block: var(--sp-2);
+  font-size: var(--t-sm);
+}
+
+.id-summary__row--total {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: var(--bw) solid var(--c-line-strong);
+  font-size: var(--t-1);
+  font-weight: var(--fw-medium);
+}
+
+.id-line {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  gap: var(--sp-4);
+  align-items: start;
+  padding-block: var(--sp-4);
+  border-bottom: var(--rule) solid var(--c-line);
+}
+
+.id-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  list-style: none;
+  margin-bottom: var(--sp-6);
+}
+
+.id-steps__item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  border: var(--bw) solid var(--c-line);
+  border-radius: var(--r-pill);
+  font-size: var(--t-sm);
+  color: var(--c-ink-muted);
+}
+
+.id-steps__item.is-active {
+  border-color: var(--c-accent);
+  background: var(--c-accent-soft);
+  color: var(--c-accent);
+  font-weight: var(--fw-medium);
+}
+
+.id-steps__item.is-done {
+  color: var(--c-ink);
+}
+
+// Cart drawer
+.id-cart-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(27rem, 92vw);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  background: var(--c-bg);
+  border-left: var(--bw) solid var(--c-line);
+  translate: 100% 0;
+  transition: translate var(--dur) var(--ease);
+}
+
+.id-cart-drawer.is-open {
+  translate: 0 0;
+}
+
+.id-cart-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-5);
+  border-bottom: var(--bw) solid var(--c-line);
+}
+
+.id-cart-drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--sp-5);
+  overscroll-behavior: contain;
+}
+
+.id-cart-drawer__foot {
+  padding: var(--sp-5);
+  border-top: var(--bw) solid var(--c-line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  background: var(--c-surface);
+}
+
+// -----------------------------------------------------------------------------
+// EVENTS
+// -----------------------------------------------------------------------------
+// A short list must read as a deliberate layout, not a grid with holes — which
+// is what the live site does today when one in-person event is showing in a
+// three-across grid.
+.id-event-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.id-event {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: 1fr;
+  text-decoration: none;
+  color: inherit;
+
+  @media (min-width: 720px) {
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr) auto;
+    align-items: center;
+  }
+}
+
+.id-event__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.id-event__title {
+  font-size: var(--t-2);
+}
+
+.id-event__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  font-family: var(--f-label);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.id-event__desc {
+  color: var(--c-ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.id-event__cta {
+  @media (min-width: 720px) {
+    justify-self: end;
+  }
+}
+
+// Date block — reused by events and the summit agenda.
+.id-datemark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  padding: var(--sp-2);
+  border: var(--bw) solid var(--c-line);
+  border-radius: var(--card-radius);
+  background: var(--c-surface);
+  flex: 0 0 auto;
+}
+
+.id-datemark__month {
+  font-family: var(--f-label);
+  font-size: var(--t-xs);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.id-datemark__day {
+  font-family: var(--f-display);
+  font-size: var(--t-3);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+// -----------------------------------------------------------------------------
+// SUMMIT
+// -----------------------------------------------------------------------------
+.id-factbar {
+  display: grid;
+  gap: 0;
+  grid-template-columns: 1fr;
+  border: var(--bw) solid var(--c-line);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  background: var(--c-surface);
+
+  @media (min-width: 760px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.id-factbar__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: var(--bw) solid var(--c-line);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  @media (min-width: 760px) {
+    border-bottom: 0;
+    border-right: var(--bw) solid var(--c-line);
+
+    &:last-child {
+      border-right: 0;
+    }
+  }
+}
+
+.id-agenda-day {
+  display: grid;
+  gap: var(--sp-4);
+  grid-template-columns: 1fr;
+  padding-block: var(--sp-5);
+  border-top: var(--bw) solid var(--c-line);
+
+  @media (min-width: 720px) {
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: var(--sp-6);
+  }
+}
+
+.id-agenda-item {
+  display: grid;
+  gap: var(--sp-1) var(--sp-4);
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  padding-block: var(--sp-3);
+  border-bottom: var(--rule) solid var(--c-line);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.id-agenda-item__time {
+  font-family: var(--f-label);
+  font-size: var(--t-xs);
+  letter-spacing: 0.05em;
+  color: var(--c-ink-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+// Speaker carousel — a scroll-snap rail rather than a JS carousel, so it works
+// with a trackpad, a touchscreen, and the keyboard without extra code.
+.id-rail-scroll {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min(15rem, 72vw), 1fr);
+  gap: var(--sp-5);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--sp-4);
+
+  > * {
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 1024px) {
+    grid-auto-columns: minmax(0, 1fr);
+    overflow-x: visible;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// TEAM
+// -----------------------------------------------------------------------------
+.id-team-grid {
+  display: grid;
+  gap: var(--sp-6) var(--sp-5);
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+}
+
+.id-team-detail {
+  display: grid;
+  gap: var(--sp-7);
+  grid-template-columns: 1fr;
+
+  @media (min-width: 860px) {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// CONTENT PAGES (about, seminars, equipping groups, give, coaching, policies)
+// -----------------------------------------------------------------------------
+.id-prose {
+  max-width: var(--measure);
+
+  > * + * {
+    margin-top: var(--sp-5);
+  }
+
+  h2 {
+    margin-top: var(--sp-8);
+    font-size: var(--t-3);
+  }
+
+  h3 {
+    margin-top: var(--sp-6);
+    font-size: var(--t-2);
+  }
+}
+
+.id-feature-row {
+  display: grid;
+  gap: var(--sp-6);
+  align-items: center;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 860px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.id-feature-row:nth-child(even) .id-feature-row__media {
+  @media (min-width: 860px) {
+    order: -1;
+  }
+}
+
+.id-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.id-stat__num {
+  font-family: var(--f-display);
+  font-size: var(--t-4);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-accent);
+}
+
+.id-quote {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.id-quote__text {
+  font-family: var(--f-display);
+  font-size: var(--t-2);
+  line-height: var(--lh-snug);
+  font-weight: var(--fw-body);
+}
+
+.id-quote__by {
+  font-family: var(--f-label);
+  font-size: var(--t-xs);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+}
+
+// -----------------------------------------------------------------------------
+// BLOG / PODCASTS
+// -----------------------------------------------------------------------------
+.id-post-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.id-post {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: 1fr;
+  padding-bottom: var(--sp-6);
+  border-bottom: var(--rule) solid var(--c-line);
+
+  @media (min-width: 760px) {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+  }
+}
+
+.id-embed {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--c-surface-2);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+
+  iframe,
+  youtube-player,
+  > div {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  iframe {
+    border: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// SUBSCRIBE BAND
+// The live site asks for the same three fields twice on one page — once in
+// "Stay in the Loop" and again in the footer column directly below it. The
+// band is the one that stays; the footer keeps a single link.
+// -----------------------------------------------------------------------------
+.id-subscribe {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.id-subscribe__form {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 42rem;
+
+  @media (min-width: 720px) {
+    grid-template-columns: 1fr 1fr auto;
+  }
+}
+
+.id-subscribe__form .id-input {
+  min-width: 0;
+}
+
+// -----------------------------------------------------------------------------
+// ACCOUNT / ORDER LOOKUP
+// -----------------------------------------------------------------------------
+.id-order {
+  border: var(--bw) solid var(--c-line);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+}
+
+.id-order__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  justify-content: space-between;
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--c-surface);
+  border-bottom: var(--bw) solid var(--c-line);
+  font-size: var(--t-sm);
+}

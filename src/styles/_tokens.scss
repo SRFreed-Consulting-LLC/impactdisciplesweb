@@ -1,0 +1,191 @@
+// =============================================================================
+// DESIGN TOKENS — the contract between the shared component layer and a
+// direction.
+//
+// Every visual decision the six redesign directions disagree about is a custom
+// property declared here. `redesign/base` ships neutral values; each direction
+// branch overrides this file and nothing else in the primitives layer, so a
+// component written against these names renders correctly in all six.
+//
+// Rules for direction branches:
+//   * Override VALUES here. Do not add new properties without adding them to
+//     base too, or the other five branches silently lose the declaration.
+//   * Structural differences that cannot be expressed as a value (a stacked
+//     nav vs a split one) belong in _direction.scss, which is empty on base.
+//   * Never reference a raw hex outside this file. If a component needs a
+//     colour that isn't here, the token set is missing one — add it.
+// =============================================================================
+
+:root {
+  // ---------------------------------------------------------------------------
+  // COLOUR
+  // `bg` is the page ground; `surface` is anything sitting on it (cards, bars);
+  // `surface-2` is a second level (a sidebar inside a card, a table stripe).
+  // ---------------------------------------------------------------------------
+  --c-bg: #ffffff;
+  --c-surface: #f6f7f8;
+  --c-surface-2: #eceef0;
+  --c-ink: #15181c;
+  --c-ink-muted: #5d666f;
+  --c-ink-faint: #8b939b;
+  --c-line: #dfe3e7;
+  --c-line-strong: #c3cad1;
+
+  --c-accent: #1f6feb;
+  --c-accent-ink: #ffffff; // text that sits ON the accent
+  --c-accent-soft: #e8f0fd; // accent at tint strength, for chips and wells
+  --c-accent-2: #0fa37f;
+
+  --c-focus: var(--c-accent);
+  --c-danger: #b3261e;
+  --c-success: #17795e;
+
+  // Inverted block (footers, dark bands) — a direction that is already dark
+  // points these back at its own surfaces rather than flipping.
+  --c-inv-bg: #15181c;
+  --c-inv-ink: #f2f4f6;
+  --c-inv-ink-muted: #a4adb6;
+  --c-inv-line: #2c3238;
+
+  // Media placeholder wash, used behind images while they load and by the
+  // gradient scrims that sit over hero photography.
+  --c-scrim: rgba(12, 15, 20, 0.55);
+  --c-scrim-strong: rgba(12, 15, 20, 0.78);
+
+  // ---------------------------------------------------------------------------
+  // TYPE
+  // Three roles: display (headings), body (running text), label (eyebrows,
+  // metadata, table headers, buttons). A direction may point two roles at the
+  // same family — that is a legitimate choice, not a missing value.
+  // ---------------------------------------------------------------------------
+  --f-display: "Segoe UI Semibold", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --f-label: "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  --fw-display: 700;
+  --fw-body: 400;
+  --fw-medium: 600;
+  --fw-label: 600;
+
+  // Display treatment. `--display-case` and `--display-track` are what make
+  // Lantern shout in condensed caps while Sanctuary stays in sentence case.
+  --display-case: none;
+  --display-track: -0.01em;
+  --display-leading: 1.06;
+
+  --label-case: uppercase;
+  --label-track: 0.12em;
+  --label-size: 0.72rem;
+
+  // Fluid type scale. Step 0 is body copy; the page never uses a size that
+  // isn't on this scale.
+  --t-xs: 0.78rem;
+  --t-sm: 0.875rem;
+  --t-0: 1rem;
+  --t-1: clamp(1.06rem, 0.4vw + 0.98rem, 1.2rem);
+  --t-2: clamp(1.25rem, 0.7vw + 1.1rem, 1.5rem);
+  --t-3: clamp(1.5rem, 1.2vw + 1.25rem, 2rem);
+  --t-4: clamp(1.9rem, 2.2vw + 1.4rem, 2.75rem);
+  --t-5: clamp(2.4rem, 3.6vw + 1.6rem, 4rem);
+  --t-6: clamp(2.9rem, 5.5vw + 1.7rem, 5.5rem);
+
+  --lh-tight: 1.12;
+  --lh-snug: 1.32;
+  --lh-body: 1.62;
+  --measure: 64ch; // running-text max width
+
+  // ---------------------------------------------------------------------------
+  // GEOMETRY
+  // Set every radius to 0 and Cornerstone/Broadcast fall out; raise them and
+  // The Table does. Border widths carry the same weight for Field Manual.
+  // ---------------------------------------------------------------------------
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 14px;
+  --r-pill: 999px;
+
+  --bw: 1px; // default border
+  --bw-strong: 2px; // emphasised border (Field Manual, Cornerstone)
+  --rule: 1px; // hairline divider
+  --rule-strong: 3px; // section rule
+
+  // ---------------------------------------------------------------------------
+  // ELEVATION
+  // A flat direction sets both to `none` rather than removing the declaration.
+  // ---------------------------------------------------------------------------
+  --sh-1: 0 1px 2px rgba(16, 22, 30, 0.06), 0 2px 8px rgba(16, 22, 30, 0.05);
+  --sh-2: 0 2px 4px rgba(16, 22, 30, 0.07), 0 12px 28px rgba(16, 22, 30, 0.09);
+
+  // ---------------------------------------------------------------------------
+  // SPACE & RHYTHM
+  // ---------------------------------------------------------------------------
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+
+  --container: 1200px;
+  --container-narrow: 780px;
+  --container-wide: 1440px;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+
+  // Vertical rhythm between major page sections. Sanctuary runs this loose,
+  // Broadcast runs it tight.
+  --section-y: clamp(3rem, 7vw, 6rem);
+  --section-y-tight: clamp(2rem, 4vw, 3.5rem);
+
+  // ---------------------------------------------------------------------------
+  // SHELL
+  // ---------------------------------------------------------------------------
+  --header-h: 76px;
+  --header-bg: var(--c-bg);
+  --header-ink: var(--c-ink);
+  --header-line: var(--c-line);
+  --header-shadow: none;
+
+  --footer-bg: var(--c-inv-bg);
+  --footer-ink: var(--c-inv-ink);
+  --footer-ink-muted: var(--c-inv-ink-muted);
+  --footer-line: var(--c-inv-line);
+
+  // ---------------------------------------------------------------------------
+  // CONTROLS
+  // ---------------------------------------------------------------------------
+  --btn-radius: var(--r-md);
+  --btn-pad-y: 0.7rem;
+  --btn-pad-x: 1.4rem;
+  --btn-case: uppercase;
+  --btn-track: 0.1em;
+  --btn-weight: 600;
+  --btn-size: 0.8rem;
+  --btn-border: var(--bw);
+
+  --field-radius: var(--r-sm);
+  --field-bg: var(--c-bg);
+  --field-border: var(--c-line-strong);
+
+  --card-radius: var(--r-md);
+  --card-bg: var(--c-surface);
+  --card-border: var(--bw) solid var(--c-line);
+  --card-shadow: none;
+  --card-pad: var(--sp-5);
+
+  // ---------------------------------------------------------------------------
+  // MOTION
+  // ---------------------------------------------------------------------------
+  --ease: cubic-bezier(0.2, 0.6, 0.25, 1);
+  --dur-fast: 140ms;
+  --dur: 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+  }
+}

@@ -1,52 +1,87 @@
+// =============================================================================
+// GLOBAL STYLESHEET
+//
+// Redesign note: the site's look now comes from `src/styles/` (a token-driven
+// design system) rather than from the purchased Outstock theme. The Outstock
+// partials below are still imported during the route-by-route migration because
+// pages that haven't been rebuilt yet depend on their classes; each import is
+// removed as the last template that needs it is converted.
+//
+// Icon fonts (Font Awesome Pro, Ionicons) stay regardless — they're referenced
+// from templates as `<i class="fa-...">` and are not part of the old look.
+// =============================================================================
+
+// `@use` rules must precede every other rule, so all of them sit together here.
+// Emission follows this order, which is why the design system is last: it has
+// to win over Outstock at equal specificity.
 @use "swiper/css/bundle";
-@use './assets/styles/theme/scss/main.scss';
-@use './assets/styles/theme/scss/variables';
-@import './assets/styles/theme/css/fontAwesome5Pro.css';
-@import './assets/styles/theme/css/ionicons.min.css';
-@import './assets/styles/theme/css/animate.min.css';
+@use "./assets/styles/theme/scss/main.scss";
+@use "./assets/styles/theme/scss/variables";
+@use "./styles/main.scss" as design-system;
+
+// Plain-CSS imports. Sass leaves a `.css` URL as a literal `@import url(...)`,
+// which the browser hoists above everything else in the sheet — so these carry
+// the lowest precedence of anything here, which is what we want for Bootstrap.
+@import "./assets/styles/theme/css/fontAwesome5Pro.css";
+@import "./assets/styles/theme/css/ionicons.min.css";
 @import "~bootstrap/dist/css/bootstrap.css";
 
-
-//GLOBAL STYLES
-
-html, body {
-  margin: 0;
-  min-height: 100%;
-  height: 100%;
-	// background-color: #1c1c1c;
-	background-color: #f7f7f7;
-}
-
-.toolbar-label,
-.toolbar-label > b {
-  padding-left: 10px;
-  font-size: 16px;
-}
-
-.toolbar {
-  padding-top: 10px;
-}
-
-.dx-popup-wrapper>.dx-overlay-content {
-  border-radius: 0;
-}
-
-h1, h2, h3, h4, h5, h6, p {
-  font-family: 'Lato', sans-serif !important;
-}
+// -----------------------------------------------------------------------------
+// Legacy compatibility
+//
+// `main { padding-top: 82.3px }` used to compensate for Outstock's
+// `position: fixed` header. The new header is `position: sticky`, so it takes
+// up its own space in flow and that offset would leave a gap under it.
+// -----------------------------------------------------------------------------
 main {
-  padding-top: 82.3px;
+  padding-top: 0;
 }
 
-@media #{variables.$xxs,variables.$xs,variables.$sm} {
-  main {
-    padding-top: 182.3px !important;
+// Legacy button classes still present in not-yet-migrated templates. Rather
+// than leave them looking like the old site next to redesigned components, map
+// them onto the new button so a half-migrated page stays coherent.
+.impact-btn,
+.impact-btn-blue,
+.impact-btn-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: auto;
+  line-height: 1.2;
+  width: auto;
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  border: var(--btn-border) solid var(--c-accent);
+  border-radius: var(--btn-radius);
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+  font-family: var(--f-label);
+  font-size: var(--btn-size);
+  font-weight: var(--btn-weight);
+  letter-spacing: var(--btn-track);
+  text-transform: var(--btn-case);
+  text-decoration: none;
+
+  &::after {
+    display: none;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--c-accent) 86%, #000);
+    border-color: color-mix(in srgb, var(--c-accent) 86%, #000);
+    color: var(--c-accent-ink);
+  }
+
+  span {
+    color: inherit;
   }
 }
 
-
-//animations
-
+// -----------------------------------------------------------------------------
+// Entrance animations. Kept from the previous stylesheet because the
+// `appAnimate` directive references these class names by string; now gated on
+// the reduced-motion preference, which the originals were not.
+// -----------------------------------------------------------------------------
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -58,34 +93,27 @@ main {
   }
 }
 
-.fadeInUp {
-  animation-name: fadeInUp;
-  animation-duration: 1s;
-  animation-fill-mode: both;
-}
-.fadeInUpTwo {
-  animation-name: fadeInUp;
-  animation-duration: 1s;
-	animation-delay: 0.3s;
-  animation-fill-mode: both;
-}
-.fadeInUpThree {
-  animation-name: fadeInUp;
-  animation-duration: 1s;
-	animation-delay: 0.5s;
-  animation-fill-mode: both;
-}
-.fadeInUpFour {
-  animation-name: fadeInUp;
-  animation-duration: 1s;
-	animation-delay: 0.7s;
-  animation-fill-mode: both;
-}
+.fadeInUp,
+.fadeInUpTwo,
+.fadeInUpThree,
+.fadeInUpFour,
 .fadeInUpFive {
   animation-name: fadeInUp;
-  animation-duration: 1s;
-	animation-delay: 1s;
+  animation-duration: 0.8s;
   animation-fill-mode: both;
+}
+
+.fadeInUpTwo {
+  animation-delay: 0.12s;
+}
+.fadeInUpThree {
+  animation-delay: 0.22s;
+}
+.fadeInUpFour {
+  animation-delay: 0.32s;
+}
+.fadeInUpFive {
+  animation-delay: 0.42s;
 }
 
 @keyframes fadeInLeftToRight {
@@ -98,11 +126,12 @@ main {
   }
   100% {
     clip-path: inset(0 0 0 0);
+    opacity: 1;
   }
 }
 
 .fadeInLeftToRight {
-  animation: fadeInLeftToRight 2s ease-out forwards;
+  animation: fadeInLeftToRight 1.2s var(--ease) forwards;
 }
 
 @keyframes fadeInRightToLeft {
@@ -115,24 +144,19 @@ main {
   }
   100% {
     clip-path: inset(0 0 0 0);
+    opacity: 1;
   }
 }
 
 .fadeInRightToLeft {
-	animation: fadeInRightToLeft 2s ease-out forwards;
+  animation: fadeInRightToLeft 1.2s var(--ease) forwards;
 }
 
 @keyframes fadeInDown {
   0% {
     opacity: 0;
-    transform: translateY(-40px);
+    transform: translateY(-30px);
   }
-
-	50% {
-    opacity: 0.5;
-    transform: translateY(-20px);
-  }
-
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -141,439 +165,37 @@ main {
 
 .fadeInDown {
   display: inline-block;
-  animation: fadeInDown 1s linear forwards;
+  animation: fadeInDown 0.8s var(--ease) forwards;
 }
 
-
-//buttons
-.impact-btn {
-	position: relative;
-	display: inline-block;
-	text-transform: uppercase;
-	text-align: center;
-	font-weight: 700;
-	height: 50px;
-	line-height: 46px;
-	padding: 0 42px;
-	border: 2px solid variables.$white;
-	color: variables.$black;
-	background: variables.$white;
-	z-index: 1;
-	font-size: 12px;
-	width: fit-content;
-	align-items: center;
-	cursor: pointer;
-	@media #{variables.$xxs, variables.$xs}{
-		width: 100% !important;
-		height: 30px !important;
-    line-height: 30px !important;
-		padding: 0 10px;
-		font-size: 10px;
-	}
-	@media #{variables.$sm}{
-		width: 100% !important;
-		height: 35px !important;
-		line-height: 35px !important;
-		padding: 0 10px;
-		font-size: 12px;
-	}
-	@media #{variables.$md}{
-		height: 40px;
-    padding: 0 30px;
-    line-height: 38px;
-    width: 100%;
-	}
-	.dx-button-content {
-		display: flex;
-		justify-content: center;
-	}
-	& span{
-		color: variables.$blue;
-	}
-	&::after{
-		position: absolute;
-		content: '';
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 0;
-		background-color: variables.$blue;
-		z-index: -1;
-	}
-	&:hover{
-		color: variables.$white;
-		border-color: variables.$blue;
-		&::after{
-			height: 100%;
-		}
-		& span{
-			color: variables.$white;
-		}
-	}
-	&-thin {
-		height: 40px;
-    line-height: 38px;
-	}
-	&-blue {
-		background-color: variables.$blue;
-		color: variables.$white;
-		border-color: variables.$blue;
-		&::after{
-			background-color: variables.$white;
-		}
-		&:hover{
-			border-color: variables.$blue;
-			color: variables.$black;
-		}
-    & span{
-      color: variables.$black;
-    }
-	}
-	&-blue-border {
-		background-color: variables.$white;
-		color: variables.$black;
-		border-color: variables.$blue;
-		&::after{
-			background-color: variables.$blue;
-		}
-		&:hover{
-			border-color: variables.$white;
-			color: variables.$white;
-		}
-    & span{
-      color: variables.$white;
-    }
-	}
-}
-
-.impact-btn-outlined {
-	position: relative;
-	display: inline-block;
-	text-transform: uppercase;
-	text-align: center;
-	font-weight: 700;
-	height: 50px;
-	line-height: 46px;
-	padding: 0 42px;
-	border: 2px solid variables.$blue;
-	color: variables.$black;
-	background: variables.$white;
-	z-index: 1;
-	font-size: 12px;
-	width: fit-content;
-	align-items: center;
-	cursor: pointer;
-	@media #{variables.$xxs, variables.$xs}{
-		width: 100% !important;
-		height: 30px !important;
-    line-height: 30px !important;
-		padding: 0 10px;
-		font-size: 10px;
-	}
-	@media #{variables.$sm}{
-		width: 100% !important;
-		height: 35px !important;
-		line-height: 35px !important;
-		padding: 0 10px;
-		font-size: 12px;
-	}
-	@media #{variables.$md}{
-		height: 40px;
-    padding: 0 30px;
-    line-height: 38px;
-    width: 100%;
-	}
-	.dx-button-content {
-		display: flex;
-		justify-content: center;
-	}
-	& span{
-		color: variables.$blue;
-	}
-	&::after{
-		position: absolute;
-		content: '';
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 0;
-		background-color: variables.$blue;
-		z-index: -1;
-	}
-	&:hover{
-		color: variables.$white;
-		border-color: variables.$blue;
-		&::after{
-			height: 100%;
-		}
-		& span{
-			color: variables.$white;
-		}
-	}
-	&-thin {
-		height: 40px;
-    line-height: 38px;
-	}
-	&-blue {
-		background-color: variables.$blue;
-		color: variables.$white;
-		border-color: variables.$blue;
-		&::after{
-			background-color: variables.$white;
-		}
-		&:hover{
-			border-color: variables.$blue;
-			color: variables.$black;
-		}
-    & span{
-      color: variables.$black;
-    }
-	}
-	&-blue-border {
-		background-color: variables.$white;
-		color: variables.$black;
-		border-color: variables.$blue;
-		&::after{
-			background-color: variables.$blue;
-		}
-		&:hover{
-			border-color: variables.$white;
-			color: variables.$white;
-		}
-    & span{
-      color: variables.$white;
-    }
-	}
-}
-
-.impact-icon-btn {
-	background: variables.$white;
-	border: 2px solid variables.$white;
-	color: variables.$black;
-	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	text-transform: uppercase;
-	text-align: center;
-	height: 50px;
-	line-height: 46px;
-  padding: 0 20px;
-	z-index: 1;
-	i {
-		font-size: 20px;
-		margin-right: 10px;
-	}
-	cursor: pointer;
-	.dx-button-content {
-		display: flex;
-		justify-content: center;
-	}
-	@media #{variables.$xxs, variables.$xs}{
-		width: 100% !important;
-		height: 30px !important;
-    line-height: 30px !important;
-		padding: 0 10px;
-		font-size: 10px;
-		i {
-			font-size: 10px;
-		}
-	}
-	&::after{
-		position: absolute;
-		content: '';
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 0;
-		background-color: variables.$blue;
-		z-index: -1;
-	}
-	&:hover{
-		color: variables.$white;
-		border-color: variables.$blue;
-		&::after{
-			height: 100%;
-		}
-		& span{
-			color: variables.$white;
-		}
-		i {
-			color: variables.$white;
-		}
-	}
-	&:focus {
-		i {
-			color: variables.$white;
-		}
-	}
-	&-blue {
-		background-color: variables.$blue;
-		color: variables.$white;
-		border-color: variables.$blue;
-		&::after{
-			background-color: variables.$white;
-			i {
-				color: variables.$black;
-			}
-		}
-		&:hover{
-			border-color: variables.$blue;
-			color: variables.$black;
-			i {
-				color: variables.$black;
-			}
-		}
-    & span{
-      color: variables.$black;
-			i {
-				color: variables.$black;
-			}
-    }
-	}
-}
-
-//lines
-.slider-hr {
-  background-image: linear-gradient(to right, transparent, variables.$theme-color);
-  height: 5px;
-  border: none;
-  outline: none;
-  position: relative;
-  width: 100%;
-  opacity: .8;
-
-  &:before {
-    position: absolute;
-    top: 1px;
-    left: 90%;
-    background: black;
-    color: white;
-    padding: 1em;
-    width: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-}
-
-.slider-hr-large {
-  background-image: linear-gradient(to right, transparent, variables.$theme-color);
-  height: 10px;
-  border: none;
-  outline: none;
-  position: relative;
-  width: 100%;
-  opacity: .8;
-
-  &:before {
-    position: absolute;
-    top: 1px;
-    left: 90%;
-    background: black;
-    color: white;
-    padding: 1em;
-    width: 100%;
-    transform: translate(-50%, -50%);
+@media (prefers-reduced-motion: reduce) {
+  .fadeInUp,
+  .fadeInUpTwo,
+  .fadeInUpThree,
+  .fadeInUpFour,
+  .fadeInUpFive,
+  .fadeInLeftToRight,
+  .fadeInRightToLeft,
+  .fadeInDown {
+    animation: none !important;
+    opacity: 1;
+    clip-path: none;
+    transform: none;
   }
 }
 
-.slider-hr-solid {
-	width: 200px;
-	border: 0;
-	border-top: 6px solid variables.$theme-color;
-	opacity: 1;
-}
-
-.solid-line {
-	border-top: 10px solid variables.$theme-color;
-  opacity: 1;
-}
-
-
-
-//title
-.slider-small-pretitle {
-	color: variables.$theme-color;
-	font-size: 20px;
-	@media #{variables.$xxs,variables.$xs} {
-		font-size: 14px;
-	}
-}
-
-.slider-pretitle {
-	color: variables.$theme-color;
-	font-size: 25px;
-	@media #{variables.$xxs,variables.$xs} {
-		font-size: 18px;
-	}
-}
-
-.slider-title {
-	font-size: 80px;
-	font-weight: 600;
-	@media #{variables.$xxs,variables.$xs} {
-		font-size: 60px;
-	}
-}
-
-.slider-medium-title {
-	font-size: 50px;
-	font-weight: 600;
-	@media #{variables.$xxs,variables.$xs} {
-		font-size: 30px;
-	}
-	&-white {
-		color: variables.$white;
-		@media #{variables.$xxs,variables.$xs} {
-			font-size: 30px;
-		}
-	}
-}
-
-.slider-subtitle {
-	font-size: 16px;
-	@media #{variables.$xxs,variables.$xs} {
-		font-size: 14px;
-	}
-}
-
-.title-large {
-	font-size: 100px;
-	@media #{variables.$xxs,variables.$xs} {
-		font-size: 70px;
-	}
-}
-
-.title-xl {
-	font-size: 120px;
-	@media #{variables.$xxs,variables.$xs} {
-		font-size: 65px;
-	}
-}
-
-
-//other
-.coming-soon-box {
-	background-color: #f5f5f5;
-	padding: 50px;
-}
-
-// Backs DialogService (replacement for devextreme/ui/dialog's confirm()/
-// alert()) -- a plain Bootstrap modal, styled with this app's own
-// .impact-btn buttons instead of Bootstrap's own button classes for visual
-// consistency with the rest of the site.
+// -----------------------------------------------------------------------------
+// DialogService modal (replaces devextreme's confirm()/alert()).
+// -----------------------------------------------------------------------------
 .impact-dialog {
-	&__message {
-		font-size: 15px;
-	}
-	&__btn {
-		&--cancel, &--confirm {
-			height: 36px;
-			line-height: 32px;
-			padding: 0 24px;
-			font-size: 11px;
-			margin-left: 10px;
-		}
-	}
-}
+  &__message {
+    font-size: var(--t-0);
+  }
 
+  &__btn {
+    &--cancel,
+    &--confirm {
+      margin-left: var(--sp-3);
+    }
+  }
+}

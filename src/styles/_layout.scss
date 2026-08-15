@@ -1,0 +1,175 @@
+// =============================================================================
+// LAYOUT — containers, section rhythm, and the handful of grids every page
+// reuses. Spacing is applied with flex/grid `gap` rather than per-child margin
+// so nothing collapses or doubles when a direction changes the rhythm.
+// =============================================================================
+
+.id-container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.id-container--narrow {
+  max-width: var(--container-narrow);
+}
+
+.id-container--wide {
+  max-width: var(--container-wide);
+}
+
+.id-container--flush {
+  max-width: none;
+  padding-inline: 0;
+}
+
+// -----------------------------------------------------------------------------
+// Section — the vertical unit every page is built from.
+// -----------------------------------------------------------------------------
+.id-section {
+  padding-block: var(--section-y);
+}
+
+.id-section--tight {
+  padding-block: var(--section-y-tight);
+}
+
+.id-section--flush-top {
+  padding-block-start: 0;
+}
+
+.id-section--flush-bottom {
+  padding-block-end: 0;
+}
+
+.id-section--surface {
+  background: var(--c-surface);
+}
+
+.id-section--surface-2 {
+  background: var(--c-surface-2);
+}
+
+.id-section--inverted {
+  background: var(--c-inv-bg);
+  color: var(--c-inv-ink);
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--c-inv-ink);
+  }
+
+  .id-muted,
+  .id-label {
+    color: var(--c-inv-ink-muted);
+  }
+}
+
+// Stack: the default vertical flow inside a section.
+.id-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.id-stack--tight {
+  gap: var(--sp-3);
+}
+
+.id-stack--loose {
+  gap: var(--sp-7);
+}
+
+// Cluster: horizontal group that wraps (button rows, tag rows, meta rows).
+.id-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.id-cluster--between {
+  justify-content: space-between;
+}
+
+// -----------------------------------------------------------------------------
+// Auto grid — the workhorse behind product grids, team grids, event lists.
+// `--min` is the smallest a column may get before the grid drops one.
+// -----------------------------------------------------------------------------
+.id-grid {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--min, 260px), 100%), 1fr));
+}
+
+.id-grid--2 {
+  --min: 420px;
+}
+.id-grid--3 {
+  --min: 300px;
+}
+.id-grid--4 {
+  --min: 220px;
+}
+.id-grid--tight {
+  gap: var(--sp-3);
+}
+
+// Split — an asymmetric two-column that collapses on small screens. Used for
+// hero text/media pairs and for sidebar layouts.
+.id-split {
+  display: grid;
+  gap: var(--sp-6);
+  align-items: center;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 860px) {
+    grid-template-columns: var(--split, 1fr 1fr);
+  }
+}
+
+.id-split--start {
+  align-items: start;
+}
+
+// Sidebar layout — store category rail plus content. Collapses to a disclosure
+// on small screens (see `_components.scss`, `.id-filter-bar`).
+.id-with-sidebar {
+  display: grid;
+  gap: var(--sp-6);
+  grid-template-columns: 1fr;
+
+  @media (min-width: 900px) {
+    grid-template-columns: var(--sidebar-w, 250px) minmax(0, 1fr);
+    gap: var(--sp-7);
+  }
+}
+
+// Anything that must be allowed to scroll rather than push the page wide.
+.id-scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// -----------------------------------------------------------------------------
+// Utilities kept deliberately few — a long utility list is how a token system
+// stops being used.
+// -----------------------------------------------------------------------------
+.id-center {
+  text-align: center;
+
+  .id-lead,
+  .id-body {
+    margin-inline: auto;
+  }
+}
+
+.id-full-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}

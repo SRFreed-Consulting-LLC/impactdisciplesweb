@@ -1,0 +1,612 @@
+// =============================================================================
+// PRIMITIVES — the component vocabulary every page is built from.
+//
+// A direction restyles these by overriding tokens. Where a direction needs a
+// genuinely different SHAPE (Broadcast's rule-separated rows vs The Table's
+// floating cards), it overrides the class in _direction.scss.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Buttons
+// -----------------------------------------------------------------------------
+.id-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--btn-pad-y) var(--btn-pad-x);
+  border: var(--btn-border) solid var(--c-accent);
+  border-radius: var(--btn-radius);
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+  font-family: var(--f-label);
+  font-size: var(--btn-size);
+  font-weight: var(--btn-weight);
+  letter-spacing: var(--btn-track);
+  text-transform: var(--btn-case);
+  text-decoration: none;
+  line-height: 1.2;
+  text-align: center;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.id-btn:hover {
+  background: color-mix(in srgb, var(--c-accent) 86%, #000);
+  border-color: color-mix(in srgb, var(--c-accent) 86%, #000);
+  color: var(--c-accent-ink);
+}
+
+.id-btn:active {
+  transform: translateY(1px);
+}
+
+.id-btn[disabled],
+.id-btn.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.id-btn--ghost {
+  background: transparent;
+  color: var(--c-ink);
+  border-color: var(--c-line-strong);
+
+  &:hover {
+    background: transparent;
+    color: var(--c-accent);
+    border-color: var(--c-accent);
+  }
+}
+
+.id-btn--quiet {
+  background: transparent;
+  border-color: transparent;
+  color: var(--c-accent);
+  padding-inline: 0;
+
+  &:hover {
+    background: transparent;
+    border-color: transparent;
+    text-decoration: underline;
+  }
+}
+
+.id-btn--on-dark {
+  background: var(--c-inv-ink);
+  border-color: var(--c-inv-ink);
+  color: var(--c-inv-bg);
+
+  &:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--c-inv-bg);
+  }
+}
+
+.id-btn--lg {
+  --btn-pad-y: 0.95rem;
+  --btn-pad-x: 2rem;
+  --btn-size: 0.875rem;
+}
+
+.id-btn--sm {
+  --btn-pad-y: 0.45rem;
+  --btn-pad-x: 0.9rem;
+  --btn-size: 0.72rem;
+}
+
+.id-btn--block {
+  width: 100%;
+}
+
+// -----------------------------------------------------------------------------
+// Section heading — the device that carries a direction's structural voice.
+// Base is an eyebrow above a heading; directions restyle heavily.
+// -----------------------------------------------------------------------------
+.id-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-6);
+}
+
+.id-section-head__eyebrow {
+  font-family: var(--f-label);
+  font-size: var(--label-size);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--label-track);
+  text-transform: var(--label-case);
+  color: var(--c-accent);
+}
+
+.id-section-head__title {
+  font-size: var(--t-3);
+}
+
+.id-section-head__sub {
+  color: var(--c-ink-muted);
+  max-width: var(--measure);
+}
+
+.id-section-head--between {
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+// -----------------------------------------------------------------------------
+// Card
+// -----------------------------------------------------------------------------
+.id-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition:
+    box-shadow var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.id-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--card-pad);
+  flex: 1;
+}
+
+.id-card__title {
+  font-size: var(--t-2);
+}
+
+.id-card__foot {
+  margin-top: auto;
+  padding-top: var(--sp-2);
+}
+
+// A card that is itself a link.
+a.id-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+a.id-card:hover {
+  border-color: var(--c-accent);
+  color: inherit;
+}
+
+// -----------------------------------------------------------------------------
+// Media — every image slot. `--ratio` keeps grids from jumping while images
+// load, and the muted ground shows through as a deliberate placeholder rather
+// than a white hole.
+// -----------------------------------------------------------------------------
+.id-media {
+  position: relative;
+  aspect-ratio: var(--ratio, 3 / 2);
+  background: var(--c-surface-2);
+  overflow: hidden;
+}
+
+.id-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur) var(--ease);
+}
+
+.id-media--contain img {
+  object-fit: contain;
+}
+
+.id-media--square {
+  --ratio: 1;
+}
+.id-media--portrait {
+  --ratio: 3 / 4;
+}
+.id-media--wide {
+  --ratio: 16 / 9;
+}
+.id-media--book {
+  --ratio: 3 / 4;
+}
+
+a:hover > .id-media img,
+.id-card:hover .id-media img {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .id-media img {
+    transition: none;
+  }
+  a:hover > .id-media img,
+  .id-card:hover .id-media img {
+    transform: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Tag / chip
+// -----------------------------------------------------------------------------
+.id-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 0.25em 0.65em;
+  border-radius: var(--r-sm);
+  background: var(--c-accent-soft);
+  color: var(--c-accent);
+  font-family: var(--f-label);
+  font-size: var(--t-xs);
+  font-weight: var(--fw-label);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.id-tag--quiet {
+  background: var(--c-surface-2);
+  color: var(--c-ink-muted);
+}
+
+.id-tag--sale {
+  background: color-mix(in srgb, var(--c-danger) 12%, transparent);
+  color: var(--c-danger);
+}
+
+// -----------------------------------------------------------------------------
+// Price
+// -----------------------------------------------------------------------------
+.id-price {
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  font-size: var(--t-1);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-ink);
+}
+
+.id-price__was {
+  margin-right: var(--sp-2);
+  color: var(--c-ink-faint);
+  text-decoration: line-through;
+  font-size: var(--t-sm);
+  font-weight: var(--fw-body);
+}
+
+// -----------------------------------------------------------------------------
+// Forms
+// -----------------------------------------------------------------------------
+.id-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.id-field__label {
+  font-family: var(--f-label);
+  font-size: var(--t-sm);
+  font-weight: var(--fw-medium);
+  color: var(--c-ink);
+}
+
+.id-field__hint {
+  font-size: var(--t-xs);
+  color: var(--c-ink-muted);
+}
+
+.id-field__error {
+  font-size: var(--t-xs);
+  color: var(--c-danger);
+}
+
+.id-input,
+.id-select,
+.id-textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: var(--field-bg);
+  border: var(--bw) solid var(--field-border);
+  border-radius: var(--field-radius);
+  color: var(--c-ink);
+  font-size: var(--t-0);
+  line-height: 1.4;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+.id-input::placeholder,
+.id-textarea::placeholder {
+  color: var(--c-ink-faint);
+}
+
+.id-input:focus,
+.id-select:focus,
+.id-textarea:focus {
+  outline: none;
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-accent) 22%, transparent);
+}
+
+.id-textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.id-select {
+  appearance: none;
+  padding-right: 2.2rem;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.15rem) calc(50% + 2px),
+    calc(100% - 0.8rem) calc(50% + 2px);
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+
+.id-check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  cursor: pointer;
+}
+
+.id-check input {
+  margin-top: 0.25em;
+  accent-color: var(--c-accent);
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
+
+.id-form-grid {
+  display: grid;
+  gap: var(--sp-4);
+  grid-template-columns: 1fr;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.id-form-grid__full {
+  grid-column: 1 / -1;
+}
+
+// -----------------------------------------------------------------------------
+// Notes / callouts
+// -----------------------------------------------------------------------------
+.id-note {
+  padding: var(--sp-4) var(--sp-5);
+  border-left: var(--bw-strong) solid var(--c-accent);
+  background: var(--c-accent-soft);
+  border-radius: var(--r-sm);
+  color: var(--c-ink);
+}
+
+.id-note--empty {
+  border-left-color: var(--c-line-strong);
+  background: var(--c-surface);
+  color: var(--c-ink-muted);
+  text-align: center;
+  padding-block: var(--sp-7);
+}
+
+// -----------------------------------------------------------------------------
+// Table — agenda, cart lines, order summary.
+// -----------------------------------------------------------------------------
+.id-table-wrap {
+  overflow-x: auto;
+  border: var(--bw) solid var(--c-line);
+  border-radius: var(--card-radius);
+}
+
+.id-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-sm);
+  min-width: 34rem;
+}
+
+.id-table th,
+.id-table td {
+  padding: var(--sp-3) var(--sp-4);
+  text-align: left;
+  border-bottom: var(--rule) solid var(--c-line);
+  vertical-align: top;
+}
+
+.id-table thead th {
+  font-family: var(--f-label);
+  font-size: var(--label-size);
+  font-weight: var(--fw-label);
+  letter-spacing: var(--label-track);
+  text-transform: var(--label-case);
+  color: var(--c-ink-muted);
+  background: var(--c-surface);
+  white-space: nowrap;
+}
+
+.id-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.id-table .id-num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+// -----------------------------------------------------------------------------
+// Breadcrumb
+// -----------------------------------------------------------------------------
+.id-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--t-sm);
+  color: var(--c-ink-muted);
+  list-style: none;
+}
+
+.id-breadcrumb li + li::before {
+  content: "/";
+  margin-right: var(--sp-2);
+  color: var(--c-ink-faint);
+}
+
+.id-breadcrumb a {
+  text-decoration: none;
+}
+
+.id-breadcrumb [aria-current] {
+  color: var(--c-ink);
+}
+
+// -----------------------------------------------------------------------------
+// Accordion — FAQ lists, mobile filter groups. Uses native <details> so it
+// works without JS and stays keyboard-accessible.
+// -----------------------------------------------------------------------------
+.id-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.id-disclosure {
+  border: var(--bw) solid var(--c-line);
+  border-radius: var(--card-radius);
+  background: var(--card-bg);
+  overflow: hidden;
+}
+
+.id-disclosure > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  cursor: pointer;
+  font-family: var(--f-display);
+  font-weight: var(--fw-medium);
+  list-style: none;
+}
+
+.id-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.id-disclosure > summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.id-disclosure[open] > summary::after {
+  transform: rotate(-135deg) translateY(-2px);
+}
+
+.id-disclosure__body {
+  padding: 0 var(--sp-5) var(--sp-5);
+  color: var(--c-ink-muted);
+}
+
+// -----------------------------------------------------------------------------
+// Countdown — summit and event banners.
+// -----------------------------------------------------------------------------
+.id-countdown {
+  display: flex;
+  gap: var(--sp-4);
+}
+
+.id-countdown__part {
+  text-align: center;
+  min-width: 3.2rem;
+}
+
+.id-countdown__num {
+  display: block;
+  font-family: var(--f-display);
+  font-weight: var(--fw-display);
+  font-size: var(--t-4);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.id-countdown__label {
+  display: block;
+  margin-top: var(--sp-1);
+  font-family: var(--f-label);
+  font-size: var(--t-xs);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+}
+
+// -----------------------------------------------------------------------------
+// Person — team members, speakers, coaches.
+// -----------------------------------------------------------------------------
+.id-person {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  text-decoration: none;
+  color: inherit;
+}
+
+.id-person__name {
+  font-size: var(--t-1);
+}
+
+.id-person__role {
+  font-family: var(--f-label);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+}
+
+// -----------------------------------------------------------------------------
+// Spinner
+// -----------------------------------------------------------------------------
+.id-spinner {
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 2px solid color-mix(in srgb, var(--c-ink) 18%, transparent);
+  border-top-color: var(--c-accent);
+  border-radius: 50%;
+  animation: id-spin 700ms linear infinite;
+}
+
+@keyframes id-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .id-spinner {
+    animation-duration: 2s;
+  }
+}
