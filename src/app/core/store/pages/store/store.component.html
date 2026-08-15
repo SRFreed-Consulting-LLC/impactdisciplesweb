@@ -14,6 +14,7 @@
   <section class="id-section">
     <div class="id-container id-with-sidebar">
       <app-store-sidebar
+        [products]="products"
         (searchEvent)="searchProducts($event)"
         (categoryFilterEvent)="filterProductsByCategory($event)"
         (viewAllProductsEvents)="viewAllProducts()"

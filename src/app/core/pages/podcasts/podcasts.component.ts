@@ -35,12 +35,24 @@ export class PodcastsComponent implements OnInit, OnDestroy {
     private viewScroller: ViewportScroller) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.pageNo = params['page'] ? params['page'] : this.pageNo;
-      this.loadPodcasts();
+    // Load active podcasts once. Pagination is client-side slicing, so a page
+    // change re-slices the already-loaded list via applyPage() instead of
+    // opening a new whole-collection listener each time (P7 -- the DMM page
+    // already avoids this). Web config is a one-time cached read, not a
+    // standing listener.
+    this.podcastService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe((podcasts) => {
+      this.podcasts = podcasts.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
+      this.selectedPodcast = this.podcasts[0];
+      this.applyPage();
     });
-    this.webConfigService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe(configs => {
-     this.webConfig = configs[0];
+
+    this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params) => {
+      this.pageNo = params['page'] ? params['page'] : this.pageNo;
+      this.applyPage();
+    });
+
+    this.webConfigService.getAll().then(configs => {
+      this.webConfig = configs[0];
     });
   }
 
@@ -48,13 +60,9 @@ export class PodcastsComponent implements OnInit, OnDestroy {
     this.isPlaying = true;
   }
 
-  loadPodcasts(): void {
-    this.podcastService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe((podcasts) => {
-      this.podcasts = podcasts.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
-      this.selectedPodcast = this.podcasts[0];
-      this.paginate = this.getPager(this.podcasts.length, Number(+this.pageNo), this.pageSize);
-      this.filteredPodcasts = this.podcasts.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
-    });
+  private applyPage(): void {
+    this.paginate = this.getPager(this.podcasts.length, Number(+this.pageNo), this.pageSize);
+    this.filteredPodcasts = this.podcasts.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
   }
 
   selectPodcast(podcast: PodCastModel) {
@@ -76,7 +84,7 @@ export class PodcastsComponent implements OnInit, OnDestroy {
   }
 
   clearFilters(): void {
-    this.loadPodcasts();
+    this.applyPage();
     this.selectedPodcast = null;
     this.isListView = true;
   }

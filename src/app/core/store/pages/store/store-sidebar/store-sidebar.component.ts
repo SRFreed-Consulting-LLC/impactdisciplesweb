@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { SeriesModel } from 'src/app/common/models/utils/series.model';
-import { combineLatest, map, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { TagModel } from 'src/app/common/models/domain/tag.model';
 import { ProductModel } from 'src/app/common/models/utils/product.model';
 import { ProductCategoriesService } from 'src/app/common/services/data/product-categories.service';
-import { ProductService } from 'src/app/common/services/data/product.service';
-import { QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
 
 interface CategoryWithProducts {
   category: TagModel;
@@ -28,6 +26,17 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
   @Input() showSeriesInSidebar = false;
   @Input() seriesItems: SeriesModel[] = [];
   @Input() ebooksOnly = false;
+
+  // Products come from the parent page (store: active products; e-books:
+  // isEBook products), which already loads them for its own grid. The
+  // sidebar no longer opens its own whole-catalog product listener -- that
+  // was a second standing subscription per store visit on top of the
+  // parent's (P2). It still streams the small categories collection itself.
+  private products$ = new BehaviorSubject<ProductModel[]>([]);
+  @Input() set products(value: ProductModel[]) {
+    this.products$.next(value ?? []);
+  }
+
   @Output() categoryFilterEvent = new EventEmitter<TagModel>();
   @Output() seriesFilterEvent = new EventEmitter<SeriesModel>();
   @Output() searchEvent = new EventEmitter<string>();
@@ -40,17 +49,12 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
 
   constructor(
-    private productService: ProductService,
     private productCategoriesService: ProductCategoriesService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    const productSource$ = this.ebooksOnly
-      ? this.productService.queryAllByMultiValue([new QueryParam('isEBook', WhereFilterOperandKeys.equal, true)])
-      : this.productService.streamAllByValue('isActive', true);
-
-    combineLatest([productSource$, this.productCategoriesService.streamAll()]).pipe(
+    combineLatest([this.products$, this.productCategoriesService.streamAll()]).pipe(
       takeUntil(this.ngUnsubscribe),
       map(([products, categories]) =>
         categories.map(category => {

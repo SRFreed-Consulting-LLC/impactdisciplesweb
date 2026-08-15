@@ -62,12 +62,13 @@ export class GiveComponent implements OnInit {
               body: JSON.stringify(request),
             });
 
-            console.log(await response.json())
-
             if (!response.ok) {
               throw new Error('Failed to fetch client secret');
             }
 
+            // Read the body exactly once - a fetch response stream can only
+            // be consumed a single time, so an extra response.json() here
+            // (previously a console.log) threw and broke Stripe init.
             const { clientSecret } = await response.json();
 
 
@@ -109,8 +110,6 @@ export class GiveComponent implements OnInit {
         },
       });
     })
-
-    console.log(response.error);
 
     // This point will only be reached if there is an immediate error when
     // confirming the payment. Otherwise, your customer will be redirected to

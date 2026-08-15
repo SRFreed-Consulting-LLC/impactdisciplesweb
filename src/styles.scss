@@ -24,7 +24,10 @@
 // the lowest precedence of anything here, which is what we want for Bootstrap.
 @import "./assets/styles/theme/css/fontAwesome5Pro.css";
 @import "./assets/styles/theme/css/ionicons.min.css";
-@import "~bootstrap/dist/css/bootstrap.css";
+// Bootstrap is bundled once via angular.json's "styles" (the minified copy,
+// loaded before this file so the design system still overrides it). The
+// duplicate @import that used to sit here loaded the whole framework a
+// second time.
 
 // -----------------------------------------------------------------------------
 // Legacy compatibility

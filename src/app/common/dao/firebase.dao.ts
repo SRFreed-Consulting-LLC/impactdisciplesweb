@@ -3,9 +3,8 @@ import { addDoc, collectionData, deleteDoc, doc, docData, getDoc, getDocs, limit
 import { Firestore, collection } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { DocumentData, onSnapshot, QueryConstraint, QuerySnapshot } from 'firebase/firestore';
+import { DocumentData, QueryConstraint, QuerySnapshot } from 'firebase/firestore';
 import { BaseModel } from '../models/base.model';
-import { Unsubscribe } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -27,15 +26,6 @@ export class FirebaseDAO<T extends BaseModel> {
 
   public getAllByValue(table: string, field: string, value: unknown, fromFirestore?, limitCount?: number): Promise<T[]>{
     const constraints: QueryConstraint[] = [where(field, "==", value)];
-    if (limitCount) constraints.push(limit(limitCount));
-
-    return getDocs(query(collection(this.fs, '/' + table), ...constraints)).then(docs => {
-      return this.getDocListFromPromise(docs, fromFirestore);
-    });
-  }
-
-  public queryByValue(table: string, field: string, opStr: WhereFilterOperandKeys, value: unknown, fromFirestore?, limitCount?: number): Promise<T[]>{
-    const constraints: QueryConstraint[] = [where(field, opStr, value)];
     if (limitCount) constraints.push(limit(limitCount));
 
     return getDocs(query(collection(this.fs, '/' + table), ...constraints)).then(docs => {
@@ -73,13 +63,11 @@ export class FirebaseDAO<T extends BaseModel> {
   }
 
   public async update(id: string, value: T, table: string, fromFirestore?): Promise<T>{
-    await setDoc(doc(this.fs, '/' + table + '/' + id), value).then(async () => {
-      const retval = await this.getById(id, table, fromFirestore);
-      retval.id = id;
-      return retval;
-    });
+    await setDoc(doc(this.fs, '/' + table + '/' + id), value);
 
-    return this.getById(id, table, fromFirestore);
+    const retval = await this.getById(id, table, fromFirestore);
+    retval.id = id;
+    return retval;
   }
 
   public delete(id: string, table: string){
@@ -120,8 +108,7 @@ export class FirebaseDAO<T extends BaseModel> {
     );
   }
 
-  // Distinct from streamById() below (callback/onSnapshot-based) -- this is
-  // an Observable, single-document counterpart to streamByValue() above.
+  // Observable, single-document counterpart to streamByValue() above.
   // Added for BaseService.streamById() (see its own comment): querying a
   // collection by an 'id' field via streamByValue() briefly emits an empty
   // array before the real snapshot arrives (and permanently emits one for
@@ -139,66 +126,6 @@ export class FirebaseDAO<T extends BaseModel> {
         return of([]);
       })
     );
-  }
-
-  public streamById(id: string, table: string, callBack, fromFirestore?): Unsubscribe{
-    return onSnapshot(doc(this.fs, '/' + table + '/' + id), async doc => {
-      if(doc.exists()){
-        let retval: T = doc.data() as T;
-        retval.id = doc.id;
-        retval = fromFirestore? fromFirestore(retval) : retval;
-        callBack(retval);
-      }
-    })
-  }
-
-  public queryStreamByValue(table: string, field: string, opStr: WhereFilterOperandKeys, value: unknown, fromFirestore?, limitCount?: number): Observable<T[]>{
-    const constraints: QueryConstraint[] = [where(field, opStr, value)];
-    if (limitCount) constraints.push(limit(limitCount));
-
-    return collectionData(query(collection(this.fs, '/' + table), ...constraints), {idField: 'id'}).pipe(
-      map(docs => {
-        return this.getDocListFromStream(docs, fromFirestore);
-      }),
-      catchError(err => {
-        console.error(`FirebaseDAO.queryStreamByValue('${table}', '${field}') failed:`, err);
-        return of([]);
-      })
-    );
-  }
-
-  public queryAllStreamByMultiValue(table: string, queries: QueryParam[], fromFirestore?, limitCount?: number): Observable<T[]>{
-    const queryConstraints: QueryConstraint[] = queries.map((query) =>
-      where(query.field, query.operation, query.value),
-    );
-    if (limitCount) queryConstraints.push(limit(limitCount));
-
-    return collectionData(query(collection(this.fs, '/' + table), ...queryConstraints), {idField: 'id'}).pipe(
-      map(docs => {
-        return this.getDocListFromStream(docs, fromFirestore);
-      }),
-      catchError(err => {
-        console.error(`FirebaseDAO.queryAllStreamByMultiValue('${table}') failed:`, err);
-        return of([]);
-      })
-    );
-  }
-
-  public async createInSubcollection(value: T, table: string, record_id: string, subcollection: string, fromFirestore?): Promise<T> {
-    const snap = await addDoc(collection(this.fs, table, record_id, subcollection), value);
-
-    return this.getById(table, snap.id, fromFirestore);
-  }
-
-  public async getAllFromSubCollection(table: string, record_id: string, subcollection: string, fromFirestore?): Promise<T[]> {
-    const snap = await getDocs(collection(this.fs, table, record_id, subcollection));
-
-    const docsData = snap.docs.map((item) => {
-      const val = item.exists() ? item.data() as T : null;
-      return fromFirestore && val ? fromFirestore(val) : val;
-    });
-
-    return docsData;
   }
 
   private getDocListFromStream(docs: (DocumentData | (DocumentData & {id: string}))[], fromFirestore){
@@ -225,11 +152,6 @@ export class FirebaseDAO<T extends BaseModel> {
     return retval;
   }
 
-  private getDoc(doc: (DocumentData | (DocumentData & {id: string})), fromFirestore){
-    const val: T = doc as T;
-    val.id = doc.id;
-    return fromFirestore? fromFirestore(val) : val;
-  }
 }
 
 
