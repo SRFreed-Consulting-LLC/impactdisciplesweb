@@ -1,0 +1,12 @@
+// =============================================================================
+// THEME VALUES — the one file a direction branch replaces.
+//
+// Empty on `redesign/base`, which therefore renders in the neutral defaults
+// declared in _tokens.scss. Each direction branch overwrites this file with
+// its own `:root { … }` block overriding whichever tokens its identity needs.
+//
+// It is imported after _tokens.scss and before every component partial, so a
+// value set here wins over the default without any of the primitives having to
+// know a direction exists. Structural moves that can't be expressed as a token
+// value go in _direction.scss instead, which loads last.
+// =============================================================================

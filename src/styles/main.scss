@@ -1,11 +1,15 @@
 // =============================================================================
 // Impact Discipleship Ministries — design system entry point.
 //
-// Import order matters: tokens must land before anything reads them, and
-// _direction.scss must land last so a direction can override any primitive.
+// Import order matters:
+//   tokens        declares the contract with neutral defaults
+//   theme-values  a direction branch overrides those values (empty on base)
+//   …partials…    components, written only against the token names
+//   direction     structural overrides a direction needs (empty on base)
 // =============================================================================
 
 @use "tokens";
+@use "theme-values";
 @use "base";
 @use "layout";
 @use "primitives";
