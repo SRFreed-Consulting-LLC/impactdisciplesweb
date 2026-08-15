@@ -9,7 +9,7 @@ export class LocationPipe implements PipeTransform {
 
   constructor(private locationService: LocationService) {}
   transform(locationId: string, format: 'full' | 'name' | 'cityState' | 'address' = 'full'): Promise<string> {
-    return this.locationService.getById(locationId).then(location => {
+    return this.locationService.getByIdCached(locationId).then(location => {
       if (!location) {
         return '';
       }

@@ -65,11 +65,28 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       this.catalog.applyActiveProductSale([this.product], sales);
       this.cartItem = this.catalog.productToCartItem(this.product);
 
-      this.productService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe(allProducts => {
-        const relatedByCategory = allProducts.filter(p => p?.category === this.product?.category && p?.id !== this.product?.id);
-        const otherProducts = allProducts.filter(p => p?.id !== this.product?.id);
-        this.relatedProducts = relatedByCategory.length > 0 ? relatedByCategory.slice(0, 2) : otherProducts.slice(0, 2);
-      });
+      this.loadRelatedProducts();
+    });
+  }
+
+  // Related products are picked once from the current product's category via
+  // a one-time, category-bounded query -- not a live whole-collection
+  // streamAll(). The old approach re-subscribed to the entire products
+  // collection on every product-doc emission and every in-page navigation,
+  // downloading the whole catalog (inactive products included) each time.
+  private loadRelatedProducts(): void {
+    const category = this.product.category;
+    const currentId = this.product.id;
+
+    if (!category) {
+      this.relatedProducts = [];
+      return;
+    }
+
+    this.productService.getAllByValue('category', category).then(sameCategory => {
+      this.relatedProducts = sameCategory
+        .filter(p => p?.id !== currentId)
+        .slice(0, 2);
     });
   }
 

@@ -72,9 +72,16 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           if(this.currentUser){
             this.event = events[0];
 
-            this.coursesList = await this.courseService.getAll();
+            // Fetch once, not on every event-doc emission (P12). These full
+            // collections don't change within an attendee's session; the maps
+            // below are cheap to rebuild from the already-loaded lists.
+            if (!this.coursesList.length) {
+              this.coursesList = await this.courseService.getAll();
+            }
 
-            this.coachesList = await this.coachService.getAll();
+            if (!this.coachesList.length) {
+              this.coachesList = await this.coachService.getAll();
+            }
 
             this.roomsList = await this.locationService.getById(typeof this.event.location=='string'? this.event.location : this.event.location.id).then(location => {
               return location.trainingrooms;
@@ -189,6 +196,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.scheduleService.stopMonitoringBreakoutCapacity();
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

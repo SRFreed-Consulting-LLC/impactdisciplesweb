@@ -2,7 +2,6 @@ import { CommonModule, DatePipe } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { NavMenuComponent } from "./nav-menu/nav-menu.component";
-import { ExtraInfoComponent } from "./components/extra-info/extra-info.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DynamicFormComponent } from "./form-renderer/dynamic-form.component";
 import { DynamicFormFieldComponent } from "./form-renderer/dynamic-form-field.component";
@@ -30,7 +29,6 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
 @NgModule({
   declarations: [
     NavMenuComponent,
-    ExtraInfoComponent,
     OffcanvasComponent,
     BackToTopComponent,
     SubscribeAreaComponent,
@@ -59,7 +57,6 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
   ],
   exports: [
     NavMenuComponent,
-    ExtraInfoComponent,
     OffcanvasComponent,
     BackToTopComponent,
     SubscribeAreaComponent,

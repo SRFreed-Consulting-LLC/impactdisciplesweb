@@ -11,6 +11,7 @@
   ></app-header>
   <div class="store__container">
     <app-store-sidebar
+      [products]="products"
       (searchEvent)="searchProducts($event)"
       (categoryFilterEvent)="filterProductsByCategory($event)"
       (viewAllProductsEvents)="viewAllProducts()"

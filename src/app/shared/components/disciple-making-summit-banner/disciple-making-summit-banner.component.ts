@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { EventService } from 'src/app/common/services/data/event.service';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-disciple-making-summit-banner',
@@ -19,13 +18,19 @@ export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
   public seconds = 0;
 
   private intervalId: number;
-  private ngUnsubscribe = new Subject<void>();
+  private destroyed = false;
 
   constructor(private eventService: EventService){}
 
   ngOnInit(): void {
-    this.eventService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe((events) => {
-      this.dms = events.find((event) => event.isSummit)
+    // One-time, summit-only fetch instead of a live whole-collection
+    // streamAll() -- the banner only needs to pick the summit once, and the
+    // countdown runs off a local interval, not Firestore (P3).
+    this.eventService.getAllByValue('isSummit', true).then((events) => {
+      if (this.destroyed) {
+        return;
+      }
+      this.dms = events.find((event) => event.isSummit);
       this.startCountdown();
     });
   }
@@ -49,11 +54,10 @@ export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
 }

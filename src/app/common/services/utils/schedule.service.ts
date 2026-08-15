@@ -1,5 +1,6 @@
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { Injectable } from "@angular/core";
+import { Subscription } from 'rxjs';
 import { AgendaItem } from "src/app/common/models/domain/utils/agenda-item.model";
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { ScheduleModel, TimeGroupsModel, UpdatedAgendaItemModel } from 'src/app/common/models/utils/schedule.model';
@@ -130,8 +131,18 @@ export class ScheduleService {
 
   public traininlist: Map<string, string[]> = new Map<string, string[]>();
 
+  // This is a providedIn:'root' singleton and monitorBreakoutCapacity() is
+  // called from inside the schedule page's event-stream callback, so without
+  // tracking the subscription every page visit (and every event-doc
+  // emission) stacked another permanent event-registrations listener (P4).
+  // Replace the previous listener on each call, and let the page tear the
+  // last one down via stopMonitoringBreakoutCapacity() in ngOnDestroy.
+  private capacitySub?: Subscription;
+
   monitorBreakoutCapacity(event: EventModel){
-    this.eventRegistrationService.streamTrainingSessionList(event.id).subscribe(registeredusers => {
+    this.capacitySub?.unsubscribe();
+
+    this.capacitySub = this.eventRegistrationService.streamTrainingSessionList(event.id).subscribe(registeredusers => {
       const retval: Map<string, string[]> = new Map<string, string[]>();
 
       registeredusers.forEach(user => {
@@ -146,5 +157,10 @@ export class ScheduleService {
 
       this.traininlist = retval;
     })
+  }
+
+  stopMonitoringBreakoutCapacity(){
+    this.capacitySub?.unsubscribe();
+    this.capacitySub = undefined;
   }
 }
