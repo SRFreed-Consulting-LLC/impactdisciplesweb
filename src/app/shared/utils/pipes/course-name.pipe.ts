@@ -9,8 +9,8 @@ export class CourseNamePipe implements PipeTransform {
 
   constructor(private courseService: CourseService) {}
   transform(courseId: string): Promise<string> {
-    return this.courseService.getById(courseId).then(course => {
-      return course.title
+    return this.courseService.getByIdCached(courseId).then(course => {
+      return course?.title ?? '';
     });
   }
 }

@@ -64,7 +64,7 @@ export class SubscriptionService extends BaseService<SubscriptionModel> {
       text +='God Bless! - Impact Disciples Ministry'
 
       text += "<br><br><br><div>If you believe you received this confirmation by mistake, please click " +
-        "<b><a href='" + environment.unsubscribeUrl + "?email="+ subscription.email +
+        "<b><a href='" + environment.unsubscribeUrl + "?email="+ encodeURIComponent(subscription.email) +
         "&type=prayer'>here</a></b> to remove your address.</div>"
 
       this.emailService.sendTextEmail(subscription.email, subject, text);
@@ -78,7 +78,7 @@ export class SubscriptionService extends BaseService<SubscriptionModel> {
     text +='<div>God Bless! - Impact Disciples Ministry</div>'
 
     text += "<br><br><br><div>If you believe you received this confirmation by mistake, please click " +
-      "<b><a href='" + environment.unsubscribeUrl + "?email="+ subscription.email +
+      "<b><a href='" + environment.unsubscribeUrl + "?email="+ encodeURIComponent(subscription.email) +
       "&type=newsletter'>here</a></b> to remove your address.</div>"
 
     this.emailService.sendHtmlEmail(subscription.email, subject, text);

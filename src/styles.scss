@@ -4,7 +4,9 @@
 @import './assets/styles/theme/css/fontAwesome5Pro.css';
 @import './assets/styles/theme/css/ionicons.min.css';
 @import './assets/styles/theme/css/animate.min.css';
-@import "~bootstrap/dist/css/bootstrap.css";
+// Bootstrap is bundled once via angular.json's "styles" (the minified copy);
+// the duplicate @import that used to sit here loaded the whole framework a
+// second time.
 
 
 //GLOBAL STYLES

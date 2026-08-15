@@ -1,7 +1,5 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PodCastModel } from 'src/app/common/models/domain/pod-cast.model';
-import { PodCastService } from 'src/app/common/services/data/pod-cast.service';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-podcast-sidebar',
@@ -9,23 +7,26 @@ import { Subject, takeUntil } from 'rxjs';
     styleUrls: ['./podcast-sidebar.component.scss'],
     standalone: false
 })
-export class PodcastSidebarComponent implements OnInit, OnDestroy {
+export class PodcastSidebarComponent {
   @Output() searchEvent = new EventEmitter<string>();
   @Output() selectPodcast = new EventEmitter<PodCastModel>();
   @Output() clearFiltersEvent = new EventEmitter<void>();
-  @Input() podcasts: PodCastModel[] = [];
-  public recentPodcasts: PodCastModel[] = [];
 
-  private ngUnsubscribe = new Subject<void>();
-
-  constructor(private podcastService: PodCastService) {}
-
-  ngOnInit(): void {
-    this.podcastService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe((podcasts) => {
-      const sortedPodcasts = podcasts.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
-      this.recentPodcasts = sortedPodcasts.slice(0, 5);
-    });
+  // The "recent" list is derived from the podcasts the parent already loads
+  // and passes in -- the sidebar no longer opens its own duplicate active-
+  // podcasts listener on top of the parent's (P7).
+  private _podcasts: PodCastModel[] = [];
+  @Input() set podcasts(value: PodCastModel[]) {
+    this._podcasts = value ?? [];
+    this.recentPodcasts = [...this._podcasts]
+      .sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime())
+      .slice(0, 5);
   }
+  get podcasts(): PodCastModel[] {
+    return this._podcasts;
+  }
+
+  public recentPodcasts: PodCastModel[] = [];
 
   onSelectPodcast(podcast: PodCastModel) {
     this.selectPodcast.emit(podcast);
@@ -44,10 +45,4 @@ export class PodcastSidebarComponent implements OnInit, OnDestroy {
   onClearFilters(): void {
     this.clearFiltersEvent.emit();
   }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
-
 }

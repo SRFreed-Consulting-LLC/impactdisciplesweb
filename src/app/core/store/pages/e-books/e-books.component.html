@@ -12,6 +12,7 @@
   <div class="e-books__container">
     <app-store-sidebar
       [ebooksOnly]="true"
+      [products]="products"
       (searchEvent)="searchProducts($event)"
       (categoryFilterEvent)="filterProductsByCategory($event)"
       (viewAllProductsEvents)="viewAllProducts()"

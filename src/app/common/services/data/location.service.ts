@@ -11,4 +11,23 @@ export class LocationService extends BaseService<LocationModel>{
     super(dao)
     this.table="locations"
   }
+
+  // Per-id promise cache so the location pipe rendering the same location id
+  // across many event cards triggers one Firestore read, not one per card
+  // (P10). Locations don't change within a public visit; a failed read is
+  // evicted so a transient error isn't cached permanently.
+  private byIdCache = new Map<string, Promise<LocationModel>>();
+
+  getByIdCached(id: string): Promise<LocationModel> {
+    if (!id) {
+      return Promise.resolve(undefined);
+    }
+    if (!this.byIdCache.has(id)) {
+      this.byIdCache.set(id, this.getById(id).catch((err) => {
+        this.byIdCache.delete(id);
+        throw err;
+      }));
+    }
+    return this.byIdCache.get(id);
+  }
 }
