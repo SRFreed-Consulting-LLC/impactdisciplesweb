@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CoachModel } from 'src/app/common/models/domain/coach.model';
-import { CoachService } from 'src/app/common/services/data/coach.service';
+import { ImpactTeamMemberModel } from 'src/app/common/models/domain/impact-team-member.model';
+import { ImpactTeamService } from 'src/app/common/services/data/impact-team.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -11,16 +11,21 @@ import { Subject, takeUntil } from 'rxjs';
     standalone: false
 })
 export class TeamDetailsComponent implements OnInit, OnDestroy {
-  teamMember: CoachModel;
+  teamMember: ImpactTeamMemberModel;
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private route: ActivatedRoute, private coachService: CoachService){}
+  constructor(private route: ActivatedRoute, private impactTeamService: ImpactTeamService){}
 
+  // Reads `impact_team` now, not `coaches` (2026-08 split) - the same
+  // document id was reused by the admin-side move script for anyone who
+  // had teamPageSortOrder set, so this route (and the Summit "Featured
+  // Speakers" carousel, which links here too) keeps resolving with no
+  // route/link changes needed.
   ngOnInit(): void {
     const teamId = this.route.snapshot.paramMap.get('id');
     if (teamId) {
-      this.coachService.streamById(teamId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((coach) => {
+      this.impactTeamService.streamById(teamId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((coach) => {
         if(coach && coach.length == 1){
           this.teamMember = coach[0];
         }

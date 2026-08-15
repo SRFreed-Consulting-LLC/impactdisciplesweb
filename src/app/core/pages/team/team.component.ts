@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CoachModel } from 'src/app/common/models/domain/coach.model';
-import { CoachService } from 'src/app/common/services/data/coach.service';
+import { ImpactTeamMemberModel } from 'src/app/common/models/domain/impact-team-member.model';
+import { ImpactTeamService } from 'src/app/common/services/data/impact-team.service';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
@@ -14,13 +14,18 @@ export class TeamComponent implements OnInit, AfterViewInit {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
 
-  coaches: CoachModel[];
+  coaches: ImpactTeamMemberModel[];
 
-  constructor(private coachService: CoachService){}
+  constructor(private impactTeamService: ImpactTeamService){}
 
+  // Reads `impact_team` now, not `coaches` (2026-08 split - see
+  // impact-team-member.model.ts's own header comment). `teamPageSortOrder`
+  // is just `sortOrder` on this collection - there's no second sort
+  // concept to disambiguate from since this collection only has the one
+  // purpose.
   async ngOnInit(): Promise<void> {
-    this.coaches = await this.coachService.getAllByValue('isActive', true).then( coaches => {
-      coaches.sort((a, b) => a.teamPageSortOrder - b.teamPageSortOrder)
+    this.coaches = await this.impactTeamService.getAllByValue('isActive', true).then( coaches => {
+      coaches.sort((a, b) => a.sortOrder - b.sortOrder)
       return coaches;
     })
 
