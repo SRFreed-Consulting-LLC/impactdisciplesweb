@@ -55,12 +55,12 @@ export class ImpactUserService extends BaseService<ImpactUser>{
         // reset the purchase date to now
         match[0].purchaseDate = Timestamp.now();
       } else {
-        // create a new license
+        // create a new license - no term: a license never expires, and
+        // nothing ever read the old type/length ("year"/1) anyway. See
+        // BookLicenseModel's own comment.
         const lm: BookLicenseModel = {...new BookLicenseModel()}
         lm.bookId = request.digitalBookId;
-        lm.length = 1
         lm.language = request.language;
-        lm.type = 'year';
         lm.purchaseDate = Timestamp.now();
 
         // add license to user's list
