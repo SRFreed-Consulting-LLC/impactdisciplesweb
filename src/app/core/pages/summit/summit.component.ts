@@ -49,15 +49,32 @@ export class SummitComponent implements OnInit, OnDestroy {
         new QueryParam('isActive', WhereFilterOperandKeys.equal, true)
       ]
 
+      // "No summit for the requested year" is an EXPECTED state, not an
+      // error - the nav links to next year's summit before its event doc
+      // exists (e.g. /summit/2027 while only 2026 is created). Fall back
+      // to the next upcoming active summit so the page stays registerable
+      // (register button -> event-details -> cart) whenever ANY summit is
+      // on sale; only the static teaser renders when none is. The page
+      // lights up automatically once the year's event doc is created with
+      // isSummit + isActive. Multiple matches pick the soonest rather
+      // than bailing (the old `length == 1` check returned null - and
+      // console.error'd - the moment TWO future summits existed).
       this.summit = await this.eventService.queryAllByMultiValue(query).then(events => {
-        if(events && events.length == 1){
-          return events[0]
-        } else {
-          console.error('No summit event found for ' + year);
-
-          return null;
+        if (events && events.length > 0) {
+          return this.soonest(events);
         }
-
+        console.warn('No summit event found for ' + year + ' - checking for next upcoming summit');
+        return this.eventService.queryAllByMultiValue([
+          new QueryParam('startDate', WhereFilterOperandKeys.more, new Date()),
+          new QueryParam('isSummit', WhereFilterOperandKeys.equal, true),
+          new QueryParam('isActive', WhereFilterOperandKeys.equal, true)
+        ]).then(upcoming => {
+          if (upcoming && upcoming.length > 0) {
+            return this.soonest(upcoming);
+          }
+          console.warn('No upcoming summit on sale - showing the static teaser');
+          return null;
+        });
       });
 
       if(this.summit?.agendaItems) {
@@ -79,8 +96,21 @@ export class SummitComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Soonest-starting event of a result set - used instead of assuming the
+   *  summit query returns exactly one match. */
+  private soonest(events: EventModel[]): EventModel {
+    return [...events].sort(
+      (a, b) => new Date(a.startDate.toString()).getTime() - new Date(b.startDate.toString()).getTime()
+    )[0];
+  }
+
   private startCountdown(): void {
-    const endDate = new Date(this.summit?.startDate.toString()).getTime();
+    if (!this.summit?.startDate) {
+      // Static-teaser mode (no summit on sale) - a countdown against
+      // nothing just ticks NaN into the template every second.
+      return;
+    }
+    const endDate = new Date(this.summit.startDate.toString()).getTime();
 
     this.intervalId = setInterval(() => {
       const now = new Date().getTime();

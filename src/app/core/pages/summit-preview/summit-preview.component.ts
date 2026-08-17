@@ -38,19 +38,26 @@ export class SummitPreviewComponent implements OnInit, OnDestroy {
       const year = Number(params.get('year'));
 
       const query = [
-        new QueryParam('startDate', WhereFilterOperandKeys.more, (year) + '-01-01'),
+        // A real Date, not a "YYYY-01-01" string - Firestore inequality
+        // filters only match same-typed values, so the string form
+        // silently matched zero docs (see summit.component.ts's identical
+        // fix). No isActive filter here on purpose: preview exists to see
+        // a not-yet-activated summit.
+        new QueryParam('startDate', WhereFilterOperandKeys.more, new Date(year + '-01-01')),
         new QueryParam('isSummit', WhereFilterOperandKeys.equal, true)
       ]
 
       this.summit = await this.eventService.queryAllByMultiValue(query).then(events => {
-        if(events && events.length == 1){
-          return events[0]
-        } else {
-          console.error('No summit event found for ' + year);
-
-          return null;
+        if (events && events.length > 0) {
+          // Soonest match rather than requiring exactly one - two future
+          // summits used to null this out entirely.
+          return [...events].sort(
+            (a, b) => new Date(a.startDate.toString()).getTime() - new Date(b.startDate.toString()).getTime()
+          )[0];
         }
-
+        // Expected state (no event doc for that year yet), not an error.
+        console.warn('No summit event found for ' + year);
+        return null;
       });
 
       if(this.summit?.agendaItems) {
@@ -74,7 +81,12 @@ export class SummitPreviewComponent implements OnInit, OnDestroy {
   }
 
   private startCountdown(): void {
-    const endDate = new Date(this.summit?.startDate.toString()).getTime();
+    if (!this.summit?.startDate) {
+      // No summit loaded - a countdown against nothing just ticks NaN
+      // into the template every second.
+      return;
+    }
+    const endDate = new Date(this.summit.startDate.toString()).getTime();
 
     this.intervalId = setInterval(() => {
       const now = new Date().getTime();
