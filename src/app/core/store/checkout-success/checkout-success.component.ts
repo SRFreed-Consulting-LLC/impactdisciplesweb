@@ -13,7 +13,6 @@ import { EventService } from 'src/app/common/services/data/event.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { SubscriptionService } from 'src/app/common/services/data/subscription.service';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
-import { ImpactUserService } from 'src/app/shared/utils/services/impact-user.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { CartService } from '../services/cart.service';
@@ -43,7 +42,6 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     public cartService: CartService,
     private newsletterSubscriptionService: SubscriptionService,
     private eventRegistrationService: EventRegistrationService,
-    private impactService: ImpactUserService,
     private emailService: EMailService,
     private eventService: EventService,
     private affiliateSaleService: AffilliateSalesService,
@@ -72,12 +70,15 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     }
 
     const events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
-    const digitalBooks: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook);
     const followUpEmails: CartItem[] = checkoutForm.cartItems.filter(item => item.followUpEmailId);
-
-    if (digitalBooks.length > 0) {
-      this.runSideEffect('DIGITAL_LIBRARY_REGISTER', checkoutForm, () => this.impactService.registerImpactUser(checkoutForm), 'setting up your Digital Library access');
-    }
+    // DIGITAL_LIBRARY_REGISTER side effect removed (pre-prod checklist #3):
+    // the legacy impact-users license store is retired - digital-book access
+    // is granted into libraryUsers by the onPurchaseGrantLibraryLicenses
+    // trigger the moment the purchase doc lands, entirely server-side.
+    // NOTE for the eventual PROD cutover: the OLD production library (if
+    // still serving anyone from impact-users) stops receiving grants once
+    // this build reaches production - by then the new reader app must be
+    // the live one.
 
     if (events.length > 0) {
       await this.registerEventUsers(checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events);
