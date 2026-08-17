@@ -147,6 +147,14 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   proceedToCheckout() {
     this.validateAttendees().then(isValid => {
       if (isValid) {
+        // The inputs write into attendeesForm (reactive form), not into
+        // cartItem.attendees -- copy the typed values over before the cart
+        // item is stored, or checkout-success registers empty attendees
+        // (the server rejects them with a 400 and nobody gets registered).
+        this.cartItem.attendees = this.attendeesForm.controls.map(control => {
+          const value = (control as FormGroup).getRawValue();
+          return { firstName: value.firstName, lastName: value.lastName, email: value.email };
+        });
         this.cartService.addCartProduct(this.cartItem);
         this.router.navigate(['/shopping-cart']);
       }

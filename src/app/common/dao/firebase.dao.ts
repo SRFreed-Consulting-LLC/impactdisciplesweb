@@ -54,20 +54,23 @@ export class FirebaseDAO<T extends BaseModel> {
     })
   }
 
+  // No read-back after the write: some collections are write-only for
+  // anonymous visitors under firestore.rules (log-messages,
+  // affilliate_sales, mail) -- the write succeeds but the read-back is
+  // denied, failing the call after the data already landed. No writer in
+  // this app uses serverTimestamp(), so echoing the input is equivalent.
   public add(value: T, table: string, fromFirestore?): Promise<T>{
-    return addDoc(collection(this.fs, '/' + table), value).then(async doc => {
-      const retval = await this.getById(doc.id, table, fromFirestore);
-      retval.id = doc.id;
-      return retval;
+    return addDoc(collection(this.fs, '/' + table), value).then(doc => {
+      const retval = { ...value, id: doc.id };
+      return fromFirestore ? fromFirestore(retval) : retval;
     });
   }
 
   public async update(id: string, value: T, table: string, fromFirestore?): Promise<T>{
     await setDoc(doc(this.fs, '/' + table + '/' + id), value);
 
-    const retval = await this.getById(id, table, fromFirestore);
-    retval.id = id;
-    return retval;
+    const retval = { ...value, id };
+    return fromFirestore ? fromFirestore(retval) : retval;
   }
 
   public delete(id: string, table: string){
