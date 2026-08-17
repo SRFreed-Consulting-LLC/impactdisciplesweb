@@ -20,12 +20,9 @@ export class MonthlyNewsletterComponent implements OnInit {
   constructor(private newsletterService: MonthlyNewletterService) { }
 
   async ngOnInit() {
+    // getAllOrdered() already queries with orderBy('date', 'desc') --
+    // re-sorting client-side here was redundant (not incorrect, just
+    // duplicate work on every load).
     this.newletters = await this.newsletterService.getAllOrdered('date', this.maxNewsletters);
-
-    const datSorter = (a,b) => {
-      return new Date(b.date as string).getTime() - new Date(a.date as string).getTime()
-    };
-
-      this.newletters.sort(datSorter);
   }
 }

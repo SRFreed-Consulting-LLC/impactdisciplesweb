@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -16,7 +15,6 @@ import { EffectFade, Pagination } from 'swiper/modules';
 export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
-  public canRegisterForDMS = true;
   public dms: EventModel;
   public impactDisciplesInfo = impactDisciplesInfo;
   @Input() images: string[] = [
@@ -38,7 +36,7 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(private eventService: EventService, private router: Router){}
+  constructor(private eventService: EventService){}
 
   ngOnInit(): void {
     this.eventService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe(async (events) => {
@@ -97,10 +95,6 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
         },
       });
     }
-  }
-
-  goToEventDetails(event: EventModel): void {
-    this.router.navigate(['/event-details'], { state: { event } });
   }
 
   prevSlide() {

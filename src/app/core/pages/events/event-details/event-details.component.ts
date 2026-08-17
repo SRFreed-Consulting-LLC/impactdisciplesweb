@@ -1,4 +1,3 @@
-import { EventRegistrationService } from './../../../../../../src/app/common/services/data/event-registration.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +15,7 @@ import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model
 import { CartService } from 'src/app/core/store/services/cart.service';
 import { CartItem } from 'src/app/common/models/utils/cart.model';
 import { EventService } from 'src/app/common/services/data/event.service';
+import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
@@ -167,8 +167,17 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  registerUsers(){
-      this.attendeesForm.controls.forEach(async (control) => {
+  async registerUsers(){
+      // Was: cartService.clearCartNoConfirmation() ran unconditionally after
+      // every single attendee, inside a plain forEach that doesn't wait for
+      // the async registration call -- so it fired regardless of whether
+      // that attendee's registration actually succeeded, and once per
+      // attendee rather than once for the whole batch. A failed
+      // registration cleared state anyway, contradicting the error toast's
+      // own "please try again." Restructured with Promise.all so the batch
+      // is awaited as a whole, and the cart is only cleared once, only if
+      // at least one attendee actually registered successfully.
+      const results = await Promise.all(this.attendeesForm.controls.map(async (control) => {
         const attendeeGroup = control as FormGroup;
         const value = attendeeGroup.getRawValue();
 
@@ -176,7 +185,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
         // the old client-side create -> template email -> receipt-stamp
         // chain (the function does all three server-side, including the
         // confirmation email carrying the breakout link).
-        await this.eventRegistrationService.registerForEvent({
+        return this.eventRegistrationService.registerForEvent({
           eventId: this.event.id,
           firstName: value.firstName,
           lastName: value.lastName,
@@ -187,6 +196,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
             ' starting on ' + dateFromTimestamp(this.event.startDate),
             type: 'success'
           });
+          return true;
         }).catch((err) => {
           this.loggerService.logMessage(
             'EVENT_REGISTRATION',
@@ -200,11 +210,13 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
               type: 'error'
             });
           });
+          return false;
         });
+      }));
 
+      if (results.some(Boolean)) {
         this.cartService.clearCartNoConfirmation();
-      })
-
+      }
   }
 
   private groupAgendaItemsByMonthAndDate(agendaItems: AgendaItem[]) {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import impactDisciplesInfo from '../utils/data/impact-disciples.data';
 import { SubscriptionModel } from 'src/app/common/models/domain/subscription.model';
 import { SubscriptionService } from 'src/app/common/services/data/subscription.service';
+import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
 @Component({
@@ -15,7 +16,11 @@ export class FooterComponent {
 
   subscription: SubscriptionModel = {... new SubscriptionModel(), type: 'newsletter'};
 
-  constructor(private subscriptionService: SubscriptionService, private toastService: ToastService){}
+  constructor(
+    private subscriptionService: SubscriptionService,
+    private toastService: ToastService,
+    private loggerService: LoggerService
+  ){}
 
   // Was a raw this.subscriptionService.add(this.subscription) - a direct,
   // un-deduped Firestore write straight into the old `subscriptions`
@@ -37,6 +42,17 @@ export class FooterComponent {
 
         return null;
       }
+    }).catch(err => {
+      // createSubscription() throws on a failed request -- was previously
+      // unhandled here, a genuinely silent failure with no user feedback.
+      this.loggerService.logMessage(
+        'NEWSLETTER_SUBSCRIBE', this.subscription.email, 'Failed to subscribe to the newsletter.', { err: String(err) }
+      ).subscribe(errorCode => {
+        this.toastService.notify({
+          message: 'We could not complete your subscription. Please try again - reference code: ' + errorCode,
+          type: 'error'
+        });
+      });
     });
     // Confirmation email is queued server-side by subscribe_to_email_list
     // now (pre-prod #1) - no client mail write.
