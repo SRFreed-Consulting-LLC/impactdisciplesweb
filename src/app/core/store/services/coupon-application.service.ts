@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CartItem } from 'src/app/common/models/utils/cart.model';
 import { CouponModel } from 'src/app/common/models/utils/coupon.model';
-import { CouponService } from 'src/app/common/services/data/coupon.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
+import { environment } from 'src/environments/environment';
 
 export interface CouponLineResult {
   itemId: string;
@@ -28,20 +28,29 @@ export interface CouponApplicationResult {
 // Single implementation of "does this coupon apply to this cart, and by how
 // much" -- replaces the logic that was embedded directly in the original
 // ShoppingCartComponent.applyCoupon() (and the second, dead lookup in
-// CheckoutComponent.getCouponCode() whose result was never read). Uses
-// CouponService's existing, unmodified read methods (getAllByValue) -- one
-// Firestore read per apply, same as the original, just centralized.
+// CheckoutComponent.getCouponCode() whose result was never read).
+//
+// The code is resolved through the `lookup_coupon` Cloud Function rather
+// than a direct Firestore read (pre-prod checklist #5): the direct read
+// required a world-readable `coupons` collection - anyone could enumerate
+// every discount code - so the rules now lock it to staff and this single-
+// code lookup happens server-side. Bonus over the old exact-match read:
+// the lookup is case-insensitive. Server-side checkout pricing still
+// re-validates the coupon regardless - this is UX-layer resolution only.
 @Injectable({ providedIn: 'root' })
 export class CouponApplicationService {
-  constructor(private couponService: CouponService) {}
 
   async validateAndApply(items: CartItem[], code: string): Promise<CouponApplicationResult> {
     if (!code) {
       return { applied: false, netDiscount: 0, lineResults: [], message: 'Please enter a coupon code.' };
     }
 
-    const coupons: CouponModel[] = await this.couponService.getAllByValue('code', code);
-    const coupon = coupons?.[0];
+    const response = await fetch(environment.lookupCouponUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
+    });
+    const coupon: CouponModel | null = response.ok ? (await response.json())?.coupon : null;
 
     if (!coupon || !coupon.isActive) {
       return { applied: false, netDiscount: 0, lineResults: [], message: 'Coupon not valid for these items.' };

@@ -12,7 +12,6 @@ import { EventRegistrationService } from 'src/app/common/services/data/event-reg
 import { EventService } from 'src/app/common/services/data/event.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { SubscriptionService } from 'src/app/common/services/data/subscription.service';
-import { TaxRateSummaryService } from 'src/app/common/services/data/tax-rate-summary.service';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
 import { ImpactUserService } from 'src/app/shared/utils/services/impact-user.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
@@ -48,7 +47,6 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     private emailService: EMailService,
     private eventService: EventService,
     private affiliateSaleService: AffilliateSalesService,
-    private taxSummaryService: TaxRateSummaryService,
     private toastService: ToastService,
     private loggerService: LoggerService
   ) {}
@@ -74,7 +72,6 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     }
 
     const events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
-    const products: CartItem[] = checkoutForm.cartItems.filter(item => !item.isEvent);
     const digitalBooks: CartItem[] = checkoutForm.cartItems.filter(item => item.isDigitalBook);
     const followUpEmails: CartItem[] = checkoutForm.cartItems.filter(item => item.followUpEmailId);
 
@@ -85,10 +82,10 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     if (events.length > 0) {
       await this.registerEventUsers(checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events);
     }
-
-    if (products.length > 0 && checkoutForm.total > 0) {
-      this.runSideEffect('TAX_SUMMARY', checkoutForm, () => this.taxSummaryService.recordStateTaxesCollected(checkoutForm), 'recording collected sales tax');
-    }
+    // TAX_SUMMARY side effect removed (pre-prod checklist #4): collected
+    // sales tax now rolls into tax_rate_summaries SERVER-side via the
+    // onPurchaseTaxSummary purchases trigger - no more anonymous client
+    // read-modify-write of running totals (and no double-count on refresh).
 
     if (followUpEmails.length > 0) {
       this.sendProductFollowUpEmail(checkoutForm, followUpEmails);

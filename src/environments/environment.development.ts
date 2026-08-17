@@ -19,6 +19,8 @@ export const environment = {
   capturePaypalOrderUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/capture_paypal_order",
   shippingUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_shipping_rates",
   youtubeKeyUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_youtube_keys",
+
+  lookupCouponUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/lookup_coupon",
   subscribeUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/subscribe_to_email_list",
   unsubscribeUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/unsubscribe_from_email_list",
   oneGiftUrl: 'https://buy.stripe.com/test_3cseVSfkM23y4tafYY',
