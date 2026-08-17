@@ -1,8 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { Timestamp } from 'firebase/firestore';
-import { AffilliateSaleModel } from 'src/app/common/models/utils/affilliate-sale.model';
 import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
-import { AffilliateSalesService } from 'src/app/common/services/data/affiliate-sales.service';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
@@ -37,7 +34,6 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     private newsletterSubscriptionService: SubscriptionService,
     private eventRegistrationService: EventRegistrationService,
     private eventService: EventService,
-    private affiliateSaleService: AffilliateSalesService,
     private toastService: ToastService,
     private loggerService: LoggerService
   ) {}
@@ -58,9 +54,10 @@ export class CheckoutSuccessComponent implements AfterViewInit {
       );
     }
 
-    if (checkoutForm.couponCode) {
-      this.runSideEffect('AFFILIATE_SALE', checkoutForm, () => this.recordAffiliateSale(checkoutForm), 'recording your coupon/affiliate sale');
-    }
+    // Affiliate/coupon sale is recorded server-side by the checkout Cloud
+    // Function now (sweep fix) - the client no longer writes
+    // affilliate_sales (that write required an anonymous-create rule that
+    // let anyone forge attribution).
 
     const events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
     // DIGITAL_LIBRARY_REGISTER side effect removed (pre-prod checklist #3):
@@ -104,17 +101,6 @@ export class CheckoutSuccessComponent implements AfterViewInit {
         });
       });
     });
-  }
-
-  private recordAffiliateSale(checkoutForm: CheckoutForm): Promise<AffilliateSaleModel> {
-    const sale: AffilliateSaleModel = { ...new AffilliateSaleModel() };
-    sale.code = checkoutForm.couponCode;
-    sale.date = Timestamp.now();
-    sale.email = checkoutForm.email;
-    sale.totalAfterDiscount = checkoutForm.total - checkoutForm.discount;
-    sale.totalBeforeDiscount = checkoutForm.total;
-    sale.receipt = checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : '';
-    return this.affiliateSaleService.add(sale);
   }
 
   private async registerEventUsers(confirmationId: string, events: CartItem[]): Promise<void> {
