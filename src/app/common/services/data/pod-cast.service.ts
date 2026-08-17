@@ -10,9 +10,6 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class PodCastService extends BaseService<PodCastModel>{
-  API_KEY
-  PLAY_LIST_ID;
-
   constructor(public override dao: FirebaseDAO<PodCastModel> ) {
     super(dao)
     this.table="pod_casts"
@@ -27,58 +24,28 @@ export class PodCastService extends BaseService<PodCastModel>{
 
   videos = signal<unknown[]>([]);
 
+  // Was: fetch a raw YouTube Data API key from the server, then call
+  // YouTube directly from the browser with that key embedded in the
+  // request URL -- the key ended up in client JS and every outgoing
+  // request, fully exposed to anyone who opened devtools. Also called a
+  // Cloud Function (get_youtube_keys) that no longer exists, so this was
+  // silently broken regardless. Now calls get_youtube_videos_public, which
+  // does the YouTube call itself server-side (same pattern the admin app's
+  // own staff-only get_youtube_videos already used) and returns just the
+  // video list -- the API key never reaches the browser at all.
   async getVideoInfo(){
     this.videos = signal<unknown[]>([]);
 
-    const keysResponse = await fetch(environment.youtubeKeyUrl);
-
-    if (!keysResponse.ok) {
-      throw new Error('Failed to fetch client secret');
-    }
-
-    const keysResult = await keysResponse.json();
-
-    this.API_KEY = keysResult.api_key;
-    this.PLAY_LIST_ID = keysResult.playlist_key
-
-    let pageToken: string =  await this.callYoutube(this.PLAY_LIST_ID);
-
-    while (pageToken){
-      pageToken = await this.callYoutube(this.PLAY_LIST_ID, pageToken);
-    }
-
-    return this.videos();
-  }
-
-  private async callYoutube(playlistId: string, pageToken?: string){
-    const videos: unknown[] = [];
-
-    let playListItemsUrl = `https://www.googleapis.com/youtube/v3/playlistItems?key=${this.API_KEY}&part=snippet,contentDetails&maxResults=50&&playlistId=${playlistId}`;
-
-    if(pageToken){
-      playListItemsUrl += "&pageToken=" + pageToken
-    }
-
-    const response = await fetch(playListItemsUrl);
+    const response = await fetch(environment.youtubeVideosUrl);
 
     if (!response.ok) {
-      throw new Error('Failed to fetch client secret');
+      throw new Error('Failed to fetch YouTube videos');
     }
 
     const result = await response.json();
+    this.videos.set(result.videos ?? []);
 
-    videos.push(...result.items);
-
-    if(result.nextPageToken){
-      pageToken = result.nextPageToken;
-
-    } else {
-      pageToken = null;
-    }
-
-    this.videos.update(vids => vids = [...vids, ...videos])
-
-    return result.nextPageToken
+    return this.videos();
   }
 }
 

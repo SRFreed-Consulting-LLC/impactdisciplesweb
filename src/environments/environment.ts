@@ -18,7 +18,7 @@ export const environment = {
   createPaypalOrderUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/create_paypal_order",
   capturePaypalOrderUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/capture_paypal_order",
   shippingUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_shipping_rates",
-  youtubeKeyUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_youtube_keys",
+  youtubeVideosUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_youtube_videos_public",
 
   lookupCouponUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/lookup_coupon",
 
