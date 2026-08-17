@@ -8,7 +8,6 @@ import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
 import { SalesService } from 'src/app/common/services/data/sales.service';
 import { ShippingService } from 'src/app/common/services/data/shipping.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
-import { EMailService } from 'src/app/common/services/data/email.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { EnumHelper } from 'src/app/common/utils/enum_helper';
 import { NumberUtil } from 'src/app/common/utils/number-util';
@@ -93,7 +92,6 @@ export class CheckoutComponent implements OnInit {
     private pricingService: PricingService,
     private checkoutOrderService: CheckoutOrderService,
     private shippingService: ShippingService,
-    private emailService: EMailService,
     private salesService: SalesService,
     private webConfigService: WebConfigService,
     private router: Router,
@@ -349,72 +347,11 @@ export class CheckoutComponent implements OnInit {
   private async finishCheckout(checkoutForm: CheckoutForm): Promise<void> {
     this.checkoutForm = checkoutForm;
     localStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(checkoutForm));
-    this.sendProductPurchaseSuccessEmail(checkoutForm);
+    // Sales receipt (and any product follow-up emails) are queued
+    // server-side when the order saves (pre-prod #1) - no client mail
+    // write here any more.
     this.currentStep = 'confirm';
     this.router.navigateByUrl('/checkout-success');
   }
 
-  private sendProductPurchaseSuccessEmail(cart: CheckoutForm) {
-    let ebooksPurchased = false;
-    const USDollar = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-    let html = "<table style='width: 90%;'>";
-    html += "<tr><td></td><td style='text-align: left;'>PRODUCT</td><td style='text-align: right;'>PRICE</td><td style='text-align: right;'>DISCOUNT</td><td style='text-align: center;'>QUANTITY</td><td style='text-align: right;'>TOTAL</td><td style='text-align: left;'></td></tr>";
-
-    cart.cartItems.forEach(product => {
-      const unitPrice = this.pricingService.effectiveUnitPrice(product);
-      html += '<tr>';
-      html += "<td><img src='" + product.img.url + "' alt='" + product.img.name + "' height='100px'></img></td>";
-      html += "<td style='text-align: left;'>" + product.itemName + '</td>';
-      html += "<td style='text-align: right;'>" + USDollar.format(unitPrice) + '</td>';
-      html += product.discount > 0
-        ? "<td style='text-align: right;'>" + USDollar.format(product.discount) + '</td>'
-        : '<td></td>';
-      html += "<td style='text-align: center;'>" + product.orderQuantity + '</td>';
-      html += "<td style='text-align: right;'>" + USDollar.format(this.pricingService.lineTotal(product)) + '</td>';
-
-      if (product.isEBook) {
-        html += "<td style='text-align: left;'><a href='" + product.eBookUrl.url + "' download>DOWNLOAD</a></td>";
-      }
-      if (product.isDigitalBook) {
-        ebooksPurchased = true;
-        html += "<td style='text-align: left;'>See install instuctions below!</td>";
-      }
-      html += '</tr>';
-    });
-
-    html += "<tr><td></td><td></td><td></td><td></td><td>SUBTOTAL</td><td style='text-align: right;'><b>" + USDollar.format(this.subtotal()) + '</b></td><td></td></tr>';
-
-    if (cart.estimatedTaxes > 0) {
-      html += "<tr><td></td><td></td><td></td><td></td><td>TAXES</td><td style='text-align: right;'><b> + " + USDollar.format(cart.estimatedTaxes) + '</b></td><td></td></tr>';
-    }
-    if (cart.shippingRate > 0) {
-      html += "<tr><td></td><td></td><td></td><td></td><td>SHIPPING</td><td style='text-align: right;'><b> + " + USDollar.format(cart.shippingRate) + '</b></td><td></td></tr>';
-    }
-    if (cart.shippingDiscount > 0) {
-      html += "<tr><td></td><td></td><td></td><td></td><td>SHIPPING DISCOUNT</td><td style='text-align: right;'><b> - " + USDollar.format(cart.shippingDiscount) + '</b></td><td></td></tr>';
-    }
-    if (cart.discount > 0) {
-      html += "<tr><td></td><td></td><td></td><td></td><td>DISCOUNT</td><td style='text-align: right;'><b> - " + USDollar.format(cart.discount) + '</b></td><td></td></tr>';
-    }
-
-    html += "<tr><td></td><td></td><td></td><td></td><td>TOTAL</td><td style='text-align: right;'><b> = " + USDollar.format(this.orderTotal()) + '</b></td><td></td></tr>';
-    html += '</table>';
-
-    if (cart.receipt) {
-      html += '<div>Confirmation Id: <b>' + cart.receipt + '</b></div>';
-    }
-    if (ebooksPurchased) {
-      html += '<br><div><b>If you purchased an item from our Digital Library, instuctions for setting up the Library on your preferred Device can be found <a href="https://library.impactdisciples.com/install-instructions">here</a>!</b></div>';
-      html += '<br><div>(For easy installation, it is best to open this email on your preferred Device and click the link!)</div>';
-    }
-
-    const form = {};
-    form['firstName'] = cart.firstName;
-    form['lastName'] = cart.lastName;
-    form['email'] = cart.email;
-    form['product_list'] = html;
-
-    return this.emailService.sendHTMLEMailFromTemplate(cart.email, 'Sales Receipt', form);
-  }
 }

@@ -18,7 +18,6 @@ import { CartItem } from 'src/app/common/models/utils/cart.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
-import { EMailService } from 'src/app/common/services/data/email.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
@@ -53,7 +52,6 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     private eventService: EventService,
     private cartService: CartService,
     private eventRegistrationService: EventRegistrationService,
-    private emailService: EMailService,
     private toastService: ToastService,
     private loggerService: LoggerService,
     private fb: FormBuilder

@@ -25,10 +25,8 @@ export class SubscribeAreaComponent {
 
         return null;
       }
-    }).then(sub => {
-      if(sub){
-        this.subscriptionService.sendConfirmationEmail(this.subscription)
-      }
     });
+    // Confirmation email is queued server-side by subscribe_to_email_list
+    // now (pre-prod #1) - no client mail write.
   }
 }

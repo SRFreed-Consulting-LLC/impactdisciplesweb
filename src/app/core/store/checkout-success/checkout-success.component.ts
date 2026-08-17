@@ -3,7 +3,6 @@ import { Timestamp } from 'firebase/firestore';
 import { AffilliateSaleModel } from 'src/app/common/models/utils/affilliate-sale.model';
 import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { AffilliateSalesService } from 'src/app/common/services/data/affiliate-sales.service';
-import { EMailService } from 'src/app/common/services/data/email.service';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
@@ -37,7 +36,6 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     public cartService: CartService,
     private newsletterSubscriptionService: SubscriptionService,
     private eventRegistrationService: EventRegistrationService,
-    private emailService: EMailService,
     private eventService: EventService,
     private affiliateSaleService: AffilliateSalesService,
     private toastService: ToastService,
@@ -65,7 +63,6 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     }
 
     const events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
-    const followUpEmails: CartItem[] = checkoutForm.cartItems.filter(item => item.followUpEmailId);
     // DIGITAL_LIBRARY_REGISTER side effect removed (pre-prod checklist #3):
     // the legacy impact-users license store is retired - digital-book access
     // is granted into libraryUsers by the onPurchaseGrantLibraryLicenses
@@ -83,9 +80,8 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     // onPurchaseTaxSummary purchases trigger - no more anonymous client
     // read-modify-write of running totals (and no double-count on refresh).
 
-    if (followUpEmails.length > 0) {
-      this.sendProductFollowUpEmail(checkoutForm, followUpEmails);
-    }
+    // Product follow-up emails are queued server-side when the order
+    // saves now (pre-prod #1) - no client mail write.
 
     // Once, unconditionally -- the original calls this from three separate
     // branches (including once per event attendee in a loop).
@@ -162,19 +158,4 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     }
   }
 
-  private sendProductFollowUpEmail(checkoutForm: CheckoutForm, followUpEmails: CartItem[]): void {
-    followUpEmails.forEach(followUp => {
-      const form = {};
-      form['firstName'] = checkoutForm.firstName;
-      form['lastName'] = checkoutForm.lastName;
-      form['email'] = checkoutForm.email?.toLowerCase();
-
-      this.runSideEffect(
-        'FOLLOW_UP_EMAIL',
-        checkoutForm,
-        () => this.emailService.sendHTMLEMailByIdFromTemplate(checkoutForm.email, followUp.followUpEmailId, form),
-        'sending a follow-up email'
-      );
-    });
-  }
 }
