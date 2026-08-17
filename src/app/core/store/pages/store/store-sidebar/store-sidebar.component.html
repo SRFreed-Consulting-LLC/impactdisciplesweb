@@ -17,7 +17,7 @@
       </div>
       <div class="sidebar__accordion-content">
         <div class="accordion">
-          @for (item of categoryWithProducts; track item; let i = $index) {
+          @for (item of categoryWithProducts; track item.category.id; let i = $index) {
             <div class="accordion-item" [class.accordion-item--opened]="openIndex === i">
               <button
                 type="button"
@@ -30,7 +30,7 @@
               @if (openIndex === i) {
                 <div class="accordion-item__body">
                   <div class="accordion__tags-container">
-                    @for (product of item?.displayProducts; track product) {
+                    @for (product of item?.displayProducts; track product.id) {
                       <button
                         type="button"
                         (click)="onItemClick(product?.id)">

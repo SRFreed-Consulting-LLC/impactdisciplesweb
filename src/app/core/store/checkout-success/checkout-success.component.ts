@@ -76,7 +76,7 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     // the live one.
 
     if (events.length > 0) {
-      await this.registerEventUsers(checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events);
+      await this.registerEventUsers(checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events, checkoutForm.email);
     }
     // TAX_SUMMARY side effect removed (pre-prod checklist #4): collected
     // sales tax now rolls into tax_rate_summaries SERVER-side via the
@@ -111,8 +111,26 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     });
   }
 
-  private async registerEventUsers(confirmationId: string, events: CartItem[]): Promise<void> {
+  private async registerEventUsers(confirmationId: string, events: CartItem[], purchaserEmail: string): Promise<void> {
     for (const event of events) {
+      // Hoisted out of the attendee loop below -- event.id doesn't change
+      // per attendee, so this used to re-fetch the identical event doc
+      // once per attendee (a group registration of N people did N
+      // redundant reads instead of 1) purely to read eventName/startDate
+      // for the success toast.
+      let eventModel;
+      try {
+        eventModel = await this.eventService.getById(event.id);
+      } catch (err) {
+        this.loggerService.logMessage(
+          'EVENT_REGISTRATION_NEW',
+          purchaserEmail,
+          'Failed to load event details after checkout succeeded; attendees for this event were not registered.',
+          { err, eventId: event.id, confirmationId }
+        ).subscribe();
+        continue;
+      }
+
       for (const attendee of event.attendees ?? []) {
         try {
           // Pre-prod #2: one register_for_event Cloud Function call
@@ -120,7 +138,6 @@ export class CheckoutSuccessComponent implements AfterViewInit {
           // receipt-stamp chain (the function does all three server-side,
           // including the confirmation email with the breakout link -
           // whose domain is pinned server-side, not client-supplied).
-          const eventModel = await this.eventService.getById(event.id);
           await this.eventRegistrationService.registerForEvent({
             eventId: event.id,
             firstName: attendee.firstName,

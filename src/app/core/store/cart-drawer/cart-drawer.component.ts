@@ -5,7 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CartItem } from 'src/app/common/models/utils/cart.model';
 import { CartLineItem } from '../models/cart-line-item.model';
 import { CartService } from '../services/cart.service';
-import { CartDrawerStateService } from '../services/cart-drawer-state.service';
+import { CART_OPEN_DRAWER_EVENT } from '../services/cart-events';
 import { PricingService } from '../services/pricing.service';
 import { CouponApplicationService } from '../services/coupon-application.service';
 
@@ -37,11 +37,22 @@ export class CartDrawerComponent implements OnInit, AfterViewInit, OnDestroy {
   private offcanvas: Offcanvas;
   private ngUnsubscribe = new Subject<void>();
 
+  // Was CartDrawerStateService, a providedIn:'root' singleton wrapping this
+  // exact window listener for what turned out to be its only subscriber
+  // (this component). Inlined directly -- but unlike that singleton (whose
+  // constructor, and so its addEventListener, only ever ran once per app
+  // lifetime), this component is re-created on every store-page navigation,
+  // so the listener needs real add/remove lifecycle management here to
+  // avoid piling up duplicate listeners. Bound field (not an inline arrow
+  // in addEventListener) so removeEventListener can find the same
+  // reference, same pattern HomeHeaderComponent already uses for its own
+  // cart-event listener.
+  private readonly onOpenRequested = () => this.offcanvas?.show();
+
   constructor(
     public cartService: CartService,
     private pricingService: PricingService,
     private couponApplicationService: CouponApplicationService,
-    private drawerState: CartDrawerStateService,
     private router: Router
   ) {}
 
@@ -54,15 +65,15 @@ export class CartDrawerComponent implements OnInit, AfterViewInit, OnDestroy {
     // pass -- a textbook NG0100 ExpressionChangedAfterItHasBeenCheckedError.
     // ngOnInit runs before that first check, so it's safe here.
     this.cartService.cartChanged$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(items => this.recompute(items));
+    window.addEventListener(CART_OPEN_DRAWER_EVENT, this.onOpenRequested);
   }
 
   ngAfterViewInit(): void {
     this.offcanvas = new Offcanvas(this.drawerRef.nativeElement);
-
-    this.drawerState.openRequested$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.offcanvas.show());
   }
 
   ngOnDestroy(): void {
+    window.removeEventListener(CART_OPEN_DRAWER_EVENT, this.onOpenRequested);
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

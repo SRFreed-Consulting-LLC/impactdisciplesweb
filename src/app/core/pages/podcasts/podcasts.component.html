@@ -20,7 +20,7 @@
     <app-podcast-sidebar [podcasts]="podcasts" (searchEvent)="searchPodcasts($event)" (clearFiltersEvent)="clearFilters()" (selectPodcast)="selectPodcast($event)"></app-podcast-sidebar>
     @if (isListView) {
       <div class="podcasts__container-list">
-        @for (podcast of filteredPodcasts; track podcast) {
+        @for (podcast of filteredPodcasts; track podcast.id) {
           <div>
             <app-podcast-postbox-item [podcast]="podcast" (selectPodcast)="selectPodcast($event)"></app-podcast-postbox-item>
           </div>

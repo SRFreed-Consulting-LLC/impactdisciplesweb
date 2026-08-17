@@ -5,7 +5,6 @@ import { IOnApproveCallbackData, IPayPalConfig } from 'ngx-paypal';
 import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { SaleModel } from 'src/app/common/models/utils/sale.model';
 import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
-import { SalesService } from 'src/app/common/services/data/sales.service';
 import { ShippingService } from 'src/app/common/services/data/shipping.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
@@ -14,7 +13,8 @@ import { NumberUtil } from 'src/app/common/utils/number-util';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { CartService } from '../services/cart.service';
 import { PricingService } from '../services/pricing.service';
-import { CheckoutOrderService, CheckoutOrderRequest } from '../services/checkout-order.service';
+import { ProductCatalogService } from '../services/product-catalog.service';
+import { CheckoutOrderService, CheckoutOrderRequest, CreateOrderBreakdown } from '../services/checkout-order.service';
 import { CheckoutStep } from './checkout-steps/checkout-steps.component';
 
 const CHECKOUT_STORAGE_KEY = 'checkoutForm';
@@ -87,12 +87,21 @@ export class CheckoutComponent implements OnInit {
   public payPalConfig?: IPayPalConfig;
   currency = 'USD';
 
+  // Set once startOrder() gets a real response back -- from that point on,
+  // subtotal()/totalDiscount()/orderTotal() below show these authoritative
+  // server numbers instead of continuing to recompute a client-side
+  // estimate that could drift from what's actually charged (rounding, a
+  // sale/coupon changing between add-to-cart and checkout, etc). Before the
+  // server responds (and if it fails), those methods fall back to
+  // PricingService's optimistic estimate, same as before.
+  private serverBreakdown: CreateOrderBreakdown | null = null;
+
   constructor(
     public cartService: CartService,
     private pricingService: PricingService,
     private checkoutOrderService: CheckoutOrderService,
     private shippingService: ShippingService,
-    private salesService: SalesService,
+    private catalog: ProductCatalogService,
     private webConfigService: WebConfigService,
     private router: Router,
     private toastService: ToastService,
@@ -123,15 +132,15 @@ export class CheckoutComponent implements OnInit {
   }
 
   subtotal(): number {
-    return this.pricingService.cartSubtotal(this.checkoutForm.cartItems);
+    return this.serverBreakdown ? this.serverBreakdown.subtotal : this.pricingService.cartSubtotal(this.checkoutForm.cartItems);
   }
 
   totalDiscount(): number {
-    return this.pricingService.cartDiscount(this.checkoutForm.cartItems);
+    return this.serverBreakdown ? this.serverBreakdown.totalDiscount : this.pricingService.cartDiscount(this.checkoutForm.cartItems);
   }
 
   orderTotal(): number {
-    return this.pricingService.orderTotal(this.checkoutForm);
+    return this.serverBreakdown ? this.serverBreakdown.total : this.pricingService.orderTotal(this.checkoutForm);
   }
 
   lineTotal(item: CartItem): number {
@@ -151,6 +160,7 @@ export class CheckoutComponent implements OnInit {
     this.applyFormValuesToCheckoutForm();
     this.currentStep = 'payment';
     this.orderError = false;
+    this.serverBreakdown = null;
     this.submitting = true;
     this.showEstimatedTaxesSpinner = true;
     this.showShippingSpinner = true;
@@ -184,6 +194,11 @@ export class CheckoutComponent implements OnInit {
 
   backToShipping(): void {
     this.currentStep = 'shipping';
+    // The server's breakdown was quoted against the shipping/customer info
+    // that's about to be edited -- revert to the optimistic client estimate
+    // rather than keep showing a now-stale server total.
+    this.serverBreakdown = null;
+    this.payPalConfig = undefined;
   }
 
   private applyFormValuesToCheckoutForm(): void {
@@ -230,7 +245,7 @@ export class CheckoutComponent implements OnInit {
         // capture first.
         await this.finishCheckout(result.checkoutForm);
       } else {
-        this.checkoutForm.discount = result.breakdown.totalDiscount;
+        this.serverBreakdown = result.breakdown;
         this.checkoutForm.estimatedTaxes = result.breakdown.estimatedTaxes;
         this.checkoutForm.taxRate = result.breakdown.taxRate;
         this.checkoutForm.taxSource = result.breakdown.taxSource;
@@ -327,16 +342,14 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  // Was a hand-duplicated copy of ProductCatalogService.getActiveSales()'s
+  // isActive + date-range filter -- now calls the same shared, cached
+  // method store/product-details/e-books already use, instead of running
+  // its own independent (and uncached) Firestore query for the exact same
+  // data.
   private getActiveSales(): void {
-    this.salesService.getAllByValue('isActive', true).then(sales => {
-      const today = new Date();
-      sales.forEach(sale => {
-        const startDate = new Date(sale.startDate as string);
-        const endDate = new Date(sale.endDate as string);
-        if (startDate <= today && endDate >= today) {
-          this.sales.push(sale);
-        }
-      });
+    this.catalog.getActiveSales().then(sales => {
+      this.sales = sales;
     });
   }
 

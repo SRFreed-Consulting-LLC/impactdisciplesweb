@@ -21,7 +21,7 @@
   <div class="events__person">
     <h2>In Person Events</h2>
     <div class="events__person-list">
-      @for (event of eventsList; track event) {
+      @for (event of eventsList; track event.id) {
         <a class="events__person-item" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
           @if (event.imageUrl) {
             <img loading="lazy" [src]="event.imageUrl.url" alt="blog">
@@ -52,7 +52,7 @@
     <div class="events__online">
       <h2>Online Events</h2>
       <div class="events__online-list">
-        @for (event of onlineEventsList; track event) {
+        @for (event of onlineEventsList; track event.id) {
           <a class="events__online-item" [routerLink]="event.isSummit ? ['/summit', event?.startDate?.toString() | date: 'yyyy'] : ['/event-details', event.id]">
             @if (event.imageUrl) {
               <img loading="lazy" [src]="event.imageUrl.url" alt="blog">

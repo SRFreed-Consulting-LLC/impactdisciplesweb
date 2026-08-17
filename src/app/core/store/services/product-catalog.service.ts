@@ -16,17 +16,31 @@ import { CartItem } from 'src/app/common/models/utils/cart.model';
 // SalesService/ProductModel/CartItem -- none of them are modified.
 @Injectable({ providedIn: 'root' })
 export class ProductCatalogService {
+  // getActiveSales() used to be called independently (a full Firestore
+  // query, no caching) from every page that needs it -- store, e-books,
+  // product-details, and checkout (which had its own hand-duplicated copy
+  // of this exact method instead of calling it at all). A single
+  // browse-to-checkout session could trigger up to 4 redundant reads of
+  // the same `sales` collection. Cached the same way WebConfigService
+  // already caches config -- see that service's own comment for the
+  // session-lived-singleton reasoning.
+  private cachedActiveSales: Promise<SaleModel[]> | null = null;
+
   constructor(private salesService: SalesService) {}
 
   async getActiveSales(): Promise<SaleModel[]> {
-    const sales = await this.salesService.getAllByValue('isActive', true);
-    const today = new Date();
+    if (!this.cachedActiveSales) {
+      this.cachedActiveSales = this.salesService.getAllByValue('isActive', true).then(sales => {
+        const today = new Date();
+        return sales.filter(sale => {
+          const startDate = new Date(sale.startDate as string);
+          const endDate = new Date(sale.endDate as string);
+          return startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime();
+        });
+      });
+    }
 
-    return sales.filter(sale => {
-      const startDate = new Date(sale.startDate as string);
-      const endDate = new Date(sale.endDate as string);
-      return startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime();
-    });
+    return this.cachedActiveSales;
   }
 
   /** Mutates each product's salePrice in place from the first active
