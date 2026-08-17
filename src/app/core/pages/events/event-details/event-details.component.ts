@@ -17,10 +17,7 @@ import { CartService } from 'src/app/core/store/services/cart.service';
 import { CartItem } from 'src/app/common/models/utils/cart.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
-import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
-import { Timestamp } from 'firebase/firestore';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
-import { EMailModel } from 'src/app/common/models/admin/mail.model';
 import { EMailService } from 'src/app/common/services/data/email.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
@@ -168,43 +165,31 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
       this.attendeesForm.controls.forEach(async (control) => {
         const attendeeGroup = control as FormGroup;
         const value = attendeeGroup.getRawValue();
-        const registration = {... new EventRegistrationModel()};
-        registration.eventId = this.event.id;
-        registration.firstName = value.firstName;
-        registration.lastName = value.lastName;
-        registration.email = value.email.toLowerCase();
-        registration.registrationDate = Timestamp.now();
 
-        // Every `return` below matters: without it the inner chain isn't
-        // linked to the outer one and this .catch() would never see its
-        // rejections (2026-08-12 fullsweep fix - see the matching comment on
-        // CheckoutSuccessComponent.registerEventUsers()). Other attendees in
-        // the surrounding forEach are unaffected either way, since each runs
-        // its own independent async closure.
-        await this.eventService.getById(this.event.id).then(async event => {
-          return this.eventRegistrationService.add(registration).then(registration => {
-            return this.sendRegistrationSuccessEmail(registration, event).then(email => {
-              registration.receiptEmailId = email.id;
-              return registration;
-            }).then(registration => {
-              return this.eventRegistrationService.update(registration.id, registration);
-            }).then(() => {
-              this.toastService.notify({
-                message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + event.eventName +
-                ' starting on ' + dateFromTimestamp(event.startDate),
-                type: 'success'
-              });
-            });
+        // Pre-prod #2: one register_for_event Cloud Function call replaces
+        // the old client-side create -> template email -> receipt-stamp
+        // chain (the function does all three server-side, including the
+        // confirmation email carrying the breakout link).
+        await this.eventRegistrationService.registerForEvent({
+          eventId: this.event.id,
+          firstName: value.firstName,
+          lastName: value.lastName,
+          email: value.email,
+        }).then(() => {
+          this.toastService.notify({
+            message: value.firstName + ' ' + value.lastName + ' (' + String(value.email).toLowerCase() + ') Registered Successfully for ' + this.event.eventName +
+            ' starting on ' + dateFromTimestamp(this.event.startDate),
+            type: 'success'
           });
         }).catch((err) => {
           this.loggerService.logMessage(
             'EVENT_REGISTRATION',
-            registration.email,
+            value.email,
             'Failed to register attendee for event.',
             { err, eventId: this.event.id, eventName: this.event.eventName }
           ).subscribe((errorCode) => {
             this.toastService.notify({
-              message: 'We hit a problem registering ' + registration.firstName + ' ' + registration.lastName +
+              message: 'We hit a problem registering ' + value.firstName + ' ' + value.lastName +
                 ' for ' + this.event.eventName + '. Please try again or contact us - reference code: ' + errorCode,
               type: 'error'
             });
@@ -214,17 +199,6 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
         this.cartService.clearCartNoConfirmation();
       })
 
-  }
-
-  sendRegistrationSuccessEmail(registration: EventRegistrationModel, event:EventModel): Promise<EMailModel>{
-    const form = {};
-    form['firstName'] = registration.firstName;
-    form['lastName'] = registration.lastName;
-    form['email'] = registration.email;
-    form['eventName'] = event.eventName;
-    form['startDate'] = new Date(event.startDate as string).toLocaleDateString() + " at " + new Date(event.startDate as string).toLocaleTimeString();
-
-    return this.emailService.sendTemplateEmail(registration.email, event.emailTemplate, form);
   }
 
   private groupAgendaItemsByMonthAndDate(agendaItems: AgendaItem[]) {
@@ -270,8 +244,8 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     if (!control.value || !this.event) {
       return Promise.resolve(null);
     }
-    return this.eventRegistrationService.getEventRegistration(control.value, this.event.id).then(registrants =>
-      registrants.length === 0 ? null : { alreadyRegistered: true }
+    return this.eventRegistrationService.isAlreadyRegistered(control.value, this.event.id).then(exists =>
+      exists ? { alreadyRegistered: true } : null
     );
   };
 

@@ -118,10 +118,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   private async updateSchedule() {
     // Fetch session IDs and organize schedules
-    this.scheduleService.sessionIds = await this.eventRegistrationService.getUserTrainingSession(
-      this.currentUser?.email,
-      this.event.id
-    );
+    // The freshly-reloaded registration itself carries the session list -
+    // no separate by-email query (pre-prod #2: email is not a credential).
+    this.currentUser = await this.eventRegistrationService.getEventRegistrationById(this.currentUser.id);
+    this.scheduleService.sessionIds = this.currentUser?.trainingSessions ?? [];
+    await this.scheduleService.refreshBreakoutCapacity(this.event);
     this.scheduleService.organizeAgendaItems(this.event.agendaItems);
 
     // Update local properties from AgendaService

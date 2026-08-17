@@ -1,94 +1,98 @@
 import { Injectable } from '@angular/core';
-import { Timestamp } from 'firebase/firestore';
-import { FirebaseDAO, QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
 import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
-import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
-import { BaseService } from './base.service';
-import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
+// Pre-prod hardening #2: every public event-registration flow goes through
+// Cloud Functions now - the collection itself is staff-only under
+// firestore.rules. The identity model is unchanged and deliberate:
+// attendees have no accounts, so the registration's own unguessable doc id
+// (carried in the confirmation email's breakout link) IS the credential.
+// What died: the by-email lookup (emails are guessable; links aren't), the
+// full-roster stream (the schedule only ever needed per-session COUNTS),
+// and anonymous whole-doc writes (session changes are a narrow server-side
+// mutation). This service no longer extends BaseService - the web app has
+// no direct Firestore access to this collection at all.
 @Injectable({
   providedIn: 'root'
 })
-export class EventRegistrationService extends BaseService<EventRegistrationModel>{
-  constructor(public override dao: FirebaseDAO<EventRegistrationModel> ) {
-    super(dao)
-    this.table="event-registrations"
-    this.fromFirestore = EventRegistrationService.fromFirestore
-  }
+export class EventRegistrationService {
 
-  static readonly fromFirestore = (data): EventRegistrationModel => {
-    data.registrationDate = dateFromTimestamp(data.registrationDate as Timestamp)
-
-    return data;
-  };
-
-  async getEventRegistrationById(id: string): Promise<EventRegistrationModel> {
-    return await this.getById(id);
-  }
-
-  async getEventRegistration(email: string, eventId: string): Promise<EventRegistrationModel[]> {
-    const params: QueryParam[] = [];
-    params.push(new QueryParam('email', WhereFilterOperandKeys.equal, email.toLowerCase()));
-    params.push(new QueryParam('eventId', WhereFilterOperandKeys.equal, eventId));
-
-    return await this.queryAllByMultiValue(params);
-  }
-
-  async registerForTrainingSession(email: string, agendaItemId: string, eventId: string): Promise<EventRegistrationModel> {
-    const params: QueryParam[] = [];
-    params.push(new QueryParam('email', WhereFilterOperandKeys.equal, email.toLowerCase()));
-    params.push(new QueryParam('eventId', WhereFilterOperandKeys.equal, eventId));
-
-    const retval = await this.queryAllByMultiValue(params)
-
-    if(retval && retval.length == 1){
-      if(!retval[0].trainingSessions){
-        retval[0].trainingSessions = [];
-      }
-
-      retval[0].trainingSessions.push(agendaItemId);
-
-      this.update(retval[0].id, retval[0]);
-
-      return retval[0];
+  private async post<T>(url: string, body: unknown): Promise<T> {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      throw new Error(`Request failed (${response.status})`);
     }
-
-    return null;
+    return response.json() as Promise<T>;
   }
 
-  async unregisterForTrainingSession(email: string, agendaItemId: string, eventId: string): Promise<EventRegistrationModel> {
-    const params: QueryParam[] = [];
-    params.push(new QueryParam('email', WhereFilterOperandKeys.equal, email.toLowerCase()));
-    params.push(new QueryParam('eventId', WhereFilterOperandKeys.equal, eventId));
+  /** Creates the registration server-side - which also renders + queues
+   *  the confirmation email (with the breakout link) and stamps
+   *  receiptEmailId, replacing the old client-side create/email/update
+   *  dance in one call. */
+  async registerForEvent(input: {
+    eventId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    receipt?: string;
+  }): Promise<{ registrationId: string; receiptEmailId?: string }> {
+    return this.post(environment.registerForEventUrl, {
+      ...input,
+      email: input.email.toLowerCase(),
+    });
+  }
 
-    const retval = await this.queryAllByMultiValue(params);
-
-    if(retval && retval.length == 1){
-      retval[0].trainingSessions = retval[0].trainingSessions.filter(session => session != agendaItemId);
-
-      this.update(retval[0].id, retval[0]);
-
-      return retval[0];
+  /** Fetch by the emailed link's unguessable registration id. */
+  async getEventRegistrationById(id: string): Promise<EventRegistrationModel | null> {
+    const result = await this.post<{ registration: (EventRegistrationModel & { registrationDateIso?: string }) | null }>(
+      environment.getEventRegistrationUrl,
+      { registrationId: id },
+    );
+    if (!result.registration) {
+      return null;
     }
-
-    return null;
+    const { registrationDateIso, ...registration } = result.registration;
+    registration.registrationDate = registrationDateIso ? new Date(registrationDateIso) : undefined;
+    return registration as EventRegistrationModel;
   }
 
-  async getUserTrainingSession(email: string, eventId: string): Promise<string []> {
-    const params: QueryParam[] = [];
-    params.push(new QueryParam('email', WhereFilterOperandKeys.equal, email.toLowerCase()));
-    params.push(new QueryParam('eventId', WhereFilterOperandKeys.equal, eventId));
-
-    const retval = await this.queryAllByMultiValue(params);
-
-    if(retval && retval.length == 1){
-      return retval[0].trainingSessions;
-    }
-
-    return [];
+  /** Boolean-only duplicate check for the signup form's validator. */
+  async isAlreadyRegistered(email: string, eventId: string): Promise<boolean> {
+    const result = await this.post<{ exists: boolean }>(environment.checkRegistrationExistsUrl, {
+      eventId,
+      email: email.toLowerCase(),
+    });
+    return result.exists;
   }
 
-  streamTrainingSessionList(eventId: string): Observable<EventRegistrationModel[]> {
-    return this.streamAllByValue('eventId', eventId)
+  async registerForTrainingSession(registrationId: string, agendaItemId: string): Promise<string[]> {
+    const result = await this.post<{ trainingSessions: string[] }>(environment.updateMySessionsUrl, {
+      registrationId,
+      sessionId: agendaItemId,
+      action: 'add',
+    });
+    return result.trainingSessions;
+  }
+
+  async unregisterForTrainingSession(registrationId: string, agendaItemId: string): Promise<string[]> {
+    const result = await this.post<{ trainingSessions: string[] }>(environment.updateMySessionsUrl, {
+      registrationId,
+      sessionId: agendaItemId,
+      action: 'remove',
+    });
+    return result.trainingSessions;
+  }
+
+  /** Per-session registration counts - all the capacity display needs. */
+  async getSessionCounts(eventId: string): Promise<Record<string, number>> {
+    const result = await this.post<{ counts: Record<string, number> }>(
+      environment.getSessionCountsUrl,
+      { eventId },
+    );
+    return result.counts;
   }
 }

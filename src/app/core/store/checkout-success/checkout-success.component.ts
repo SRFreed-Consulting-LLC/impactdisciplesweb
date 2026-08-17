@@ -1,9 +1,5 @@
-import { formatDate } from '@angular/common';
 import { AfterViewInit, Component } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
-import { EMailModel } from 'src/app/common/models/admin/mail.model';
-import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
-import { EventModel } from 'src/app/common/models/domain/event.model';
 import { AffilliateSaleModel } from 'src/app/common/models/utils/affilliate-sale.model';
 import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { AffilliateSalesService } from 'src/app/common/services/data/affiliate-sales.service';
@@ -14,7 +10,6 @@ import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { SubscriptionService } from 'src/app/common/services/data/subscription.service';
 import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
-import { environment } from 'src/environments/environment';
 import { CartService } from '../services/cart.service';
 
 const CHECKOUT_STORAGE_KEY = 'checkoutForm';
@@ -129,35 +124,35 @@ export class CheckoutSuccessComponent implements AfterViewInit {
   private async registerEventUsers(confirmationId: string, events: CartItem[]): Promise<void> {
     for (const event of events) {
       for (const attendee of event.attendees ?? []) {
-        const registration = { ...new EventRegistrationModel() };
-        registration.eventId = event.id;
-        registration.firstName = attendee.firstName;
-        registration.lastName = attendee.lastName;
-        registration.email = attendee.email.toLowerCase();
-        registration.receipt = confirmationId;
-        registration.registrationDate = Timestamp.now();
-
         try {
+          // Pre-prod #2: one register_for_event Cloud Function call
+          // replaces the old client-side create -> template email ->
+          // receipt-stamp chain (the function does all three server-side,
+          // including the confirmation email with the breakout link -
+          // whose domain is pinned server-side, not client-supplied).
           const eventModel = await this.eventService.getById(event.id);
-          const savedRegistration = await this.eventRegistrationService.add(registration);
-          const emailResult = await this.sendRegistrationSuccessEmail(savedRegistration, eventModel);
-          savedRegistration.receiptEmailId = emailResult.id;
-          await this.eventRegistrationService.update(savedRegistration.id, savedRegistration);
+          await this.eventRegistrationService.registerForEvent({
+            eventId: event.id,
+            firstName: attendee.firstName,
+            lastName: attendee.lastName,
+            email: attendee.email,
+            receipt: confirmationId,
+          });
 
           this.toastService.notify({
-            message: registration.firstName + ' ' + registration.lastName + ' (' + registration.email + ') Registered Successfully for ' + eventModel.eventName +
+            message: attendee.firstName + ' ' + attendee.lastName + ' (' + attendee.email.toLowerCase() + ') Registered Successfully for ' + eventModel.eventName +
               ' starting on ' + dateFromTimestamp(eventModel.startDate),
             type: 'success'
           });
         } catch (err) {
           this.loggerService.logMessage(
             'EVENT_REGISTRATION_NEW',
-            registration.email,
+            attendee.email,
             'Failed to register attendee for event after checkout succeeded.',
             { err, eventId: event.id, eventName: event.itemName, confirmationId }
           ).subscribe(errorCode => {
             this.toastService.notify({
-              message: 'Your order was placed, but we hit a problem registering ' + registration.firstName + ' ' + registration.lastName +
+              message: 'Your order was placed, but we hit a problem registering ' + attendee.firstName + ' ' + attendee.lastName +
                 ' for ' + event.itemName + '. Please contact us to complete this registration - reference code: ' + errorCode,
               type: 'error'
             });
@@ -165,18 +160,6 @@ export class CheckoutSuccessComponent implements AfterViewInit {
         }
       }
     }
-  }
-
-  private sendRegistrationSuccessEmail(registration: EventRegistrationModel, event: EventModel): Promise<EMailModel> {
-    const form = {};
-    form['firstName'] = registration.firstName;
-    form['lastName'] = registration.lastName;
-    form['email'] = registration.email?.toLowerCase();
-    form['eventName'] = event.eventName;
-    form['startDate'] = formatDate(event.startDate as string, 'longDate', 'en-us') + ' at ' + formatDate(event.startDate as string, 'shortTime', 'en-US');
-    form['editRegistration'] = "<a href='" + environment.domain + '/events/' + event.id + '/registrations/' + registration.id + "'>Register for Breakout</a>";
-
-    return this.emailService.sendHTMLEMailFromTemplate(registration.email, event.emailTemplate, form);
   }
 
   private sendProductFollowUpEmail(checkoutForm: CheckoutForm, followUpEmails: CartItem[]): void {

@@ -21,6 +21,21 @@ export const environment = {
   youtubeKeyUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_youtube_keys",
 
   lookupCouponUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/lookup_coupon",
+
+
+  registerForEventUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/register_for_event",
+
+
+  getEventRegistrationUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_event_registration",
+
+
+  updateMySessionsUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/update_my_sessions",
+
+
+  checkRegistrationExistsUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/check_registration_exists",
+
+
+  getSessionCountsUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_session_counts",
   subscribeUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/subscribe_to_email_list",
   unsubscribeUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/unsubscribe_from_email_list",
   oneGiftUrl: 'https://buy.stripe.com/test_3cseVSfkM23y4tafYY',

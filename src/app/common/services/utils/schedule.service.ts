@@ -1,6 +1,5 @@
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { Injectable } from "@angular/core";
-import { Subscription } from 'rxjs';
 import { AgendaItem } from "src/app/common/models/domain/utils/agenda-item.model";
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { ScheduleModel, TimeGroupsModel, UpdatedAgendaItemModel } from 'src/app/common/models/utils/schedule.model';
@@ -129,38 +128,32 @@ export class ScheduleService {
     });
   }
 
-  public traininlist: Map<string, string[]> = new Map<string, string[]>();
 
   // This is a providedIn:'root' singleton and monitorBreakoutCapacity() is
-  // called from inside the schedule page's event-stream callback, so without
-  // tracking the subscription every page visit (and every event-doc
-  // emission) stacked another permanent event-registrations listener (P4).
-  // Replace the previous listener on each call, and let the page tear the
-  // last one down via stopMonitoringBreakoutCapacity() in ngOnDestroy.
-  private capacitySub?: Subscription;
+  // Pre-prod #2: capacity comes from the get_session_counts Cloud Function
+  // (per-session COUNTS - the full roster stream this replaced exposed
+  // every attendee's name/email to any visitor). One-shot fetch instead of
+  // a live listener: the schedule refreshes it on load and after every
+  // register/unregister action (see SchedulePage.updateSchedule), which is
+  // when counts can change from this user's perspective.
+  traininlist: Map<string, number> = new Map<string, number>();
 
   monitorBreakoutCapacity(event: EventModel){
-    this.capacitySub?.unsubscribe();
+    void this.refreshBreakoutCapacity(event);
+  }
 
-    this.capacitySub = this.eventRegistrationService.streamTrainingSessionList(event.id).subscribe(registeredusers => {
-      const retval: Map<string, string[]> = new Map<string, string[]>();
-
-      registeredusers.forEach(user => {
-        user?.trainingSessions?.forEach(session =>{
-          if(!retval.has(session)){
-            retval.set(session, [])
-          }
-
-          retval.get(session).push(user.id);
-        })
-      })
-
-      this.traininlist = retval;
-    })
+  async refreshBreakoutCapacity(event: EventModel): Promise<void> {
+    try {
+      const counts = await this.eventRegistrationService.getSessionCounts(event.id);
+      this.traininlist = new Map(Object.entries(counts));
+    } catch {
+      // Capacity display is best-effort - a failed refresh keeps the last
+      // known counts rather than erroring the schedule.
+    }
   }
 
   stopMonitoringBreakoutCapacity(){
-    this.capacitySub?.unsubscribe();
-    this.capacitySub = undefined;
+    // One-shot fetches now - nothing to tear down; kept so the page's
+    // ngOnDestroy call sites don't churn.
   }
 }

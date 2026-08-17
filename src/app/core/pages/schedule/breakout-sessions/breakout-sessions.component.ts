@@ -155,10 +155,10 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
       this.dialogService.confirm('<i>You are already assigned to a course at this time. Would you like to remove that course and add the new one?</i>', 'Confirm').then((dialogResult) => {
         if (dialogResult) {
           this.eventRegistrationService
-          .unregisterForTrainingSession(this.currentUser.email, conflictingCourse.item.id, this.event.id)
+          .unregisterForTrainingSession(this.currentUser.id, conflictingCourse.item.id)
           .then(() => {
             this.eventRegistrationService
-              .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
+              .registerForTrainingSession(this.currentUser.id, course.id)
               .then(() => {
                 this.dialogService.alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
                   this.scheduleEventBus.dispatchResetSchedule();
@@ -171,7 +171,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     } else {
       // Directly add the course if no conflict
       this.eventRegistrationService
-        .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
+        .registerForTrainingSession(this.currentUser.id, course.id)
         .then(() => {
           this.dialogService.alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
             this.scheduleEventBus.dispatchResetSchedule();
@@ -185,7 +185,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     this.dialogService.confirm('<i>Are you sure you want to remove this course from your schedule?</i>', 'Confirm').then((dialogResult) => {
       if (dialogResult) {
         this.eventRegistrationService
-        .unregisterForTrainingSession(this.currentUser.email, course.id, this.event.id)
+        .unregisterForTrainingSession(this.currentUser.id, course.id)
         .then(() => {
           this.dialogService.alert('<i>You have been successfully removed from ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Removed').then(() => {
             this.scheduleEventBus.dispatchResetSchedule();
@@ -202,7 +202,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
   }
 
   viewCourseCapcaity(item: string) {
-    return this.scheduleService.traininlist.get(item)?.length || 0;
+    return this.scheduleService.traininlist.get(item) || 0;
   }
 
 resizePopup() {

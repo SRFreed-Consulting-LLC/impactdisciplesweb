@@ -81,7 +81,7 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   getCapacity(){
-    return this.scheduleService.traininlist.get(this?.customAgendaItem?.item.id)?.length;
+    return this.scheduleService.traininlist.get(this?.customAgendaItem?.item.id);
   }
 
   getRoomName(id: string){
@@ -115,10 +115,10 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
       this.dialogService.confirm('<i>You are already assigned to a course at this time. Would you like to remove that course and add the new one?</i>', 'Confirm').then((dialogResult) => {
         if (dialogResult) {
           this.eventRegistrationService
-          .unregisterForTrainingSession(this.currentUser.email, conflictingCourse.item.id, this.event.id)
+          .unregisterForTrainingSession(this.currentUser.id, conflictingCourse.item.id)
           .then(() => {
             this.eventRegistrationService
-              .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
+              .registerForTrainingSession(this.currentUser.id, course.id)
               .then(() => {
                 this.scheduleEventBus.dispatchResetSchedule();
                 this.isVisible$.next(false);
@@ -129,7 +129,7 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       // Directly add the course if no conflict
       this.eventRegistrationService
-        .registerForTrainingSession(this.currentUser.email, course.id, this.event.id)
+        .registerForTrainingSession(this.currentUser.id, course.id)
         .then(() => {
           this.scheduleEventBus.dispatchResetSchedule();
           this.isVisible$.next(false);
@@ -141,7 +141,7 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
     this.dialogService.confirm('<i>Are you sure you want to remove this course from your schedule?</i>', 'Confirm').then((dialogResult) => {
       if (dialogResult) {
         this.eventRegistrationService
-        .unregisterForTrainingSession(this.currentUser.email, course.id, this.event.id)
+        .unregisterForTrainingSession(this.currentUser.id, course.id)
         .then(() => {
           this.scheduleEventBus.dispatchResetSchedule();
           this.isVisible$.next(false)
