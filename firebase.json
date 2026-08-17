@@ -1,8 +1,4 @@
 {
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  },
   "hosting": [
     {
       "target": "production",
@@ -17,10 +13,12 @@
           "source": "/merch",
           "destination": "https://www.asbshops.com/lagrangehub/matthewfrady/impact",
           "type": 301,
-          "headers": [{
-            "key": "Cache-Control",
-            "value": "max-age=0"
-          }]
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=0"
+            }
+          ]
         }
       ],
       "rewrites": [
@@ -43,10 +41,12 @@
           "source": "/merch",
           "destination": "https://www.asbshops.com/lagrangehub/matthewfrady/impact",
           "type": 301,
-          "headers": [{
-            "key": "Cache-Control",
-            "value": "max-age=0"
-          }]
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=0"
+            }
+          ]
         }
       ],
       "rewrites": [
