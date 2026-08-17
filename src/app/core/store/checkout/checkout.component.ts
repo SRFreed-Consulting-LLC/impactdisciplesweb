@@ -343,10 +343,15 @@ export class CheckoutComponent implements OnInit {
   // No Firestore write happens here any more -- the server already made
   // it, only after a real payment was verified (or the order was
   // genuinely free). This just reflects that already-saved record back
-  // into the UI/localStorage and moves on to the confirmation page.
+  // into the UI and moves on to the confirmation page. sessionStorage (not
+  // localStorage) on purpose: this is full checkout PII (name, email,
+  // phone, addresses, PayPal receipt) that only exists to hand the order
+  // to /checkout-success in this same tab, which deletes it once consumed.
+  // sessionStorage keeps it out of other tabs and out of persistent
+  // storage if the user closes the tab before the success page runs.
   private async finishCheckout(checkoutForm: CheckoutForm): Promise<void> {
     this.checkoutForm = checkoutForm;
-    localStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(checkoutForm));
+    sessionStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(checkoutForm));
     // Sales receipt (and any product follow-up emails) are queued
     // server-side when the order saves (pre-prod #1) - no client mail
     // write here any more.

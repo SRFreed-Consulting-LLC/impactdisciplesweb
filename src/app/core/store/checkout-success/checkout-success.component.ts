@@ -39,7 +39,13 @@ export class CheckoutSuccessComponent implements AfterViewInit {
   ) {}
 
   async ngAfterViewInit(): Promise<void> {
-    const checkoutForm: CheckoutForm = JSON.parse(localStorage.getItem(CHECKOUT_STORAGE_KEY));
+    // Handed off from CheckoutComponent.finishCheckout() via sessionStorage
+    // (same-tab only, cleared below once consumed) - this is checkout PII,
+    // so it must never sit in persistent/cross-tab localStorage. The
+    // localStorage.removeItem below just sweeps up any copy left behind by
+    // builds that stored it there.
+    localStorage.removeItem(CHECKOUT_STORAGE_KEY);
+    const checkoutForm: CheckoutForm = JSON.parse(sessionStorage.getItem(CHECKOUT_STORAGE_KEY));
 
     if (!checkoutForm) {
       return;
@@ -83,7 +89,9 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     // Once, unconditionally -- the original calls this from three separate
     // branches (including once per event attendee in a loop).
     this.cartService.clearCartNoConfirmation();
-    localStorage.removeItem(CHECKOUT_STORAGE_KEY);
+    // PII handoff consumed - delete it so the receipt/addresses don't
+    // outlive this page.
+    sessionStorage.removeItem(CHECKOUT_STORAGE_KEY);
   }
 
   private runSideEffect(code: string, checkoutForm: CheckoutForm, action: () => Promise<unknown> | void, humanDescription: string): void {

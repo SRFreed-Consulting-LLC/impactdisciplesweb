@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, SecurityContext, inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Modal } from 'bootstrap';
 
 /**
@@ -10,11 +11,16 @@ import { Modal } from 'bootstrap';
  *
  * Messages may contain simple inline HTML (e.g. "<i>...</i>") - every
  * existing call site in this app passes markup like that, matching what
- * devextreme/ui/dialog itself rendered - so this renders via innerHTML,
- * same as the DevExtreme version did.
+ * devextreme/ui/dialog itself rendered - so this renders as HTML, but only
+ * after passing through Angular's HTML sanitizer (some messages interpolate
+ * Firestore-stored text such as course titles, so raw innerHTML would be a
+ * stored-XSS sink). The sanitizer keeps simple inline markup like <i>/<b>
+ * intact while stripping scripts/event handlers.
  */
 @Injectable({ providedIn: 'root' })
 export class DialogService {
+  private readonly sanitizer = inject(DomSanitizer);
+
   confirm(message: string, title = 'Confirm'): Promise<boolean> {
     return this.open(message, title, [
       { text: 'Cancel', value: false, className: 'impact-btn-blue-border impact-dialog__btn--cancel' },
@@ -37,17 +43,22 @@ export class DialogService {
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content impact-dialog">
             <div class="modal-header">
-              <h5 class="modal-title">${title}</h5>
+              <h5 class="modal-title"></h5>
             </div>
             <div class="modal-body impact-dialog__message"></div>
             <div class="modal-footer"></div>
           </div>
         </div>`;
 
-      // innerHTML here, not textContent: message strings from every call
-      // site in this app already contain inline HTML (e.g. "<i>...</i>"),
-      // same as what was passed straight through to devextreme/ui/dialog.
-      backdrop.querySelector('.impact-dialog__message')!.innerHTML = message;
+      // Title is always a short plain-text string - set as text, never HTML.
+      backdrop.querySelector('.modal-title')!.textContent = title;
+
+      // HTML (not textContent) because call sites pass simple inline markup
+      // (e.g. "<i>...</i>"), same as what was passed straight through to
+      // devextreme/ui/dialog - but sanitized first, since some messages
+      // interpolate Firestore-stored text (e.g. course titles).
+      backdrop.querySelector('.impact-dialog__message')!.innerHTML =
+        this.sanitizer.sanitize(SecurityContext.HTML, message) ?? '';
 
       const footer = backdrop.querySelector('.modal-footer')!;
       let settled = false;
