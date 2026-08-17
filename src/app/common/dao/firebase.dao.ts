@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collectionData, deleteDoc, doc, docData, getDoc, getDocs, limit, query, setDoc, where } from '@angular/fire/firestore';
+import { addDoc, collectionData, deleteDoc, doc, docData, getDoc, getDocs, limit, orderBy, query, setDoc, where } from '@angular/fire/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -18,6 +18,19 @@ export class FirebaseDAO<T extends BaseModel> {
   // entire collection.
   public getAll(table: string, fromFirestore?, limitCount?: number): Promise<T[]>{
     const constraints: QueryConstraint[] = limitCount ? [limit(limitCount)] : [];
+
+    return getDocs(query(collection(this.fs, '/' + table), ...constraints)).then(docs => {
+      return this.getDocListFromPromise(docs, fromFirestore);
+    });
+  }
+
+  // getAll() with a server-side orderBy(orderField, 'desc') so the newest
+  // documents survive the limit() cap -- a plain limit() keeps whichever
+  // docs Firestore returns first (doc-id order), not the newest. Single
+  // field, no where clause, so no composite index is needed.
+  public getAllOrdered(table: string, orderField: string, fromFirestore?, limitCount?: number): Promise<T[]>{
+    const constraints: QueryConstraint[] = [orderBy(orderField, 'desc')];
+    if (limitCount) constraints.push(limit(limitCount));
 
     return getDocs(query(collection(this.fs, '/' + table), ...constraints)).then(docs => {
       return this.getDocListFromPromise(docs, fromFirestore);
@@ -106,6 +119,28 @@ export class FirebaseDAO<T extends BaseModel> {
       }),
       catchError(err => {
         console.error(`FirebaseDAO.streamByValue('${table}', '${field}') failed:`, err);
+        return of([]);
+      })
+    );
+  }
+
+  // streamByValue() with a server-side orderBy(orderField, 'desc') so the
+  // newest documents survive the limit() cap (see getAllOrdered() above).
+  // NOTE: where(field, '==', ...) combined with orderBy(orderField) on a
+  // different field REQUIRES a composite index on the collection -- the
+  // query hard-fails with failed-precondition until that index is READY
+  // (declared in the admin repo's firestore.indexes.json, which owns index
+  // deployment for this database).
+  public streamByValueOrdered(table: string, field: string, value: unknown, orderField: string, fromFirestore?, limitCount?: number): Observable<T[]>{
+    const constraints: QueryConstraint[] = [where(field, "==", value), orderBy(orderField, 'desc')];
+    if (limitCount) constraints.push(limit(limitCount));
+
+    return collectionData(query(collection(this.fs, '/' + table), ...constraints), {idField: 'id'}).pipe(
+      map(docs => {
+        return this.getDocListFromStream(docs, fromFirestore);
+      }),
+      catchError(err => {
+        console.error(`FirebaseDAO.streamByValueOrdered('${table}', '${field}', '${orderField}') failed:`, err);
         return of([]);
       })
     );

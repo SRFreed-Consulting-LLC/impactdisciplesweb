@@ -26,6 +26,10 @@ export class PodcastsComponent implements OnInit, OnDestroy {
   public sortBy = 'asc';
   public pageNo = 1;
 
+  // Server-side cap: newest 60 = deepest realistic page 10 at 6/page,
+  // instead of streaming the entire growing collection to every visitor.
+  private readonly maxPodcasts = 60;
+
   private ngUnsubscribe = new Subject<void>();
 
   constructor(public podcastService: PodCastService,
@@ -40,7 +44,7 @@ export class PodcastsComponent implements OnInit, OnDestroy {
     // opening a new whole-collection listener each time (P7 -- the DMM page
     // already avoids this). Web config is a one-time cached read, not a
     // standing listener.
-    this.podcastService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe((podcasts) => {
+    this.podcastService.streamAllByValueOrdered('isActive', true, 'date', this.maxPodcasts).pipe(takeUntil(this.ngUnsubscribe)).subscribe((podcasts) => {
       this.podcasts = podcasts.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
       this.selectedPodcast = this.podcasts[0];
       this.applyPage();

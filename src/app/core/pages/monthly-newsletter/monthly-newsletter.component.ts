@@ -13,10 +13,14 @@ export class MonthlyNewsletterComponent implements OnInit {
 
   newletters: MonthlyNewsletterModel[] = []
 
+  // Server-side cap: newest 100 instead of reading the entire growing
+  // collection. orderBy(date desc) + limit only -- no composite index needed.
+  private readonly maxNewsletters = 100;
+
   constructor(private newsletterService: MonthlyNewletterService) { }
 
   async ngOnInit() {
-    this.newletters = await this.newsletterService.getAll();
+    this.newletters = await this.newsletterService.getAllOrdered('date', this.maxNewsletters);
 
     const datSorter = (a,b) => {
       return new Date(b.date as string).getTime() - new Date(a.date as string).getTime()

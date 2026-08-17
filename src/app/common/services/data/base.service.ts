@@ -19,6 +19,12 @@ export class BaseService<T extends BaseModel> {
     return this.dao.getAll(this.table, this.fromFirestore, limitCount);
   }
 
+  // getAll() ordered newest-first on orderField (server-side orderBy desc)
+  // so a limitCount cap keeps the newest documents, not doc-id order.
+  getAllOrdered(orderField: string, limitCount?: number): Promise<T[]>{
+    return this.dao.getAllOrdered(this.table, orderField, this.fromFirestore, limitCount);
+  }
+
   getAllByValue(field: string, value: unknown, limitCount?: number): Promise<T[]>{
     return this.dao.getAllByValue(this.table, field, value, this.fromFirestore, limitCount);
   }
@@ -37,6 +43,13 @@ export class BaseService<T extends BaseModel> {
 
   streamAllByValue(field: string, value: unknown, limitCount?: number): Observable<T[]>{
     return this.dao.streamByValue(this.table, field, value, this.fromFirestore, limitCount)
+  }
+
+  // streamAllByValue() ordered newest-first on orderField so a limitCount
+  // cap keeps the newest documents. Requires a composite index on
+  // (field ASC, orderField DESC) -- see FirebaseDAO.streamByValueOrdered().
+  streamAllByValueOrdered(field: string, value: unknown, orderField: string, limitCount?: number): Observable<T[]>{
+    return this.dao.streamByValueOrdered(this.table, field, value, orderField, this.fromFirestore, limitCount)
   }
 
   // streamByDocId(), not streamByValue(this.table, 'id', id, ...) --

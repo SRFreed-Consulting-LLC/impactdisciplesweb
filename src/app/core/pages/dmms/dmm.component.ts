@@ -22,6 +22,10 @@ export class BlogComponent implements OnInit, OnDestroy {
   public pageNo = 1;
   public impactDisciplesInfo = impactDisciplesInfo;
 
+  // Server-side cap: newest 60 = deepest realistic page 10 at 6/page,
+  // instead of streaming the entire growing collection to every visitor.
+  private readonly maxDmms = 60;
+
   private ngUnsubscribe = new Subject<void>();
 
   constructor(
@@ -38,7 +42,7 @@ export class BlogComponent implements OnInit, OnDestroy {
     this.route.queryParams.pipe(
       switchMap((params) => {
         this.pageNo = params['page'] ? params['page'] : this.pageNo;
-        return this.dmmService.streamAllByValue('isActive', true);
+        return this.dmmService.streamAllByValueOrdered('isActive', true, 'date', this.maxDmms);
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe((blogs) => {
