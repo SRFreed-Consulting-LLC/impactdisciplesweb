@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IOnApproveCallbackData, IPayPalConfig } from 'ngx-paypal';
+import { IOnApproveCallbackData, IPayPalConfig, PayPalScriptService } from 'ngx-paypal';
 import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { SaleModel } from 'src/app/common/models/utils/sale.model';
 import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
@@ -96,6 +96,12 @@ export class CheckoutComponent implements OnInit {
   // PricingService's optimistic estimate, same as before.
   private serverBreakdown: CreateOrderBreakdown | null = null;
 
+  // Resolves once webConfig (and with it the PayPal client id) has loaded.
+  // startOrder() awaits this before building the PayPal config -- the old
+  // fire-and-forget getWebConfig() left a latent TypeError if the Firestore
+  // read was slower than the user reaching the payment step.
+  private webConfigReady: Promise<void> = Promise.resolve();
+
   constructor(
     public cartService: CartService,
     private pricingService: PricingService,
@@ -103,6 +109,7 @@ export class CheckoutComponent implements OnInit {
     private shippingService: ShippingService,
     private catalog: ProductCatalogService,
     private webConfigService: WebConfigService,
+    private payPalScriptService: PayPalScriptService,
     private router: Router,
     private toastService: ToastService,
     private loggerService: LoggerService,
@@ -119,8 +126,48 @@ export class CheckoutComponent implements OnInit {
       shippingAddress: { state: '', country: 'United States' }
     };
 
+    // Perceived-latency fix, part 1: open the connection to PayPal's CDN
+    // NOW, so the SDK download below doesn't also pay DNS+TLS setup.
+    // Scoped to checkout on purpose -- index.html deliberately doesn't
+    // preload payment resources site-wide (see its own comment).
+    this.addPreconnect('https://www.paypal.com');
+    this.addPreconnect('https://www.paypalobjects.com');
+
     this.getActiveSales();
-    this.getWebConfig();
+    this.webConfigReady = this.getWebConfig().then(() => this.preloadPayPalSdk());
+  }
+
+  // Perceived-latency fix, part 2 (the big one): start downloading the
+  // ~250KB PayPal JS SDK the moment the client id is known, instead of
+  // only after the shipping-rate and create-order round-trips finish.
+  // ngx-paypal's ScriptService short-circuits on window.paypal already
+  // existing, so when <ngx-paypal> finally renders, the SDK loaded here is
+  // reused and the buttons appear immediately. The params MUST match what
+  // NgxPaypalComponent.initPayPalScript() would request for our config
+  // (client-id + currency + commit) -- the SDK configures itself from its
+  // script URL, and the later component render trusts whatever this loaded.
+  private preloadPayPalSdk(): void {
+    if (!this.webConfig?.paypalClientId) {
+      return;
+    }
+    this.payPalScriptService.registerPayPalScript({
+      clientId: this.webConfig.paypalClientId,
+      currency: this.currency,
+      commit: 'true',
+      funding: false,
+      extraParams: []
+    }, () => { /* preload only - NgxPaypalComponent wires the buttons */ });
+  }
+
+  private addPreconnect(origin: string): void {
+    if (document.head.querySelector(`link[rel="preconnect"][href="${origin}"]`)) {
+      return;
+    }
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = origin;
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
   }
 
   isShippingAddressNeeded(): boolean {
@@ -239,6 +286,13 @@ export class CheckoutComponent implements OnInit {
     try {
       const result = await this.checkoutOrderService.createOrder(this.buildOrderRequest());
 
+      // Normally long resolved by now (it kicked off in ngOnInit, and the
+      // SDK preload rode it) - this await only matters when the Firestore
+      // config read is slower than the whole shipping+order chain, where
+      // createPaypalConfig() below would previously have thrown on an
+      // undefined webConfig.
+      await this.webConfigReady;
+
       if (result.free) {
         // Free (fully covered by a coupon, or genuinely $0) -- the server
         // already wrote the purchase record, since there's no payment to
@@ -336,8 +390,8 @@ export class CheckoutComponent implements OnInit {
     };
   }
 
-  private getWebConfig(): void {
-    this.webConfigService.getAll().then(config => {
+  private getWebConfig(): Promise<void> {
+    return this.webConfigService.getAll().then(config => {
       this.webConfig = config[0];
     });
   }
