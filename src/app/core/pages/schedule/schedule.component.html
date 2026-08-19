@@ -37,7 +37,7 @@
                                               <div>
                                                 @if (breakout.isAssignedToUser) {
                                                   <div class="course">
-                                                    <div class="course__title">{{ getCourseTitle(getCourse(breakout.item.course)) }}</div>
+                                                    <div class="course__title">{{ getTitle(breakout.item) }}</div>
                                                     @if (breakout.item.room) {
                                                       <div class="course__room">Room: {{ getRoomName(breakout.item.room) }}</div>
                                                     }

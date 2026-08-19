@@ -15,6 +15,7 @@ import { DaysModel, ScheduleModel, TimeGroupsModel } from 'src/app/common/models
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
 import { ActivatedRoute } from '@angular/router';
 import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
+import { breakoutTitle } from 'src/app/shared/utils/breakout.util';
 import { ScheduleEventBusService } from './schedule-event-bus.service';
 import { ToastService, ToastType } from 'src/app/shared/utils/services/toast.service';
 
@@ -166,12 +167,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     return timeGroup.items.some(item => item.isAssignedToUser);
   }
 
-  getCourseTitle(course:CourseModel){
-    if(course && course.title){
-      return course.title.replace("Breakout: ", "");
-    } else {
-      return '';
-    }
+  // Item-first with legacy course fallback - see breakout.util.ts (2026-08
+  // Courses retirement).
+  getTitle(item: AgendaItem){
+    return breakoutTitle(item, item?.course ? this.getCourse(item.course) : null);
   }
 
   getCourse(id: string){
