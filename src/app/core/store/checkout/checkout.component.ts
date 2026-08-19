@@ -11,6 +11,7 @@ import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { EnumHelper } from 'src/app/common/utils/enum_helper';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
+import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
 import { CartService } from '../services/cart.service';
 import { PricingService } from '../services/pricing.service';
 import { ProductCatalogService } from '../services/product-catalog.service';
@@ -113,6 +114,7 @@ export class CheckoutComponent implements OnInit {
     private router: Router,
     private toastService: ToastService,
     private loggerService: LoggerService,
+    private attributionService: AttributionService,
     private fb: FormBuilder
   ) {}
 
@@ -342,7 +344,10 @@ export class CheckoutComponent implements OnInit {
       billingAddress: this.checkoutForm.billingAddress,
       shippingAddress: this.checkoutForm.shippingAddress,
       shippingRate: this.checkoutForm.shippingRate,
-      shippingRateId: this.checkoutForm.shippingRateId
+      shippingRateId: this.checkoutForm.shippingRateId,
+      // Campaign attribution captured on landing (Campaign Manager v2,
+      // Phase 4) - the server validates before crediting any campaign.
+      ...(this.attributionService.get() ? { attribution: this.attributionService.get() } : {})
     };
   }
 
