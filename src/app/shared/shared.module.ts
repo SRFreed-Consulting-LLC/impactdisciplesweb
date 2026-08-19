@@ -11,6 +11,7 @@ import { CampaignPopupComponent } from "./components/campaign-popup/campaign-pop
 import { SubscribeAreaComponent } from "./components/subscribe-area/subscribe-area.component";
 import { FooterComponent } from "./footer/footer.component";
 import { LocationPipe } from "./utils/pipes/location.pipe";
+import { VenuePipe } from "./utils/pipes/venue.pipe";
 import { CourseNamePipe } from "./utils/pipes/course-name.pipe";
 import { BookBannerComponent } from "./components/book-banner/book-banner.component";
 import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.component";
@@ -39,6 +40,7 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     ComingSoonComponent,
     PaginationComponent,
     LocationPipe,
+    VenuePipe,
     CourseNamePipe,
     TimeFormatPipe,
     DiscipleMakingSummitBannerComponent,
@@ -69,6 +71,7 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     ComingSoonComponent,
     PaginationComponent,
     LocationPipe,
+    VenuePipe,
     CourseNamePipe,
     TimeFormatPipe,
     DiscipleMakingSummitBannerComponent,

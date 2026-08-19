@@ -29,8 +29,8 @@
             </div>
             <div class="col-xl-4 col-md-4 summit__info-text">
               <i class="fa-solid fa-location-dot"></i>
-              <a [href]="'https://www.google.com/maps/search/?api=1&query=' + (summit?.location?.toString() | location: 'address' | async)" target="_blank">
-                {{ summit?.location?.toString() | location: 'address' | async }}
+              <a [href]="'https://www.google.com/maps/search/?api=1&query=' + (summit | venue: 'address' | async)" target="_blank">
+                {{ summit | venue: 'address' | async }}
               </a>
             </div>
             <div class="col-xl-4 col-md-4 summit__info-text">
