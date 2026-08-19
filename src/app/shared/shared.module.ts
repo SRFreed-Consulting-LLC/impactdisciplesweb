@@ -7,6 +7,7 @@ import { DynamicFormComponent } from "./form-renderer/dynamic-form.component";
 import { DynamicFormFieldComponent } from "./form-renderer/dynamic-form-field.component";
 import { OffcanvasComponent } from "./components/offcanvas/offcanvas.component";
 import { BackToTopComponent } from "./components/back-to-top/back-to-top.component";
+import { CampaignPopupComponent } from "./components/campaign-popup/campaign-popup.component";
 import { SubscribeAreaComponent } from "./components/subscribe-area/subscribe-area.component";
 import { FooterComponent } from "./footer/footer.component";
 import { LocationPipe } from "./utils/pipes/location.pipe";
@@ -46,7 +47,8 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     HeaderComponent,
     HomeHeaderComponent,
     DynamicFormComponent,
-    DynamicFormFieldComponent
+    DynamicFormFieldComponent,
+    CampaignPopupComponent
   ],
   imports: [
     CommonModule,
@@ -59,6 +61,7 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     NavMenuComponent,
     OffcanvasComponent,
     BackToTopComponent,
+    CampaignPopupComponent,
     SubscribeAreaComponent,
     FooterComponent,
     BookBannerComponent,

@@ -1,4 +1,4 @@
-export const environment = {
+﻿export const environment = {
   production: false,
   firebaseConfig: {
     apiKey: "AIzaSyDuxbnrsCjpHqlNauBWsaSrQHChUN-w008",
@@ -37,6 +37,7 @@ export const environment = {
 
   getSessionCountsUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/get_session_counts",
   subscribeUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/subscribe_to_email_list",
+  campaignWebEventUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/campaign_web_event",
   unsubscribeUrl: "https://us-central1-impactdisciplesdev.cloudfunctions.net/unsubscribe_from_email_list",
   oneGiftUrl: 'https://buy.stripe.com/test_3cseVSfkM23y4tafYY',
   monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',

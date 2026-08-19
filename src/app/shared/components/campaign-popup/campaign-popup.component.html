@@ -1,0 +1,17 @@
+@if (visible && popup) {
+  <div class="cpopup__overlay">
+    <div class="cpopup__box"
+      [style.width.px]="popup.width || 480"
+      [style.maxHeight.px]="popup.height || 420"
+      [style.background]="popup.bgColor || '#ffffff'">
+      <button type="button" class="cpopup__close" aria-label="Close" (click)="close()">&times;</button>
+      <div class="cpopup__content" [class.cpopup__content--link]="!!popup.ctaUrl"
+        (click)="onContentClick()" (keyup.enter)="onContentClick()"
+        [attr.tabindex]="popup.ctaUrl ? 0 : -1" [attr.role]="popup.ctaUrl ? 'link' : null"
+        [innerHTML]="html"></div>
+      <label class="cpopup__dismiss">
+        <input type="checkbox" [(ngModel)]="dontShowAgain"> Don't show this again
+      </label>
+    </div>
+  </div>
+}
