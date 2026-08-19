@@ -42,6 +42,10 @@ export interface CheckoutOrderRequest {
   shippingAddress?: unknown;
   shippingRate?: number;
   shippingRateId?: unknown;
+  // Campaign attribution captured on landing (AttributionService) - the
+  // server validates the campaign exists before crediting anything, so
+  // this stays advisory, never a price/priv input.
+  attribution?: { campaignId: string; emailId?: string; source?: string };
 }
 
 export interface CreateOrderBreakdown {

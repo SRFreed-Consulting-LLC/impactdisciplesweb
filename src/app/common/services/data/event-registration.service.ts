@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
 import { environment } from 'src/environments/environment';
+import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
 
 // Pre-prod hardening #2: every public event-registration flow goes through
 // Cloud Functions now - the collection itself is staff-only under
@@ -16,6 +17,8 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class EventRegistrationService {
+
+  constructor(private attributionService: AttributionService) {}
 
   private async post<T>(url: string, body: unknown): Promise<T> {
     const response = await fetch(url, {
@@ -40,9 +43,13 @@ export class EventRegistrationService {
     email: string;
     receipt?: string;
   }): Promise<{ registrationId: string; receiptEmailId?: string }> {
+    // Campaign attribution (Campaign Manager v2, Phase 4) - a registration
+    // that follows a campaign click credits that campaign's funnel.
+    const attribution = this.attributionService.get();
     return this.post(environment.registerForEventUrl, {
       ...input,
       email: input.email.toLowerCase(),
+      ...(attribution ? { attribution } : {}),
     });
   }
 
