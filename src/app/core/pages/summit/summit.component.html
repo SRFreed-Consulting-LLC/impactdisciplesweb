@@ -143,7 +143,7 @@
                                           @for (item of dayGroup.items; track item) {
                                             <tr class="row" class="agenda__group">
                                               @if (item.isCourse) {
-                                                <td class="col-8">{{ item.course | courseName | async }}</td>
+                                                <td class="col-8">{{ item | courseName | async }}</td>
                                               }
                                               @if (!item.isCourse) {
                                                 <td class="col-8">{{ item.text }}</td>

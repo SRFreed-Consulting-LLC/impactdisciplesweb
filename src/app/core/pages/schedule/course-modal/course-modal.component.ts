@@ -12,6 +12,7 @@ import { EventRegistrationModel } from 'src/app/common/models/domain/event-regis
 import { ScheduleModel, UpdatedAgendaItemModel } from 'src/app/common/models/utils/schedule.model';
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
 import { ScheduleEventBusService } from '../schedule-event-bus.service';
+import { breakoutDescription, breakoutTitle, sameBreakoutSession } from 'src/app/shared/utils/breakout.util';
 
 export interface CourseItem {
   course: CourseModel;
@@ -84,6 +85,16 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
     return this.scheduleService.traininlist.get(this?.customAgendaItem?.item.id);
   }
 
+  // Item-first with legacy course fallback - see breakout.util.ts (2026-08
+  // Courses retirement).
+  getTitle(){
+    return breakoutTitle(this.customAgendaItem?.item, this.courseItem);
+  }
+
+  getDescription(){
+    return breakoutDescription(this.customAgendaItem?.item, this.courseItem);
+  }
+
   getRoomName(id: string){
     return this.roomsMap.get(id)?.name || '';
   }
@@ -108,7 +119,7 @@ export class CourseModalComponent implements OnInit, OnChanges, OnDestroy {
       .find(item =>
         item.isAssignedToUser &&
         new Date(item.item.startDate).getTime() === new Date(course.startDate).getTime() &&
-        item.item.course !== course.course
+        !sameBreakoutSession(item.item, course)
       );
 
     if (conflictingCourse) {

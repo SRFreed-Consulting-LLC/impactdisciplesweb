@@ -17,13 +17,13 @@
                         @for (course of timeGroup.items; track course) {
                           <div>
                             <div class="sessions__item" (click)="viewCourse(course)" (keydown.enter)="viewCourse(course)" (keydown.space)="viewCourse(course)" tabindex="0" role="button" [ngClass]="{ 'assigned-user': course.isAssignedToUser }" >
-                              <div class="sessions__item-title">{{ getCourseTitle(getCourse(course.item.course)) }}</div>
+                              <div class="sessions__item-title">{{ getTitle(course.item) }}</div>
                               <div class="sessions__item-details">
                                 <div class="sessions__item-details-item">
                                   <div class="row course-popup-content" style="width: 100%;">
                                     <div class="col-lg-8 col-sm-12 alignText-start" style="padding-bottom: 10px;">
                                       <div class="course-popup-content__description">
-                                        {{ getCourse(course.item.course).longDescription || getCourse(course.item.course).shortDescription }}
+                                        {{ getDescription(course.item) }}
                                       </div>
                                     </div>
                                     <div class="col-lg-4 col-sm-12 alignText-start">

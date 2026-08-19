@@ -8,7 +8,7 @@
 
       @if (isVisible$ | async) {
         <div class="course-popup-content">
-          <div class="course-popup-content__title">{{ courseItem?.title }}</div>
+          <div class="course-popup-content__title">{{ getTitle() }}</div>
           <div class="course-popup-content__details">
             <div class="course-popup-content__details-item">
               <i class="fa-solid fa-calendar-day"></i>
@@ -53,7 +53,7 @@
             </div>
           </div>
           <div class="course-popup-content__description">
-            {{ courseItem.longDescription || courseItem.shortDescription }}
+            {{ getDescription() }}
           </div>
         </div>
       }

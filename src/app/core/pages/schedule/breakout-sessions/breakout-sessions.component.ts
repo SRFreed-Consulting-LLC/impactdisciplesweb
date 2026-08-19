@@ -14,6 +14,7 @@ import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { formatDate } from '@angular/common';
 import { ScheduleEventBusService } from '../schedule-event-bus.service';
+import { breakoutDescription, breakoutTitle, sameBreakoutSession } from 'src/app/shared/utils/breakout.util';
 
 @Component({
     selector: 'app-breakout-sessions',
@@ -78,12 +79,14 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     return this.roomsMap.get(id)?.name || '';
   }
 
-  getCourseTitle(course:CourseModel){
-    if(course && course.title){
-      return course.title.replace("Breakout: ", "");
-    } else {
-      return '';
-    }
+  // Item-first with legacy course fallback - see breakout.util.ts (2026-08
+  // Courses retirement).
+  getTitle(item: AgendaItem){
+    return breakoutTitle(item, item?.course ? this.getCourse(item.course) : null);
+  }
+
+  getDescription(item: AgendaItem){
+    return breakoutDescription(item, item?.course ? this.getCourse(item.course) : null);
   }
   getCoachImg(id: string){
     return this.coachesMap.get(id)?.photoUrl.url || '';
@@ -148,7 +151,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
       .find(item =>
         item.isAssignedToUser &&
         new Date(item.item.startDate).getTime() === new Date(course.startDate).getTime() &&
-        item.item.course !== course.course
+        !sameBreakoutSession(item.item, course)
       );
 
     if (conflictingCourse) {
@@ -160,7 +163,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
             this.eventRegistrationService
               .registerForTrainingSession(this.currentUser.id, course.id)
               .then(() => {
-                this.dialogService.alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
+                this.dialogService.alert('<i>You have been successfully registered for ' + this.getTitle(course) + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
                   this.scheduleEventBus.dispatchResetSchedule();
                   this.isVisible$.next(false);
                 })
@@ -173,7 +176,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
       this.eventRegistrationService
         .registerForTrainingSession(this.currentUser.id, course.id)
         .then(() => {
-          this.dialogService.alert('<i>You have been successfully registered for ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
+          this.dialogService.alert('<i>You have been successfully registered for ' + this.getTitle(course) + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Success').then(() => {
             this.scheduleEventBus.dispatchResetSchedule();
             this.isVisible$.next(false);
           })
@@ -187,7 +190,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
         this.eventRegistrationService
         .unregisterForTrainingSession(this.currentUser.id, course.id)
         .then(() => {
-          this.dialogService.alert('<i>You have been successfully removed from ' + this.getCourse(course.course).title + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Removed').then(() => {
+          this.dialogService.alert('<i>You have been successfully removed from ' + this.getTitle(course) + "' at " + formatDate(course.startDate, 'shortTime', 'en-US') + '</i>', 'Registration Removed').then(() => {
             this.scheduleEventBus.dispatchResetSchedule();
             this.isVisible$.next(false);
           })
