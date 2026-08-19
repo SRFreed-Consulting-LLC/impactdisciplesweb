@@ -6,6 +6,19 @@ import { OrganizationModel } from './organization.model';
 import { AgendaItem } from './utils/agenda-item.model';
 import { FAQModel } from '../utils/faq.model';
 import { ImageModel } from '../utils/image.model';
+import { Address } from './utils/address.model';
+
+// Where this event happens, snapshotted by the ADMIN app at save time from
+// the chosen location record - or, when the organization has no location
+// children, from the org's own name + address. Denormalized on purpose:
+// this site renders it directly, because `organizations` is staff-only
+// readable in Firestore rules. Old events may lack it - fall back to the
+// LocationPipe over `event.location` (hand-synced from the admin repo's
+// event.model.ts, 2026-08 restructure).
+export interface EventVenue {
+  name: string;
+  address: Address;
+}
 
 export class EventModel extends BaseModel {
   isActive = false;
@@ -13,7 +26,10 @@ export class EventModel extends BaseModel {
   organization?: string | OrganizationModel;
   startDate?: Timestamp | Date | string;
   endDate?: Timestamp | Date | string;
+  // Optional as of the 2026-08 restructure - a single-site org's event has
+  // no location record and the venue is the org's own address (see `venue`).
   location?: string | LocationModel;
+  venue?: EventVenue;
   attendees?: AppUser[];
   agendaItems?: AgendaItem[];
   description?: string;
