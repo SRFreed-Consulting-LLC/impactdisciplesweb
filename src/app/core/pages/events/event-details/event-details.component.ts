@@ -17,7 +17,7 @@ import { CartItem } from 'src/app/common/models/utils/cart.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
-import { dateFromTimestamp } from 'src/app/common/utils/date-from-timestamp';
+import { dateFromTimestamp, toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 
@@ -220,7 +220,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
   }
 
   private groupAgendaItemsByMonthAndDate(agendaItems: AgendaItem[]) {
-    agendaItems.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+    agendaItems.sort((a, b) => toMillis(a.startDate) - toMillis(b.startDate));
 
     const groupedByMonthYear = agendaItems.reduce((acc, item) => {
       const monthYearKey = new Date(item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -241,7 +241,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.groupedAgendaItems = Object.keys(groupedByMonthYear).map(monthYear => ({
       monthYear: monthYear,
       days: Object.keys(groupedByMonthYear[monthYear])
-        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+        .sort((a, b) => toMillis(a) - toMillis(b))
         .map(date => ({
           date: new Date(date),
           items: groupedByMonthYear[monthYear][date],

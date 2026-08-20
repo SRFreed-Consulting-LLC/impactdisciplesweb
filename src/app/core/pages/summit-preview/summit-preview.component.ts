@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { ActivatedRoute } from '@angular/router';
 import { QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
 import { EventModel } from 'src/app/common/models/domain/event.model';
@@ -52,7 +53,7 @@ export class SummitPreviewComponent implements OnInit, OnDestroy {
           // Soonest match rather than requiring exactly one - two future
           // summits used to null this out entirely.
           return [...events].sort(
-            (a, b) => new Date(a.startDate.toString()).getTime() - new Date(b.startDate.toString()).getTime()
+            (a, b) => toMillis(a.startDate) - toMillis(b.startDate)
           )[0];
         }
         // Expected state (no event doc for that year yet), not an error.
@@ -86,7 +87,7 @@ export class SummitPreviewComponent implements OnInit, OnDestroy {
       // into the template every second.
       return;
     }
-    const endDate = new Date(this.summit.startDate.toString()).getTime();
+    const endDate = toMillis(this.summit.startDate);
 
     this.intervalId = setInterval(() => {
       const now = new Date().getTime();
@@ -117,7 +118,7 @@ export class SummitPreviewComponent implements OnInit, OnDestroy {
   }
 
   private groupAgendaItemsByMonthAndDate(agendaItems: AgendaItem[]) {
-    agendaItems.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+    agendaItems.sort((a, b) => toMillis(a.startDate) - toMillis(b.startDate));
 
     const groupedByMonthYear = agendaItems.reduce((acc, item) => {
       const monthYearKey = new Date(item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -138,7 +139,7 @@ export class SummitPreviewComponent implements OnInit, OnDestroy {
     this.groupedAgendaItems = Object.keys(groupedByMonthYear).map(monthYear => ({
       monthYear: monthYear,
       days: Object.keys(groupedByMonthYear[monthYear])
-        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+        .sort((a, b) => toMillis(a) - toMillis(b))
         .map(date => ({
           date: new Date(date),
           items: groupedByMonthYear[monthYear][date],

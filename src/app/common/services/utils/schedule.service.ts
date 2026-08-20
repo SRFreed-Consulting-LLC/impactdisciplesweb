@@ -1,4 +1,5 @@
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
+import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { Injectable } from "@angular/core";
 import { AgendaItem } from "src/app/common/models/domain/utils/agenda-item.model";
 import { EventModel } from 'src/app/common/models/domain/event.model';
@@ -17,7 +18,7 @@ export class ScheduleService {
   constructor(private eventRegistrationService: EventRegistrationService){}
 
   public organizeAgendaItems(agendaItems: AgendaItem[]): void {
-    const sortedItems = [...agendaItems].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+    const sortedItems = [...agendaItems].sort((a, b) => toMillis(a.startDate) - toMillis(b.startDate));
     const groupedAgendaItems = this.groupByDateAndTime(sortedItems);
 
     // Create fullSchedule
@@ -84,7 +85,7 @@ export class ScheduleService {
     return Object.entries(groupedByMonthYear).map(([monthYear, days]) => ({
       monthYear,
       days: Object.entries(days)
-        .sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime())
+        .sort(([a], [b]) => toMillis(a) - toMillis(b))
         .map(([date, items]) => ({ date: new Date(date), items })),
     }));
   }

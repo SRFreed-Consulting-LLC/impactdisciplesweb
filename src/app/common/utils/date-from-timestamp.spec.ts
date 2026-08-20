@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
-import { dateFromTimestamp } from './date-from-timestamp';
+import { dateFromTimestamp, toMillis } from './date-from-timestamp';
 
 // Normalizes the several shapes a "date" arrives in from Firestore (see the
 // admin repo's MIGRATION.md on inconsistent date-field shapes): a real
@@ -65,5 +65,27 @@ describe('dateFromTimestamp', () => {
     // purpose; this pins the current behavior rather than blessing it.
     expect(dateFromTimestamp(new Timestamp(0, 0))).toBeNull();
     expect(dateFromTimestamp({ seconds: 0, nanoseconds: 0 })).toBeNull();
+  });
+
+  describe('toMillis', () => {
+    const seconds = 1723680000; // 2024-08-15T00:00:00Z
+
+    it('returns epoch millis for a Date, a Timestamp, and a {seconds} map alike', () => {
+      expect(toMillis(new Date(seconds * 1000))).toBe(seconds * 1000);
+      expect(toMillis(new Timestamp(seconds, 0))).toBe(seconds * 1000);
+      expect(toMillis({ seconds, nanoseconds: 5 })).toBe(seconds * 1000);
+    });
+
+    it('parses the MM/dd/yyyy form via dateFromTimestamp and ISO strings via the native fallback', () => {
+      expect(toMillis('08/15/2024')).toBe(new Date(2024, 7, 15).getTime());
+      expect(toMillis('2024-08-15T00:00:00Z')).toBe(seconds * 1000);
+    });
+
+    it('returns 0 (not NaN) for null, undefined, and unparsable input so sorts stay stable', () => {
+      expect(toMillis(null)).toBe(0);
+      expect(toMillis(undefined)).toBe(0);
+      expect(toMillis('not a date')).toBe(0);
+      expect(toMillis({})).toBe(0);
+    });
   });
 });

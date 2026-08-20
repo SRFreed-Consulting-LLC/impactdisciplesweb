@@ -1,4 +1,5 @@
 import { ViewportScroller } from '@angular/common';
+import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PodCastModel } from 'src/app/common/models/domain/pod-cast.model';
@@ -45,7 +46,7 @@ export class PodcastsComponent implements OnInit, OnDestroy {
     // already avoids this). Web config is a one-time cached read, not a
     // standing listener.
     this.podcastService.streamAllByValueOrdered('isActive', true, 'date', this.maxPodcasts).pipe(takeUntil(this.ngUnsubscribe)).subscribe((podcasts) => {
-      this.podcasts = podcasts.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
+      this.podcasts = podcasts.sort((a, b) => toMillis(b?.date) - toMillis(a?.date));
       this.selectedPodcast = this.podcasts[0];
       this.applyPage();
     });

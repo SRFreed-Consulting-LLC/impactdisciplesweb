@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { CourseModel } from 'src/app/common/models/domain/course.model';
 import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
@@ -105,7 +106,7 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
       .flatMap(timeGroup => timeGroup.items)
       .find(item =>
         item.isAssignedToUser &&
-        new Date(item.item.startDate).getTime() === new Date(course.startDate).getTime() &&
+        toMillis(item.item.startDate) === toMillis(course.startDate) &&
         !sameBreakoutSession(item.item, course)
       );
 

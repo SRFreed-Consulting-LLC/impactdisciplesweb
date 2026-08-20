@@ -1,4 +1,5 @@
 import { ViewportScroller } from '@angular/common';
+import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, switchMap, takeUntil } from 'rxjs';
@@ -46,7 +47,7 @@ export class BlogComponent implements OnInit, OnDestroy {
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe((blogs) => {
-      this.dmms = blogs.sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime());
+      this.dmms = blogs.sort((a, b) => toMillis(b?.date) - toMillis(a?.date));
       this.paginate = this.getPager(this.dmms.length, Number(+this.pageNo), this.pageSize);
       this.filteredDmms = this.dmms.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
     });

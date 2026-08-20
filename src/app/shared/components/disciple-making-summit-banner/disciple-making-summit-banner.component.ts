@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 
@@ -36,7 +37,7 @@ export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
   }
 
   private startCountdown(): void {
-    const endDate = new Date(this.dms?.startDate.toString()).getTime();
+    const endDate = toMillis(this.dms?.startDate);
 
     this.intervalId = setInterval(() => {
       const now = new Date().getTime();

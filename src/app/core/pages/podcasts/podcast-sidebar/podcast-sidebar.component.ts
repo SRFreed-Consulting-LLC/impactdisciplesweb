@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { PodCastModel } from 'src/app/common/models/domain/pod-cast.model';
 
 @Component({
@@ -19,7 +20,7 @@ export class PodcastSidebarComponent {
   @Input() set podcasts(value: PodCastModel[]) {
     this._podcasts = value ?? [];
     this.recentPodcasts = [...this._podcasts]
-      .sort((a, b) => new Date(b?.date?.toString()).getTime() - new Date(a?.date?.toString()).getTime())
+      .sort((a, b) => toMillis(b?.date) - toMillis(a?.date))
       .slice(0, 5);
   }
   get podcasts(): PodCastModel[] {

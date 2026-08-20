@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -68,7 +69,7 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
       });
 
       const dateSorter = (a,b) => {
-        return new Date(a.startDate as string).getTime() - new Date(b.startDate as string).getTime()
+        return toMillis(a.startDate) - toMillis(b.startDate)
       };
 
       this.eventsList.sort(dateSorter);
