@@ -71,6 +71,13 @@
             <div class="row g-0 justify-content-center">
               <div class="story__text-area col-xl-6 col-lg-6 d-flex">
                 <h4 class="story__title mb-10">REGISTER FOR <strong>SUMMIT</strong></h4>
+                <!-- Bound to the event's own description (edited in the
+                     admin's summit wizard/Info tab, mirrored by its live
+                     preview); the long-standing hardcoded paragraph remains
+                     as the fallback for summits without one. -->
+                @if (summit?.description) {
+                  <p>{{ summit?.description }}</p>
+                } @else {
                 <p>
                   From its start in 2021, the Disciple-Making Summit has had a singular mission—calling disciple-makers, leaders, and pastors across nation and around the world to come together to focus on our main purpose. Jesus told us in Matthew 28:19 to “Go and make disciples…” We are here to do just that.
                   <br>
@@ -80,9 +87,11 @@
                         <br>
                           This is a weekend for everyone – bring yourself, your small group, your youth group, your church staff – we promise that you will leave inspired and more equipped to make disciples in the coming year.
                         </p>
+                }
                       </div>
                       <div class="col-xl-5 col-lg-5 mt-80">
-                        <youtube-player [videoId]="'MUPDplOSOR4'" [width]="458" [height]="224" suggestedQuality="highres" [playerVars]="{'autoplay': 0}"></youtube-player>
+                        <!-- The event's own promo video when set (admin wizard/Info tab), else the long-standing hardcoded one. -->
+                        <youtube-player [videoId]="summit?.videoId || 'MUPDplOSOR4'" [width]="458" [height]="224" suggestedQuality="highres" [playerVars]="{'autoplay': 0}"></youtube-player>
                       </div>
                     </div>
                   </div>
