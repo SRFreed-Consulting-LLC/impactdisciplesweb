@@ -1,0 +1,29 @@
+<app-home-header></app-home-header>
+
+<div class="newsletter-view">
+  <section class="pt-40 pb-100">
+    <div class="container">
+      <p class="newsletter-view__back">
+        <a routerLink="/monthly-newsletter">&larr; All newsletters</a>
+      </p>
+
+      @if (loading) {
+        <p class="newsletter-view__status">Loading newsletter…</p>
+      } @else if (notFound) {
+        <p class="newsletter-view__status">That newsletter isn't available. <a routerLink="/monthly-newsletter">See all newsletters</a>.</p>
+      } @else if (error) {
+        <p class="newsletter-view__status">The newsletter couldn't be loaded right now. Please try again later.</p>
+      } @else {
+        <iframe #frame class="newsletter-view__frame"
+          title="Newsletter"
+          [srcdoc]="html"
+          [style.height.px]="frameHeight"
+          sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
+          referrerpolicy="no-referrer"
+          (load)="fitFrame()"></iframe>
+      }
+    </div>
+  </section>
+</div>
+
+<app-footer></app-footer>

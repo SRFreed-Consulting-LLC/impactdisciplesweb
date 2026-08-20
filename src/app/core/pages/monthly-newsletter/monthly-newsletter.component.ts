@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { MonthlyNewsletterModel } from 'src/app/common/models/domain/monthly-newsletter.model';
-import { MonthlyNewletterService } from 'src/app/common/services/data/monthly-newsletter.service';
+import { NewsletterArchiveItem, NewsletterArchiveService } from 'src/app/common/services/data/newsletter-archive.service';
 
-
+// Public list of published newsletter issues. Since 2026-08-20 this reads
+// the admin-curated archive (campaign_emails touches flagged publishToWeb,
+// served by the newsletter_archive function) instead of the retired
+// `monthly-newsletter` collection of Mailchimp links; each row opens the
+// issue on our own /monthly-newsletter/:id page rather than on mailchi.mp.
 @Component({
     selector: 'app-monthly-newsletter',
     templateUrl: './monthly-newsletter.component.html',
@@ -11,18 +14,21 @@ import { MonthlyNewletterService } from 'src/app/common/services/data/monthly-ne
 })
 export class MonthlyNewsletterComponent implements OnInit {
 
-  newletters: MonthlyNewsletterModel[] = []
+  newsletters: NewsletterArchiveItem[] = [];
+  loading = true;
+  error = false;
 
-  // Server-side cap: newest 100 instead of reading the entire growing
-  // collection. orderBy(date desc) + limit only -- no composite index needed.
-  private readonly maxNewsletters = 100;
-
-  constructor(private newsletterService: MonthlyNewletterService) { }
+  constructor(private archive: NewsletterArchiveService) { }
 
   async ngOnInit() {
-    // getAllOrdered() already queries with orderBy('date', 'desc') --
-    // re-sorting client-side here was redundant (not incorrect, just
-    // duplicate work on every load).
-    this.newletters = await this.newsletterService.getAllOrdered('date', this.maxNewsletters);
+    try {
+      // Already newest-first from the endpoint (sentAt desc).
+      this.newsletters = await this.archive.list();
+    } catch (err) {
+      console.error('Newsletter archive unavailable', err);
+      this.error = true;
+    } finally {
+      this.loading = false;
+    }
   }
 }

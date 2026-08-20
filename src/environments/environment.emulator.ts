@@ -41,6 +41,7 @@ export const environment = {
   getSessionCountsUrl: `${FN}/get_session_counts`,
   subscribeUrl: `${FN}/subscribe_to_email_list`,
   campaignWebEventUrl: `${FN}/campaign_web_event`,
+  newsletterArchiveUrl: `${FN}/newsletter_archive`,
   unsubscribeUrl: `${FN}/unsubscribe_from_email_list`,
   oneGiftUrl: 'https://example.test/one-gift',
   monthlyGiftUrl: 'https://example.test/monthly-gift',
