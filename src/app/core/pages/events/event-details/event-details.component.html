@@ -62,7 +62,12 @@
             @if (event?.endDate) {
               <span class="date">- {{ event.endDate.toString() | date: 'M/d' }} </span>
             }
-            @if (event?.location) {
+            <!-- venue OR location: a single-site-org event has NO location
+                 child by design (the org's own address IS the venue, carried
+                 in the `venue` snapshot) - gating on location alone hid the
+                 venue for exactly that case. VenuePipe itself is
+                 snapshot-first either way. -->
+            @if (event?.venue || event?.location) {
               <span>/ {{ event | venue : 'cityState' | async }}</span>
             }
           </span>
