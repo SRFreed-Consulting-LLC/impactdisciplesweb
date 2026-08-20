@@ -100,20 +100,21 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     return this.coachesMap.get(id)?.title || '';
   }
 
+  // Clicking a session row. Each row already renders the full session
+  // detail plus its own Sign up / Remove buttons (addCourse/removeCourse),
+  // so a row click only has work to do when the session is full: offer the
+  // wait list. (It used to also dispatch showCourseModal for non-full
+  // sessions, but nothing mounted that modal - removed 2026-08-20.)
+  //
+  // NOTE (open, flagged by the 2026-08-20 sweep): the wait-list branch
+  // below mutates the agenda item in memory and tells the user they were
+  // added, but nothing persists it - the web app has no write path onto
+  // `events` (anon client, rules are read-only) and there is no Cloud
+  // Function for it; only the admin app's EventService.addToWaitList
+  // writes a wait list. Left as-is pending a product decision.
   viewCourse(item: UpdatedAgendaItemModel) {
     if(item.item.isCourse){
-      if(this.viewCourseCapcaity(item.item.id) < item.item.maxParticipants){
-        const course: CourseModel = this.getCourse(item.item.course);
-        this.scheduleEventBus.dispatchShowCourseModal({
-          customAgendaItem: item,
-          course: course,
-          currentUser: this.currentUser,
-          event: this.event,
-          allCourses: this.allCourses,
-          coachesList: this.coachesList,
-          roomsList: this.roomsList
-        });
-      } else {
+      if(this.viewCourseCapcaity(item.item.id) >= item.item.maxParticipants){
         this.dialogService.confirm('<i>This session is currently Full. Would you like to be added to the "Wait List"?</i>', 'Session is Full').then(async (dialogResult) => {
           if (dialogResult) {
             if(!item.item.waitList){

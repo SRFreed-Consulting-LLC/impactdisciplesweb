@@ -8,7 +8,6 @@ import { EventsComponent } from "./pages/events/events.component";
 import { EventDetailsComponent } from "./pages/events/event-details/event-details.component";
 import { ScheduleComponent } from "./pages/schedule/schedule.component";
 import { BreakoutSessionsComponent } from "./pages/schedule/breakout-sessions/breakout-sessions.component";
-import { CourseModalComponent } from "./pages/schedule/course-modal/course-modal.component";
 
 const routes: Routes = [
   {
@@ -30,8 +29,7 @@ const routes: Routes = [
     EventsComponent,
     EventDetailsComponent,
     ScheduleComponent,
-    BreakoutSessionsComponent,
-    CourseModalComponent
+    BreakoutSessionsComponent
   ],
   imports: [
     CommonModule,
