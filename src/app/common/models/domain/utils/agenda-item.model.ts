@@ -24,9 +24,9 @@ export class AgendaItem extends BaseModel{
   signedUp?: number;
   description?: string;
   room?: string;
-  // Emails of users who asked to be waitlisted once maxParticipants was hit
-  // (breakout-sessions.component.ts) - always used at runtime, just never
-  // declared here (only surfaced once viewCourse()'s item param stopped
-  // being typed any).
+  // Emails queued for a FULL breakout session. Written only by the admin
+  // app (Summit Command Center: EventService.addToWaitList/removeFromWaitList)
+  // - the web app reads the shape but no longer offers a self-service
+  // wait-list prompt (the old one never persisted; removed 2026-08-20).
   waitList?: string[];
 }

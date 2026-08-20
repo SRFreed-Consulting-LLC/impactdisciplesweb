@@ -4,10 +4,9 @@ import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.mo
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { DialogService } from 'src/app/shared/utils/services/dialog.service';
-import { EventService } from 'src/app/common/services/data/event.service';
 import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
 import { CoachModel } from 'src/app/common/models/domain/coach.model';
-import { ScheduleModel, TimeGroupsModel, UpdatedAgendaItemModel } from 'src/app/common/models/utils/schedule.model';
+import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
@@ -46,7 +45,6 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
     private scheduleEventBus: ScheduleEventBusService,
     private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService,
-    private eventService: EventService,
     private dialogService: DialogService) { }
 
     async ngOnInit(): Promise<void> {
@@ -98,50 +96,6 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
 
   getCoachTitle(id: string){
     return this.coachesMap.get(id)?.title || '';
-  }
-
-  // Clicking a session row. Each row already renders the full session
-  // detail plus its own Sign up / Remove buttons (addCourse/removeCourse),
-  // so a row click only has work to do when the session is full: offer the
-  // wait list. (It used to also dispatch showCourseModal for non-full
-  // sessions, but nothing mounted that modal - removed 2026-08-20.)
-  //
-  // NOTE (open, flagged by the 2026-08-20 sweep): the wait-list branch
-  // below mutates the agenda item in memory and tells the user they were
-  // added, but nothing persists it - the web app has no write path onto
-  // `events` (anon client, rules are read-only) and there is no Cloud
-  // Function for it; only the admin app's EventService.addToWaitList
-  // writes a wait list. Left as-is pending a product decision.
-  viewCourse(item: UpdatedAgendaItemModel) {
-    if(item.item.isCourse){
-      if(this.viewCourseCapcaity(item.item.id) >= item.item.maxParticipants){
-        this.dialogService.confirm('<i>This session is currently Full. Would you like to be added to the "Wait List"?</i>', 'Session is Full').then(async (dialogResult) => {
-          if (dialogResult) {
-            if(!item.item.waitList){
-              item.item.waitList = [];
-            }
-
-            item.item.waitList.push(this.currentUser.email);
-
-            await this.eventService.getById(this.event.id).then(e => {
-              const agendaItemId = e.agendaItems.findIndex(agendaItem=> agendaItem.id == item.item.id);
-
-              e.agendaItems[agendaItemId] = item.item;
-
-              this.event = e;
-
-              this.dialogService.alert('<i>You have been successfully added to the waitList</i>', 'Registration Success').then(() => {
-                this.scheduleEventBus.dispatchResetSchedule();
-                this.isVisible$.next(false);
-              })
-            })
-
-            //add user to wait list
-            //pop up a success message
-          }
-        })
-      }
-    }
   }
 
   addCourse(course: AgendaItem) {

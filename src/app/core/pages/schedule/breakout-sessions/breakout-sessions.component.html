@@ -16,7 +16,7 @@
                       <div>
                         @for (course of timeGroup.items; track course) {
                           <div>
-                            <div class="sessions__item" (click)="viewCourse(course)" (keydown.enter)="viewCourse(course)" (keydown.space)="viewCourse(course)" tabindex="0" role="button" [ngClass]="{ 'assigned-user': course.isAssignedToUser }" >
+                            <div class="sessions__item" [ngClass]="{ 'assigned-user': course.isAssignedToUser }">
                               <div class="sessions__item-title">{{ getTitle(course.item) }}</div>
                               <div class="sessions__item-details">
                                 <div class="sessions__item-details-item">
