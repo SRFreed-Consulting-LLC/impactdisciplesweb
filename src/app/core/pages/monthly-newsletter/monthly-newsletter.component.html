@@ -18,10 +18,17 @@
               <div class="col-6"><h4>Date</h4></div>
               <div class="col-6"><h4>Newsletter</h4></div>
             </div>
-            @for (nl of newletters; track nl) {
+            @if (loading) {
+              <p class="newsletter__status">Loading newsletters…</p>
+            } @else if (error) {
+              <p class="newsletter__status">The newsletter archive is unavailable right now. Please try again later.</p>
+            } @else if (newsletters.length === 0) {
+              <p class="newsletter__status">No newsletters have been published yet.</p>
+            }
+            @for (nl of newsletters; track nl.id) {
               <div class="row">
                 <div class="col-6"><h5>{{nl.date | date: 'MMM yyyy'}}</h5></div>
-                <div class="col-6"><h5><a href="{{nl.url}}" target="_blank" rel="noopener noreferrer" style="border-bottom: 1px solid black;">{{nl.title}}</a></h5></div>
+                <div class="col-6"><h5><a [routerLink]="['/monthly-newsletter', nl.id]" style="border-bottom: 1px solid black;">{{nl.title}}</a></h5></div>
               </div>
             }
           </div>

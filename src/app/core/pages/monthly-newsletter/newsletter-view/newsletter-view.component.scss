@@ -1,0 +1,26 @@
+@use '../../../../../assets/styles/theme/scss/variables';
+
+.newsletter-view {
+  &__back {
+    margin-bottom: 16px;
+
+    a {
+      color: variables.$theme-color;
+      font-weight: 600;
+    }
+  }
+
+  &__status {
+    padding: 40px 0;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  &__frame {
+    display: block;
+    width: 100%;
+    min-height: 600px;
+    border: 0;
+    background: #fff;
+  }
+}

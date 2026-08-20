@@ -22,6 +22,7 @@ import { TermsOfServiceComponent } from "./pages/terms-of-service/terms-of-servi
 import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-reviews.component";
 import { ConsultationSurveyComponent } from "./pages/consultation-survey/consultation-survey.component";
 import { MonthlyNewsletterComponent } from "./pages/monthly-newsletter/monthly-newsletter.component";
+import { NewsletterViewComponent } from "./pages/monthly-newsletter/newsletter-view/newsletter-view.component";
 import { PrayerTeamComponent } from "./pages/prayer-team/prayer-team.component";
 
 const routes: Routes = [
@@ -43,6 +44,7 @@ const routes: Routes = [
   { path: 'customer-reviews', component: CustomerReviewsComponent },
   { path: 'consultation-survey', component: ConsultationSurveyComponent },
   { path: 'monthly-newsletter', component: MonthlyNewsletterComponent },
+  { path: 'monthly-newsletter/:id', component: NewsletterViewComponent },
   { path: 'prayer-team', component: PrayerTeamComponent }
 ];
 
@@ -66,6 +68,7 @@ const routes: Routes = [
     CustomerReviewsComponent,
     ConsultationSurveyComponent,
     MonthlyNewsletterComponent,
+    NewsletterViewComponent,
     PrayerTeamComponent
   ],
   imports: [
