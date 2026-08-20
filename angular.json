@@ -83,6 +83,20 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "emulator": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.emulator.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "local"
@@ -98,6 +112,9 @@
             },
             "local": {
               "buildTarget": "impactdisciplesweb:build:local"
+            },
+            "emulator": {
+              "buildTarget": "impactdisciplesweb:build:emulator"
             }
           },
           "defaultConfiguration": "local"

@@ -11,6 +11,9 @@
     "build-prod": "ng build --configuration=production",
     "build-deploy-prod": "ng build --configuration=production && firebase use impactdisciples-a82a8 && firebase deploy --only hosting:production",
     "lint": "ng lint",
+    "test": "ng test --watch=false --browsers=ChromeHeadless",
+    "test:watch": "ng test",
+    "start-emu": "ng serve --configuration=emulator --port=4200",
     "e2e": "playwright test",
     "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss}\""
