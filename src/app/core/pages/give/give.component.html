@@ -16,14 +16,14 @@
       <div class="options__item">
         <h3>One-Time</h3>
         <i class="large-icon fas fa-dollar-sign"></i>
-        <div class="buttons" [ngClass]="{'hidden': isFormVisible === 'oneTime'}">
+        <div class="buttons">
           <button class="impact-btn" (click)="window.open(environment.oneGiftUrl, '_blank')">SEND DONATION</button>
         </div>
       </div>
       <div class="options__item">
         <h3>Monthly</h3>
         <i class="large-icon fas fa-calendar-days"></i>
-        <div class="buttons" [ngClass]="{'hidden': isFormVisible === 'monthly'}">
+        <div class="buttons">
           <button class="impact-btn" (click)="window.open(environment.monthlyGiftUrl, '_blank')">SEND DONATION</button>
         </div>
       </div>
@@ -35,7 +35,7 @@
         Psalm 78:6 - “So the next generation would know… and they would tell their children.”<br>
         Your support multiplies the mission of Jesus!</p>
 
-        <div class="buttons" [ngClass]="{'hidden': isFormVisible === 'partner'}">
+        <div class="buttons">
           <button class="impact-btn" (click)="window.open(environment.impactPartnersGiftUrl, '_blank')">BECOME A PARTNER</button>
         </div>
       </div>

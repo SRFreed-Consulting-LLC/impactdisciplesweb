@@ -1,195 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
-import { StripeService } from 'src/app/shared/utils/services/stripe.service';
-import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { environment } from 'src/environments/environment';
 
+// Giving is entirely link-out: the three buttons open the hosted Stripe
+// Payment Link / PayPal donate pages from environment.{oneGiftUrl,
+// monthlyGiftUrl, impactPartnersGiftUrl} in a new tab. The former embedded
+// Stripe Elements form (create_payment_intent + confirmPayment +
+// return_url status check) was never reachable from this template and was
+// removed in the 2026-08-20 refactor sweep along with StripeService.
 @Component({
     selector: 'app-give',
     templateUrl: './give.component.html',
     styleUrls: ['./give.component.scss'],
     standalone: false
 })
-export class GiveComponent implements OnInit {
+export class GiveComponent {
   public impactDisciplesInfo = impactDisciplesInfo;
-  isFormVisible = '';
-  status = "REQUEST";
-  elements;
-  loading = false;
-  oneTimeAmount = 0;
-  monthlyAmount = 0;
-
   public environment = environment;
 
   window = window;
-
-  constructor (
-    private stripeService: StripeService,
-    private toastService: ToastService
-  ) {}
-
-  async ngOnInit(): Promise<void> {
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
-
-    if (!clientSecret) {
-      this.status = "REQUEST"
-    } else {
-      this.status = "RESPONSE"
-    }
-  }
-
-  async initializeStripeForm(): Promise<void> {
-    try {
-      if (this.status === "RESPONSE") {
-        this.checkStatus();
-      } else {
-        setTimeout(async () => {
-          const paymentForm = document.querySelector("#payment-form");
-          if (paymentForm) {
-            paymentForm.addEventListener("submit", this.handleSubmit.bind(this));
-
-            const request = {};
-            request['items'] = [{ id: "Gift", amount: this.oneTimeAmount }];
-            request['description'] = "One time gift";
-
-
-            // Fetch client secret for Stripe payment
-            const response = await fetch(environment.stripeURL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(request),
-            });
-
-            if (!response.ok) {
-              throw new Error('Failed to fetch client secret');
-            }
-
-            // Read the body exactly once - a fetch response stream can only
-            // be consumed a single time, so an extra response.json() here
-            // (previously a console.log) threw and broke Stripe init.
-            const { clientSecret } = await response.json();
-
-
-            // Initialize Stripe Elements
-            await this.stripeService.getStripe().then(stripe => {
-              this.elements = stripe.elements({ clientSecret });
-
-              const paymentElementOptions = {
-                layout: "tabs",
-              };
-
-              const paymentElement = this.elements.create("payment", paymentElementOptions);
-              paymentElement.mount("#payment-element");
-            })
-
-            // Set loading to false once form is ready
-            this.loading = false;
-          }
-        }, 0);  // Ensures form is rendered before Stripe is initialized
-      }
-    } catch (error) {
-      console.error('Error initializing Stripe form:', error);
-      this.loading = false;  // Ensure loading is set to false even if there is an error
-      this.showMessage('Failed to load payment form. Please try again.', 'ERROR');
-    }
-  }
-
-  async handleSubmit(e) {
-    // TODO: validate give forms
-    e.preventDefault();
-    this.setLoading(true);
-
-    const response = await this.stripeService.getStripe().then(async stripe => {
-      return await stripe.confirmPayment({
-        elements: this.elements,
-        confirmParams: {
-          // Make sure to change this to your payment completion page
-          return_url: environment.domain + "/checkout-success",
-        },
-      });
-    })
-
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-    if (response.error.type === "card_error" || response.error.type === "validation_error") {
-      this.showMessage(response.error.message, 'ERROR');
-    } else {
-      this.showMessage("An unexpected error occurred.", 'ERROR');
-    }
-
-    this.setLoading(false);
-  }
-
-  async checkStatus() {
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
-
-    if (!clientSecret) {
-      return;
-    }
-
-    const { paymentIntent } = await this.stripeService.getStripe().then(async stripe => {
-      return await stripe.retrievePaymentIntent(clientSecret);
-    })
-
-    switch (paymentIntent.status) {
-      case "succeeded":
-        this.showMessage("Payment succeeded!", 'SUCCESS');
-        break;
-      case "processing":
-        this.showMessage("Your payment is processing.", 'INFO');
-        break;
-      case "requires_payment_method":
-        this.showMessage("Your payment was not successful, please try again.", 'ERROR');
-        break;
-      default:
-        this.showMessage("Something went wrong.", 'ERROR');
-        break;
-    }
-  }
-
-  // ------- UI helpers -------
-  showMessage(messageText, type) {
-    if(type ==='SUCCESS'){
-      this.toastService.notify({ message: messageText, type: 'success' });
-    } else if(type ==='INFO'){
-      this.toastService.notify({ message: messageText, type: 'info' });
-    } else if(type ==='ERROR'){
-      this.toastService.notify({ message: messageText, type: 'error' });
-    }
-  }
-
-  // Show a spinner on payment submission
-  setLoading(isLoading) {
-    if (isLoading) {
-      // Disable the button and show a spinner
-      document.querySelector("#submit")['disabled'] = true;
-      document.querySelector("#spinner").classList.remove("hidden");
-      document.querySelector("#button-text").classList.add("hidden");
-    } else {
-      document.querySelector("#submit")['disabled'] = false;
-      document.querySelector("#spinner").classList.add("hidden");
-      document.querySelector("#button-text").classList.remove("hidden");
-    }
-  }
-
-  completePurchase() {
-    // Add Logic to handle purchase completion
-  }
-
-  togglePaymentForm(formType: string): void {
-    if (this.isFormVisible === formType) {
-      this.isFormVisible = '';  // Close if the same form is clicked again
-    } else {
-      this.isFormVisible = formType;  // Show the selected form
-      this.loading = true;
-      this.initializeStripeForm();
-    }
-  }
 }
