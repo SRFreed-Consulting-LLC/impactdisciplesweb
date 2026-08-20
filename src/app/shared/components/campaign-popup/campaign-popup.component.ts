@@ -2,7 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subject, takeUntil } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { CampaignPopupService, CampaignPopup } from 'src/app/common/services/data/campaign-popup.service';
+import { CampaignPopupService, CampaignPopup, PopupCtaField } from 'src/app/common/services/data/campaign-popup.service';
+import { FormSubmissionService } from 'src/app/common/services/data/form-submission.service';
+import { FormSubmissionModel } from 'src/app/common/models/domain/form-submission.model';
 
 // Web-campaign popup renderer (Campaign Manager v2, Phase 5) - mounted in
 // the app shell, shows the first ACTIVE campaign popup whose date window
@@ -26,12 +28,33 @@ export class CampaignPopupComponent implements OnInit, OnDestroy {
   visible = false;
   dontShowAgain = false;
 
+  // Form-CTA state (see PopupCta.type 'form').
+  formValues: Record<PopupCtaField, string> = { email: '', firstName: '', lastName: '', phone: '' };
+  submitting = false;
+  submitDone = false;
+  submitError = '';
+
   private ngUnsubscribe = new Subject<void>();
 
   constructor(
     private popupService: CampaignPopupService,
+    private formSubmissionService: FormSubmissionService,
     private sanitizer: DomSanitizer
   ) {}
+
+  // Legacy popups (no structured cta) keep the whole-content click-through;
+  // cta popups navigate via their buttons only.
+  get legacyClickThrough(): boolean {
+    return !!this.popup?.ctaUrl && !this.popup?.cta;
+  }
+
+  ctaFields(): PopupCtaField[] {
+    return this.popup?.cta?.formFields ?? ['email'];
+  }
+
+  fieldLabel(field: PopupCtaField): string {
+    return { email: 'Email', firstName: 'First name', lastName: 'Last name', phone: 'Phone' }[field];
+  }
 
   ngOnInit(): void {
     this.popupService.streamAllByValue('isActive', true)
@@ -101,11 +124,86 @@ export class CampaignPopupComponent implements OnInit, OnDestroy {
   }
 
   onContentClick(): void {
-    if (!this.popup?.ctaUrl) {
+    if (!this.legacyClickThrough || !this.popup?.ctaUrl) {
       return;
     }
     this.beacon(this.popup, 'web_click');
     window.location.href = this.popup.ctaUrl;
+  }
+
+  // Primary CTA: close-type dismisses; link-type counts the click and
+  // navigates (the URL already carries ?cid&csrc=popup for attribution).
+  onPrimary(): void {
+    const cta = this.popup?.cta;
+    if (!cta || cta.type === 'close') {
+      this.close();
+      return;
+    }
+    if (cta.type === 'link' && cta.linkUrl) {
+      this.beacon(this.popup!, 'web_click');
+      window.location.href = cta.linkUrl;
+    }
+  }
+
+  // Form CTA submit: validates the email, then hands the values to the
+  // chosen destination - the newsletter subscribe endpoint (with explicit
+  // popup attribution so the campaign's subscribes credit) or an anonymous
+  // form_submissions create (the exact rules-locked shape dynamic forms
+  // use; labels match the admin's Create Contact heuristics).
+  async onSubmit(): Promise<void> {
+    const popup = this.popup;
+    const cta = popup?.cta;
+    if (!popup || !cta || this.submitting || this.submitDone) {
+      return;
+    }
+    const email = this.formValues.email.trim().toLowerCase();
+    if (!email.includes('@') || !email.includes('.')) {
+      this.submitError = 'Please enter a valid email address.';
+      return;
+    }
+    this.submitError = '';
+    this.submitting = true;
+    try {
+      if (cta.formDestination === 'formSubmissions') {
+        const fields = this.ctaFields();
+        const submission = {
+          ...new FormSubmissionModel(),
+          formId: `popup-${popup.campaignId}`,
+          formName: `Popup: ${popup.title || 'Campaign'}`,
+          fieldSnapshot: fields.map((f) => ({ id: f, label: this.fieldLabel(f), type: f === 'email' ? 'email' : 'text' })),
+          values: Object.fromEntries(fields.map((f) => [f, f === 'email' ? email : this.formValues[f].trim()])),
+          submittedAt: new Date(),
+          newRecordStatus: 'new'
+        } as FormSubmissionModel;
+        await this.formSubmissionService.add(submission);
+      } else {
+        const response = await fetch(environment.subscribeUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'newsletter',
+            email,
+            firstName: this.formValues.firstName.trim(),
+            lastName: this.formValues.lastName.trim(),
+            attribution: { campaignId: popup.campaignId, source: 'popup' }
+          })
+        });
+        if (!response.ok) {
+          throw new Error(String(response.status));
+        }
+      }
+      this.submitDone = true;
+      this.beacon(popup, 'web_click');
+      // A successful submit is a terminal interaction - don't re-show.
+      try {
+        localStorage.setItem(`campaign-popup-dismissed-${popup.id}`, '1');
+      } catch { /* storage unavailable - acceptable */ }
+      setTimeout(() => { this.visible = false; }, 1800);
+    } catch {
+      this.submitError = 'Something went wrong - please try again.';
+    } finally {
+      this.submitting = false;
+    }
   }
 
   close(): void {

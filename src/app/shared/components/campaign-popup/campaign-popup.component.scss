@@ -59,3 +59,69 @@
     margin: 0;
   }
 }
+
+// ---- Structured CTA (2026-08-20) - keep literal light-palette styling
+// like the rest of this popup (admin-authored light content regardless of
+// nothing: the popup renders on the public site's own light look).
+.cpopup__form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 22px 0;
+}
+
+.cpopup__field {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 14px;
+  background: #fff;
+  color: #1d2733;
+}
+
+.cpopup__error {
+  color: #c62828;
+  font-size: 12.5px;
+  margin: 0;
+}
+
+.cpopup__thanks {
+  text-align: center;
+  font-weight: 700;
+  color: #1d8a46;
+  padding: 14px 0 4px;
+  margin: 0;
+}
+
+.cpopup__ctas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 22px 2px;
+}
+
+.cpopup__primary {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 26px;
+  background: #0e7d8a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.cpopup__secondary {
+  border: 0;
+  background: none;
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}

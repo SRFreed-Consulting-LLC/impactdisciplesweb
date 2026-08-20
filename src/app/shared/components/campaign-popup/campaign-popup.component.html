@@ -5,10 +5,42 @@
       [style.maxHeight.px]="popup.height || 420"
       [style.background]="popup.bgColor || '#ffffff'">
       <button type="button" class="cpopup__close" aria-label="Close" (click)="close()">&times;</button>
-      <div class="cpopup__content" [class.cpopup__content--link]="!!popup.ctaUrl"
+      <div class="cpopup__content" [class.cpopup__content--link]="legacyClickThrough"
         (click)="onContentClick()" (keyup.enter)="onContentClick()"
-        [attr.tabindex]="popup.ctaUrl ? 0 : -1" [attr.role]="popup.ctaUrl ? 'link' : null"
+        [attr.tabindex]="legacyClickThrough ? 0 : -1" [attr.role]="legacyClickThrough ? 'link' : null"
         [innerHTML]="html"></div>
+
+      <!-- Structured CTA (PopupCta) - legacy popups without one keep the
+           whole-content click-through above. -->
+      @if (popup.cta; as cta) {
+        @if (cta.type === 'form' && !submitDone) {
+          <div class="cpopup__form">
+            @for (field of ctaFields(); track field) {
+              <input class="cpopup__field" [type]="field === 'email' ? 'email' : 'text'"
+                [placeholder]="fieldLabel(field)" [(ngModel)]="formValues[field]"
+                [attr.aria-label]="fieldLabel(field)">
+            }
+            @if (submitError) { <p class="cpopup__error">{{ submitError }}</p> }
+          </div>
+        }
+        @if (submitDone) {
+          <p class="cpopup__thanks">Thank you! You're all set. ✓</p>
+        } @else {
+          <div class="cpopup__ctas">
+            @if (cta.type === 'form') {
+              <button type="button" class="cpopup__primary" [disabled]="submitting" (click)="onSubmit()">
+                {{ submitting ? '…' : cta.primaryLabel }}
+              </button>
+            } @else {
+              <button type="button" class="cpopup__primary" (click)="onPrimary()">{{ cta.primaryLabel }}</button>
+            }
+            @if (cta.type !== 'close' && cta.dismissLabel) {
+              <button type="button" class="cpopup__secondary" (click)="close()">{{ cta.dismissLabel }}</button>
+            }
+          </div>
+        }
+      }
+
       <label class="cpopup__dismiss">
         <input type="checkbox" [(ngModel)]="dontShowAgain"> Don't show this again
       </label>

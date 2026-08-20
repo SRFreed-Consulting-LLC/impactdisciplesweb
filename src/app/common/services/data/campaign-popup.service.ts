@@ -7,6 +7,21 @@ import { BaseService } from './base.service';
 // common/ are independent copies - changes never propagate automatically).
 // campaign_popups is PUBLIC-READABLE by rule; it deliberately carries no
 // audience or stats - just what the renderer needs.
+// Structured Call To Action (2026-08-20) - mirror of the admin repo's
+// PopupCta. 'close' = announcement (one dismissing button); 'link' =
+// primary navigates to linkUrl (already ?cid-decorated) + secondary
+// dismiss; 'form' = the popup collects admin-chosen fields (email always)
+// and submits to the newsletter list or Form Submissions.
+export type PopupCtaField = 'email' | 'firstName' | 'lastName' | 'phone';
+export interface PopupCta {
+  type: 'close' | 'link' | 'form';
+  primaryLabel: string;
+  dismissLabel?: string | null;
+  linkUrl?: string | null;
+  formFields?: PopupCtaField[] | null;
+  formDestination?: 'newsletter' | 'formSubmissions' | null;
+}
+
 export class CampaignPopup extends BaseModel {
   campaignId = '';
   isActive = false;
@@ -17,7 +32,9 @@ export class CampaignPopup extends BaseModel {
   width?: number | null;
   height?: number | null;
   bgColor?: string | null;
+  // LEGACY whole-popup click-through - superseded by `cta` when present.
   ctaUrl?: string | null;
+  cta?: PopupCta | null;
 }
 
 @Injectable({
