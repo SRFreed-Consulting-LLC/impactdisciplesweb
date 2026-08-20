@@ -1,7 +1,7 @@
 import { CartItem } from 'src/app/common/models/utils/cart.model';
 
 // Client-only view model. Never persisted -- CartService still stores/
-// reads plain CartItem[] (localStorage['cart']) and PurchasesService still
+// reads plain CartItem[] (localStorage['cart']) and the checkout Cloud Function still
 // writes plain CheckoutForm/CartItem[] to Firestore, exactly like the
 // original store did. This type exists purely so components stop
 // re-deriving "what kind of item is this" and "what's its real price"

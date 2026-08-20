@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { collection, documentId, getDocs, query, where } from '@angular/fire/firestore';
 import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
 import { ImpactTeamMemberModel } from 'src/app/common/models/domain/impact-team-member.model';
 import { BaseService } from './base.service';
@@ -20,32 +19,4 @@ export class ImpactTeamService extends BaseService<ImpactTeamMemberModel>{
     return data;
   };
 
-  // Mirrors CoachService's own getAllByIds() (same batched-`in`-query
-  // reasoning) - kept here for parity even though nothing in this repo
-  // calls it yet, in case a future change needs to resolve a mixed
-  // Coaches + Impact Team id list the way impactdisciples-admin's own
-  // breakout instructor picker already does.
-  async getAllByIds(ids: string[]): Promise<ImpactTeamMemberModel[]> {
-    const uniqueIds = Array.from(new Set(ids)).filter(Boolean);
-
-    if (uniqueIds.length === 0) return [];
-
-    const chunkSize = 10;
-    const chunks: string[][] = [];
-
-    for (let i = 0; i < uniqueIds.length; i += chunkSize) {
-      chunks.push(uniqueIds.slice(i, i + chunkSize));
-    }
-
-    const snapshots = await Promise.all(chunks.map(chunk =>
-      getDocs(query(collection(this.dao.fs, '/' + this.table), where(documentId(), 'in', chunk)))
-    ));
-
-    return snapshots.flatMap(snapshot =>
-      snapshot.docs.map(doc => {
-        const data = { ...doc.data(), id: doc.id } as ImpactTeamMemberModel;
-        return this.fromFirestore ? this.fromFirestore(data) : data;
-      })
-    );
-  }
 }

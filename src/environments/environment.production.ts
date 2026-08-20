@@ -11,8 +11,6 @@
     measurementId: "G-KJL13HB8DV"
   },
   domain: 'https://impactdisciples.com',
-  session_expires: 30,
-  freeEbookUrl: "https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/EBooks%2FM-7-Journal.pdf?alt=media&token=50e3282f-6fa1-46aa-ad3a-a486e4024af1",
   createPaypalOrderUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/create_paypal_order",
   capturePaypalOrderUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/capture_paypal_order",
   shippingUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_shipping_rates",
@@ -37,12 +35,10 @@
   subscribeUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/subscribe_to_email_list",
   campaignWebEventUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/campaign_web_event",
   newsletterArchiveUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/newsletter_archive",
-  unsubscribeUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/unsubscribe_from_email_list",
   oneGiftUrl: 'https://buy.stripe.com/4gwcOI5sY1zq2JieUW',
   monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',
   impactPartnersGiftUrl: 'https://www.paypal.com/donate/?hosted_button_id=J5PJN3ZD8EZ4A&source=url',
   shippingCarriers: ["se-1047625"],
-  application: "web"
 };
 
 

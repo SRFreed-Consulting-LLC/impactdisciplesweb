@@ -56,10 +56,6 @@ const routes: Routes = [
     loadChildren: () => import('./core/content.module').then(m => m.ContentFeatureModule)
   },
   {
-    matcher: firstSegmentMatcher(['account']),
-    loadChildren: () => import('./core/account.module').then(m => m.AccountFeatureModule)
-  },
-  {
     matcher: firstSegmentMatcher(['disciple-making-minute', 'podcasts']),
     loadChildren: () => import('./core/blog.module').then(m => m.BlogFeatureModule)
   },

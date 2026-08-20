@@ -5,7 +5,6 @@ import { getFirestore, provideFirestore, connectFirestoreEmulator } from '@angul
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
-import { CookieService } from 'ngx-cookie-service';
 import { SharedModule } from './shared/shared.module';
 import { GlobalErrorHandler } from './core/global-error-handler';
 
@@ -19,7 +18,6 @@ import { GlobalErrorHandler } from './core/global-error-handler';
     SharedModule
   ],
   providers: [
-    CookieService,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     // Connects to the local Emulator Suite when built with the `emulator`
     // configuration (see environment.emulator.ts) - the emulator stack is

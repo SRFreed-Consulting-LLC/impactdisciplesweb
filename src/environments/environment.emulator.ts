@@ -24,8 +24,6 @@ export const environment = {
     appId: "1:0:web:demo",
   },
   domain: 'http://localhost:4200',
-  session_expires: 30,
-  freeEbookUrl: "https://example.test/free-ebook.pdf",
   createPaypalOrderUrl: `${FN}/create_paypal_order`,
   capturePaypalOrderUrl: `${FN}/capture_paypal_order`,
   shippingUrl: `${FN}/get_shipping_rates`,
@@ -39,10 +37,8 @@ export const environment = {
   subscribeUrl: `${FN}/subscribe_to_email_list`,
   campaignWebEventUrl: `${FN}/campaign_web_event`,
   newsletterArchiveUrl: `${FN}/newsletter_archive`,
-  unsubscribeUrl: `${FN}/unsubscribe_from_email_list`,
   oneGiftUrl: 'https://example.test/one-gift',
   monthlyGiftUrl: 'https://example.test/monthly-gift',
   impactPartnersGiftUrl: 'https://example.test/partners-gift',
   shippingCarriers: ["se-0000000"],
-  application: "web"
 };

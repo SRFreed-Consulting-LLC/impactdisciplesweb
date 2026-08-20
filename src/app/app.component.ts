@@ -5,7 +5,6 @@ import { AttributionService } from 'src/app/shared/utils/services/attribution.se
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
     standalone: false
 })
 export class AppComponent {

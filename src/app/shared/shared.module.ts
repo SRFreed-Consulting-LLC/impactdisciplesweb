@@ -10,12 +10,10 @@ import { BackToTopComponent } from "./components/back-to-top/back-to-top.compone
 import { CampaignPopupComponent } from "./components/campaign-popup/campaign-popup.component";
 import { SubscribeAreaComponent } from "./components/subscribe-area/subscribe-area.component";
 import { FooterComponent } from "./footer/footer.component";
-import { LocationPipe } from "./utils/pipes/location.pipe";
 import { VenuePipe } from "./utils/pipes/venue.pipe";
 import { CourseNamePipe } from "./utils/pipes/course-name.pipe";
 import { BookBannerComponent } from "./components/book-banner/book-banner.component";
 import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.component";
-import { ComingSoonComponent } from "./components/coming-soon/coming-soon.component";
 import { PaginationComponent } from "./components/pagination/pagination.component";
 import { DiscipleMakingSummitBannerComponent } from './components/disciple-making-summit-banner/disciple-making-summit-banner.component';
 import { TimeFormatPipe } from "./utils/pipes/time-format.pipe";
@@ -37,9 +35,7 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     FooterComponent,
     BookBannerComponent,
     BreadcrumbComponent,
-    ComingSoonComponent,
     PaginationComponent,
-    LocationPipe,
     VenuePipe,
     CourseNamePipe,
     TimeFormatPipe,
@@ -68,9 +64,7 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     FooterComponent,
     BookBannerComponent,
     BreadcrumbComponent,
-    ComingSoonComponent,
     PaginationComponent,
-    LocationPipe,
     VenuePipe,
     CourseNamePipe,
     TimeFormatPipe,

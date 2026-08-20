@@ -11,9 +11,8 @@ const routesByModule: { module: string; path: string }[] = [
   { module: 'HomeModule', path: '/' },
   { module: 'EventsFeatureModule', path: '/events' },
   { module: 'TeamFeatureModule', path: '/team' },
-  { module: 'StoreNewFeatureModule', path: '/store' },
+  { module: 'StoreFeatureModule', path: '/store' },
   { module: 'ContentFeatureModule', path: '/about-us' },
-  { module: 'AccountFeatureModule', path: '/account' },
   { module: 'BlogFeatureModule', path: '/podcasts' },
   // SummitComponent's route requires a :year param (see summit.module.ts);
   // 2026 is the year currently linked from disciple-making-summit-banner.

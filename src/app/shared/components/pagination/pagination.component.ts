@@ -4,7 +4,6 @@ import { Pager } from 'src/app/common/models/utils/pager.model';
 @Component({
     selector: 'app-pagination',
     templateUrl: './pagination.component.html',
-    styleUrls: ['./pagination.component.scss'],
     standalone: false
 })
 export class PaginationComponent {

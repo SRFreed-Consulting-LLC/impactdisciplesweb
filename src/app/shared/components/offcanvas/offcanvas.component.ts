@@ -6,7 +6,6 @@ import { mobileMenuData } from '../../../../../src/app/common/services/data/nav-
 @Component({
     selector: 'app-offcanvas',
     templateUrl: './offcanvas.component.html',
-    styleUrls: ['./offcanvas.component.scss'],
     standalone: false
 })
 
