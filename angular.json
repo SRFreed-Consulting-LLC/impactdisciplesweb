@@ -130,6 +130,9 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
+            "exclude": [
+              "src/common/**/*.spec.ts"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"

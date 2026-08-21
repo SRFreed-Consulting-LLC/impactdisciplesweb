@@ -10,5 +10,11 @@
   "include": [
     "src/**/*.spec.ts",
     "src/**/*.d.ts"
+  ],
+  // The shared submodule ships its own specs (some import Angular Material /
+  // Form.io, which this app does not install) - they run in the admin and
+  // reader Karma suites, not here.
+  "exclude": [
+    "src/common/**"
   ]
 }

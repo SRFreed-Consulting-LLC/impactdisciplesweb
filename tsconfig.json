@@ -3,6 +3,11 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    // src/common is the git submodule shared with the admin and reader apps
+    // (impact-discipleship-library-common) - same alias those two use.
+    "paths": {
+      "@impact-common/*": ["./src/common/src/*"]
+    },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
