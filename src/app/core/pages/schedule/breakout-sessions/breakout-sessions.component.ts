@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { CourseModel } from '@impact-common/shared/models/domain/course.model';
 import { TrainingRoomModel } from '@impact-common/shared/models/domain/training-room.model';
@@ -9,7 +10,7 @@ import { EventRegistrationModel } from '@impact-common/shared/models/domain/even
 import { CoachModel } from '@impact-common/shared/models/domain/coach.model';
 import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-item.model';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { formatDate } from '@angular/common';
@@ -22,7 +23,7 @@ import { breakoutDescription, breakoutTitle, sameBreakoutSession } from 'src/app
     styleUrls: ['./breakout-sessions.component.scss'],
     standalone: false
 })
-export class BreakoutSessionsComponent implements OnInit, OnDestroy{
+export class BreakoutSessionsComponent implements OnInit{
   allCourses: ScheduleModel[];
   myCourses: ScheduleModel[];
   currentUser: CustomerModel | EventRegistrationModel;
@@ -40,18 +41,19 @@ export class BreakoutSessionsComponent implements OnInit, OnDestroy{
   private roomsMap = new Map<string, TrainingRoomModel>();
 
   public isVisible$ = new BehaviorSubject<boolean>(false);
-  private ngUnsubscribe = new Subject<void>();
 
   constructor(
     private scheduleEventBus: ScheduleEventBusService,
     private eventRegistrationService: EventRegistrationService,
     private scheduleService: ScheduleService,
-    private dialogService: DialogService) { }
+    private dialogService: DialogService,
+    private destroyRef: DestroyRef
+  ) { }
 
     async ngOnInit(): Promise<void> {
 
       this.scheduleEventBus.showBreakoutSessionsModal.pipe(
-        takeUntil(this.ngUnsubscribe)
+        takeUntilDestroyed(this.destroyRef)
       ).subscribe(({ allCourses, myCourses, currentUser, event, coursesList, coachesList, roomsList, timeGroup }) => {
         this.allCourses = allCourses;
         this.myCourses = myCourses;
@@ -170,8 +172,4 @@ resizePopup() {
   return popupWidth
 }
 
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
 }

@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
-import { Subject, takeUntil } from 'rxjs';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { EventRegistrationModel } from '@impact-common/shared/models/domain/event-registration.model';
@@ -45,8 +45,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   private coachesMap = new Map<string, CoachModel>();
   private roomsMap = new Map<string, TrainingRoomModel>();
 
-  private ngUnsubscribe = new Subject<void>();
-
   visible = false;
 
   constructor(
@@ -58,7 +56,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private locationService: LocationService,
     private courseService: CourseService,
     private coachService: CoachService,
-    private toastService: ToastService) { }
+    private toastService: ToastService,
+    private destroyRef: DestroyRef
+  ) { }
 
   async ngOnInit() {
     const eventId = this.route.snapshot.paramMap.get('event-id');
@@ -66,7 +66,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     const registrationId = this.route.snapshot.paramMap.get('registration-id');
 
     if(eventId){
-      this.eventService.streamAllByValue('id', eventId).pipe(takeUntil(this.ngUnsubscribe)).subscribe(async events => {
+      this.eventService.streamAllByValue('id', eventId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async events => {
         if(registrationId){
           this.currentUser = await this.eventRegistrationService.getEventRegistrationById(registrationId);
 
@@ -94,7 +94,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
             this.scheduleService.monitorBreakoutCapacity(this.event);
 
-            this.scheduleEventBus.resetSchedule.pipe(takeUntil(this.ngUnsubscribe)).subscribe(async () => {
+            this.scheduleEventBus.resetSchedule.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async () => {
               await this.updateSchedule();
             });
 
@@ -197,10 +197,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.scheduleService.stopMonitoringBreakoutCapacity();
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
 }
-
 

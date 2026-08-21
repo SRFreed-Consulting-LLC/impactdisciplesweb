@@ -1,7 +1,7 @@
 import { ViewportScroller } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 import { WhereFilterOperandKeys, QueryParam } from 'src/app/common/dao/firebase.dao';
 import { TagModel } from '@impact-common/shared/models/domain/tag.model';
 import { Pager } from 'src/app/common/models/utils/pager.model';
@@ -26,7 +26,7 @@ import { FilterType } from '../store/store.component';
   styleUrls: ['./e-books.component.scss'],
   standalone: false
 })
-export class EBooksComponent implements OnInit, OnDestroy {
+export class EBooksComponent implements OnInit {
   public products: ProductModel[] = [];
   public filteredProductItems: ProductModel[] = [];
   public paginate: Pager = {};
@@ -41,18 +41,17 @@ export class EBooksComponent implements OnInit, OnDestroy {
     { text: 'Price High to Low', value: FilterType.priceHighToLow }
   ];
 
-  private ngUnsubscribe = new Subject<void>();
-
   constructor(
     private productService: ProductService,
     private catalog: ProductCatalogService,
     private route: ActivatedRoute,
     private router: Router,
-    private viewScroller: ViewportScroller
+    private viewScroller: ViewportScroller,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       this.pageNo = params['page'] ? params['page'] : this.pageNo;
       this.loadProducts();
     });
@@ -123,8 +122,4 @@ export class EBooksComponent implements OnInit, OnDestroy {
     }).finally(() => this.viewScroller.setOffset([120, 120]));
   }
 
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
 }

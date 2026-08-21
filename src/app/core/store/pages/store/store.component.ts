@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 import { TagModel } from '@impact-common/shared/models/domain/tag.model';
 import { ProductModel } from '@impact-common/shared/models/utils/product.model';
 import { SeriesModel } from '@impact-common/shared/models/utils/series.model';
@@ -60,21 +60,20 @@ export class StoreComponent implements OnInit, OnDestroy {
   // not silently changing what /store?category=spanish-resources does.
   SPANISH_CATEGORY_ID = '18z0BtelKIKrwycvko9N';
 
-  private ngUnsubscribe = new Subject<void>();
-
   constructor(
     private productService: ProductService,
     private seriesService: SeriesService,
     private catalog: ProductCatalogService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     // Legacy cleanup - an old bookmarked/shared link from when this page
     // paginated (?page=N) just gets the stray param stripped now; nothing
     // reads it anymore.
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       if (params['page']) {
         this.router.navigate([], {
           relativeTo: this.route,
@@ -85,14 +84,14 @@ export class StoreComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.route.queryParamMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       if (this.products?.length) {
         this.applyCategoryFromUrl();
       }
     });
 
     this.catalog.getActiveSales().then(sales => {
-      this.productService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe(products => {
+      this.productService.streamAllByValue('isActive', true).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(products => {
         this.products = products;
         this.catalog.applyActiveProductSale(this.products, sales);
         this.applyCategoryFromUrl();
@@ -165,7 +164,7 @@ export class StoreComponent implements OnInit, OnDestroy {
         break;
       case FilterType.viewBySeries:
         this.selectedFilter = FilterType.viewBySeries;
-        this.seriesService.streamAll().pipe(takeUntil(this.ngUnsubscribe)).subscribe(seriesItems => {
+        this.seriesService.streamAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(seriesItems => {
           this.seriesItems = seriesItems.sort((a, b) => a.order - b.order);
         });
         this.showSeriesInMainView = true;
@@ -208,7 +207,5 @@ export class StoreComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.showSeriesInMainView = true;
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 }

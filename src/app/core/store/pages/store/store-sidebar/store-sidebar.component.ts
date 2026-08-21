@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SeriesModel } from '@impact-common/shared/models/utils/series.model';
-import { BehaviorSubject, combineLatest, map, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { TagModel } from '@impact-common/shared/models/domain/tag.model';
 import { ProductModel } from '@impact-common/shared/models/utils/product.model';
@@ -22,7 +23,7 @@ interface CategoryWithProducts {
   styleUrls: ['./store-sidebar.component.scss'],
   standalone: false
 })
-export class StoreSidebarComponent implements OnInit, OnDestroy {
+export class StoreSidebarComponent implements OnInit {
   @Input() showSeriesInSidebar = false;
   @Input() seriesItems: SeriesModel[] = [];
   @Input() ebooksOnly = false;
@@ -46,16 +47,15 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
 
   public openIndex: number | null = 0;
 
-  private ngUnsubscribe = new Subject<void>();
-
   constructor(
     private productCategoriesService: ProductCategoriesService,
-    private router: Router
+    private router: Router,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     combineLatest([this.products$, this.productCategoriesService.streamAll()]).pipe(
-      takeUntil(this.ngUnsubscribe),
+      takeUntilDestroyed(this.destroyRef),
       map(([products, categories]) =>
         categories.map(category => {
           const categoryProducts = products
@@ -74,11 +74,6 @@ export class StoreSidebarComponent implements OnInit, OnDestroy {
         ? categoryWithProducts.filter(item => item.displayProducts.length > 0)
         : categoryWithProducts;
     });
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
   onSearch(searchTerm: string): void {

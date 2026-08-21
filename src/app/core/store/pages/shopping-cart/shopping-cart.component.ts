@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { CartLineItem } from '../../models/cart-line-item.model';
 import { CartService } from '../../services/cart.service';
@@ -26,7 +26,7 @@ import { CouponApplicationService } from '../../services/coupon-application.serv
   styleUrls: ['./shopping-cart.component.scss'],
   standalone: false
 })
-export class ShoppingCartComponent implements OnInit, OnDestroy {
+export class ShoppingCartComponent implements OnInit {
   lineItems: CartLineItem[] = [];
   subtotal = 0;
   discount = 0;
@@ -37,22 +37,16 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   couponMessageType: 'success' | 'error' = 'success';
   lineNotes = new Map<string, string>();
 
-  private ngUnsubscribe = new Subject<void>();
-
   constructor(
     public cartService: CartService,
     private pricingService: PricingService,
     private couponApplicationService: CouponApplicationService,
-    private router: Router
+    private router: Router,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
-    this.cartService.cartChanged$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(items => this.recompute(items));
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
+    this.cartService.cartChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(items => this.recompute(items));
   }
 
   private recompute(items: CartItem[]): void {

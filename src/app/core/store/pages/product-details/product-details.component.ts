@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { ProductModel } from '@impact-common/shared/models/utils/product.model';
 import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { ProductService } from 'src/app/common/services/data/product.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
-import { Subject, takeUntil } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { ProductCatalogService } from '../../services/product-catalog.service';
 
@@ -18,7 +18,7 @@ import { ProductCatalogService } from '../../services/product-catalog.service';
   styleUrls: ['./product-details.component.scss'],
   standalone: false
 })
-export class ProductDetailsComponent implements OnInit, OnDestroy {
+export class ProductDetailsComponent implements OnInit {
   sizeError = false;
   colorError = false;
   languageError = false;
@@ -29,18 +29,17 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
   NumberUtil = NumberUtil;
 
-  private ngUnsubscribe = new Subject<void>();
-
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
     public cartService: CartService,
-    private catalog: ProductCatalogService
+    private catalog: ProductCatalogService,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     this.catalog.getActiveSales().then(sales => {
-      this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
         const productId = params['id'];
         if (productId) {
           this.loadProductDetails(productId, sales);
@@ -50,7 +49,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   private loadProductDetails(productId: string, sales: SaleModel[]): void {
-    this.productService.streamById(productId).pipe(takeUntil(this.ngUnsubscribe)).subscribe(products => {
+    this.productService.streamById(productId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(products => {
       this.product = products[0];
 
       // streamById() can emit an empty array -- briefly while the first
@@ -129,8 +128,4 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
 }

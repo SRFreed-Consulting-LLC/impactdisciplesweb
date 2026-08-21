@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Offcanvas } from 'bootstrap';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { CartLineItem } from '../models/cart-line-item.model';
 import { CartService } from '../services/cart.service';
@@ -35,7 +35,6 @@ export class CartDrawerComponent implements OnInit, AfterViewInit, OnDestroy {
   lineNotes = new Map<string, string>();
 
   private offcanvas: Offcanvas;
-  private ngUnsubscribe = new Subject<void>();
 
   // Was CartDrawerStateService, a providedIn:'root' singleton wrapping this
   // exact window listener for what turned out to be its only subscriber
@@ -53,7 +52,8 @@ export class CartDrawerComponent implements OnInit, AfterViewInit, OnDestroy {
     public cartService: CartService,
     private pricingService: PricingService,
     private couponApplicationService: CouponApplicationService,
-    private router: Router
+    private router: Router,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +64,7 @@ export class CartDrawerComponent implements OnInit, AfterViewInit, OnDestroy {
     // Angular has already checked this view for the current change-detection
     // pass -- a textbook NG0100 ExpressionChangedAfterItHasBeenCheckedError.
     // ngOnInit runs before that first check, so it's safe here.
-    this.cartService.cartChanged$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(items => this.recompute(items));
+    this.cartService.cartChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(items => this.recompute(items));
     window.addEventListener(CART_OPEN_DRAWER_EVENT, this.onOpenRequested);
   }
 
@@ -74,8 +74,6 @@ export class CartDrawerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener(CART_OPEN_DRAWER_EVENT, this.onOpenRequested);
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
   private recompute(items: CartItem[]): void {

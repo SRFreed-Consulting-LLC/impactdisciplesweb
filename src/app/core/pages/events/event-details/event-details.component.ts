@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
-import { Subject, filter, firstValueFrom, take, takeUntil } from 'rxjs';
+import { filter, firstValueFrom, take } from 'rxjs';
 import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-item.model';
 // Uses the store's cart (not the old, now-retired CartService) so a paid
 // event registration lands in the same cart/checkout the store itself now
@@ -27,7 +28,7 @@ import { ToastService } from 'src/app/shared/utils/services/toast.service';
     styleUrls: ['./event-details.component.scss'],
     standalone: false
 })
-export class EventDetailsComponent implements OnInit, OnDestroy {
+export class EventDetailsComponent implements OnInit {
   // Replaces DxAccordion + per-attendee DxForm + QueryList<DxFormComponent> --
   // one FormGroup per attendee, in a FormArray kept in lockstep with
   // cartItem.attendees (see increment()/decrement()). openIndexes tracks
@@ -45,8 +46,6 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
 
   window = window;
 
-  private ngUnsubscribe = new Subject<void>();
-
   constructor(private route: ActivatedRoute,
     private router: Router,
     private eventService: EventService,
@@ -54,14 +53,15 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     private eventRegistrationService: EventRegistrationService,
     private toastService: ToastService,
     private loggerService: LoggerService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     const eventId = this.route.snapshot.paramMap.get('id');
 
     if (eventId) {
-      this.eventService.streamById(eventId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((event) => {
+      this.eventService.streamById(eventId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
         this.event = event[0];
         this.cartItem = {
           id: this.event.id,
@@ -247,11 +247,6 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
           items: groupedByMonthYear[monthYear][date],
         })),
     }));
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
   // Replaces the AsyncRule['validationCallback'] pair below with standard

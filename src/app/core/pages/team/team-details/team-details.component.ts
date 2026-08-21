@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { ImpactTeamMemberModel } from '@impact-common/shared/models/domain/impact-team-member.model';
 import { ImpactTeamService } from 'src/app/common/services/data/impact-team.service';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-team-details',
@@ -10,12 +10,10 @@ import { Subject, takeUntil } from 'rxjs';
     styleUrls: ['./team-details.component.scss'],
     standalone: false
 })
-export class TeamDetailsComponent implements OnInit, OnDestroy {
+export class TeamDetailsComponent implements OnInit {
   teamMember: ImpactTeamMemberModel;
 
-  private ngUnsubscribe = new Subject<void>();
-
-  constructor(private route: ActivatedRoute, private impactTeamService: ImpactTeamService){}
+  constructor(private route: ActivatedRoute, private impactTeamService: ImpactTeamService, private destroyRef: DestroyRef){}
 
   // Reads `impact_team` now, not `coaches` (2026-08 split) - the same
   // document id was reused by the admin-side move script for anyone who
@@ -25,7 +23,7 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const teamId = this.route.snapshot.paramMap.get('id');
     if (teamId) {
-      this.impactTeamService.streamById(teamId).pipe(takeUntil(this.ngUnsubscribe)).subscribe((coach) => {
+      this.impactTeamService.streamById(teamId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((coach) => {
         if(coach && coach.length == 1){
           this.teamMember = coach[0];
         }
@@ -33,8 +31,4 @@ export class TeamDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
 }

@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { EventService } from 'src/app/common/services/data/event.service';
-import { Subject, takeUntil } from 'rxjs';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
@@ -13,7 +13,7 @@ import { EffectFade, Pagination } from 'swiper/modules';
     styleUrls: ['./events.component.scss'],
     standalone: false
 })
-export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
+export class EventsComponent implements AfterViewInit, OnInit  {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
   public dms: EventModel;
@@ -25,12 +25,10 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
 
   onlineEventsList: EventModel[];
 
-  private ngUnsubscribe = new Subject<void>();
-
-  constructor(private eventService: EventService){}
+  constructor(private eventService: EventService, private destroyRef: DestroyRef){}
 
   ngOnInit(): void {
-    this.eventService.streamAllByValue('isActive', true).pipe(takeUntil(this.ngUnsubscribe)).subscribe(async (events) => {
+    this.eventService.streamAllByValue('isActive', true).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (events) => {
       const  currentDate = new Date();
       currentDate.setDate(new Date().getDate() -1);
 
@@ -65,11 +63,6 @@ export class EventsComponent implements AfterViewInit, OnInit, OnDestroy  {
       this.eventsList.sort(dateSorter);
       this.onlineEventsList.sort(dateSorter);
     });
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
   ngAfterViewInit() {

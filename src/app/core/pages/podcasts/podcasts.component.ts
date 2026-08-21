@@ -1,13 +1,13 @@
 import { ViewportScroller } from '@angular/common';
 import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PodCastModel } from '@impact-common/shared/models/domain/pod-cast.model';
 import { Pager } from 'src/app/common/models/utils/pager.model';
 import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { PodCastService } from 'src/app/common/services/data/pod-cast.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-podcasts',
@@ -15,7 +15,7 @@ import { Subject, takeUntil } from 'rxjs';
     styleUrls: ['./podcasts.component.scss'],
     standalone: false
 })
-export class PodcastsComponent implements OnInit, OnDestroy {
+export class PodcastsComponent implements OnInit {
   podcasts: PodCastModel[] = [];
   filteredPodcasts: PodCastModel[] = [];
   selectedPodcast: PodCastModel;
@@ -31,13 +31,13 @@ export class PodcastsComponent implements OnInit, OnDestroy {
   // instead of streaming the entire growing collection to every visitor.
   private readonly maxPodcasts = 60;
 
-  private ngUnsubscribe = new Subject<void>();
-
   constructor(public podcastService: PodCastService,
     private webConfigService: WebConfigService,
     private route: ActivatedRoute,
     private router: Router,
-    private viewScroller: ViewportScroller) { }
+    private viewScroller: ViewportScroller,
+    private destroyRef: DestroyRef
+  ) { }
 
   ngOnInit(): void {
     // Load active podcasts once. Pagination is client-side slicing, so a page
@@ -45,13 +45,13 @@ export class PodcastsComponent implements OnInit, OnDestroy {
     // opening a new whole-collection listener each time (P7 -- the DMM page
     // already avoids this). Web config is a one-time cached read, not a
     // standing listener.
-    this.podcastService.streamAllByValueOrdered('isActive', true, 'date', this.maxPodcasts).pipe(takeUntil(this.ngUnsubscribe)).subscribe((podcasts) => {
+    this.podcastService.streamAllByValueOrdered('isActive', true, 'date', this.maxPodcasts).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((podcasts) => {
       this.podcasts = podcasts.sort((a, b) => toMillis(b?.date) - toMillis(a?.date));
       this.selectedPodcast = this.podcasts[0];
       this.applyPage();
     });
 
-    this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params) => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.pageNo = params['page'] ? params['page'] : this.pageNo;
       this.applyPage();
     });
@@ -152,11 +152,6 @@ export class PodcastsComponent implements OnInit, OnDestroy {
       endIndex: endIndex,
       pages: pages
     };
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
 }

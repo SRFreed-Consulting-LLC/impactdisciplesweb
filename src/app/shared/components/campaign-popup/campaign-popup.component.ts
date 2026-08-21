@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Subject, takeUntil } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CampaignPopupService, CampaignPopup, PopupCtaField } from 'src/app/common/services/data/campaign-popup.service';
 import { FormSubmissionService } from 'src/app/common/services/data/form-submission.service';
@@ -22,7 +22,7 @@ import { FormSubmissionModel } from '@impact-common/shared/models/domain/form-su
     styleUrls: ['./campaign-popup.component.scss'],
     standalone: false
 })
-export class CampaignPopupComponent implements OnInit, OnDestroy {
+export class CampaignPopupComponent implements OnInit {
   popup: CampaignPopup | null = null;
   html: SafeHtml | null = null;
   visible = false;
@@ -34,12 +34,11 @@ export class CampaignPopupComponent implements OnInit, OnDestroy {
   submitDone = false;
   submitError = '';
 
-  private ngUnsubscribe = new Subject<void>();
-
   constructor(
     private popupService: CampaignPopupService,
     private formSubmissionService: FormSubmissionService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private destroyRef: DestroyRef
   ) {}
 
   // Legacy popups (no structured cta) keep the whole-content click-through;
@@ -58,7 +57,7 @@ export class CampaignPopupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.popupService.streamAllByValue('isActive', true)
-      .pipe(takeUntil(this.ngUnsubscribe))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((popups) => {
         if (this.visible) {
           return; // don't swap content out from under an open popup
@@ -73,11 +72,6 @@ export class CampaignPopupComponent implements OnInit, OnDestroy {
           this.open(eligible);
         }
       });
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
   private isDismissed(popup: CampaignPopup): boolean {
