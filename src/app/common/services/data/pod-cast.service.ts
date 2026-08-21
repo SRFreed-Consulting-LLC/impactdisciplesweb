@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { Timestamp } from 'firebase/firestore';
 import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
 import { PodCastModel } from '@impact-common/shared/models/domain/pod-cast.model';
@@ -11,7 +12,10 @@ import { GetYoutubeVideosResult } from '@impact-common/shared/contract/web-http.
   providedIn: 'root'
 })
 export class PodCastService extends BaseService<PodCastModel>{
-  constructor(public override dao: FirebaseDAO<PodCastModel> ) {
+  constructor(
+    public override dao: FirebaseDAO<PodCastModel>,
+    private client: CloudFunctionsClient
+  ) {
     super(dao)
     this.table="pod_casts"
     this.fromFirestore = PodCastService.fromFirestore
@@ -37,13 +41,10 @@ export class PodCastService extends BaseService<PodCastModel>{
   async getVideoInfo(){
     this.videos = signal<unknown[]>([]);
 
-    const response = await fetch(environment.youtubeVideosUrl);
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch YouTube videos');
-    }
-
-    const result: GetYoutubeVideosResult = await response.json();
+    const result = await this.client.get<GetYoutubeVideosResult>(
+      environment.youtubeVideosUrl,
+      { fallbackError: 'Failed to fetch YouTube videos' }
+    );
     this.videos.set(result.videos ?? []);
 
     return this.videos();

@@ -1,4 +1,5 @@
 import { Component, OnInit, DestroyRef } from '@angular/core';
+import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
@@ -38,7 +39,8 @@ export class CampaignPopupComponent implements OnInit {
     private popupService: CampaignPopupService,
     private formSubmissionService: FormSubmissionService,
     private sanitizer: DomSanitizer,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private client: CloudFunctionsClient
   ) {}
 
   // Legacy popups (no structured cta) keep the whole-content click-through;
@@ -106,15 +108,7 @@ export class CampaignPopupComponent implements OnInit {
 
   private beacon(popup: CampaignPopup, type: 'web_shown' | 'web_click'): void {
     const url = `${environment.campaignWebEventUrl}?cid=${encodeURIComponent(popup.campaignId)}&type=${type}`;
-    try {
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(url);
-      } else {
-        fetch(url).catch(() => undefined);
-      }
-    } catch {
-      // best-effort only
-    }
+    this.client.beacon(url);
   }
 
   onContentClick(): void {
@@ -171,20 +165,15 @@ export class CampaignPopupComponent implements OnInit {
         } as FormSubmissionModel;
         await this.formSubmissionService.add(submission);
       } else {
-        const response = await fetch(environment.subscribeUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'newsletter',
-            email,
-            firstName: this.formValues.firstName.trim(),
-            lastName: this.formValues.lastName.trim(),
-            attribution: { campaignId: popup.campaignId, source: 'popup' }
-          })
+        await this.client.post(environment.subscribeUrl, {
+          type: 'newsletter',
+          email,
+          firstName: this.formValues.firstName.trim(),
+          lastName: this.formValues.lastName.trim(),
+          // Popup attribution is built here, not taken from
+          // AttributionService - the popup credits itself.
+          attribution: { campaignId: popup.campaignId, source: 'popup' }
         });
-        if (!response.ok) {
-          throw new Error(String(response.status));
-        }
       }
       this.submitDone = true;
       this.beacon(popup, 'web_click');

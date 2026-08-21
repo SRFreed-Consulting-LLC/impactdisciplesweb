@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { CouponModel } from '@impact-common/shared/models/utils/coupon.model';
 import { NumberUtil } from 'src/app/common/utils/number-util';
@@ -39,18 +40,26 @@ export interface CouponApplicationResult {
 // re-validates the coupon regardless - this is UX-layer resolution only.
 @Injectable({ providedIn: 'root' })
 export class CouponApplicationService {
+  constructor(private client: CloudFunctionsClient) {}
+
 
   async validateAndApply(items: CartItem[], code: string): Promise<CouponApplicationResult> {
     if (!code) {
       return { applied: false, netDiscount: 0, lineResults: [], message: 'Please enter a coupon code.' };
     }
 
-    const response = await fetch(environment.lookupCouponUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
-    });
-    const coupon: CouponModel | null = response.ok ? (await response.json())?.coupon : null;
+    // Deliberately swallows failures: an unreachable lookup must read as
+    // "coupon not valid" and let checkout continue, never as an error the
+    // shopper has to clear. This is the one call site that must not throw,
+    // which is why it catches here rather than the client hiding it.
+    let coupon: CouponModel | null = null;
+    try {
+      const result = await this.client.post<{ coupon?: CouponModel }>(
+        environment.lookupCouponUrl, { code });
+      coupon = result?.coupon ?? null;
+    } catch {
+      coupon = null;
+    }
 
     if (!coupon || !coupon.isActive) {
       return { applied: false, netDiscount: 0, lineResults: [], message: 'Coupon not valid for these items.' };

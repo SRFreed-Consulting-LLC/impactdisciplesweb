@@ -1,24 +1,35 @@
 import { LoggerService } from './logger.service';
 import { Injectable } from '@angular/core';
+import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
 import { UNIT_OF_MEASURE } from '@impact-common/shared/lists/unit_of_measure.enum';
 import { ShippingModel, Package, WeightDetail, ShippingRequest, RateOptions } from '@impact-common/shared/models/domain/shipment.model';
 import { Address } from '@impact-common/shared/models/domain/utils/address.model';
 import { Phone } from '@impact-common/shared/models/domain/utils/phone.model';
 import { CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
+import { ShippingRate } from '@impact-common/shared/models/domain/shipment-label-batch-request.model';
 import { environment } from 'src/environments/environment';
 import { BaseService } from './base.service';
 import { WebConfigService } from './web-config.service';
 
 
+// The ShipEngine rate payload. Was implicitly `any` when it came straight
+// off response.json(); the client returns a typed value, so the shape
+// calculateShipping() actually reads is named here, over the existing
+// shared ShippingRate model rather than a re-invented one.
+interface ShippingRateResponse {
+  rateResponse: { rates: ShippingRate[] };
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class ShippingService extends BaseService<ShippingModel>{
   shippingCarriers: string[] = environment.shippingCarriers;
 
 
-  constructor(public override dao: FirebaseDAO<ShippingModel>, private webConfigService: WebConfigService, private logService: LoggerService) {
+  constructor(public override dao: FirebaseDAO<ShippingModel>, private webConfigService: WebConfigService, private logService: LoggerService, private client: CloudFunctionsClient) {
     super(dao)
     this.table="shipments"
   }
@@ -102,21 +113,26 @@ export class ShippingService extends BaseService<ShippingModel>{
     }
   }
 
-  private async makeRequest(request: ShippingRequest){
-    const response = await fetch(environment.shippingUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      this.logService.logMessage('SHIPPING REQUEST', request.shipment.shipTo.name, 'Error receieved from ShippingService: ', JSON.stringify(response));
-
-      throw new Error('Failed to get Shipping Rates: ' + JSON.stringify(response));
+  // The ShipEngine rate payload. Was implicitly `any` when this came
+  // straight off response.json(); the client returns a typed value, so
+  // the shape calculateShipping() actually reads is named here.
+  private async makeRequest(request: ShippingRequest): Promise<ShippingRateResponse>{
+    try {
+      return await this.client.post<ShippingRateResponse>(environment.shippingUrl, request,
+        { fallbackError: 'Failed to get Shipping Rates' });
+    } catch (err) {
+      // The log is the point here - a failed rate lookup is recoverable
+      // for the shopper (calculateShipping falls back), but it needs to
+      // be visible to staff. Rethrown unchanged afterwards.
+      //
+      // The old message interpolated JSON.stringify(response) on a
+      // Response object, which always serialises to "{}" - so this used
+      // to log and throw a literal empty object. The client's error
+      // carries the real status and the server's own message instead.
+      this.logService.logMessage(
+        'SHIPPING REQUEST', request.shipment.shipTo.name,
+        'Error receieved from ShippingService: ', String(err));
+      throw err;
     }
-
-    const rate = await response.json();
-
-    return rate;
   }
 }

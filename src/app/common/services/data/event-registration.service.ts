@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EventRegistrationModel } from '@impact-common/shared/models/domain/event-registration.model';
 import { environment } from 'src/environments/environment';
-import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
+import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import {
   CheckRegistrationExistsResult,
   GetEventRegistrationResult,
@@ -25,19 +25,14 @@ import {
 })
 export class EventRegistrationService {
 
-  constructor(private attributionService: AttributionService) {}
+  constructor(private client: CloudFunctionsClient) {}
 
-  private async post<T>(url: string, body: unknown): Promise<T> {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    if (!response.ok) {
-      throw new Error(`Request failed (${response.status})`);
-    }
-    return response.json() as Promise<T>;
+  // No attribution by default: only registerForEvent below credits a
+  // campaign funnel. The lookup calls must not start sending it.
+  private post<T>(url: string, body: unknown): Promise<T> {
+    return this.client.post<T>(url, body);
   }
+
 
   /** Creates the registration server-side - which also renders + queues
    *  the confirmation email (with the breakout link) and stamps
@@ -51,13 +46,12 @@ export class EventRegistrationService {
     receipt?: string;
   }): Promise<RegisterForEventResult> {
     // Campaign attribution (Campaign Manager v2, Phase 4) - a registration
-    // that follows a campaign click credits that campaign's funnel.
-    const attribution = this.attributionService.get();
-    return this.post(environment.registerForEventUrl, {
+    // that follows a campaign click credits that campaign's funnel. This is
+    // the only call here that carries it.
+    return this.client.post(environment.registerForEventUrl, {
       ...input,
       email: input.email.toLowerCase(),
-      ...(attribution ? { attribution } : {}),
-    });
+    }, { withAttribution: true });
   }
 
   /** Fetch by the emailed link's unguessable registration id. */

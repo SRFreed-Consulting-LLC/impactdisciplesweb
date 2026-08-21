@@ -1,4 +1,5 @@
 import { CouponApplicationService } from './coupon-application.service';
+import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { CouponModel } from '@impact-common/shared/models/utils/coupon.model';
 
@@ -18,7 +19,12 @@ describe('CouponApplicationService', () => {
   let service: CouponApplicationService;
 
   beforeEach(() => {
-    service = new CouponApplicationService();
+    // A real CloudFunctionsClient over a stub AttributionService - only
+    // this construction changed when the transport was extracted; every
+    // assertion below is untouched.
+    service = new CouponApplicationService(
+      new CloudFunctionsClient({ get: () => null } as never)
+    );
   });
 
   it('applies the percent discount per unit and totals it across the quantity', async () => {

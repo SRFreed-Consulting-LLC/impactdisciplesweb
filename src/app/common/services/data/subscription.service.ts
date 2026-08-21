@@ -4,7 +4,7 @@ import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
 import { SubscriptionModel, SubscriptionType } from 'src/app/common/models/domain/subscription.model';
 import { BaseService } from './base.service';
 import { environment } from 'src/environments/environment';
-import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
+import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { SubscribeToEmailListResult } from '@impact-common/shared/contract/web-http.types';
 
 // Newsletter/Prayer Team subscriber state used to live in its own
@@ -26,7 +26,7 @@ import { SubscribeToEmailListResult } from '@impact-common/shared/contract/web-h
 export class SubscriptionService extends BaseService<SubscriptionModel> {
   constructor(
     public override dao: FirebaseDAO<SubscriptionModel>,
-    private attributionService: AttributionService
+    private client: CloudFunctionsClient
   ) {
     super(dao)
     this.table = "subscriptions"
@@ -40,18 +40,11 @@ export class SubscriptionService extends BaseService<SubscriptionModel> {
   async createSubscription(type: SubscriptionType, firstName: string, lastName: string, email: string): Promise<SubscriptionModel | null> {
     // Campaign attribution (Campaign Manager v2, Phase 4): a subscribe
     // that follows a campaign click credits that campaign's funnel.
-    const attribution = this.attributionService.get();
-    const response = await fetch(environment.subscribeUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, firstName, lastName, email, ...(attribution ? { attribution } : {}) })
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to subscribe: ' + response.status);
-    }
-
-    const result: SubscribeToEmailListResult = await response.json();
+    const result = await this.client.post<SubscribeToEmailListResult>(
+      environment.subscribeUrl,
+      { type, firstName, lastName, email },
+      { withAttribution: true, fallbackError: 'Failed to subscribe' }
+    );
     if (result.alreadySubscribed) {
       return null;
     }

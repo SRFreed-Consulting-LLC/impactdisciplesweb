@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { environment } from 'src/environments/environment';
 import { CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
 import {
@@ -46,35 +47,19 @@ export type CaptureOrderResult = CapturePaypalOrderResult<CheckoutForm>;
 })
 export class CheckoutOrderService {
 
+  constructor(private client: CloudFunctionsClient) {}
+
   async createOrder(request: CheckoutOrderRequest): Promise<CreateOrderResult> {
-    const response = await fetch(environment.createPaypalOrderUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(request)
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data?.error || 'Failed to start checkout');
-    }
-
-    return data;
+    return this.client.post<CreateOrderResult>(
+      environment.createPaypalOrderUrl, request,
+      { fallbackError: 'Failed to start checkout' }
+    );
   }
 
   async captureOrder(orderId: string, payerID?: string): Promise<CaptureOrderResult> {
-    const response = await fetch(environment.capturePaypalOrderUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId, payerID })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data?.error || 'Failed to complete payment');
-    }
-
-    return data;
+    return this.client.post<CaptureOrderResult>(
+      environment.capturePaypalOrderUrl, { orderId, payerID },
+      { fallbackError: 'Failed to complete payment' }
+    );
   }
 }
