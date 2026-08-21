@@ -1,8 +1,6 @@
 import { Component, OnInit, DestroyRef } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CartLinesBase } from 'src/app/core/store/cart-lines.base';
 import { Router } from '@angular/router';
-import { CartItem } from '@impact-common/shared/models/utils/cart.model';
-import { CartLineItem } from '../../models/cart-line-item.model';
 import { CartService } from '../../services/cart.service';
 import { PricingService } from '../../services/pricing.service';
 import { CouponApplicationService } from '../../services/coupon-application.service';
@@ -26,67 +24,19 @@ import { CouponApplicationService } from '../../services/coupon-application.serv
   styleUrls: ['./shopping-cart.component.scss'],
   standalone: false
 })
-export class ShoppingCartComponent implements OnInit {
-  lineItems: CartLineItem[] = [];
-  subtotal = 0;
-  discount = 0;
-  total = 0;
-
-  couponCode = '';
-  couponMessage = '';
-  couponMessageType: 'success' | 'error' = 'success';
-  lineNotes = new Map<string, string>();
-
+export class ShoppingCartComponent extends CartLinesBase implements OnInit {
   constructor(
-    public cartService: CartService,
-    private pricingService: PricingService,
-    private couponApplicationService: CouponApplicationService,
+    cartService: CartService,
+    pricingService: PricingService,
+    couponApplicationService: CouponApplicationService,
     private router: Router,
-    private destroyRef: DestroyRef
-  ) {}
+    destroyRef: DestroyRef
+  ) {
+    super(cartService, pricingService, couponApplicationService, destroyRef);
+  }
 
   ngOnInit(): void {
-    this.cartService.cartChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(items => this.recompute(items));
-  }
-
-  private recompute(items: CartItem[]): void {
-    this.lineItems = this.pricingService.toCartLineItems(items);
-    this.subtotal = this.pricingService.cartSubtotal(items);
-    this.discount = this.pricingService.cartDiscount(items);
-    this.total = this.pricingService.cartTotal(items);
-  }
-
-  async applyCoupon(): Promise<void> {
-    const items = this.cartService.getCartProducts();
-    this.couponApplicationService.clear(items);
-    this.lineNotes.clear();
-
-    const result = await this.couponApplicationService.validateAndApply(items, this.couponCode);
-
-    result.lineResults.forEach(line => {
-      if (line.skippedReason) {
-        this.lineNotes.set(line.itemId, line.skippedReason);
-      }
-    });
-
-    this.couponMessage = result.message;
-    this.couponMessageType = result.applied ? 'success' : 'error';
-    this.cartService.setCouponCode(result.applied ? this.couponCode : '');
-
-    this.cartService.touch();
-    this.recompute(items);
-  }
-
-  increment(item: CartItem): void {
-    this.cartService.addCartProduct(item, 1, false);
-  }
-
-  decrement(item: CartItem): void {
-    this.cartService.quantityDecrement(item);
-  }
-
-  remove(item: CartItem): void {
-    this.cartService.removeCartProduct(item);
+    this.watchCart();
   }
 
   checkout(): void {
