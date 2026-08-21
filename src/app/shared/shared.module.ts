@@ -3,8 +3,6 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { NavMenuComponent } from "./nav-menu/nav-menu.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { DynamicFormComponent } from "./form-renderer/dynamic-form.component";
-import { DynamicFormFieldComponent } from "./form-renderer/dynamic-form-field.component";
 import { OffcanvasComponent } from "./components/offcanvas/offcanvas.component";
 import { BackToTopComponent } from "./components/back-to-top/back-to-top.component";
 import { CampaignPopupComponent } from "./components/campaign-popup/campaign-popup.component";
@@ -44,8 +42,6 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     ConsulationBannerComponent,
     HeaderComponent,
     HomeHeaderComponent,
-    DynamicFormComponent,
-    DynamicFormFieldComponent,
     CampaignPopupComponent
   ],
   imports: [
@@ -73,8 +69,6 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     ConsulationBannerComponent,
     HeaderComponent,
     HomeHeaderComponent,
-    DynamicFormComponent,
-    DynamicFormFieldComponent
   ]
 })
 export class SharedModule { }

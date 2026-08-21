@@ -5,6 +5,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { YouTubePlayerModule } from '@angular/youtube-player';
 import { SharedModule } from "../shared/shared.module";
+import { FormRendererModule } from "../shared/form-renderer/form-renderer.module";
 import { AboutUsComponent } from "./pages/about-us/about-us.component";
 import { ContactComponent } from "./pages/contact/contact.component";
 import { NewsletterComponent } from "./pages/newsletter/newsletter.component";
@@ -124,6 +125,7 @@ export const routes: Routes = [
     CommonModule,
     FormsModule,
     SharedModule,
+    FormRendererModule,
     YouTubePlayerModule,
     RouterModule.forChild(routes)
   ]

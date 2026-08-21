@@ -11,11 +11,10 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/impactdisciplesweb",
             "index": "src/index.html",
-            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -29,7 +28,8 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "serviceWorker": false
+            "serviceWorker": false,
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -60,12 +60,8 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ],
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             },
             "local": {
               "fileReplacements": [
@@ -74,12 +70,8 @@
                   "with": "src/environments/environment.local.ts"
                 }
               ],
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             },
             "emulator": {
               "fileReplacements": [
@@ -88,12 +80,8 @@
                   "with": "src/environments/environment.emulator.ts"
                 }
               ],
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "local"
