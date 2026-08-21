@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { ActivatedRoute } from '@angular/router';
 import { QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
@@ -29,13 +30,21 @@ export class SummitComponent implements OnInit, OnDestroy {
   public seconds = 0;
 
   isPlaying = false;
+  preview = false;
 
   private intervalId: number;
 
-  constructor(private route: ActivatedRoute, private eventService: EventService, public utilsService: UtilsService, private coachService: CoachService) { }
+  constructor(private route: ActivatedRoute, private eventService: EventService, public utilsService: UtilsService, private coachService: CoachService, private destroyRef: DestroyRef) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(async params => {
+    // /summit-preview is the same page with the isActive filter lifted -
+    // its whole purpose is seeing a summit BEFORE it goes on sale. Driven
+    // by route data so there is one component, not a near-clone.
+    this.preview = this.route.snapshot.data['preview'] === true;
+
+    this.route.paramMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async params => {
       const year = Number(params.get('year'));
 
       const query = [
@@ -47,7 +56,7 @@ export class SummitComponent implements OnInit, OnDestroy {
         // way Firestore's own SDK does when passed to where().
         new QueryParam('startDate', WhereFilterOperandKeys.more, new Date(year + '-01-01')),
         new QueryParam('isSummit', WhereFilterOperandKeys.equal, true),
-        new QueryParam('isActive', WhereFilterOperandKeys.equal, true)
+        ...this.activeOnly()
       ]
 
       // "No summit for the requested year" is an EXPECTED state, not an
@@ -68,7 +77,7 @@ export class SummitComponent implements OnInit, OnDestroy {
         return this.eventService.queryAllByMultiValue([
           new QueryParam('startDate', WhereFilterOperandKeys.more, new Date()),
           new QueryParam('isSummit', WhereFilterOperandKeys.equal, true),
-          new QueryParam('isActive', WhereFilterOperandKeys.equal, true)
+          ...this.activeOnly()
         ]).then(upcoming => {
           if (upcoming && upcoming.length > 0) {
             return this.soonest(upcoming);
@@ -95,6 +104,14 @@ export class SummitComponent implements OnInit, OnDestroy {
       }
       this.startCountdown();
     });
+  }
+
+  /** The isActive filter, dropped in preview mode so an un-activated
+   *  summit is visible - that is what preview is for. */
+  private activeOnly(): QueryParam[] {
+    return this.preview ?
+      [] :
+      [new QueryParam('isActive', WhereFilterOperandKeys.equal, true)];
   }
 
   /** Soonest-starting event of a result set - used instead of assuming the

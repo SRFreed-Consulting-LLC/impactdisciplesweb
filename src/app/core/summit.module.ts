@@ -5,7 +5,6 @@ import { FormsModule } from "@angular/forms";
 import { YouTubePlayerModule } from '@angular/youtube-player';
 import { SharedModule } from "../shared/shared.module";
 import { SummitComponent } from "./pages/summit/summit.component";
-import { SummitPreviewComponent } from "./pages/summit-preview/summit-preview.component";
 
 const routes: Routes = [
   {
@@ -13,15 +12,18 @@ const routes: Routes = [
     component: SummitComponent
   },
   {
+    // Same component, isActive filter lifted - see SummitComponent.
+    // Deliberately unlinked from the site: a staff-only way to see a
+    // summit before it is activated.
     path: 'summit-preview/:year',
-    component: SummitPreviewComponent
+    component: SummitComponent,
+    data: { preview: true }
   }
 ];
 
 @NgModule({
   declarations: [
-    SummitComponent,
-    SummitPreviewComponent
+    SummitComponent
   ],
   imports: [
     CommonModule,
