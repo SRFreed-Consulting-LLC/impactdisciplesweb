@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
-import { BaseModel } from 'src/app/common/models/base.model';
+import { BaseModel } from '@impact-common/shared/models/base.model';
 import { BaseService } from './base.service';
 
 // Read-side twin of the admin repo's CampaignPopupModel (both repos'

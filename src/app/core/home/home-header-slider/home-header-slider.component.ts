@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HomePageImageModel } from 'src/app/common/models/domain/home-page-image.model';
+import { HomePageImageModel } from '@impact-common/shared/models/domain/home-page-image.model';
 import { HomePageImageService } from 'src/app/common/services/data/home-page-images.service';
 import Swiper from 'swiper';
 import { Autoplay, Pagination } from 'swiper/modules';

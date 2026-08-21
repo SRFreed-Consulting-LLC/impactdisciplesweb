@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { CourseModel } from 'src/app/common/models/domain/course.model';
-import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
+import { TrainingRoomModel } from '@impact-common/shared/models/domain/training-room.model';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { EventModel } from 'src/app/common/models/domain/event.model';
 import { DialogService } from 'src/app/shared/utils/services/dialog.service';

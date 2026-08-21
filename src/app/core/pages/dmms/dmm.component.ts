@@ -3,7 +3,7 @@ import { toMillis } from 'src/app/common/utils/date-from-timestamp';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, switchMap, takeUntil } from 'rxjs';
-import { DMMModel } from 'src/app/common/models/domain/dmm.model';
+import { DMMModel } from '@impact-common/shared/models/domain/dmm.model';
 import { Pager } from 'src/app/common/models/utils/pager.model';
 import { DMMService } from 'src/app/common/services/data/dmm.service';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';

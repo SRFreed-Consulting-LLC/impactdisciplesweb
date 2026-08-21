@@ -1,6 +1,6 @@
 import { OrganizationModel } from "./organization.model";
-import { Person } from "./utils/person.model";
-import { ImageModel } from "../utils/image.model";
+import { Person } from "@impact-common/shared/models/domain/utils/person.model";
+import { ImageModel } from "@impact-common/shared/models/utils/image.model";
 
 // Split off CoachModel (2026-08, on the impactdisciples-admin side first -
 // see that repo's CLAUDE.md/MIGRATION.md for the full writeup). `coaches`

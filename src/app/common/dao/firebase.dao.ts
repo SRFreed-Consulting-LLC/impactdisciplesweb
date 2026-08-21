@@ -4,7 +4,7 @@ import { Firestore, collection } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DocumentData, QueryConstraint, QuerySnapshot } from 'firebase/firestore';
-import { BaseModel } from '../models/base.model';
+import { BaseModel } from '@impact-common/shared/models/base.model';
 
 @Injectable({
   providedIn: 'root'

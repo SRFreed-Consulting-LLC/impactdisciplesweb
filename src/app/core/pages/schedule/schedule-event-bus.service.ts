@@ -4,7 +4,7 @@ import { CoachModel } from 'src/app/common/models/domain/coach.model';
 import { CourseModel } from 'src/app/common/models/domain/course.model';
 import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
 import { EventModel } from 'src/app/common/models/domain/event.model';
-import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
+import { TrainingRoomModel } from '@impact-common/shared/models/domain/training-room.model';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
 

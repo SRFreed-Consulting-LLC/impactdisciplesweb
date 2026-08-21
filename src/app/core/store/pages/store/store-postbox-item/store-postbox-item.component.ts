@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ProductModel } from 'src/app/common/models/utils/product.model';
+import { ProductModel } from '@impact-common/shared/models/utils/product.model';
 import { CartService } from '../../../services/cart.service';
 import { ProductCatalogService } from '../../../services/product-catalog.service';
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseDAO, QueryParam } from 'src/app/common/dao/firebase.dao';
-import { BaseModel } from 'src/app/common/models/base.model';
+import { BaseModel } from '@impact-common/shared/models/base.model';
 import { Observable } from 'rxjs';
 
 @Injectable({

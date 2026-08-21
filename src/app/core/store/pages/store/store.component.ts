@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { TagModel } from 'src/app/common/models/domain/tag.model';
-import { ProductModel } from 'src/app/common/models/utils/product.model';
-import { SeriesModel } from 'src/app/common/models/utils/series.model';
+import { TagModel } from '@impact-common/shared/models/domain/tag.model';
+import { ProductModel } from '@impact-common/shared/models/utils/product.model';
+import { SeriesModel } from '@impact-common/shared/models/utils/series.model';
 import { ProductService } from 'src/app/common/services/data/product.service';
 import { SeriesService } from 'src/app/common/services/data/series.service';
 import { ProductCatalogService } from '../../services/product-catalog.service';

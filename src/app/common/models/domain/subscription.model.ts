@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore"
-import { BaseModel } from "../base.model"
+import { BaseModel } from "@impact-common/shared/models/base.model"
 
 // Newsletter and Prayer Team subscribers, merged into one collection
 // (`subscriptions`) shared with the admin app - see SubscriptionService's

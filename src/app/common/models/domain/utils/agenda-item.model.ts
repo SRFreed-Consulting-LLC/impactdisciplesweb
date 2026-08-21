@@ -1,4 +1,4 @@
-import { BaseModel } from "../../base.model";
+import { BaseModel } from "@impact-common/shared/models/base.model";
 
 // One entry in EventModel.agendaItems[] (hand-synced from the admin repo's
 // agenda-item.model.ts, 2026-08 Courses retirement). A breakout session is

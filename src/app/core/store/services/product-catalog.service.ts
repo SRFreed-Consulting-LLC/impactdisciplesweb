@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Pager } from 'src/app/common/models/utils/pager.model';
-import { ProductModel } from 'src/app/common/models/utils/product.model';
-import { SaleModel } from 'src/app/common/models/utils/sale.model';
+import { ProductModel } from '@impact-common/shared/models/utils/product.model';
+import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { SalesService } from 'src/app/common/services/data/sales.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartItem } from 'src/app/common/models/utils/cart.model';

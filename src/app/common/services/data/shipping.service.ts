@@ -1,10 +1,10 @@
 import { LoggerService } from './logger.service';
 import { Injectable } from '@angular/core';
 import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
-import { UNIT_OF_MEASURE } from 'src/app/common/lists/unit_of_measure.enum';
-import { ShippingModel, Package, WeightDetail, ShippingRequest, RateOptions } from 'src/app/common/models/domain/shipment.model';
-import { Address } from 'src/app/common/models/domain/utils/address.model';
-import { Phone } from 'src/app/common/models/domain/utils/phone.model';
+import { UNIT_OF_MEASURE } from '@impact-common/shared/lists/unit_of_measure.enum';
+import { ShippingModel, Package, WeightDetail, ShippingRequest, RateOptions } from '@impact-common/shared/models/domain/shipment.model';
+import { Address } from '@impact-common/shared/models/domain/utils/address.model';
+import { Phone } from '@impact-common/shared/models/domain/utils/phone.model';
 import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
 import { environment } from 'src/environments/environment';
 import { BaseService } from './base.service';

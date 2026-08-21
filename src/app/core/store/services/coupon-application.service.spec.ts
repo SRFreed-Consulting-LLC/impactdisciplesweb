@@ -1,6 +1,6 @@
 import { CouponApplicationService } from './coupon-application.service';
 import { CartItem } from 'src/app/common/models/utils/cart.model';
-import { CouponModel } from 'src/app/common/models/utils/coupon.model';
+import { CouponModel } from '@impact-common/shared/models/utils/coupon.model';
 
 // The coupon percent math the cart/checkout UX shows. The only outside
 // contact is the single `lookup_coupon` fetch, stubbed at window.fetch --

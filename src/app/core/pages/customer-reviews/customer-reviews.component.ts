@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TestimonialModel } from 'src/app/common/models/domain/testimonial.model';
+import { TestimonialModel } from '@impact-common/shared/models/domain/testimonial.model';
 import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 
 @Component({

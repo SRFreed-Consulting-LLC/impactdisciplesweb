@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CartItem } from 'src/app/common/models/utils/cart.model';
-import { CouponModel } from 'src/app/common/models/utils/coupon.model';
+import { CouponModel } from '@impact-common/shared/models/utils/coupon.model';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { environment } from 'src/environments/environment';
 

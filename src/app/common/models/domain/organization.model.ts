@@ -1,6 +1,6 @@
-import { BaseModel } from "../base.model";
-import { Address } from "./utils/address.model";
-import { Phone } from "./utils/phone.model";
+import { BaseModel } from "@impact-common/shared/models/base.model";
+import { Address } from "@impact-common/shared/models/domain/utils/address.model";
+import { Phone } from "@impact-common/shared/models/domain/utils/phone.model";
 
 // Hand-synced from the admin repo's organization.model.ts (2026-08
 // restructure). NOTE: this site never reads the `organizations` collection

@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { SeriesModel } from 'src/app/common/models/utils/series.model';
+import { SeriesModel } from '@impact-common/shared/models/utils/series.model';
 import { BehaviorSubject, combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { TagModel } from 'src/app/common/models/domain/tag.model';
-import { ProductModel } from 'src/app/common/models/utils/product.model';
+import { TagModel } from '@impact-common/shared/models/domain/tag.model';
+import { ProductModel } from '@impact-common/shared/models/utils/product.model';
 import { ProductCategoriesService } from 'src/app/common/services/data/product-categories.service';
 
 interface CategoryWithProducts {

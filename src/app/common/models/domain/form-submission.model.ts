@@ -1,4 +1,4 @@
-import { BaseModel } from '../base.model';
+import { BaseModel } from '@impact-common/shared/models/base.model';
 import { FormFieldType } from './form-field.model';
 
 // Trimmed copy of the sibling impactdisciples-admin repo's model of the same

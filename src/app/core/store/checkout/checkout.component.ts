@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IOnApproveCallbackData, IPayPalConfig, PayPalScriptService } from 'ngx-paypal';
 import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
-import { SaleModel } from 'src/app/common/models/utils/sale.model';
+import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
 import { ShippingService } from 'src/app/common/services/data/shipping.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';

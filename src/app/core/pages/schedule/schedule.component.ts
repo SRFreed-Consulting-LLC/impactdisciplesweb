@@ -7,7 +7,7 @@ import { EventRegistrationModel } from 'src/app/common/models/domain/event-regis
 import { EventService } from 'src/app/common/services/data/event.service';
 import { CoachModel } from 'src/app/common/models/domain/coach.model';
 import { CourseModel } from 'src/app/common/models/domain/course.model';
-import { TrainingRoomModel } from 'src/app/common/models/domain/training-room.model';
+import { TrainingRoomModel } from '@impact-common/shared/models/domain/training-room.model';
 import { LocationService } from 'src/app/common/services/data/location.service';
 import { CoachService } from 'src/app/common/services/data/coach.service';
 import { CourseService } from 'src/app/common/services/data/course.service';
