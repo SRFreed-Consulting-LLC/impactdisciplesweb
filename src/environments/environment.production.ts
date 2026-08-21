@@ -1,40 +1,34 @@
-﻿export const environment = {
+﻿import { FIREBASE_PROJECTS, functionUrl } from '@impact-common/shared/config/firebase-projects';
+
+export const environment = {
   production: true,
   useEmulators: false,
-  firebaseConfig: {
-    apiKey: "AIzaSyDRfdv2XgpLQ-ll2oxpEEMyhtC75rzkP4c",
-    authDomain: "impactdisciples-a82a8.firebaseapp.com",
-    projectId: "impactdisciples-a82a8",
-    storageBucket: "impactdisciples-a82a8.appspot.com",
-    messagingSenderId: "562759240809",
-    appId: "1:562759240809:web:7d6fa117db35b887b6a6f8",
-    measurementId: "G-KJL13HB8DV"
-  },
+  firebaseConfig: FIREBASE_PROJECTS.prod,
   domain: 'https://impactdisciples.com',
-  createPaypalOrderUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/create_paypal_order",
-  capturePaypalOrderUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/capture_paypal_order",
-  shippingUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_shipping_rates",
-  youtubeVideosUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_youtube_videos_public",
+  createPaypalOrderUrl: functionUrl('prod', 'create_paypal_order'),
+  capturePaypalOrderUrl: functionUrl('prod', 'capture_paypal_order'),
+  shippingUrl: functionUrl('prod', 'get_shipping_rates'),
+  youtubeVideosUrl: functionUrl('prod', 'get_youtube_videos_public'),
 
-  lookupCouponUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/lookup_coupon",
-
-
-  registerForEventUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/register_for_event",
+  lookupCouponUrl: functionUrl('prod', 'lookup_coupon'),
 
 
-  getEventRegistrationUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_event_registration",
+  registerForEventUrl: functionUrl('prod', 'register_for_event'),
 
 
-  updateMySessionsUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/update_my_sessions",
+  getEventRegistrationUrl: functionUrl('prod', 'get_event_registration'),
 
 
-  checkRegistrationExistsUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/check_registration_exists",
+  updateMySessionsUrl: functionUrl('prod', 'update_my_sessions'),
 
 
-  getSessionCountsUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/get_session_counts",
-  subscribeUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/subscribe_to_email_list",
-  campaignWebEventUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/campaign_web_event",
-  newsletterArchiveUrl: "https://us-central1-impactdisciples-a82a8.cloudfunctions.net/newsletter_archive",
+  checkRegistrationExistsUrl: functionUrl('prod', 'check_registration_exists'),
+
+
+  getSessionCountsUrl: functionUrl('prod', 'get_session_counts'),
+  subscribeUrl: functionUrl('prod', 'subscribe_to_email_list'),
+  campaignWebEventUrl: functionUrl('prod', 'campaign_web_event'),
+  newsletterArchiveUrl: functionUrl('prod', 'newsletter_archive'),
   oneGiftUrl: 'https://buy.stripe.com/4gwcOI5sY1zq2JieUW',
   monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',
   impactPartnersGiftUrl: 'https://www.paypal.com/donate/?hosted_button_id=J5PJN3ZD8EZ4A&source=url',
