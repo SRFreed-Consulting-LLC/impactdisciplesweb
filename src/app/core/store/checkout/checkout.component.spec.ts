@@ -111,7 +111,7 @@ function tamperedCheckoutForm(): CheckoutForm {
     // never be forwarded.
     total: 0.01,
     discount: 999
-  } as CheckoutForm;
+  } as unknown as CheckoutForm;
 }
 
 // Private method -- reached via index access on purpose; this is the same
