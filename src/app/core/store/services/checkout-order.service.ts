@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
+import {
+  CapturePaypalOrderResult,
+  CreatePaypalOrderRequest,
+  CreatePaypalOrderResult,
+} from '@impact-common/shared/contract/web-http.types';
 
 // Client for the two server-side checkout Cloud Functions
 // (create_paypal_order / capture_paypal_order,
@@ -18,69 +23,23 @@ import { CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
 // gets charged and what gets written to the "purchases" collection -- see
 // CheckoutOrderRequest below for exactly what this app is still allowed to
 // tell the server (never a price).
-export interface CheckoutOrderRequest {
-  cartItems: {
-    id: string;
-    isEvent?: boolean;
-    isEBook?: boolean;
-    isDigitalBook?: boolean;
-    orderQuantity: number;
-    size?: string;
-    color?: string;
-    language?: string;
-    attendees?: unknown[];
-    followUpEmailId?: string;
-  }[];
-  couponCode?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: unknown;
-  isNewsletter?: boolean;
-  isShippingSameAsBilling?: boolean;
-  billingAddress?: unknown;
-  shippingAddress?: unknown;
-  shippingRate?: number;
-  shippingRateId?: unknown;
-  // Campaign attribution captured on landing (AttributionService) - the
-  // server validates the campaign exists before crediting anything, so
-  // this stays advisory, never a price/priv input.
-  attribution?: { campaignId: string; emailId?: string; source?: string };
-}
-
-export interface CreateOrderBreakdown {
-  subtotal: number;
-  totalDiscount: number;
-  estimatedTaxes: number;
-  taxRate: number;
-  taxSource: string;
-  shippingDiscount: number;
-  shippingDiscountReason: string;
-  total: number;
-}
-
 // Not a discriminated union on purpose - this repo runs with
 // strictNullChecks off (see tsconfig.json), which makes TS's discriminated-
 // union narrowing unreliable. `free` is the field to check; the other
 // fields are only ever populated on the matching branch.
-export interface CreateOrderResult {
-  free: boolean;
-  checkoutForm?: CheckoutForm;
-  orderId?: string;
-  breakdown?: CreateOrderBreakdown;
-}
-
 // Payment was already captured by PayPal when recordingFailed is true - the
 // server just couldn't save the Purchase record afterward. Never treat this
 // as a normal failure (the customer WAS charged); see
 // paypal.functions.ts#capture_paypal_order's own comment on this path. Same
 // "flat, not a union" reasoning as CreateOrderResult above.
-export interface CaptureOrderResult {
-  checkoutForm?: CheckoutForm;
-  recordingFailed?: boolean;
-  errorCode?: string;
-  payPalOrderId?: string;
-}
+// The checkout request/response shapes are the shared web-http contract
+// (@impact-common/shared/contract/web-http.types, Stage 2e-ii) - the same
+// types the create_paypal_order / capture_paypal_order functions cast their
+// request bodies with. Local names kept as aliases for existing importers.
+export type CheckoutOrderRequest = CreatePaypalOrderRequest;
+export type { CreateOrderBreakdown } from '@impact-common/shared/contract/web-http.types';
+export type CreateOrderResult = CreatePaypalOrderResult<CheckoutForm>;
+export type CaptureOrderResult = CapturePaypalOrderResult<CheckoutForm>;
 
 @Injectable({
   providedIn: 'root'

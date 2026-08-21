@@ -2,6 +2,13 @@ import { Injectable } from '@angular/core';
 import { EventRegistrationModel } from '@impact-common/shared/models/domain/event-registration.model';
 import { environment } from 'src/environments/environment';
 import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
+import {
+  CheckRegistrationExistsResult,
+  GetEventRegistrationResult,
+  GetSessionCountsResult,
+  RegisterForEventResult,
+  UpdateMySessionsResult,
+} from '@impact-common/shared/contract/web-http.types';
 
 // Pre-prod hardening #2: every public event-registration flow goes through
 // Cloud Functions now - the collection itself is staff-only under
@@ -42,7 +49,7 @@ export class EventRegistrationService {
     lastName: string;
     email: string;
     receipt?: string;
-  }): Promise<{ registrationId: string; receiptEmailId?: string }> {
+  }): Promise<RegisterForEventResult> {
     // Campaign attribution (Campaign Manager v2, Phase 4) - a registration
     // that follows a campaign click credits that campaign's funnel.
     const attribution = this.attributionService.get();
@@ -55,7 +62,7 @@ export class EventRegistrationService {
 
   /** Fetch by the emailed link's unguessable registration id. */
   async getEventRegistrationById(id: string): Promise<EventRegistrationModel | null> {
-    const result = await this.post<{ registration: (EventRegistrationModel & { registrationDateIso?: string }) | null }>(
+    const result = await this.post<GetEventRegistrationResult<EventRegistrationModel>>(
       environment.getEventRegistrationUrl,
       { registrationId: id },
     );
@@ -69,7 +76,7 @@ export class EventRegistrationService {
 
   /** Boolean-only duplicate check for the signup form's validator. */
   async isAlreadyRegistered(email: string, eventId: string): Promise<boolean> {
-    const result = await this.post<{ exists: boolean }>(environment.checkRegistrationExistsUrl, {
+    const result = await this.post<CheckRegistrationExistsResult>(environment.checkRegistrationExistsUrl, {
       eventId,
       email: email.toLowerCase(),
     });
@@ -77,7 +84,7 @@ export class EventRegistrationService {
   }
 
   async registerForTrainingSession(registrationId: string, agendaItemId: string): Promise<string[]> {
-    const result = await this.post<{ trainingSessions: string[] }>(environment.updateMySessionsUrl, {
+    const result = await this.post<UpdateMySessionsResult>(environment.updateMySessionsUrl, {
       registrationId,
       sessionId: agendaItemId,
       action: 'add',
@@ -86,7 +93,7 @@ export class EventRegistrationService {
   }
 
   async unregisterForTrainingSession(registrationId: string, agendaItemId: string): Promise<string[]> {
-    const result = await this.post<{ trainingSessions: string[] }>(environment.updateMySessionsUrl, {
+    const result = await this.post<UpdateMySessionsResult>(environment.updateMySessionsUrl, {
       registrationId,
       sessionId: agendaItemId,
       action: 'remove',
@@ -96,7 +103,7 @@ export class EventRegistrationService {
 
   /** Per-session registration counts - all the capacity display needs. */
   async getSessionCounts(eventId: string): Promise<Record<string, number>> {
-    const result = await this.post<{ counts: Record<string, number> }>(
+    const result = await this.post<GetSessionCountsResult>(
       environment.getSessionCountsUrl,
       { eventId },
     );

@@ -5,6 +5,7 @@ import { SubscriptionModel, SubscriptionType } from 'src/app/common/models/domai
 import { BaseService } from './base.service';
 import { environment } from 'src/environments/environment';
 import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
+import { SubscribeToEmailListResult } from '@impact-common/shared/contract/web-http.types';
 
 // Newsletter/Prayer Team subscriber state used to live in its own
 // `subscriptions` collection, written straight from this service via the
@@ -50,7 +51,7 @@ export class SubscriptionService extends BaseService<SubscriptionModel> {
       throw new Error('Failed to subscribe: ' + response.status);
     }
 
-    const result: { subscribed: boolean; alreadySubscribed: boolean } = await response.json();
+    const result: SubscribeToEmailListResult = await response.json();
     if (result.alreadySubscribed) {
       return null;
     }

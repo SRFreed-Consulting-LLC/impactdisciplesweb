@@ -5,6 +5,7 @@ import { PodCastModel } from '@impact-common/shared/models/domain/pod-cast.model
 import { dateFromTimestamp } from '@impact-common/shared/utils/date-from-timestamp';
 import { BaseService } from './base.service';
 import { environment } from 'src/environments/environment';
+import { GetYoutubeVideosResult } from '@impact-common/shared/contract/web-http.types';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,7 @@ export class PodCastService extends BaseService<PodCastModel>{
       throw new Error('Failed to fetch YouTube videos');
     }
 
-    const result = await response.json();
+    const result: GetYoutubeVideosResult = await response.json();
     this.videos.set(result.videos ?? []);
 
     return this.videos();
