@@ -1,10 +1,10 @@
 import { ViewportScroller } from '@angular/common';
-import { toMillis } from 'src/app/common/utils/date-from-timestamp';
+import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PodCastModel } from '@impact-common/shared/models/domain/pod-cast.model';
 import { Pager } from 'src/app/common/models/utils/pager.model';
-import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
+import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { PodCastService } from 'src/app/common/services/data/pod-cast.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { Subject, takeUntil } from 'rxjs';

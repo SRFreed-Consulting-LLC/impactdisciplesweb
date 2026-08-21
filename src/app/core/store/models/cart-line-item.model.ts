@@ -1,4 +1,4 @@
-import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 
 // Client-only view model. Never persisted -- CartService still stores/
 // reads plain CartItem[] (localStorage['cart']) and the checkout Cloud Function still

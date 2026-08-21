@@ -1,6 +1,6 @@
 import { breakoutTitle, breakoutDescription, sameBreakoutSession } from './breakout.util';
-import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
-import { CourseModel } from 'src/app/common/models/domain/course.model';
+import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-item.model';
+import { CourseModel } from '@impact-common/shared/models/domain/course.model';
 
 // Post-Courses-retirement items are self-contained; pre-flatten items lean
 // on their legacy courses/{id} doc. These helpers arbitrate between the two,

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { ProductModel } from '@impact-common/shared/models/utils/product.model';
 import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { ProductService } from 'src/app/common/services/data/product.service';

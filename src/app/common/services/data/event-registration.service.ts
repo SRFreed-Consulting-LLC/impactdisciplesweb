@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
+import { EventRegistrationModel } from '@impact-common/shared/models/domain/event-registration.model';
 import { environment } from 'src/environments/environment';
 import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
 

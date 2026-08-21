@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
-import { FormDefinitionModel } from 'src/app/common/models/domain/form-definition.model';
-import { controlStyleVars, flattenDataFields, FormFieldDef } from 'src/app/common/models/domain/form-field.model';
-import { FormSubmissionModel } from 'src/app/common/models/domain/form-submission.model';
+import { FormDefinitionModel } from '@impact-common/shared/models/domain/form-definition.model';
+import { controlStyleVars, flattenDataFields, FormFieldDef } from '@impact-common/shared/models/domain/form-field.model';
+import { FormSubmissionModel } from '@impact-common/shared/models/domain/form-submission.model';
 import { FormDefinitionService } from 'src/app/common/services/data/form-definition.service';
 import { FormSubmissionService } from 'src/app/common/services/data/form-submission.service';
 import { buildFormGroup } from './build-form-group';

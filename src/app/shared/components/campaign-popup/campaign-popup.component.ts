@@ -4,7 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CampaignPopupService, CampaignPopup, PopupCtaField } from 'src/app/common/services/data/campaign-popup.service';
 import { FormSubmissionService } from 'src/app/common/services/data/form-submission.service';
-import { FormSubmissionModel } from 'src/app/common/models/domain/form-submission.model';
+import { FormSubmissionModel } from '@impact-common/shared/models/domain/form-submission.model';
 
 // Web-campaign popup renderer (Campaign Manager v2, Phase 5) - mounted in
 // the app shell, shows the first ACTIVE campaign popup whose date window

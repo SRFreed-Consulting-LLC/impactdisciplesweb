@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { toMillis } from 'src/app/common/utils/date-from-timestamp';
+import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { PodCastModel } from '@impact-common/shared/models/domain/pod-cast.model';
 
 @Component({

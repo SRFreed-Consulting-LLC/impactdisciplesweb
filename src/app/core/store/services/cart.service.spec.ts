@@ -1,6 +1,6 @@
 import { CartService } from './cart.service';
 import { PricingService } from './pricing.service';
-import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { DialogService } from 'src/app/shared/utils/services/dialog.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 

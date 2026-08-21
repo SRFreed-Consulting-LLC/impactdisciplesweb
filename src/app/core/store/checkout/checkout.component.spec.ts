@@ -1,7 +1,7 @@
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PayPalScriptService } from 'ngx-paypal';
-import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
+import { CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
 import { ShippingService } from 'src/app/common/services/data/shipping.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';

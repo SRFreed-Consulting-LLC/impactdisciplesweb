@@ -1,5 +1,5 @@
 import { ViewportScroller } from '@angular/common';
-import { toMillis } from 'src/app/common/utils/date-from-timestamp';
+import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, switchMap, takeUntil } from 'rxjs';

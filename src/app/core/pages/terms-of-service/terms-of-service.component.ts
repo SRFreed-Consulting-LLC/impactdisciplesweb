@@ -1,4 +1,4 @@
-import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
+import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { Component, OnInit } from '@angular/core';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 

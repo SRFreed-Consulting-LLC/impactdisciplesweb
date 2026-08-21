@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
-import { ImpactTeamMemberModel } from 'src/app/common/models/domain/impact-team-member.model';
+import { ImpactTeamMemberModel } from '@impact-common/shared/models/domain/impact-team-member.model';
 import { BaseService } from './base.service';
 
 @Injectable({

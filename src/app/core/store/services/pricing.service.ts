@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CartItem, CheckoutForm } from 'src/app/common/models/utils/cart.model';
+import { CartItem, CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartLineItem, kindOf } from '../models/cart-line-item.model';
 

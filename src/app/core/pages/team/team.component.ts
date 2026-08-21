@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ImpactTeamMemberModel } from 'src/app/common/models/domain/impact-team-member.model';
+import { ImpactTeamMemberModel } from '@impact-common/shared/models/domain/impact-team-member.model';
 import { ImpactTeamService } from 'src/app/common/services/data/impact-team.service';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';

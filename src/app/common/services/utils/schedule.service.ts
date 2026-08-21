@@ -1,8 +1,8 @@
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
-import { toMillis } from 'src/app/common/utils/date-from-timestamp';
+import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { Injectable } from "@angular/core";
-import { AgendaItem } from "src/app/common/models/domain/utils/agenda-item.model";
-import { EventModel } from 'src/app/common/models/domain/event.model';
+import { AgendaItem } from "@impact-common/shared/models/domain/utils/agenda-item.model";
+import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { ScheduleModel, TimeGroupsModel, UpdatedAgendaItemModel } from 'src/app/common/models/utils/schedule.model';
 
 @Injectable({

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { CoachModel } from 'src/app/common/models/domain/coach.model';
-import { CourseModel } from 'src/app/common/models/domain/course.model';
-import { EventRegistrationModel } from 'src/app/common/models/domain/event-registration.model';
-import { EventModel } from 'src/app/common/models/domain/event.model';
+import { CoachModel } from '@impact-common/shared/models/domain/coach.model';
+import { CourseModel } from '@impact-common/shared/models/domain/course.model';
+import { EventRegistrationModel } from '@impact-common/shared/models/domain/event-registration.model';
+import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { TrainingRoomModel } from '@impact-common/shared/models/domain/training-room.model';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ImpactTeamMemberModel } from 'src/app/common/models/domain/impact-team-member.model';
+import { ImpactTeamMemberModel } from '@impact-common/shared/models/domain/impact-team-member.model';
 import { ImpactTeamService } from 'src/app/common/services/data/impact-team.service';
 import { Subject, takeUntil } from 'rxjs';
 

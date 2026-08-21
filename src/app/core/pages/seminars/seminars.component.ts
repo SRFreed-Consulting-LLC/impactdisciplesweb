@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WebConfigModel } from 'src/app/common/models/utils/web-config.model';
+import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import { UtilsService } from 'src/app/shared/utils/services/utils.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';

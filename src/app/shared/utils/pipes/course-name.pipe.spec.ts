@@ -1,6 +1,6 @@
 import { CourseNamePipe } from './course-name.pipe';
-import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
-import { CourseModel } from 'src/app/common/models/domain/course.model';
+import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-item.model';
+import { CourseModel } from '@impact-common/shared/models/domain/course.model';
 import { CourseService } from 'src/app/common/services/data/course.service';
 
 // Transition shim for the 2026-08 Courses retirement: item text first,

@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { toMillis } from 'src/app/common/utils/date-from-timestamp';
-import { EventModel } from 'src/app/common/models/domain/event.model';
+import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
+import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 
 @Component({

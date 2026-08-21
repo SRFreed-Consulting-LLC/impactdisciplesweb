@@ -1,6 +1,6 @@
 import { VenuePipe } from './venue.pipe';
-import { EventModel } from 'src/app/common/models/domain/event.model';
-import { LocationModel } from 'src/app/common/models/domain/location.model';
+import { EventModel } from '@impact-common/shared/models/domain/event.model';
+import { LocationModel } from '@impact-common/shared/models/domain/location.model';
 import { LocationService } from 'src/app/common/services/data/location.service';
 
 // The pipe's only dependency is LocationService.getByIdCached() -- a plain

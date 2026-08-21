@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
+import { CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
 
 // Client for the two server-side checkout Cloud Functions
 // (create_paypal_order / capture_paypal_order,

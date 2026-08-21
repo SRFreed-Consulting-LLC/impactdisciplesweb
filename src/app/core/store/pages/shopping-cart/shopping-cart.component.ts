@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { CartLineItem } from '../../models/cart-line-item.model';
 import { CartService } from '../../services/cart.service';
 import { PricingService } from '../../services/pricing.service';

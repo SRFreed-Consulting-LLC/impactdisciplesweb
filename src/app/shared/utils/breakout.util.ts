@@ -1,5 +1,5 @@
-import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
-import { CourseModel } from 'src/app/common/models/domain/course.model';
+import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-item.model';
+import { CourseModel } from '@impact-common/shared/models/domain/course.model';
 
 // 2026-08 Courses retirement: a breakout agenda item is self-contained now
 // (`text` = title, `description` = description). These helpers read the

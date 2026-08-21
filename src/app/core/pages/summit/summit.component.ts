@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { toMillis } from 'src/app/common/utils/date-from-timestamp';
+import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { ActivatedRoute } from '@angular/router';
 import { QueryParam, WhereFilterOperandKeys } from 'src/app/common/dao/firebase.dao';
-import { EventModel } from 'src/app/common/models/domain/event.model';
+import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { UtilsService } from 'src/app/shared/utils/services/utils.service';
-import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
-import { CoachModel } from 'src/app/common/models/domain/coach.model';
+import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-item.model';
+import { CoachModel } from '@impact-common/shared/models/domain/coach.model';
 import { CoachService } from 'src/app/common/services/data/coach.service';
 import { EventService } from 'src/app/common/services/data/event.service';
 

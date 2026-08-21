@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { EventModel } from 'src/app/common/models/domain/event.model';
+import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { Address } from '@impact-common/shared/models/domain/utils/address.model';
 import { LocationService } from 'src/app/common/services/data/location.service';
 

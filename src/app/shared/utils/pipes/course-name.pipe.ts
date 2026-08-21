@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
+import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-item.model';
 import { CourseService } from 'src/app/common/services/data/course.service';
 
 // TRANSITION SHIM (2026-08 Courses retirement): takes the whole agenda

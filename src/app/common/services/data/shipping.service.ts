@@ -5,7 +5,7 @@ import { UNIT_OF_MEASURE } from '@impact-common/shared/lists/unit_of_measure.enu
 import { ShippingModel, Package, WeightDetail, ShippingRequest, RateOptions } from '@impact-common/shared/models/domain/shipment.model';
 import { Address } from '@impact-common/shared/models/domain/utils/address.model';
 import { Phone } from '@impact-common/shared/models/domain/utils/phone.model';
-import { CheckoutForm } from 'src/app/common/models/utils/cart.model';
+import { CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
 import { environment } from 'src/environments/environment';
 import { BaseService } from './base.service';
 import { WebConfigService } from './web-config.service';

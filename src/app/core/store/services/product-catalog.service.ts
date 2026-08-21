@@ -4,7 +4,7 @@ import { ProductModel } from '@impact-common/shared/models/utils/product.model';
 import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { SalesService } from 'src/app/common/services/data/sales.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
-import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 
 // Shared home for the browse/filter/pager logic that the original app
 // duplicates verbatim across store.component.ts and e-books.component.ts

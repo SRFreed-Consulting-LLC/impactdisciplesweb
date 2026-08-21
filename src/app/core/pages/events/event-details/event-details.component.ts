@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventModel } from 'src/app/common/models/domain/event.model';
+import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { Subject, filter, firstValueFrom, take, takeUntil } from 'rxjs';
-import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model';
+import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-item.model';
 // Uses the store's cart (not the old, now-retired CartService) so a paid
 // event registration lands in the same cart/checkout the store itself now
 // uses -- /shopping-cart and /checkout are the same routes either way, just
@@ -13,11 +13,11 @@ import { AgendaItem } from 'src/app/common/models/domain/utils/agenda-item.model
 // handling), so this is a drop-in swap: same addCartProduct()/
 // clearCartNoConfirmation() calls, same CartItem shape.
 import { CartService } from 'src/app/core/store/services/cart.service';
-import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
-import { dateFromTimestamp, toMillis } from 'src/app/common/utils/date-from-timestamp';
+import { dateFromTimestamp, toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 

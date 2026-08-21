@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FormFieldDef, isLayoutFieldType } from 'src/app/common/models/domain/form-field.model';
+import { FormFieldDef, isLayoutFieldType } from '@impact-common/shared/models/domain/form-field.model';
 
 // Ported from the sibling impactdisciples-admin repo's file of the same
 // name (src/app/shared/form-renderer/build-form-group.ts) - identical

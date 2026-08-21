@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { Offcanvas } from 'bootstrap';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { CartItem } from 'src/app/common/models/utils/cart.model';
+import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { CartLineItem } from '../models/cart-line-item.model';
 import { CartService } from '../services/cart.service';
 import { CART_OPEN_DRAWER_EVENT } from '../services/cart-events';
