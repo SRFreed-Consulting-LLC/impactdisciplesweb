@@ -1,0 +1,26 @@
+<app-home-header></app-home-header>
+
+@if (page$ | async; as page) {
+  <main class="form-page">
+    <app-breadcrumb
+      [currentPageName]="page.currentPageName"
+      [previousLinkName]="page.previousLinkName"
+      [previousLink]="page.previousLink"></app-breadcrumb>
+
+    <section class="form-page__area pb-100 mt-30">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div [class]="page.columnClass">
+            <div class="form-page__info">
+              <app-dynamic-form
+                [formId]="page.formId"
+                [submitButtonText]="page.submitButtonText"></app-dynamic-form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+}
+
+<app-footer></app-footer>
