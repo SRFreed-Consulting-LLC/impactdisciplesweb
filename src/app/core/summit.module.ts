@@ -9,7 +9,8 @@ import { SummitComponent } from "./pages/summit/summit.component";
 const routes: Routes = [
   {
     path: 'summit/:year',
-    component: SummitComponent
+    component: SummitComponent,
+    title: 'Summit'
   },
   {
     // Same component, isActive filter lifted - see SummitComponent.

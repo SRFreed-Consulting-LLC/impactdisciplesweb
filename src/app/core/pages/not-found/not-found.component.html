@@ -1,0 +1,30 @@
+<app-home-header></app-home-header>
+
+<main class="not-found">
+  <app-breadcrumb
+    [currentPageName]="'Page Not Found'"
+    [previousLinkName]="'Home'"
+    [previousLink]="'/'"></app-breadcrumb>
+
+  <section class="not-found__area pb-100 mt-30">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-8 text-center">
+          <h2>We couldn't find that page</h2>
+          <p class="mt-20">
+            The link may be out of date, or the page may have moved. Here are
+            a few places to pick up from:
+          </p>
+          <ul class="list-unstyled mt-20">
+            <li><a routerLink="/">Home</a></li>
+            <li><a routerLink="/events">Upcoming Training</a></li>
+            <li><a routerLink="/store">Store</a></li>
+            <li><a routerLink="/contact">Contact us</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

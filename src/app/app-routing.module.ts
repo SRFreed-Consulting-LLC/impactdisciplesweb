@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { RouterModule, Routes, UrlSegment } from '@angular/router';
 
 // Each route group below is lazy-loaded via loadChildren so a visitor only
@@ -62,6 +63,15 @@ const routes: Routes = [
   {
     matcher: firstSegmentMatcher(['summit', 'summit-preview']),
     loadChildren: () => import('./core/summit.module').then(m => m.SummitFeatureModule)
+  },
+  {
+    // Wildcard, and it must stay last: the router takes the first match,
+    // so anything below the lazy groups above would shadow them. Before
+    // this existed an unknown URL matched nothing at all and rendered a
+    // blank page with no header, no footer and no way back.
+    path: '**',
+    component: NotFoundComponent,
+    title: 'Page Not Found'
   }
 ];
 

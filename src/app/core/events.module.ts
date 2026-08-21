@@ -12,7 +12,8 @@ import { BreakoutSessionsComponent } from "./pages/schedule/breakout-sessions/br
 const routes: Routes = [
   {
     path: 'events',
-    component: EventsComponent
+    component: EventsComponent,
+    title: 'Upcoming Training'
   },
   {
     path: 'event-details/:id',

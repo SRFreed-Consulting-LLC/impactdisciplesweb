@@ -9,7 +9,8 @@ import { TeamDetailsComponent } from "./pages/team/team-details/team-details.com
 const routes: Routes = [
   {
     path: 'team',
-    component: TeamComponent
+    component: TeamComponent,
+    title: 'Team'
   },
   {
     path: 'team-details/:id',

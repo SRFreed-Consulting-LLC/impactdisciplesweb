@@ -28,13 +28,19 @@ import { PrayerTeamComponent } from "./pages/prayer-team/prayer-team.component";
 // live page, so the spec asserts against the real route table rather than
 // a copy of it.
 export const routes: Routes = [
-  { path: 'about-us', component: AboutUsComponent },
-  { path: 'contact', component: ContactComponent },
-  { path: 'newsletter', component: NewsletterComponent },
-  { path: 'give', component: GiveComponent },
-  { path: 'seminars', component: SeminarsComponent },
+  { path: 'about-us', component: AboutUsComponent,
+    title: 'About Us' },
+  { path: 'contact', component: ContactComponent,
+    title: 'Contact' },
+  { path: 'newsletter', component: NewsletterComponent,
+    title: 'Newsletter' },
+  { path: 'give', component: GiveComponent,
+    title: 'Donate' },
+  { path: 'seminars', component: SeminarsComponent,
+    title: 'Seminars' },
   {
     path: 'seminar-form', component: FormPageComponent,
+    title: 'Seminar Request Form',
     data: {
       formId: 'SEp1UJlYaFDz50Nfe5Hh',
       submitButtonText: 'Request to Book a Seminar',
@@ -44,14 +50,21 @@ export const routes: Routes = [
       columnClass: 'col-xl-8 col-lg-8'
     } as FormPageData
   },
-  { path: 'equipping-groups', component: EquippingGroupsComponent },
-  { path: 'equipping-groups-pastors', component: EquippingGroupsPastorsComponent },
-  { path: 'equipping-groups-leaders', component: EquippingGroupsLeadersComponent },
-  { path: 'equipping-groups-churches', component: EquippingGroupsChurchesComponent },
-  { path: 'coaching-with-impact', component: CoachingWithImpactComponent },
-  { path: 'lunch-and-learns', component: LunchAndLearnComponent },
+  { path: 'equipping-groups', component: EquippingGroupsComponent,
+    title: 'Equipping Groups' },
+  { path: 'equipping-groups-pastors', component: EquippingGroupsPastorsComponent,
+    title: 'Equipping Groups for Pastors' },
+  { path: 'equipping-groups-leaders', component: EquippingGroupsLeadersComponent,
+    title: 'Equipping Groups for Leaders' },
+  { path: 'equipping-groups-churches', component: EquippingGroupsChurchesComponent,
+    title: 'Equipping Groups for Churches' },
+  { path: 'coaching-with-impact', component: CoachingWithImpactComponent,
+    title: 'Coaching with Impact' },
+  { path: 'lunch-and-learns', component: LunchAndLearnComponent,
+    title: 'Lunch and Learns' },
   {
     path: 'lunch-and-learn-form', component: FormPageComponent,
+    title: 'Lunch and Learn Request Form',
     data: {
       formId: 'pgo4i6DO4Fnhc8KmqzWa',
       submitButtonText: 'Request to Book a Lunch and Learn',
@@ -61,11 +74,15 @@ export const routes: Routes = [
       columnClass: 'col-xl-6 col-lg-6'
     } as FormPageData
   },
-  { path: 'private-policy', component: PrivatePolicyComponent },
-  { path: 'terms', component: TermsOfServiceComponent },
-  { path: 'customer-reviews', component: CustomerReviewsComponent },
+  { path: 'private-policy', component: PrivatePolicyComponent,
+    title: 'Private Policy' },
+  { path: 'terms', component: TermsOfServiceComponent,
+    title: 'Terms of Service' },
+  { path: 'customer-reviews', component: CustomerReviewsComponent,
+    title: 'Customer Reviews' },
   {
     path: 'consultation-survey', component: FormPageComponent,
+    title: 'Consultation Survey',
     data: {
       formId: '9qzHMji0Lc1LtVvgAZpk',
       submitButtonText: 'Submit Free Consultation',
@@ -75,9 +92,11 @@ export const routes: Routes = [
       columnClass: 'col-xl-10 col-lg-10'
     } as FormPageData
   },
-  { path: 'monthly-newsletter', component: MonthlyNewsletterComponent },
+  { path: 'monthly-newsletter', component: MonthlyNewsletterComponent,
+    title: 'Monthly Newsletter' },
   { path: 'monthly-newsletter/:id', component: NewsletterViewComponent },
-  { path: 'prayer-team', component: PrayerTeamComponent }
+  { path: 'prayer-team', component: PrayerTeamComponent,
+    title: 'Prayer Team' }
 ];
 
 @NgModule({

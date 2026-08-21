@@ -13,11 +13,13 @@ import { PodcastPostboxItemComponent } from "./pages/podcasts/podcast-postbox-it
 const routes: Routes = [
   {
     path: 'disciple-making-minute',
-    component: BlogComponent
+    component: BlogComponent,
+    title: 'Disciple-Making Minute'
   },
   {
     path: 'podcasts',
-    component: PodcastsComponent
+    component: PodcastsComponent,
+    title: 'Podcasts'
   }
 ];
 
