@@ -9,10 +9,10 @@
             <form (ngSubmit)="handleFormSubmit()">
               <div class="row d-flex justify-content-center">
                 <div class="col-lg-3 col-xs-12">                  
-                  <input required type="name" name="name" [(ngModel)]="subscription.firstName" placeholder="First Name">
+                  <input required type="name" name="firstName" [(ngModel)]="subscription.firstName" placeholder="First Name">
                 </div>
                 <div class="col-lg-3">
-                  <input required type="name" name="name" [(ngModel)]="subscription.lastName" placeholder="Last Name">
+                  <input required type="name" name="lastName" [(ngModel)]="subscription.lastName" placeholder="Last Name">
                 </div>
               </div>
               <div class="row d-flex justify-content-center">
@@ -26,30 +26,6 @@
                 </div>
               </div>
             </form>
-            <!-- <form (ngSubmit)="handleFormSubmit()">
-              <div class="row">
-                <div class="col-3"></div>
-                <div class="col-3">
-                  <input required type="name" name="name" [(ngModel)]="subscription.firstName" placeholder="First Name">
-                </div>
-                <div class="col-3">
-                  <input required type="name" name="name" [(ngModel)]="subscription.lastName" placeholder="Last Name">
-                </div>
-                <div class="col-3"></div>
-              </div>
-              <div class="row">
-                <div class="col-3"></div>
-                <div class="col-6">
-                  <input required type="email" name="email" [(ngModel)]="subscription.email" placeholder="Email">
-                </div>
-                <div class="col-3"></div>
-              </div>
-              <div class="row">
-                <div class="col-12 text-center">
-                  <button class="subscribe__button os-btn os-btn-2 os-btn-3" type="submit">subscribe</button>
-                </div>
-              </div>
-            </form> -->
           </div>
         </div>
       </div>
