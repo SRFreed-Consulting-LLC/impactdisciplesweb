@@ -93,10 +93,10 @@ There is no test coverage yet — Karma/Jasmine are configured but no
 Tracked from an internal audit; sequenced roughly by effort, not skipped for
 lack of importance:
 
-- **Firestore rules are wide open** (`allow read, write: if true`) —
-  the single highest-priority item, not yet addressed.
-- **No standalone components / new control-flow syntax** — a deliberate,
-  large migration, not started.
+- **Firestore rules** — no longer wide open (fixed 2026-08-17): the admin
+  repo owns the one unified ruleset; this repo deploys hosting only.
+- **No standalone components / `inject()`** — deliberate (see CLAUDE.md);
+  the `@if`/`@for` control-flow migration IS done and enforced by lint.
 - **`strictNullChecks`/`noImplicitAny` are disabled** in `tsconfig.json`
   despite `strict: true` being set — re-enabling surfaces ~900 compile
   errors across the codebase (measured, not yet fixed).
