@@ -1,34 +1,35 @@
 ﻿import { FIREBASE_PROJECTS, functionUrl } from '@impact-common/shared/config/firebase-projects';
+import { HTTP_FUNCTIONS } from '@impact-common/shared/contract/functions-contract';
 
 export const environment = {
   production: true,
   useEmulators: false,
   firebaseConfig: FIREBASE_PROJECTS.prod,
   domain: 'https://impactdisciples.com',
-  createPaypalOrderUrl: functionUrl('prod', 'create_paypal_order'),
-  capturePaypalOrderUrl: functionUrl('prod', 'capture_paypal_order'),
-  shippingUrl: functionUrl('prod', 'get_shipping_rates'),
-  youtubeVideosUrl: functionUrl('prod', 'get_youtube_videos_public'),
+  createPaypalOrderUrl: functionUrl('prod', HTTP_FUNCTIONS.create_paypal_order),
+  capturePaypalOrderUrl: functionUrl('prod', HTTP_FUNCTIONS.capture_paypal_order),
+  shippingUrl: functionUrl('prod', HTTP_FUNCTIONS.get_shipping_rates),
+  youtubeVideosUrl: functionUrl('prod', HTTP_FUNCTIONS.get_youtube_videos_public),
 
-  lookupCouponUrl: functionUrl('prod', 'lookup_coupon'),
-
-
-  registerForEventUrl: functionUrl('prod', 'register_for_event'),
+  lookupCouponUrl: functionUrl('prod', HTTP_FUNCTIONS.lookup_coupon),
 
 
-  getEventRegistrationUrl: functionUrl('prod', 'get_event_registration'),
+  registerForEventUrl: functionUrl('prod', HTTP_FUNCTIONS.register_for_event),
 
 
-  updateMySessionsUrl: functionUrl('prod', 'update_my_sessions'),
+  getEventRegistrationUrl: functionUrl('prod', HTTP_FUNCTIONS.get_event_registration),
 
 
-  checkRegistrationExistsUrl: functionUrl('prod', 'check_registration_exists'),
+  updateMySessionsUrl: functionUrl('prod', HTTP_FUNCTIONS.update_my_sessions),
 
 
-  getSessionCountsUrl: functionUrl('prod', 'get_session_counts'),
-  subscribeUrl: functionUrl('prod', 'subscribe_to_email_list'),
-  campaignWebEventUrl: functionUrl('prod', 'campaign_web_event'),
-  newsletterArchiveUrl: functionUrl('prod', 'newsletter_archive'),
+  checkRegistrationExistsUrl: functionUrl('prod', HTTP_FUNCTIONS.check_registration_exists),
+
+
+  getSessionCountsUrl: functionUrl('prod', HTTP_FUNCTIONS.get_session_counts),
+  subscribeUrl: functionUrl('prod', HTTP_FUNCTIONS.subscribe_to_email_list),
+  campaignWebEventUrl: functionUrl('prod', HTTP_FUNCTIONS.campaign_web_event),
+  newsletterArchiveUrl: functionUrl('prod', HTTP_FUNCTIONS.newsletter_archive),
   oneGiftUrl: 'https://buy.stripe.com/4gwcOI5sY1zq2JieUW',
   monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',
   impactPartnersGiftUrl: 'https://www.paypal.com/donate/?hosted_button_id=J5PJN3ZD8EZ4A&source=url',

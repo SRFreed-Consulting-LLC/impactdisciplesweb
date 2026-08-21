@@ -1,4 +1,5 @@
 import { FIREBASE_PROJECTS, functionUrl } from '@impact-common/shared/config/firebase-projects';
+import { HTTP_FUNCTIONS } from '@impact-common/shared/contract/functions-contract';
 
 // Firebase EMULATOR SUITE configuration - used only by the cross-app test
 // program (`npm run start-emu`; the emulator stack itself is owned and
@@ -18,19 +19,19 @@ export const environment = {
   useEmulators: true,
   firebaseConfig: FIREBASE_PROJECTS.emulator,
   domain: 'http://localhost:4200',
-  createPaypalOrderUrl: functionUrl('emulator', 'create_paypal_order'),
-  capturePaypalOrderUrl: functionUrl('emulator', 'capture_paypal_order'),
-  shippingUrl: functionUrl('emulator', 'get_shipping_rates'),
-  youtubeVideosUrl: functionUrl('emulator', 'get_youtube_videos_public'),
-  lookupCouponUrl: functionUrl('emulator', 'lookup_coupon'),
-  registerForEventUrl: functionUrl('emulator', 'register_for_event'),
-  getEventRegistrationUrl: functionUrl('emulator', 'get_event_registration'),
-  updateMySessionsUrl: functionUrl('emulator', 'update_my_sessions'),
-  checkRegistrationExistsUrl: functionUrl('emulator', 'check_registration_exists'),
-  getSessionCountsUrl: functionUrl('emulator', 'get_session_counts'),
-  subscribeUrl: functionUrl('emulator', 'subscribe_to_email_list'),
-  campaignWebEventUrl: functionUrl('emulator', 'campaign_web_event'),
-  newsletterArchiveUrl: functionUrl('emulator', 'newsletter_archive'),
+  createPaypalOrderUrl: functionUrl('emulator', HTTP_FUNCTIONS.create_paypal_order),
+  capturePaypalOrderUrl: functionUrl('emulator', HTTP_FUNCTIONS.capture_paypal_order),
+  shippingUrl: functionUrl('emulator', HTTP_FUNCTIONS.get_shipping_rates),
+  youtubeVideosUrl: functionUrl('emulator', HTTP_FUNCTIONS.get_youtube_videos_public),
+  lookupCouponUrl: functionUrl('emulator', HTTP_FUNCTIONS.lookup_coupon),
+  registerForEventUrl: functionUrl('emulator', HTTP_FUNCTIONS.register_for_event),
+  getEventRegistrationUrl: functionUrl('emulator', HTTP_FUNCTIONS.get_event_registration),
+  updateMySessionsUrl: functionUrl('emulator', HTTP_FUNCTIONS.update_my_sessions),
+  checkRegistrationExistsUrl: functionUrl('emulator', HTTP_FUNCTIONS.check_registration_exists),
+  getSessionCountsUrl: functionUrl('emulator', HTTP_FUNCTIONS.get_session_counts),
+  subscribeUrl: functionUrl('emulator', HTTP_FUNCTIONS.subscribe_to_email_list),
+  campaignWebEventUrl: functionUrl('emulator', HTTP_FUNCTIONS.campaign_web_event),
+  newsletterArchiveUrl: functionUrl('emulator', HTTP_FUNCTIONS.newsletter_archive),
   oneGiftUrl: 'https://example.test/one-gift',
   monthlyGiftUrl: 'https://example.test/monthly-gift',
   impactPartnersGiftUrl: 'https://example.test/partners-gift',
