@@ -120,7 +120,9 @@ export class ProductCatalogService {
       size: opts?.size,
       color: opts?.color,
       language: opts?.language,
-      followUpEmailId: product.sendFollowUpEmail && product.followUpEmailId ? product.followUpEmailId : ''
+      followUpEmailId: product.sendFollowUpEmail && product.followUpEmailId ? product.followUpEmailId : '',
+      // Travels with the line so checkout can match a series-targeted offer.
+      series: product.series ?? null
     };
   }
 
