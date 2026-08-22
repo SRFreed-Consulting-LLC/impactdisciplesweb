@@ -90,10 +90,10 @@ export class StoreComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.catalog.getActiveSales().then(sales => {
+    this.catalog.getActiveOffers().then(offers => {
       this.productService.streamAllByValue('isActive', true).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(products => {
         this.products = products;
-        this.catalog.applyActiveProductSale(this.products, sales);
+        this.catalog.applyActiveOffers(this.products, offers);
         this.applyCategoryFromUrl();
       });
     });

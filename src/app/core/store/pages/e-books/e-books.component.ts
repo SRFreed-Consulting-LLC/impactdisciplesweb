@@ -58,12 +58,12 @@ export class EBooksComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.catalog.getActiveSales().then(sales => {
+    this.catalog.getActiveOffers().then(offers => {
       const queries: QueryParam[] = [new QueryParam('isEBook', WhereFilterOperandKeys.equal, true)];
 
       this.productService.queryAllByMultiValue(queries).then(products => {
         this.products = products;
-        this.catalog.applyActiveProductSale(this.products, sales);
+        this.catalog.applyActiveOffers(this.products, offers);
         this.setProducts(this.products);
       });
     });

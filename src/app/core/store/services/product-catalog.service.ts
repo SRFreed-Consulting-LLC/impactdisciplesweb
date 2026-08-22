@@ -5,6 +5,12 @@ import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { SalesService } from 'src/app/common/services/data/sales.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
+import {
+  CampaignOfferModel,
+  bestOfferPrice
+} from '@impact-common/shared/models/utils/campaign-offer.model';
+import { CampaignOfferService } from 'src/app/common/services/data/campaign-offer.service';
+import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
 
 // Shared home for the browse/filter/pager logic that the original app
 // duplicates verbatim across store.component.ts and e-books.component.ts
@@ -26,7 +32,21 @@ export class ProductCatalogService {
   // session-lived-singleton reasoning.
   private cachedActiveSales: Promise<SaleModel[]> | null = null;
 
-  constructor(private salesService: SalesService) {}
+  constructor(
+    private salesService: SalesService,
+    private offerService: CampaignOfferService,
+    private attributionService: AttributionService
+  ) {}
+
+  /**
+   * Every currently-active campaign offer (Campaign Manager v3).
+   *
+   * Cached in CampaignOfferService itself rather than here - unlike sales,
+   * offers are read by pages outside the store too.
+   */
+  getActiveOffers(): Promise<CampaignOfferModel[]> {
+    return this.offerService.getActiveOffers();
+  }
 
   async getActiveSales(): Promise<SaleModel[]> {
     if (!this.cachedActiveSales) {
@@ -43,16 +63,42 @@ export class ProductCatalogService {
     return this.cachedActiveSales;
   }
 
-  /** Mutates each product's salePrice in place from the first active
-   *  isProducts sale found, matching the original store's behavior --
-   *  request-scoped, never persisted back to Firestore. */
-  applyActiveProductSale(products: ProductModel[], activeSales: SaleModel[]): void {
-    const productSale = activeSales.find(sale => sale.isProducts);
-    if (!productSale) return;
+  /**
+   * Mutates each product's salePrice in place from the campaign offers that
+   * actually reach it - request-scoped, never persisted back to Firestore.
+   *
+   * Replaces applyActiveProductSale(), which took the FIRST active isProducts
+   * sale and rewrote EVERY product's price from it: a product nobody put on
+   * sale still got discounted, a second active sale was silently ignored, and
+   * a product's own salePrice was overwritten either way.
+   *
+   * A product with no applicable offer is now left ALONE rather than assigned
+   * a price, so an untargeted product keeps its base cost.
+   *
+   * Which offers reach a product is decided by the shared bestOfferPrice() -
+   * the same function the admin previews with, so the two cannot disagree
+   * about what a shopper is charged. Attribution is passed through for offers
+   * only visible to visitors who arrived via the campaign link (the event
+   * early-bird rule).
+   */
+  applyActiveOffers(products: ProductModel[], offers: CampaignOfferModel[]): void {
+    if (!offers?.length) {
+      return;
+    }
+    const now = Date.now();
+    const attributedCampaignId = this.attributionService.get()?.campaignId ?? null;
 
-    const percentOff = NumberUtil.clampPercent(productSale.percentOff);
     products.forEach(product => {
-      product.salePrice = product.cost - (percentOff / 100 * product.cost);
+      const price = bestOfferPrice(
+        offers,
+        { kind: 'product', id: product.id ?? '', series: product.series ?? null },
+        NumberUtil.isNumber(product.cost) ? product.cost : 0,
+        now,
+        attributedCampaignId
+      );
+      if (price !== null) {
+        product.salePrice = price;
+      }
     });
   }
 

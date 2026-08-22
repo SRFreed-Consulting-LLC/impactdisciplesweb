@@ -38,17 +38,17 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalog.getActiveSales().then(sales => {
+    this.catalog.getActiveOffers().then(offers => {
       this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
         const productId = params['id'];
         if (productId) {
-          this.loadProductDetails(productId, sales);
+          this.loadProductDetails(productId, offers);
         }
       });
     });
   }
 
-  private loadProductDetails(productId: string, sales: SaleModel[]): void {
+  private loadProductDetails(productId: string, offers: CampaignOfferModel[]): void {
     this.productService.streamById(productId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(products => {
       this.product = products[0];
 
@@ -61,7 +61,7 @@ export class ProductDetailsComponent implements OnInit {
         return;
       }
 
-      this.catalog.applyActiveProductSale([this.product], sales);
+      this.catalog.applyActiveOffers([this.product], offers);
       this.cartItem = this.catalog.productToCartItem(this.product);
 
       this.loadRelatedProducts();

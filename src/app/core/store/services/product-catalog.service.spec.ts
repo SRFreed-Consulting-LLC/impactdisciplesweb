@@ -2,6 +2,9 @@ import { ProductModel } from '@impact-common/shared/models/utils/product.model';
 import { UNIT_OF_MEASURE } from '@impact-common/shared/lists/unit_of_measure.enum';
 import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { SalesService } from 'src/app/common/services/data/sales.service';
+import { CampaignOfferModel } from '@impact-common/shared/models/utils/campaign-offer.model';
+import { CampaignOfferService } from 'src/app/common/services/data/campaign-offer.service';
+import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
 import { ProductCatalogService } from './product-catalog.service';
 
 // ProductCatalogService is the shared home for the browse/filter/pager logic
@@ -48,6 +51,46 @@ function product(overrides: Partial<ProductModel> = {}): ProductModel {
   return { id: 'p1', title: 'Product', cost: 20, ...overrides } as ProductModel;
 }
 
+function offer(overrides: Partial<CampaignOfferModel> = {}): CampaignOfferModel {
+  return {
+    campaignId: 'camp-1',
+    target: { kind: 'product', id: 'p1' },
+    discount: { type: 'percentOff', value: 10 },
+    freeShipping: false,
+    isActive: true,
+    startsAt: null,
+    endsAt: null,
+    requiresAttribution: false,
+    ...overrides
+  } as CampaignOfferModel;
+}
+
+/** Offers are read through CampaignOfferService, which does its own caching. */
+function offerServiceReturning(offers: CampaignOfferModel[]): CampaignOfferService {
+  return {
+    getActiveOffers: () => Promise.resolve(offers)
+  } as unknown as CampaignOfferService;
+}
+
+/** Attribution only matters to offers that require it (the early-bird rule). */
+function attributionOf(campaignId: string | null): AttributionService {
+  return {
+    get: () => (campaignId ? { campaignId } : null)
+  } as unknown as AttributionService;
+}
+
+function makeCatalog(
+  sales: SaleModel[] = [],
+  offers: CampaignOfferModel[] = [],
+  attributedCampaignId: string | null = null
+): ProductCatalogService {
+  return new ProductCatalogService(
+    salesServiceReturning(sales).service,
+    offerServiceReturning(offers),
+    attributionOf(attributedCampaignId)
+  );
+}
+
 describe('ProductCatalogService', () => {
   describe('getActiveSales', () => {
     it('keeps only sales whose window contains today', async () => {
@@ -65,14 +108,18 @@ describe('ProductCatalogService', () => {
       const live = sale({ name: 'live' });
 
       const { service } = salesServiceReturning([past, future, live]);
-      const sales = await new ProductCatalogService(service).getActiveSales();
+      const sales = await makeCatalog([past, future, live]).getActiveSales();
 
       expect(sales.map(s => s.name)).toEqual(['live']);
     });
 
     it('queries the sales collection once and caches the result', async () => {
       const { service, calls } = salesServiceReturning([sale()]);
-      const catalog = new ProductCatalogService(service);
+      const catalog = new ProductCatalogService(
+        service,
+        offerServiceReturning([]),
+        attributionOf(null)
+      );
 
       await catalog.getActiveSales();
       await catalog.getActiveSales();
@@ -82,59 +129,87 @@ describe('ProductCatalogService', () => {
     });
   });
 
-  describe('applyActiveProductSale', () => {
-    let catalog: ProductCatalogService;
+  describe('applyActiveOffers', () => {
+    // Replaces applyActiveProductSale. The behaviour differences are the point:
+    // the old version rewrote EVERY product from the first active sale, so a
+    // product nobody targeted was still discounted and a second live sale was
+    // silently ignored. Pricing itself is pinned in the shared
+    // campaign-offer.model spec - what is pinned HERE is which products get
+    // touched at all.
 
-    beforeEach(() => {
-      catalog = new ProductCatalogService(salesServiceReturning([]).service);
-    });
+    it('prices a product its offer targets, in place', () => {
+      const catalog = makeCatalog();
+      const products = [product({ cost: 20 })];
 
-    it('sets salePrice from the first isProducts sale, in place', () => {
-      const products = [product({ cost: 20 }), product({ cost: 15 })];
-      catalog.applyActiveProductSale(products, [sale({ percentOff: 25 })]);
+      catalog.applyActiveOffers(products, [offer({ discount: { type: 'percentOff', value: 25 } })]);
 
       expect(products[0].salePrice).toBe(15);
-      expect(products[1].salePrice).toBe(11.25);
     });
 
-    it('ignores sales that are not product sales', () => {
-      const products = [product({ cost: 20 })];
-      catalog.applyActiveProductSale(products, [
-        sale({ isProducts: false, isShipping: true, percentOff: 50 })
+    it('leaves an untargeted product alone instead of discounting it', () => {
+      // The v2 bug: a global sale set salePrice on every product in the list.
+      const catalog = makeCatalog();
+      const products = [product({ id: 'p1', cost: 20 }), product({ id: 'p2', cost: 30 })];
+
+      catalog.applyActiveOffers(products, [offer({ target: { kind: 'product', id: 'p1' } })]);
+
+      expect(products[0].salePrice).toBe(18);
+      expect(products[1].salePrice).toBeUndefined();
+    });
+
+    it('prices every product in a targeted series', () => {
+      const catalog = makeCatalog();
+      const products = [
+        product({ id: 'p1', cost: 20, series: 'ser-1' }),
+        product({ id: 'p2', cost: 40, series: 'ser-1' }),
+        product({ id: 'p3', cost: 50, series: 'ser-2' })
+      ];
+
+      catalog.applyActiveOffers(products, [
+        offer({ target: { kind: 'series', id: 'ser-1' }, discount: { type: 'percentOff', value: 50 } })
       ]);
+
+      expect(products[0].salePrice).toBe(10);
+      expect(products[1].salePrice).toBe(20);
+      expect(products[2].salePrice).toBeUndefined();
+    });
+
+    it('takes the best of several live offers, not the first', () => {
+      const catalog = makeCatalog();
+      const products = [product({ cost: 20 })];
+
+      catalog.applyActiveOffers(products, [
+        offer({ campaignId: 'a', discount: { type: 'percentOff', value: 10 } }),
+        offer({ campaignId: 'b', discount: { type: 'percentOff', value: 50 } })
+      ]);
+
+      expect(products[0].salePrice).toBe(10);
+    });
+
+    it('withholds an attribution-gated offer from an unattributed visitor', () => {
+      const catalog = makeCatalog([], [], null);
+      const products = [product({ cost: 20 })];
+
+      catalog.applyActiveOffers(products, [offer({ requiresAttribution: true })]);
 
       expect(products[0].salePrice).toBeUndefined();
     });
 
-    it('uses the FIRST product sale when several are live', () => {
+    it('applies an attribution-gated offer to a visitor from that campaign', () => {
+      const catalog = makeCatalog([], [], 'camp-1');
       const products = [product({ cost: 20 })];
-      catalog.applyActiveProductSale(products, [
-        sale({ name: 'first', percentOff: 10 }),
-        sale({ name: 'second', percentOff: 50 })
-      ]);
+
+      catalog.applyActiveOffers(products, [offer({ requiresAttribution: true })]);
 
       expect(products[0].salePrice).toBe(18);
     });
 
-    it('clamps an out-of-range or non-numeric percentOff instead of trusting it', () => {
-      // Defence in depth for records written before the admin dialog
-      // validated 0-100 (see NumberUtil.clampPercent).
-      const over = [product({ cost: 20 })];
-      catalog.applyActiveProductSale(over, [sale({ percentOff: 150 })]);
-      expect(over[0].salePrice).toBe(0); // clamped to 100% off, never negative
-
-      const under = [product({ cost: 20 })];
-      catalog.applyActiveProductSale(under, [sale({ percentOff: -50 })]);
-      expect(under[0].salePrice).toBe(20); // clamped to 0% off
-
-      const bad = [product({ cost: 20 })];
-      catalog.applyActiveProductSale(bad, [sale({ percentOff: null })]);
-      expect(bad[0].salePrice).toBe(20);
-    });
-
-    it('does nothing when there are no active sales', () => {
+    it('does nothing when there are no active offers', () => {
+      const catalog = makeCatalog();
       const products = [product({ cost: 20 })];
-      catalog.applyActiveProductSale(products, []);
+
+      catalog.applyActiveOffers(products, []);
+
       expect(products[0].salePrice).toBeUndefined();
     });
   });
@@ -143,7 +218,7 @@ describe('ProductCatalogService', () => {
     let catalog: ProductCatalogService;
 
     beforeEach(() => {
-      catalog = new ProductCatalogService(salesServiceReturning([]).service);
+      catalog = makeCatalog();
     });
 
     it('maps a product to a single-quantity cart item', () => {
@@ -209,7 +284,7 @@ describe('ProductCatalogService', () => {
     let catalog: ProductCatalogService;
 
     beforeEach(() => {
-      catalog = new ProductCatalogService(salesServiceReturning([]).service);
+      catalog = makeCatalog();
     });
 
     it('sorts by title, price ascending and price descending without mutating the input', () => {
@@ -260,7 +335,7 @@ describe('ProductCatalogService', () => {
     let catalog: ProductCatalogService;
 
     beforeEach(() => {
-      catalog = new ProductCatalogService(salesServiceReturning([]).service);
+      catalog = makeCatalog();
     });
 
     it('shows every page when there are 5 or fewer', () => {
