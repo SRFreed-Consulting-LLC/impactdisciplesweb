@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Pager } from 'src/app/common/models/utils/pager.model';
 import { ProductModel } from '@impact-common/shared/models/utils/product.model';
-import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
-import { SalesService } from 'src/app/common/services/data/sales.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import {
@@ -18,22 +16,10 @@ import { AttributionService } from 'src/app/shared/utils/services/attribution.se
 // store-postbox-item.component.ts / product-details.component.ts
 // (CartItem-from-ProductModel construction). store's own
 // StoreComponent and EBooksComponent both orchestrate over this
-// instead of each carrying their own copy. Only reads existing
-// SalesService/ProductModel/CartItem -- none of them are modified.
+// instead of each carrying their own copy.
 @Injectable({ providedIn: 'root' })
 export class ProductCatalogService {
-  // getActiveSales() used to be called independently (a full Firestore
-  // query, no caching) from every page that needs it -- store, e-books,
-  // product-details, and checkout (which had its own hand-duplicated copy
-  // of this exact method instead of calling it at all). A single
-  // browse-to-checkout session could trigger up to 4 redundant reads of
-  // the same `sales` collection. Cached the same way WebConfigService
-  // already caches config -- see that service's own comment for the
-  // session-lived-singleton reasoning.
-  private cachedActiveSales: Promise<SaleModel[]> | null = null;
-
   constructor(
-    private salesService: SalesService,
     private offerService: CampaignOfferService,
     private attributionService: AttributionService
   ) {}
@@ -41,26 +27,11 @@ export class ProductCatalogService {
   /**
    * Every currently-active campaign offer (Campaign Manager v3).
    *
-   * Cached in CampaignOfferService itself rather than here - unlike sales,
-   * offers are read by pages outside the store too.
+   * Cached in CampaignOfferService itself rather than here, since offers are
+   * read by pages outside the store too.
    */
   getActiveOffers(): Promise<CampaignOfferModel[]> {
     return this.offerService.getActiveOffers();
-  }
-
-  async getActiveSales(): Promise<SaleModel[]> {
-    if (!this.cachedActiveSales) {
-      this.cachedActiveSales = this.salesService.getAllByValue('isActive', true).then(sales => {
-        const today = new Date();
-        return sales.filter(sale => {
-          const startDate = new Date(sale.startDate as string);
-          const endDate = new Date(sale.endDate as string);
-          return startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime();
-        });
-      });
-    }
-
-    return this.cachedActiveSales;
   }
 
   /**

@@ -3,10 +3,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { ProductModel } from '@impact-common/shared/models/utils/product.model';
-import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { ProductService } from 'src/app/common/services/data/product.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartService } from '../../services/cart.service';
+import { CampaignOfferModel } from '@impact-common/shared/models/utils/campaign-offer.model';
 import { ProductCatalogService } from '../../services/product-catalog.service';
 
 // Copy of the original product-details.component.ts. The duplicated

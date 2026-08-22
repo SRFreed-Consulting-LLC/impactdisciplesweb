@@ -3,13 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IOnApproveCallbackData, IPayPalConfig, PayPalScriptService } from 'ngx-paypal';
 import { CartItem, CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
-import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { ShippingService } from 'src/app/common/services/data/shipping.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { EnumHelper } from '@impact-common/shared/utils/enum_helper';
-import { NumberUtil } from 'src/app/common/utils/number-util';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
 import {
@@ -82,7 +80,6 @@ export class CheckoutComponent implements OnInit {
   states: string[] = EnumHelper.getStateTypesAsArray();
   countries: string[] = EnumHelper.getCountryTypesAsArray();
 
-  sales: SaleModel[] = [];
   webConfig: WebConfigModel;
 
   submitting = false;
@@ -140,7 +137,6 @@ export class CheckoutComponent implements OnInit {
     this.addPreconnect('https://www.paypal.com');
     this.addPreconnect('https://www.paypalobjects.com');
 
-    this.getActiveSales();
     this.getActiveOffers();
     this.webConfigReady = this.getWebConfig().then(() => this.preloadPayPalSdk());
   }
@@ -275,13 +271,13 @@ export class CheckoutComponent implements OnInit {
     // Three things can discount shipping now - the spend threshold, a
     // campaign offer, and the legacy shipping sale - and the decision between
     // them lives in bestShippingDiscount() where it can be tested.
-    const shippingSale = this.sales.find(sale => sale.isShipping);
     const best = bestShippingDiscount({
       rate: this.checkoutForm.shippingRate ?? 0,
       subtotal: this.subtotal(),
       freeShippingThreshold: this.webConfig.freeShippingAmount,
       campaignFreeShipping: this.campaignFreeShipping(),
-      shippingSalePercent: shippingSale ? NumberUtil.clampPercent(shippingSale.percentOff) : null
+      // The legacy sales collection is retired; campaign offers own this now.
+      shippingSalePercent: null
     });
 
     if (best) {
@@ -409,17 +405,6 @@ export class CheckoutComponent implements OnInit {
   private getWebConfig(): Promise<void> {
     return this.webConfigService.getAll().then(config => {
       this.webConfig = config[0];
-    });
-  }
-
-  // Was a hand-duplicated copy of ProductCatalogService.getActiveSales()'s
-  // isActive + date-range filter -- now calls the same shared, cached
-  // method store/product-details/e-books already use, instead of running
-  // its own independent (and uncached) Firestore query for the exact same
-  // data.
-  private getActiveSales(): void {
-    this.catalog.getActiveSales().then(sales => {
-      this.sales = sales;
     });
   }
 
