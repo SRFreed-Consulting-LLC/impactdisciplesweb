@@ -16,31 +16,43 @@
     [buttonIcon3]="'fab fa-facebook-f'"
     [buttonLink3]="webConfig?.facebookLive"
   ></app-header>
-  <div class="podcasts__container">
-    <app-podcast-sidebar [podcasts]="podcasts" (searchEvent)="searchPodcasts($event)" (clearFiltersEvent)="clearFilters()" (selectPodcast)="selectPodcast($event)"></app-podcast-sidebar>
-    @if (isListView) {
-      <div class="podcasts__container-list">
-        @for (podcast of filteredPodcasts; track podcast.id) {
-          <div>
-            <app-podcast-postbox-item [podcast]="podcast" (selectPodcast)="selectPodcast($event)"></app-podcast-postbox-item>
-          </div>
-        }
-      </div>
-    }
-    @if (selectedPodcast && !this.isListView) {
-      <div class="podcasts__container-selected">
-        <h1>{{ selectedPodcast?.title }}</h1>
-        <div class="video-wrapper">
-          @if (selectedPodcast?.videoType === 'Youtube') {
-            <youtube-player
-              [videoId]="selectedPodcast?.videoId"
-              suggestedQuality="highres">
-            </youtube-player>
+
+  @if (loading) {
+    <div class="podcasts__loading">
+      <span class="podcasts__spinner"></span>
+      <p>Loading episodes from YouTube...</p>
+    </div>
+  } @else if (loadError) {
+    <div class="podcasts__loading">
+      <p>{{ loadError }}</p>
+    </div>
+  } @else {
+    <div class="podcasts__container">
+      <app-podcast-sidebar [podcasts]="podcasts" (searchEvent)="searchPodcasts($event)" (clearFiltersEvent)="clearFilters()" (selectPodcast)="selectPodcast($event)"></app-podcast-sidebar>
+      @if (isListView) {
+        <div class="podcasts__container-list">
+          @for (podcast of filteredPodcasts; track podcast.id) {
+            <div>
+              <app-podcast-postbox-item [podcast]="podcast" (selectPodcast)="selectPodcast($event)"></app-podcast-postbox-item>
+            </div>
           }
         </div>
-      </div>
-    }
-  </div>
+      }
+      @if (selectedPodcast && !this.isListView) {
+        <div class="podcasts__container-selected">
+          <h1>{{ selectedPodcast?.title }}</h1>
+          <div class="video-wrapper">
+            @if (selectedPodcast?.videoType === 'Youtube') {
+              <youtube-player
+                [videoId]="selectedPodcast?.videoId"
+                suggestedQuality="highres">
+              </youtube-player>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
 </div>
 
 <app-footer></app-footer>

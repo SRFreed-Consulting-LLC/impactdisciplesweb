@@ -23,6 +23,7 @@ export const environment = {
   capturePaypalOrderUrl: functionUrl('emulator', HTTP_FUNCTIONS.capture_paypal_order),
   shippingUrl: functionUrl('emulator', HTTP_FUNCTIONS.get_shipping_rates),
   youtubeVideosUrl: functionUrl('emulator', HTTP_FUNCTIONS.get_youtube_videos_public),
+  youtubePodcastsUrl: functionUrl('emulator', HTTP_FUNCTIONS.get_youtube_podcasts_public),
   lookupCouponUrl: functionUrl('emulator', HTTP_FUNCTIONS.lookup_coupon),
   registerForEventUrl: functionUrl('emulator', HTTP_FUNCTIONS.register_for_event),
   getEventRegistrationUrl: functionUrl('emulator', HTTP_FUNCTIONS.get_event_registration),

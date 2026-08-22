@@ -20,7 +20,16 @@ const routes: Routes = [
     path: 'podcasts',
     component: PodcastsComponent,
     title: 'Podcasts'
-  }
+  },
+  {
+    // The preview URL the YouTube-sourced page lived at while it ran beside
+    // the old Firestore-backed one (retired 2026-08-21). Kept as a redirect
+    // rather than deleted: it was linked around during sign-off, and a
+    // redirect costs one line where a 404 costs a support message.
+    path: 'podcasts-v2',
+    redirectTo: 'podcasts',
+    pathMatch: 'full'
+  },
 ];
 
 @NgModule({

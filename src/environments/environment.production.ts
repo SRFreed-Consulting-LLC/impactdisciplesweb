@@ -10,6 +10,7 @@ export const environment = {
   capturePaypalOrderUrl: functionUrl('prod', HTTP_FUNCTIONS.capture_paypal_order),
   shippingUrl: functionUrl('prod', HTTP_FUNCTIONS.get_shipping_rates),
   youtubeVideosUrl: functionUrl('prod', HTTP_FUNCTIONS.get_youtube_videos_public),
+  youtubePodcastsUrl: functionUrl('prod', HTTP_FUNCTIONS.get_youtube_podcasts_public),
 
   lookupCouponUrl: functionUrl('prod', HTTP_FUNCTIONS.lookup_coupon),
 

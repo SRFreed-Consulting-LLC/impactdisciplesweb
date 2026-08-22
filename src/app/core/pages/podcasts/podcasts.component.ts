@@ -1,21 +1,43 @@
 import { ViewportScroller } from '@angular/common';
-import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
-import { Component, OnInit, DestroyRef } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PodCastModel } from '@impact-common/shared/models/domain/pod-cast.model';
 import { Pager } from 'src/app/common/models/utils/pager.model';
 import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
-import { PodCastService } from 'src/app/common/services/data/pod-cast.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
+import { YoutubePodcastService } from './youtube-podcast.service';
 
+// The /podcasts page. Episodes come from the YouTube playlist itself,
+// via get_youtube_podcasts_public.
+//
+// This replaced the original Firestore-backed PodcastsComponent on
+// 2026-08-21, after running beside it at /podcasts-v2 first. The old
+// component read the `pod_casts` collection, which the admin app's Pod
+// Casts screen maintained by hand; both that screen and that reading path
+// are gone now, so YouTube is the single source of truth for what is an
+// episode. The collection's documents still exist but nothing reads them.
+//
+// Consequences of that, all intended: there is no isActive filter (the
+// playlist is the filter), no category, and titles/tags are YouTube's.
+// The whole feed arrives in one call and is already sorted newest-first
+// server side, so there is no per-page query and no need for the original's
+// 60-episode cap - pagination is pure slicing over an in-memory array, and
+// so is search.
 @Component({
-    selector: 'app-podcasts',
-    templateUrl: './podcasts.component.html',
-    styleUrls: ['./podcasts.component.scss'],
-    standalone: false
+  selector: 'app-podcasts',
+  templateUrl: './podcasts.component.html',
+  styleUrls: ['./podcasts.component.scss'],
+  standalone: false
 })
 export class PodcastsComponent implements OnInit {
+  private readonly podcastService = inject(YoutubePodcastService);
+  private readonly webConfigService = inject(WebConfigService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly viewScroller = inject(ViewportScroller);
+  private readonly destroyRef = inject(DestroyRef);
+
   podcasts: PodCastModel[] = [];
   filteredPodcasts: PodCastModel[] = [];
   selectedPodcast: PodCastModel;
@@ -24,37 +46,32 @@ export class PodcastsComponent implements OnInit {
   public webConfig: WebConfigModel;
   public pageSize = 6;
   public paginate: Pager = {};
-  public sortBy = 'asc';
   public pageNo = 1;
 
-  // Server-side cap: newest 60 = deepest realistic page 10 at 6/page,
-  // instead of streaming the entire growing collection to every visitor.
-  private readonly maxPodcasts = 60;
-
-  constructor(public podcastService: PodCastService,
-    private webConfigService: WebConfigService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private viewScroller: ViewportScroller,
-    private destroyRef: DestroyRef
-  ) { }
+  // Unlike the original, which streams Firestore and paints almost
+  // immediately, this page waits on a Cloud Function - a cold start is a
+  // couple of seconds of nothing. Hence an explicit loading state.
+  public loading = true;
+  public loadError = '';
 
   ngOnInit(): void {
-    // Load active podcasts once. Pagination is client-side slicing, so a page
-    // change re-slices the already-loaded list via applyPage() instead of
-    // opening a new whole-collection listener each time (P7 -- the DMM page
-    // already avoids this). Web config is a one-time cached read, not a
-    // standing listener.
-    this.podcastService.streamAllByValueOrdered('isActive', true, 'date', this.maxPodcasts).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((podcasts) => {
-      this.podcasts = podcasts.sort((a, b) => toMillis(b?.date) - toMillis(a?.date));
-      this.selectedPodcast = this.podcasts[0];
-      this.applyPage();
-    });
-
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.pageNo = params['page'] ? params['page'] : this.pageNo;
       this.applyPage();
     });
+
+    this.podcastService.getPodcasts()
+      .then((podcasts) => {
+        this.podcasts = podcasts;
+        this.selectedPodcast = this.podcasts[0];
+        this.applyPage();
+      })
+      .catch((err) => {
+        this.loadError = err?.message || 'Failed to load podcasts from YouTube';
+      })
+      .finally(() => {
+        this.loading = false;
+      });
 
     this.webConfigService.getAll().then(configs => {
       this.webConfig = configs[0];
@@ -75,14 +92,21 @@ export class PodcastsComponent implements OnInit {
     this.isListView = false;
   }
 
+  // Runs entirely against the already-loaded array - no request per
+  // keystroke, and nothing is sent to YouTube. (YouTube's own search.list
+  // costs 100 quota units a query against a 10,000/day budget, versus 1
+  // for this whole feed, and it cannot be scoped to a single playlist.)
+  // Matches title, tags and description; description is what usually
+  // carries guest names and topics.
   searchPodcasts(searchTerm: string): void {
     this.selectedPodcast = null;
     const termLower = searchTerm.toLowerCase();
     this.filteredPodcasts = this.podcasts.filter(
       (podcast) =>
+        podcast.title?.toLowerCase().includes(termLower) ||
+        podcast.description?.toLowerCase().includes(termLower) ||
         podcast.tags?.some((tag) => tag.tag.toLowerCase().includes(termLower)) ||
-        podcast.date.toString().includes(termLower) ||
-        podcast.title.toLocaleLowerCase().includes(termLower)
+        podcast.date.toString().includes(termLower)
     );
     this.paginate = this.getPager(this.filteredPodcasts.length, Number(+this.pageNo), this.pageSize);
     this.isListView = true;
@@ -153,5 +177,4 @@ export class PodcastsComponent implements OnInit {
       pages: pages
     };
   }
-
 }
