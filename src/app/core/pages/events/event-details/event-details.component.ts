@@ -14,6 +14,10 @@ import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-ite
 // handling), so this is a drop-in swap: same addCartProduct()/
 // clearCartNoConfirmation() calls, same CartItem shape.
 import { CartService } from 'src/app/core/store/services/cart.service';
+import { PricingService } from 'src/app/core/store/services/pricing.service';
+import { CampaignOfferService } from 'src/app/common/services/data/campaign-offer.service';
+import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
+import { bestOfferPrice } from '@impact-common/shared/models/utils/campaign-offer.model';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
@@ -50,6 +54,9 @@ export class EventDetailsComponent implements OnInit {
     private router: Router,
     private eventService: EventService,
     private cartService: CartService,
+    private pricingService: PricingService,
+    private offerService: CampaignOfferService,
+    private attributionService: AttributionService,
     private eventRegistrationService: EventRegistrationService,
     private toastService: ToastService,
     private loggerService: LoggerService,
@@ -68,6 +75,9 @@ export class EventDetailsComponent implements OnInit {
           itemName: this.event.eventName,
           orderQuantity: 1,
           price: NumberUtil.isNumber(this.event.costInDollars)?this.event.costInDollars : 0,
+          // 0 = no discount. An early-bird offer fills this in, and both this
+          // page and checkout then read it through PricingService.
+          salePrice: 0,
           img: this.event.imageUrl,
           isEBook: false,
           isEvent: true,
@@ -80,16 +90,59 @@ export class EventDetailsComponent implements OnInit {
           this.groupAgendaItemsByMonthAndDate(this.event.agendaItems);
         }
         this.calculateTotal();
+        void this.applyEarlyBird();
       })
     } else {
       this.router.navigate(['/events']);
     }
   }
 
-  calculateTotal() {
-    if (this.event && this.event.costInDollars) {
-      this.total = this.event.costInDollars * this.cartItem.orderQuantity;
+  /**
+   * Applies an early-bird registration price when this visitor qualifies.
+   *
+   * Unlike a product sale, an early-bird offer is shown only to someone who
+   * reached the event through the campaign - a reward for being on the list.
+   * Attribution persists 30 days in localStorage, captured at bootstrap
+   * before the router can wipe the query string, so it survives a refresh and
+   * a wander around the site.
+   *
+   * The DISPLAY only. register_for_event re-derives the price server-side, so
+   * nothing here is trusted at the point money changes hands.
+   */
+  private async applyEarlyBird(): Promise<void> {
+    try {
+      const offers = await this.offerService.getActiveOffers();
+      const attributedCampaignId = this.attributionService.get()?.campaignId ?? null;
+
+      const price = bestOfferPrice(
+        offers,
+        { kind: 'event', id: this.event?.id ?? '' },
+        NumberUtil.isNumber(this.event?.costInDollars) ? this.event.costInDollars! : 0,
+        Date.now(),
+        attributedCampaignId
+      );
+
+      if (price !== null) {
+        this.cartItem.salePrice = price;
+        this.calculateTotal();
+      }
+    } catch {
+      // Never let a pricing lookup stop someone registering at full price.
     }
+  }
+
+  // Events price through the SAME service as products now (Campaign Manager
+  // v3 stage 6). They used to compute this straight off costInDollars and
+  // never look at salePrice, while checkout priced the identical cart item
+  // through PricingService, which prefers salePrice - so any discounted
+  // registration would have been charged correctly and DISPLAYED at full
+  // price. Early-bird pricing walks straight into that gap, which is why
+  // this cutover comes first.
+  //
+  // Behaviour change, deliberate: an event with no cost now totals 0 rather
+  // than leaving a previously-computed total on screen.
+  calculateTotal() {
+    this.total = this.pricingService.lineSubtotal(this.cartItem);
   }
 
   increment() {
