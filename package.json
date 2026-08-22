@@ -16,7 +16,10 @@
     "start-emu": "ng serve --configuration=emulator --port=4200",
     "e2e": "playwright test",
     "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\""
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\"",
+    "test:coverage": "ng test --watch=false --browsers=ChromeHeadless --code-coverage",
+    "coverage:check": "node scripts/check-coverage.js",
+    "coverage:baseline": "node scripts/check-coverage.js --update"
   },
   "private": true,
   "dependencies": {
