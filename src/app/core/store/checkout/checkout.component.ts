@@ -3,15 +3,18 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IOnApproveCallbackData, IPayPalConfig, PayPalScriptService } from 'ngx-paypal';
 import { CartItem, CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
-import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { ShippingService } from 'src/app/common/services/data/shipping.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
 import { EnumHelper } from '@impact-common/shared/utils/enum_helper';
-import { NumberUtil } from 'src/app/common/utils/number-util';
 import { ToastService } from 'src/app/shared/utils/services/toast.service';
 import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
+import {
+  CampaignOfferModel,
+  grantsFreeShipping
+} from '@impact-common/shared/models/utils/campaign-offer.model';
+import { bestShippingDiscount } from './shipping-discount';
 import { CartService } from '../services/cart.service';
 import { PricingService } from '../services/pricing.service';
 import { ProductCatalogService } from '../services/product-catalog.service';
@@ -77,7 +80,6 @@ export class CheckoutComponent implements OnInit {
   states: string[] = EnumHelper.getStateTypesAsArray();
   countries: string[] = EnumHelper.getCountryTypesAsArray();
 
-  sales: SaleModel[] = [];
   webConfig: WebConfigModel;
 
   submitting = false;
@@ -135,7 +137,7 @@ export class CheckoutComponent implements OnInit {
     this.addPreconnect('https://www.paypal.com');
     this.addPreconnect('https://www.paypalobjects.com');
 
-    this.getActiveSales();
+    this.getActiveOffers();
     this.webConfigReady = this.getWebConfig().then(() => this.preloadPayPalSdk());
   }
 
@@ -266,16 +268,21 @@ export class CheckoutComponent implements OnInit {
   private calculateShippingCost = async (): Promise<void> => {
     this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
 
-    if (this.subtotal() > this.webConfig.freeShippingAmount) {
-      this.checkoutForm.shippingDiscount = this.checkoutForm.shippingRate;
-      this.checkoutForm.shippingDiscountReason = 'Over $' + this.webConfig.freeShippingAmount;
-    } else {
-      const shippingSale = this.sales.find(sale => sale.isShipping);
-      if (shippingSale) {
-        const percentOff = NumberUtil.clampPercent(shippingSale.percentOff);
-        this.checkoutForm.shippingDiscount = percentOff / 100 * this.checkoutForm.shippingRate;
-        this.checkoutForm.shippingDiscountReason = percentOff + '% Off';
-      }
+    // Three things can discount shipping now - the spend threshold, a
+    // campaign offer, and the legacy shipping sale - and the decision between
+    // them lives in bestShippingDiscount() where it can be tested.
+    const best = bestShippingDiscount({
+      rate: this.checkoutForm.shippingRate ?? 0,
+      subtotal: this.subtotal(),
+      freeShippingThreshold: this.webConfig.freeShippingAmount,
+      campaignFreeShipping: this.campaignFreeShipping(),
+      // The legacy sales collection is retired; campaign offers own this now.
+      shippingSalePercent: null
+    });
+
+    if (best) {
+      this.checkoutForm.shippingDiscount = best.amount;
+      this.checkoutForm.shippingDiscountReason = best.reason;
     }
   };
 
@@ -401,16 +408,38 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  // Was a hand-duplicated copy of ProductCatalogService.getActiveSales()'s
-  // isActive + date-range filter -- now calls the same shared, cached
-  // method store/product-details/e-books already use, instead of running
-  // its own independent (and uncached) Firestore query for the exact same
-  // data.
-  private getActiveSales(): void {
-    this.catalog.getActiveSales().then(sales => {
-      this.sales = sales;
+  // Campaign offers (Campaign Manager v3) - needed here for free shipping,
+  // which is an ORDER-level grant: shipping is quoted once per order from
+  // total cart weight, so there is no per-product shipping cost to zero out.
+  private offers: CampaignOfferModel[] = [];
+
+  private getActiveOffers(): void {
+    this.catalog.getActiveOffers().then(offers => {
+      this.offers = offers;
     });
   }
+
+  /**
+   * Whether a campaign grants this cart free shipping.
+   *
+   * Granted when the cart holds AT LEAST ONE product the offer covers - the
+   * owner's decision. Adding one qualifying item therefore frees shipping on
+   * the whole order, which is the standard shape and the one shoppers expect.
+   */
+  private campaignFreeShipping(): boolean {
+    const now = Date.now();
+    const attributedCampaignId = this.attributionService.get()?.campaignId ?? null;
+
+    return (this.checkoutForm?.cartItems ?? []).some(item =>
+      !item.isEvent && grantsFreeShipping(
+        this.offers,
+        { kind: 'product', id: item.id ?? '', series: item.series ?? null },
+        now,
+        attributedCampaignId
+      )
+    );
+  }
+
 
   // No Firestore write happens here any more -- the server already made
   // it, only after a real payment was verified (or the order was

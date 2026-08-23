@@ -3,10 +3,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { ProductModel } from '@impact-common/shared/models/utils/product.model';
-import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
 import { ProductService } from 'src/app/common/services/data/product.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartService } from '../../services/cart.service';
+import { CampaignOfferModel } from '@impact-common/shared/models/utils/campaign-offer.model';
 import { ProductCatalogService } from '../../services/product-catalog.service';
 
 // Copy of the original product-details.component.ts. The duplicated
@@ -38,17 +38,17 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.catalog.getActiveSales().then(sales => {
+    this.catalog.getActiveOffers().then(offers => {
       this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
         const productId = params['id'];
         if (productId) {
-          this.loadProductDetails(productId, sales);
+          this.loadProductDetails(productId, offers);
         }
       });
     });
   }
 
-  private loadProductDetails(productId: string, sales: SaleModel[]): void {
+  private loadProductDetails(productId: string, offers: CampaignOfferModel[]): void {
     this.productService.streamById(productId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(products => {
       this.product = products[0];
 
@@ -61,7 +61,7 @@ export class ProductDetailsComponent implements OnInit {
         return;
       }
 
-      this.catalog.applyActiveProductSale([this.product], sales);
+      this.catalog.applyActiveOffers([this.product], offers);
       this.cartItem = this.catalog.productToCartItem(this.product);
 
       this.loadRelatedProducts();

@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Pager } from 'src/app/common/models/utils/pager.model';
 import { ProductModel } from '@impact-common/shared/models/utils/product.model';
-import { SaleModel } from '@impact-common/shared/models/utils/sale.model';
-import { SalesService } from 'src/app/common/services/data/sales.service';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
+import {
+  CampaignOfferModel,
+  bestOfferPrice
+} from '@impact-common/shared/models/utils/campaign-offer.model';
+import { CampaignOfferService } from 'src/app/common/services/data/campaign-offer.service';
+import { AttributionService } from 'src/app/shared/utils/services/attribution.service';
 
 // Shared home for the browse/filter/pager logic that the original app
 // duplicates verbatim across store.component.ts and e-books.component.ts
@@ -12,47 +16,60 @@ import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 // store-postbox-item.component.ts / product-details.component.ts
 // (CartItem-from-ProductModel construction). store's own
 // StoreComponent and EBooksComponent both orchestrate over this
-// instead of each carrying their own copy. Only reads existing
-// SalesService/ProductModel/CartItem -- none of them are modified.
+// instead of each carrying their own copy.
 @Injectable({ providedIn: 'root' })
 export class ProductCatalogService {
-  // getActiveSales() used to be called independently (a full Firestore
-  // query, no caching) from every page that needs it -- store, e-books,
-  // product-details, and checkout (which had its own hand-duplicated copy
-  // of this exact method instead of calling it at all). A single
-  // browse-to-checkout session could trigger up to 4 redundant reads of
-  // the same `sales` collection. Cached the same way WebConfigService
-  // already caches config -- see that service's own comment for the
-  // session-lived-singleton reasoning.
-  private cachedActiveSales: Promise<SaleModel[]> | null = null;
+  constructor(
+    private offerService: CampaignOfferService,
+    private attributionService: AttributionService
+  ) {}
 
-  constructor(private salesService: SalesService) {}
-
-  async getActiveSales(): Promise<SaleModel[]> {
-    if (!this.cachedActiveSales) {
-      this.cachedActiveSales = this.salesService.getAllByValue('isActive', true).then(sales => {
-        const today = new Date();
-        return sales.filter(sale => {
-          const startDate = new Date(sale.startDate as string);
-          const endDate = new Date(sale.endDate as string);
-          return startDate.getTime() <= today.getTime() && endDate.getTime() >= today.getTime();
-        });
-      });
-    }
-
-    return this.cachedActiveSales;
+  /**
+   * Every currently-active campaign offer (Campaign Manager v3).
+   *
+   * Cached in CampaignOfferService itself rather than here, since offers are
+   * read by pages outside the store too.
+   */
+  getActiveOffers(): Promise<CampaignOfferModel[]> {
+    return this.offerService.getActiveOffers();
   }
 
-  /** Mutates each product's salePrice in place from the first active
-   *  isProducts sale found, matching the original store's behavior --
-   *  request-scoped, never persisted back to Firestore. */
-  applyActiveProductSale(products: ProductModel[], activeSales: SaleModel[]): void {
-    const productSale = activeSales.find(sale => sale.isProducts);
-    if (!productSale) return;
+  /**
+   * Mutates each product's salePrice in place from the campaign offers that
+   * actually reach it - request-scoped, never persisted back to Firestore.
+   *
+   * Replaces applyActiveProductSale(), which took the FIRST active isProducts
+   * sale and rewrote EVERY product's price from it: a product nobody put on
+   * sale still got discounted, a second active sale was silently ignored, and
+   * a product's own salePrice was overwritten either way.
+   *
+   * A product with no applicable offer is now left ALONE rather than assigned
+   * a price, so an untargeted product keeps its base cost.
+   *
+   * Which offers reach a product is decided by the shared bestOfferPrice() -
+   * the same function the admin previews with, so the two cannot disagree
+   * about what a shopper is charged. Attribution is passed through for offers
+   * only visible to visitors who arrived via the campaign link (the event
+   * early-bird rule).
+   */
+  applyActiveOffers(products: ProductModel[], offers: CampaignOfferModel[]): void {
+    if (!offers?.length) {
+      return;
+    }
+    const now = Date.now();
+    const attributedCampaignId = this.attributionService.get()?.campaignId ?? null;
 
-    const percentOff = NumberUtil.clampPercent(productSale.percentOff);
     products.forEach(product => {
-      product.salePrice = product.cost - (percentOff / 100 * product.cost);
+      const price = bestOfferPrice(
+        offers,
+        { kind: 'product', id: product.id ?? '', series: product.series ?? null },
+        NumberUtil.isNumber(product.cost) ? product.cost : 0,
+        now,
+        attributedCampaignId
+      );
+      if (price !== null) {
+        product.salePrice = price;
+      }
     });
   }
 
@@ -74,7 +91,9 @@ export class ProductCatalogService {
       size: opts?.size,
       color: opts?.color,
       language: opts?.language,
-      followUpEmailId: product.sendFollowUpEmail && product.followUpEmailId ? product.followUpEmailId : ''
+      followUpEmailId: product.sendFollowUpEmail && product.followUpEmailId ? product.followUpEmailId : '',
+      // Travels with the line so checkout can match a series-targeted offer.
+      series: product.series ?? null
     };
   }
 
