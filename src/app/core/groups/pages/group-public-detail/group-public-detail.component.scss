@@ -1,0 +1,225 @@
+@use '../../../../../assets/styles/theme/scss/variables';
+
+.group-detail {
+  &__body {
+    padding: 60px 0 40px;
+  }
+
+  &__status {
+    padding: 60px 0;
+    text-align: center;
+    color: variables.$body-text-color;
+  }
+
+  &__badge {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: variables.$black;
+    background: variables.$theme-color;
+
+    &--online {
+      color: variables.$white;
+      background: variables.$blue;
+    }
+  }
+
+  &__title {
+    margin: 0 0 18px;
+    font-size: 38px;
+    line-height: 1.2;
+    color: variables.$heading-color;
+  }
+
+  &__leader {
+    margin: 18px 0 26px;
+    font-size: 15px;
+    color: variables.$black-soft-3;
+  }
+
+  &__description {
+    margin-bottom: 34px;
+    font-size: 15px;
+    line-height: 1.75;
+    color: variables.$body-text-color;
+  }
+
+  &__section {
+    margin-bottom: 30px;
+
+    h4 {
+      margin: 0 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: variables.$heading-color;
+    }
+
+    p {
+      margin: 0 0 6px;
+      display: flex;
+      align-items: baseline;
+      font-size: 15px;
+      color: variables.$body-text-color;
+
+      i {
+        flex: 0 0 22px;
+        color: variables.$blue;
+      }
+    }
+  }
+
+  // Indented to sit under the location line it belongs to, past the icon.
+  &__address {
+    padding-left: 22px;
+  }
+
+  &__note {
+    font-size: 13px !important;
+    color: variables.$grey-3 !important;
+  }
+
+  &__panel {
+    margin-bottom: 26px;
+    padding: 32px 28px;
+    background: variables.$grey;
+    border-top: 6px solid variables.$theme-color;
+
+    h4 {
+      margin: 0 0 18px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: variables.$heading-color;
+    }
+
+    &--book {
+      border-top-color: variables.$blue;
+    }
+  }
+
+  &__panel-text {
+    margin: 0 0 22px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: variables.$body-text-color;
+  }
+
+  &__panel-note {
+    margin: 16px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: variables.$grey-3;
+  }
+
+  &__capacity {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: variables.$heading-color;
+
+    &--full {
+      color: variables.$black-soft-2;
+    }
+  }
+
+  &__bar {
+    height: 8px;
+    margin-bottom: 24px;
+    background: variables.$grey-2;
+
+    span {
+      display: block;
+      height: 100%;
+      background: variables.$theme-color;
+      transition: width 0.4s ease;
+    }
+  }
+
+  &__book {
+    display: flex;
+    gap: 18px;
+
+    img {
+      width: 90px;
+      height: auto;
+      flex: 0 0 90px;
+    }
+  }
+
+  &__book-title {
+    margin: 0 0 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: variables.$heading-color;
+  }
+
+  &__book-price {
+    margin: 0 0 14px;
+    font-size: 15px;
+    color: variables.$blue;
+  }
+
+  &__empty {
+    padding: 70px 30px;
+    text-align: center;
+    background: variables.$grey;
+
+    h4 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      color: variables.$heading-color;
+    }
+
+    p {
+      margin: 0 auto 26px;
+      max-width: 480px;
+      color: variables.$body-text-color;
+    }
+  }
+
+  &__cta {
+    margin-top: 70px;
+    padding: 50px 30px;
+    text-align: center;
+    border-top: 10px solid variables.$theme-color;
+    background: variables.$grey;
+
+    h4 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      color: variables.$heading-color;
+    }
+
+    p {
+      margin: 0 auto 26px;
+      max-width: 560px;
+      color: variables.$body-text-color;
+    }
+  }
+
+  &__cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+  }
+}
+
+@media #{variables.$xxs, variables.$xs, variables.$sm} {
+  .group-detail {
+    &__body {
+      padding: 36px 0 20px;
+    }
+
+    &__title {
+      font-size: 26px;
+    }
+  }
+}

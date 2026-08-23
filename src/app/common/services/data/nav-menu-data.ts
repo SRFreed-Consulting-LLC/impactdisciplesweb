@@ -12,6 +12,7 @@ const menuData: MenuModel[] = [
     dropdownItems: [
       { link: '/seminars', title: 'Seminars', visible: true, external: false, highlight: false },
       { link: '/equipping-groups', title: 'Equipping Groups', visible: true, external: false, highlight: false },
+      { link: '/impact-groups', title: 'Find an Impact Group', visible: true, external: false, highlight: false },
       { link: '/coaching-with-impact', title: 'Coaching with Impact', visible: true, external: false, highlight: false },
       { link: '/lunch-and-learns', title: 'Lunch and Learns', visible: true, external: false, highlight: false },
       { link: '/events', title: 'Upcoming Training', visible: true, external: false, highlight: false }
@@ -58,6 +59,7 @@ export const mobileMenuData: MobileMenuModel[] = [
     dropdownMenu: [
       { link: '/seminars', title: 'Seminars', visible: true },
       { link: '/equipping-groups', title: 'Equipping Groups', visible: true },
+      { link: '/impact-groups', title: 'Find an Impact Group', visible: true },
       { link: '/coaching-with-impact', title: 'Coaching with Impact', visible: true },
       { link: '/lunch-and-learns', title: 'Lunch and Learns', visible: true },
       { link: '/events', title: 'Upcoming Training', visible: true }

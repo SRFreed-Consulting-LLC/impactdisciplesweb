@@ -143,5 +143,9 @@
   </section>
 </main>
 
+<!-- Impact Groups studying this book. Renders nothing when there are none,
+     or when this product is not a library book (no digitalBookId). -->
+<app-group-strip [bookId]="product?.digitalBookId"></app-group-strip>
+
 <app-footer></app-footer>
 <app-cart-drawer></app-cart-drawer>

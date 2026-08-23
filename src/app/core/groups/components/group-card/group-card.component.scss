@@ -1,0 +1,93 @@
+@use '../../../../../assets/styles/theme/scss/variables';
+
+.group-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 28px 26px;
+  background: variables.$white;
+  border: 1px solid variables.$border;
+  text-decoration: none;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 12px 30px rgba(28, 28, 28, 0.1);
+    transform: translateY(-3px);
+
+    .group-card__cta {
+      color: variables.$white;
+      border-color: variables.$blue;
+
+      &::after {
+        height: 100%;
+      }
+    }
+  }
+
+  &__badge {
+    align-self: flex-start;
+    margin-bottom: 16px;
+    padding: 5px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: variables.$black;
+    background: variables.$theme-color;
+
+    &--online {
+      color: variables.$white;
+      background: variables.$blue;
+    }
+  }
+
+  &__title {
+    margin: 0 0 16px;
+    font-size: 18px;
+    line-height: 1.35;
+    color: variables.$heading-color;
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    color: variables.$body-text-color;
+  }
+
+  &__meta-row {
+    display: flex;
+    align-items: baseline;
+
+    i {
+      flex: 0 0 18px;
+      color: variables.$blue;
+    }
+
+    // Sits directly under the location row it qualifies, so it lines up
+    // with that row's text rather than with its icon.
+    &--distance {
+      padding-left: 18px;
+      font-style: italic;
+    }
+
+    &--full {
+      color: variables.$black-soft-2;
+      font-weight: 600;
+    }
+  }
+
+  &__leader {
+    margin: 0 0 22px;
+    font-size: 13px;
+    color: variables.$black-soft-3;
+  }
+
+  // Pushes the CTA to the bottom so cards of differing text length still
+  // line their buttons up across a row.
+  &__cta {
+    margin-top: auto;
+  }
+}

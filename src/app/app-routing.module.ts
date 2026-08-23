@@ -61,6 +61,13 @@ const routes: Routes = [
     loadChildren: () => import('./core/blog.module').then(m => m.BlogFeatureModule)
   },
   {
+    // Public Impact Group finder. Named 'impact-groups', not 'groups':
+    // /equipping-groups already owns that word in this app's nav and URL
+    // space, and the reader/admin apps already say "Impact Groups".
+    matcher: firstSegmentMatcher(['impact-groups']),
+    loadChildren: () => import('./core/groups/groups-feature.module').then(m => m.GroupsFeatureModule)
+  },
+  {
     matcher: firstSegmentMatcher(['summit', 'summit-preview']),
     loadChildren: () => import('./core/summit.module').then(m => m.SummitFeatureModule)
   },

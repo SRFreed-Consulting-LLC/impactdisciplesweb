@@ -1,0 +1,40 @@
+@use '../../../../../assets/styles/theme/scss/variables';
+
+.group-strip {
+  padding: 70px 0;
+  background: variables.$grey;
+
+  &__title {
+    margin: 22px 0 32px;
+    font-size: 22px;
+    color: variables.$heading-color;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  &__more {
+    margin-top: 34px;
+    text-align: center;
+  }
+
+  &__note {
+    margin: 26px 0 0;
+    text-align: center;
+    font-size: 13px;
+    color: variables.$grey-3;
+  }
+}
+
+@media #{variables.$xxs, variables.$xs, variables.$sm} {
+  .group-strip {
+    padding: 40px 0;
+
+    &__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

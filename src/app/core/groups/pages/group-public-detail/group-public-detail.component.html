@@ -1,0 +1,142 @@
+<app-home-header></app-home-header>
+
+<div class="group-detail">
+  <app-breadcrumb
+    [previousLinkName]="'Impact Groups'"
+    [previousLink]="'/impact-groups'"
+    [currentPageName]="group?.title || 'Impact Group'"
+  ></app-breadcrumb>
+
+  <div class="container group-detail__body">
+    @if (loading) {
+      <p class="group-detail__status">Loading this Impact Group…</p>
+    } @else if (notFound) {
+      <div class="group-detail__empty">
+        <h4>We couldn't find that Impact Group</h4>
+        <p>It may have closed, filled up, or been made invite-only since this link was shared.</p>
+        <a class="impact-btn impact-btn-blue" routerLink="/impact-groups">FIND ANOTHER GROUP</a>
+      </div>
+    } @else if (group) {
+      <div class="row">
+        <!-- Main -->
+        <div class="col-lg-7">
+          <span class="group-detail__badge" [class.group-detail__badge--online]="group.meetingType === 'online'">
+            {{ badge }}
+          </span>
+          <h2 class="group-detail__title">{{ group.title }}</h2>
+          <hr class="slider-hr-solid" />
+          <p class="group-detail__leader">Led by {{ group.leaderLabel }}</p>
+
+          @if (group.description) {
+            <p class="group-detail__description">{{ group.description }}</p>
+          }
+
+          <section class="group-detail__section">
+            <h4>When</h4>
+            <p><i class="fas fa-clock" aria-hidden="true"></i>{{ when }}</p>
+          </section>
+
+          <section class="group-detail__section">
+            <h4>Where</h4>
+            <p>
+              <i
+                class="fas"
+                [class.fa-map-marker-alt]="group.meetingType !== 'online'"
+                [class.fa-globe]="group.meetingType === 'online'"
+                aria-hidden="true"
+              ></i>{{ where }}
+            </p>
+            @if (hasAddress) {
+              <p class="group-detail__address">{{ group.address1 }}</p>
+            }
+            @if (addressHidden) {
+              <p class="group-detail__note">
+                <i class="fas fa-info-circle" aria-hidden="true"></i>
+                The exact address is shared once the leader accepts you.
+              </p>
+            }
+            @if (group.meetingType !== 'in-person') {
+              <p class="group-detail__note">
+                <i class="fas fa-info-circle" aria-hidden="true"></i>
+                Joining details are sent to members — they're never posted publicly.
+              </p>
+            }
+          </section>
+        </div>
+
+        <!-- Aside -->
+        <div class="col-lg-5">
+          <div class="group-detail__panel">
+            <h4>Want to join?</h4>
+
+            @if (group.spotsLeft !== undefined && fill !== undefined) {
+              <p class="group-detail__capacity" [class.group-detail__capacity--full]="full">{{ capacity }}</p>
+              <div class="group-detail__bar" role="presentation">
+                <span [style.width.%]="fill"></span>
+              </div>
+            } @else {
+              <p class="group-detail__capacity">{{ capacity }}</p>
+            }
+
+            @if (full) {
+              <p class="group-detail__panel-text">
+                This group has no room right now. You can still ask the leader to be added to
+                their list, or find another group.
+              </p>
+              <a class="impact-btn impact-btn-blue-border" routerLink="/impact-groups">
+                FIND ANOTHER GROUP
+              </a>
+            } @else {
+              <p class="group-detail__panel-text">
+                Impact Groups are run inside the Impact Library reader, where you'll study the
+                book together.
+              </p>
+              <a class="impact-btn impact-btn-blue" [href]="joinUrl" rel="noopener">
+                REQUEST TO JOIN IN THE READER
+              </a>
+              <p class="group-detail__panel-note">
+                No account yet? You'll create one — it's free and takes a minute.
+              </p>
+            }
+          </div>
+
+          @if (group.bookTitle || book) {
+            <div class="group-detail__panel group-detail__panel--book">
+              <h4>The book they're studying</h4>
+              <div class="group-detail__book">
+                @if (book?.imageUrl?.url) {
+                  <img loading="lazy" [src]="book.imageUrl.url" [alt]="book.title" />
+                }
+                <div>
+                  <p class="group-detail__book-title">{{ book?.title || group.bookTitle }}</p>
+                  @if (book) {
+                    <p class="group-detail__book-price">
+                      {{ (book.salePrice > 0 ? book.salePrice : book.cost) | currency }}
+                    </p>
+                    <a class="impact-btn impact-btn-thin" [routerLink]="['/product-details', book.id]">
+                      VIEW BOOK
+                    </a>
+                  }
+                </div>
+              </div>
+              <p class="group-detail__panel-note">
+                Members study this together. You don't need it to ask to join.
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <section class="group-detail__cta">
+        <h4>Don't see one that fits?</h4>
+        <p>Start your own Impact Group — you'll need a copy of the book to lead one.</p>
+        <div class="group-detail__cta-actions">
+          <a class="impact-btn impact-btn-blue" [href]="createUrl" rel="noopener">START A GROUP</a>
+          <a class="impact-btn" routerLink="/store">BROWSE BOOKS</a>
+        </div>
+      </section>
+    }
+  </div>
+</div>
+
+<app-footer></app-footer>

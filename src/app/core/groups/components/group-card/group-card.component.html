@@ -1,0 +1,36 @@
+<a class="group-card" [routerLink]="['/impact-groups', group.id]">
+  <span class="group-card__badge" [class.group-card__badge--online]="group.meetingType === 'online'">
+    {{ badge }}
+  </span>
+
+  <h4 class="group-card__title">{{ group.title }}</h4>
+
+  <div class="group-card__meta">
+    @if (group.bookTitle) {
+      <span class="group-card__meta-row">
+        <i class="fas fa-book" aria-hidden="true"></i>{{ group.bookTitle }}
+      </span>
+    }
+    <span class="group-card__meta-row">
+      <i
+        class="fas"
+        [class.fa-map-marker-alt]="group.meetingType !== 'online'"
+        [class.fa-globe]="group.meetingType === 'online'"
+        aria-hidden="true"
+      ></i>{{ where }}
+    </span>
+    @if (distance) {
+      <span class="group-card__meta-row group-card__meta-row--distance">{{ distance }}</span>
+    }
+    <span class="group-card__meta-row">
+      <i class="fas fa-clock" aria-hidden="true"></i>{{ when }}
+    </span>
+    <span class="group-card__meta-row" [class.group-card__meta-row--full]="full">
+      <i class="fas fa-users" aria-hidden="true"></i>{{ capacity }}
+    </span>
+  </div>
+
+  <p class="group-card__leader">Led by {{ group.leaderLabel }}</p>
+
+  <span class="impact-btn impact-btn-thin group-card__cta">VIEW GROUP</span>
+</a>

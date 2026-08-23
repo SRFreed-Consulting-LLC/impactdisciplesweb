@@ -1,0 +1,219 @@
+@use '../../../../../assets/styles/theme/scss/variables';
+
+.group-finder {
+  &__body {
+    padding: 60px 0 40px;
+  }
+
+  &__sidebar {
+    margin-bottom: 40px;
+
+    .sidebar__search {
+      margin-bottom: 30px;
+
+      form {
+        position: relative;
+      }
+
+      input {
+        width: 100%;
+        height: 50px;
+        padding: 0 50px 0 18px;
+        border: 1px solid variables.$border;
+        background: variables.$white;
+        font-size: 14px;
+
+        &:focus {
+          outline: none;
+          border-color: variables.$blue;
+        }
+      }
+
+      button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50px;
+        height: 50px;
+        border: none;
+        background: transparent;
+        color: variables.$blue;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__filter {
+    margin-bottom: 30px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid variables.$border;
+
+    h3 {
+      margin: 0 0 14px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: variables.$heading-color;
+    }
+  }
+
+  &__filter-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+
+    .clear-filter-button {
+      border: none;
+      background: none;
+      padding: 0;
+      font-size: 12px;
+      color: variables.$blue;
+      cursor: pointer;
+    }
+  }
+
+  &__radios {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+
+    &--inline {
+      flex-direction: row;
+      gap: 8px;
+      margin-top: 14px;
+    }
+  }
+
+  &__radio {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    color: variables.$body-text-color;
+    cursor: pointer;
+
+    input {
+      accent-color: variables.$blue;
+      cursor: pointer;
+    }
+
+    span {
+      flex: 1;
+    }
+
+    em {
+      font-style: normal;
+      font-size: 12px;
+      color: variables.$grey-3;
+    }
+  }
+
+  &__chip {
+    padding: 7px 14px;
+    border: 1px solid variables.$border;
+    background: variables.$white;
+    font-size: 12px;
+    font-weight: 600;
+    color: variables.$body-text-color;
+    cursor: pointer;
+
+    &--on {
+      border-color: variables.$blue;
+      background: variables.$blue;
+      color: variables.$white;
+    }
+  }
+
+  &__hint {
+    margin: 12px 0 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: variables.$grey-3;
+
+    &--warn {
+      color: variables.$black-soft-2;
+    }
+  }
+
+  &__count {
+    margin-bottom: 22px;
+    font-size: 14px;
+    font-weight: 600;
+    color: variables.$heading-color;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 26px;
+  }
+
+  &__more,
+  &__status {
+    margin-top: 36px;
+    text-align: center;
+  }
+
+  &__status {
+    color: variables.$body-text-color;
+  }
+
+  &__empty {
+    padding: 60px 30px;
+    text-align: center;
+    background: variables.$grey;
+
+    h4 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      color: variables.$heading-color;
+    }
+
+    p {
+      margin: 0 auto 24px;
+      max-width: 460px;
+      color: variables.$body-text-color;
+    }
+  }
+
+  &__empty-actions,
+  &__cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+  }
+
+  &__cta {
+    margin-top: 70px;
+    padding: 50px 30px;
+    text-align: center;
+    border-top: 10px solid variables.$theme-color;
+    background: variables.$grey;
+
+    h4 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      color: variables.$heading-color;
+    }
+
+    p {
+      margin: 0 auto 26px;
+      max-width: 560px;
+      color: variables.$body-text-color;
+    }
+  }
+}
+
+@media #{variables.$xxs, variables.$xs, variables.$sm} {
+  .group-finder {
+    &__body {
+      padding: 36px 0 20px;
+    }
+
+    &__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

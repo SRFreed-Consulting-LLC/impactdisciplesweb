@@ -33,6 +33,11 @@ export const environment = {
   subscribeUrl: functionUrl('emulator', HTTP_FUNCTIONS.subscribe_to_email_list),
   campaignWebEventUrl: functionUrl('emulator', HTTP_FUNCTIONS.campaign_web_event),
   newsletterArchiveUrl: functionUrl('emulator', HTTP_FUNCTIONS.newsletter_archive),
+  searchImpactGroupsUrl: functionUrl('emulator', HTTP_FUNCTIONS.search_impact_groups),
+  // Where the public Impact Group finder hands off for anything that
+  // needs an account - joining a group, starting one. This site has no
+  // Firebase Auth; the reader owns every group write.
+  readerAppOrigin: 'http://localhost:4300',
   oneGiftUrl: 'https://example.test/one-gift',
   monthlyGiftUrl: 'https://example.test/monthly-gift',
   impactPartnersGiftUrl: 'https://example.test/partners-gift',

@@ -1,0 +1,30 @@
+@if (groups.length) {
+  <section class="group-strip">
+    <div class="container">
+      <hr class="slider-hr-solid" />
+      <h4 class="group-strip__title">
+        {{ total }} {{ total === 1 ? 'group is' : 'groups are' }} studying this book right now
+      </h4>
+
+      <div class="group-strip__grid">
+        @for (group of groups; track group.id) {
+          <app-group-card [group]="group"></app-group-card>
+        }
+      </div>
+
+      @if (hasMore) {
+        <div class="group-strip__more">
+          <a
+            class="impact-btn impact-btn-thin impact-btn-blue-border"
+            [routerLink]="['/impact-groups']"
+            [queryParams]="{ book: bookId }"
+          >SEE ALL {{ total }} GROUPS FOR THIS BOOK</a>
+        </div>
+      }
+
+      <p class="group-strip__note">
+        Reading it with others? Start your own Impact Group once you have the book.
+      </p>
+    </div>
+  </section>
+}

@@ -1,0 +1,212 @@
+<app-home-header></app-home-header>
+
+<div class="group-finder">
+  <app-header
+    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fhome-header.jpg?alt=media&token=4a6de836-e6fc-4c12-9e2a-e8c063ffdcc3'"
+    [pretitle]="'IMPACT GROUPS'"
+    [title]="'Study with people near you'"
+  ></app-header>
+
+  <div class="container group-finder__body">
+    <div class="row">
+      <!-- Filters -->
+      <div class="col-lg-3">
+        <aside class="group-finder__sidebar">
+          <div class="sidebar__search">
+            <form (submit)="$event.preventDefault(); onSearchSubmit(searchInput.value)">
+              <input
+                type="text"
+                #searchInput
+                [value]="searchText"
+                placeholder="City, state or group name"
+                aria-label="Search Impact Groups"
+                (input)="onSearchInputChange(searchInput.value)"
+              />
+              <button type="submit" aria-label="Search"><i class="far fa-search"></i></button>
+            </form>
+          </div>
+
+          <div class="group-finder__filter">
+            <h3>Near me</h3>
+            <button
+              type="button"
+              class="impact-btn impact-btn-thin"
+              [class.impact-btn-blue]="coords"
+              [disabled]="locating"
+              (click)="useMyLocation()"
+            >
+              @if (locating) { LOCATING… } @else if (coords) { USING MY LOCATION } @else { USE MY LOCATION }
+            </button>
+            @if (locationError) {
+              <p class="group-finder__hint group-finder__hint--warn">{{ locationError }}</p>
+            }
+            @if (coords) {
+              <div class="group-finder__radios group-finder__radios--inline">
+                @for (option of radiusOptions; track option) {
+                  <button
+                    type="button"
+                    class="group-finder__chip"
+                    [class.group-finder__chip--on]="radiusMi === option"
+                    (click)="onRadiusChange(option)"
+                  >{{ option }} mi</button>
+                }
+              </div>
+              <p class="group-finder__hint">
+                Groups without a saved location can't be matched by distance.
+              </p>
+            }
+          </div>
+
+          <div class="group-finder__filter">
+            <h3>Meeting type</h3>
+            <div class="group-finder__radios">
+              @for (option of [
+                { value: 'all', label: 'All' },
+                { value: 'in-person', label: 'In person' },
+                { value: 'online', label: 'Online' },
+                { value: 'hybrid', label: 'Both' }
+              ]; track option.value) {
+                <label class="group-finder__radio">
+                  <input
+                    type="radio"
+                    name="meeting"
+                    [checked]="meeting === option.value"
+                    (change)="onMeetingChange($any(option.value))"
+                  />
+                  <span>{{ option.label }}</span>
+                </label>
+              }
+            </div>
+          </div>
+
+          @if (bookFacets.length) {
+            <div class="group-finder__filter">
+              <div class="group-finder__filter-head">
+                <h3>Book</h3>
+                @if (bookId) {
+                  <button type="button" class="clear-filter-button" (click)="onBookChange(undefined)">
+                    View all
+                  </button>
+                }
+              </div>
+              <div class="group-finder__radios">
+                @for (facet of bookFacets; track facet.bookId) {
+                  <label class="group-finder__radio">
+                    <input
+                      type="radio"
+                      name="book"
+                      [checked]="bookId === facet.bookId"
+                      (change)="onBookChange(facet.bookId)"
+                    />
+                    <span>{{ facet.bookTitle }}</span>
+                    <em>{{ facet.count }}</em>
+                  </label>
+                }
+              </div>
+            </div>
+          }
+
+          <div class="group-finder__filter">
+            <h3>Starts</h3>
+            <div class="group-finder__radios">
+              @for (option of [
+                { value: 'any', label: 'Any time' },
+                { value: 30, label: 'Next 30 days' },
+                { value: 90, label: 'Next 90 days' }
+              ]; track option.label) {
+                <label class="group-finder__radio">
+                  <input
+                    type="radio"
+                    name="starts"
+                    [checked]="starts === option.value"
+                    (change)="onStartsChange($any(option.value))"
+                  />
+                  <span>{{ option.label }}</span>
+                </label>
+              }
+            </div>
+          </div>
+
+          @if (hasFilters) {
+            <button type="button" class="impact-btn impact-btn-thin impact-btn-blue-border" (click)="clearFilters()">
+              CLEAR ALL FILTERS
+            </button>
+          }
+        </aside>
+      </div>
+
+      <!-- Results -->
+      <div class="col-lg-9">
+        @if (loading) {
+          <p class="group-finder__status">Loading Impact Groups…</p>
+        } @else if (errored) {
+          <div class="group-finder__empty">
+            <h4>We couldn't load Impact Groups just now</h4>
+            <p>Please check your connection and try again.</p>
+          </div>
+        } @else {
+          <div class="group-finder__count">
+            <span>
+              {{ total }} {{ total === 1 ? 'open group' : 'open groups' }}
+              @if (coords) { within {{ radiusMi }} miles }
+            </span>
+          </div>
+
+          @if (groups.length) {
+            <div class="group-finder__grid">
+              @for (group of groups; track group.id) {
+                <app-group-card [group]="group"></app-group-card>
+              }
+            </div>
+
+            @if (canLoadMore) {
+              <div class="group-finder__more">
+                <button
+                  type="button"
+                  class="impact-btn impact-btn-blue-border"
+                  [disabled]="loadingMore"
+                  (click)="loadMore()"
+                >
+                  @if (loadingMore) { LOADING… } @else { SHOW MORE GROUPS }
+                </button>
+              </div>
+            }
+          } @else {
+            <div class="group-finder__empty">
+              <h4>No groups match those filters</h4>
+              @if (hasFilters) {
+                <p>Try widening your search — or start a group of your own.</p>
+                <div class="group-finder__empty-actions">
+                  <button type="button" class="impact-btn impact-btn-thin" (click)="clearFilters()">
+                    CLEAR FILTERS
+                  </button>
+                  <a class="impact-btn impact-btn-thin impact-btn-blue" [href]="createUrl" rel="noopener">
+                    START A GROUP
+                  </a>
+                </div>
+              } @else {
+                <p>There are no open Impact Groups right now. Yours could be the first.</p>
+                <a class="impact-btn impact-btn-blue" [href]="createUrl" rel="noopener">START A GROUP</a>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Start-your-own -->
+    <section class="group-finder__cta">
+      <h4>Don't see one that fits?</h4>
+      <p>
+        Impact Groups are run inside the Impact Library reader, where you'll study the book
+        together. You'll need your own copy of the book to lead one.
+      </p>
+      <div class="group-finder__cta-actions">
+        <a class="impact-btn impact-btn-blue" [href]="createUrl" rel="noopener">START A GROUP</a>
+        <a class="impact-btn" routerLink="/store">BROWSE BOOKS</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<app-footer></app-footer>

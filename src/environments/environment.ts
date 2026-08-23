@@ -31,6 +31,11 @@ export const environment = {
   subscribeUrl: functionUrl('dev', HTTP_FUNCTIONS.subscribe_to_email_list),
   campaignWebEventUrl: functionUrl('dev', HTTP_FUNCTIONS.campaign_web_event),
   newsletterArchiveUrl: functionUrl('dev', HTTP_FUNCTIONS.newsletter_archive),
+  searchImpactGroupsUrl: functionUrl('dev', HTTP_FUNCTIONS.search_impact_groups),
+  // Where the public Impact Group finder hands off for anything that
+  // needs an account - joining a group, starting one. This site has no
+  // Firebase Auth; the reader owns every group write.
+  readerAppOrigin: 'https://impactdisciplesdev-library.web.app',
   oneGiftUrl: 'https://buy.stripe.com/test_3cseVSfkM23y4tafYY',
   monthlyGiftUrl: 'https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=FES66T88VX7ZJ&source=url',
   impactPartnersGiftUrl: 'https://www.paypal.com/donate/?hosted_button_id=J5PJN3ZD8EZ4A&source=url',

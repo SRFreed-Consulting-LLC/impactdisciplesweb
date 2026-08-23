@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPayPalModule } from 'ngx-paypal';
 import { SharedModule } from '../../shared/shared.module';
+import { GroupsSharedModule } from '../groups/groups-shared.module';
 
 import { StoreComponent } from './pages/store/store.component';
 import { StoreSidebarComponent } from './pages/store/store-sidebar/store-sidebar.component';
@@ -62,6 +63,10 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    // "Groups studying this book" on the product page - the card is
+    // declared in GroupsSharedModule so the lazy finder and this lazy
+    // module can both use it (a component may only be declared once).
+    GroupsSharedModule,
     NgxPayPalModule,
     RouterModule.forChild(routes)
   ]
