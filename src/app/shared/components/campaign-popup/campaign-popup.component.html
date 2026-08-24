@@ -2,7 +2,7 @@
   <div class="cpopup__overlay">
     <div class="cpopup__box"
       [style.width.px]="popup.width || 480"
-      [style.maxHeight.px]="popup.height || 420"
+      [style.minHeight.px]="popup.height || 0"
       [style.background]="popup.bgColor || '#ffffff'">
       <button type="button" class="cpopup__close" aria-label="Close" (click)="close()">&times;</button>
       <div class="cpopup__content" [class.cpopup__content--link]="legacyClickThrough"
