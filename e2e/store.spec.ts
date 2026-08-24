@@ -73,12 +73,36 @@ test('add to cart from /store updates the header cart badge and drawer', async (
   // a real button click). Wait for real category data (a live Firestore
   // read against dev data, not an emulator) before clicking, so the click
   // doesn't race the product list.
-  await expect(page.locator('.accordion-item').first()).toBeVisible({ timeout: 30000 });
+  // Wait for the category list to be POPULATED, not merely present: one
+  // visible .accordion-item can paint before the live dev Firestore read
+  // resolves, and clicking "View All" against an unloaded list no-ops - the
+  // race this spec has always warned about, which showed up as an
+  // intermittent timeout on the product grid below.
+  const categories = page.locator('.accordion-item');
+  await expect.poll(() => categories.count(), { timeout: 30000 })
+    .toBeGreaterThan(1);
   await page.getByRole('button', { name: 'View All' }).first().click();
 
-  const firstAddToCart = page.locator('app-store-postbox-item .impact-icon-btn-blue').first();
-  await firstAddToCart.waitFor({ state: 'visible', timeout: 15000 });
-  await firstAddToCart.click();
+  // Wait for the flat grid to actually POPULATE, not just for one button to
+  // paint. "View All" renders ~54 products from a live dev Firestore read,
+  // and a fixed 15s wait on the first button was marginal - it passed when
+  // this spec ran alone and timed out at 16.8s inside a full-suite run.
+  // Asserting a non-zero count first fails with a useful message when the
+  // data genuinely does not arrive, instead of a bare locator timeout.
+  const addToCartButtons =
+    page.locator('app-store-postbox-item .impact-icon-btn-blue');
+  // Re-click if the first one was swallowed: the toggle is a plain button
+  // with a manual handler, so a click landing mid-render is simply lost and
+  // waiting longer never recovers it.
+  await expect.poll(async () => {
+    const count = await addToCartButtons.count();
+    if (count === 0) {
+      await page.getByRole('button', { name: 'View All' }).first()
+        .click({ trial: false }).catch(() => undefined);
+    }
+    return count;
+  }, { timeout: 30000 }).toBeGreaterThan(0);
+  await addToCartButtons.first().click();
 
   await expect(headerCartLink).toContainText('Cart (1)');
 
