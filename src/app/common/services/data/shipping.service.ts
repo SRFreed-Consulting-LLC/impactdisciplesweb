@@ -1,7 +1,6 @@
 import { LoggerService } from './logger.service';
 import { Injectable } from '@angular/core';
 import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
-import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
 import { UNIT_OF_MEASURE } from '@impact-common/shared/lists/unit_of_measure.enum';
 import { ShippingModel, Package, WeightDetail, ShippingRequest, RateOptions } from '@impact-common/shared/models/domain/shipment.model';
 import { Address } from '@impact-common/shared/models/domain/utils/address.model';
@@ -9,7 +8,6 @@ import { Phone } from '@impact-common/shared/models/domain/utils/phone.model';
 import { CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
 import { ShippingRate } from '@impact-common/shared/models/domain/shipment-label-batch-request.model';
 import { environment } from 'src/environments/environment';
-import { BaseService } from './base.service';
 import { WebConfigService } from './web-config.service';
 
 
@@ -25,14 +23,17 @@ interface ShippingRateResponse {
   providedIn: 'root'
 })
 
-export class ShippingService extends BaseService<ShippingModel>{
+// Not a BaseService. It used to extend one and bind `this.table` to a
+// `shipments` collection that has since been deleted - but it never called a
+// single CRUD method on it. The only thing this service does is
+// calculateShipping(), which goes out through CloudFunctionsClient to
+// ShipEngine, so the Firestore inheritance was pure misdirection: it
+// advertised a collection that no longer exists and pulled in a FirebaseDAO
+// nothing here used.
+export class ShippingService {
   shippingCarriers: string[] = environment.shippingCarriers;
 
-
-  constructor(public override dao: FirebaseDAO<ShippingModel>, private webConfigService: WebConfigService, private logService: LoggerService, private client: CloudFunctionsClient) {
-    super(dao)
-    this.table="shipments"
-  }
+  constructor(private webConfigService: WebConfigService, private logService: LoggerService, private client: CloudFunctionsClient) {}
 
   async calculateShipping(checkoutForm: CheckoutForm): Promise<CheckoutForm>{
     let totalWeight: number;
