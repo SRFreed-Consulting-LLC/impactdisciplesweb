@@ -1,4 +1,6 @@
 import { Component, OnInit, DestroyRef } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -11,6 +13,14 @@ import { FormSubmissionModel } from '@impact-common/shared/models/domain/form-su
 // the app shell, shows the first ACTIVE campaign popup whose date window
 // covers now, to EVERY visitor (no targeting - a deliberate product
 // decision), on every visit until they check "don't show this again"
+//
+// HOME PAGE ONLY (2026-08-26). The component is mounted in the shell, so it
+// used to appear over every route - a visitor reading an event page or part
+// way through checkout got a full-screen interruption. It now shows only on
+// `/`. Navigating away hides it WITHOUT marking it dismissed (leaving the
+// site is not the same as declining the offer), and returning to the home
+// page shows it again; the impression beacon is localStorage-guarded, so
+// that cannot inflate the count.
 // (per-popup localStorage key). Fires the campaign_web_event beacon:
 // web_shown once per visitor per popup (also localStorage-guarded, which
 // caps write volume), web_click on the click-through. The click-through
@@ -36,6 +46,7 @@ export class CampaignPopupComponent implements OnInit {
   submitError = '';
 
   constructor(
+    private router: Router,
     private popupService: CampaignPopupService,
     private formSubmissionService: FormSubmissionService,
     private sanitizer: DomSanitizer,
@@ -70,10 +81,41 @@ export class CampaignPopupComponent implements OnInit {
           const to = p.toDate?.toMillis ? p.toDate.toMillis() : 0;
           return from <= now && (to === 0 || to >= now) && !this.isDismissed(p);
         });
-        if (eligible) {
-          this.open(eligible);
-        }
+        // Remembered rather than opened immediately: the visitor may not be
+        // on the home page yet, and may arrive there later without this
+        // stream emitting again.
+        this.eligible = eligible ?? null;
+        this.syncToRoute();
       });
+
+    this.router.events
+      .pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => this.syncToRoute());
+  }
+
+  /** The most recent popup that COULD be shown, whether or not it is. */
+  private eligible: CampaignPopup | null = null;
+
+  /** The site's home page, and nothing else. Query/fragment stripped so a
+   *  campaign link like `/?cid=abc` - the exact URL a popup's own
+   *  click-through produces - still counts as home. */
+  private get onHomePage(): boolean {
+    return this.router.url.split('?')[0].split('#')[0] === '/';
+  }
+
+  /** Opens on the home page, hides anywhere else. Hiding does NOT dismiss:
+   *  the visitor never declined it, so it is waiting when they come back. */
+  private syncToRoute(): void {
+    if (!this.onHomePage) {
+      this.visible = false;
+      return;
+    }
+    if (!this.visible && this.eligible) {
+      this.open(this.eligible);
+    }
   }
 
   private isDismissed(popup: CampaignPopup): boolean {

@@ -175,11 +175,34 @@ test.describe('campaign popup', () => {
     expect(keys.filter((k) => k === SHOWN_KEY)).toHaveLength(1);
   });
 
-  test('it appears on an interior page too, not only the home page', async ({ page }) => {
-    // The popup is mounted in the app shell, so a visitor arriving on a
-    // campaign landing page must see it as well.
-    await visitFresh(page, '/store');
+  test('it does NOT appear on interior pages - home only', async ({ page }) => {
+    // Reversed on 2026-08-26. The component is mounted in the app shell, so
+    // it used to appear over EVERY route - a visitor reading an event page
+    // or part way through checkout got a full-screen interruption. It is now
+    // the home page's alone.
+    //
+    // The fixture is proven live on the home page FIRST: asserting absence
+    // on /store by itself would pass vacuously any time the fixture is
+    // missing, which is exactly the failure mode these specs already guard
+    // against elsewhere.
+    await visitFresh(page);
     await requireFixture(page);
+    await expect(popup(page)).toBeVisible();
+
+    await page.goto('/store');
+    await expect(popup(page)).toBeHidden();
+  });
+
+  test('coming back to the home page shows it again', async ({ page }) => {
+    // Leaving the home page hides it but must NOT count as dismissing it -
+    // walking away is not the same as declining the offer.
+    await visitFresh(page);
+    await requireFixture(page);
+
+    await page.goto('/store');
+    await expect(popup(page)).toBeHidden();
+
+    await page.goto('/');
     await expect(popup(page)).toBeVisible();
   });
 
