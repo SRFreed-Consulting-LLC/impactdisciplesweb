@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(git submodule status:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node --check:*)",
+      "Bash(npm test:*)",
+      "Bash(npx ng test:*)",
+      "Bash(npx ng build:*)",
+      "Bash(npx playwright test:*)",
+      "Bash(curl -s -o /dev/null:*)",
+      "Read(//tmp/**)"
+    ]
+  }
+}
