@@ -46,7 +46,7 @@ export class DiscipleshipLibraryComponent {
       headline: 'Every title, one shelf.',
       body: 'Browse the whole Impact Discipleship Library, open any book, and pick up exactly where you left off — the app remembers your place.',
       points: ['The full library in one list', 'Continue reading from any device', 'Nothing to install'],
-      image: 'assets/reader/library-shelf.png',
+      image: 'assets/reader/library-shelf.jpg',
       imageAlt: 'The Impact Discipleship Library book shelf on a phone'
     },
     {
@@ -58,7 +58,7 @@ export class DiscipleshipLibraryComponent {
       // Swap to dictation.mp4 + isVideo:true once the clip is recorded -
       // the motion IS the point here, and a still cannot carry it. Until
       // then a still, rather than a <video> pointing at a 404.
-      image: 'assets/reader/dictation.png',
+      image: 'assets/reader/dictation.jpg',
       imageAlt: 'Speaking an answer into a lesson and watching it transcribe',
       mediaRight: true
     },
@@ -68,17 +68,17 @@ export class DiscipleshipLibraryComponent {
       headline: 'Nobody disciples alone.',
       body: 'See who is in your group, message the room, share prayer requests, and hand licences to new members as they join.',
       points: ['Group chat and prayer requests', 'Members, invites and licences', 'Everyone on the same lesson'],
-      image: 'assets/reader/group-chat.png',
+      image: 'assets/reader/group-chat.jpg',
       imageAlt: 'An Impact Group chat and its prayer requests'
     },
     {
       index: '04',
       name: 'Messages',
-      headline: 'When it should not be in the group room.',
-      body: 'Direct messages between members, for the conversations that are better had one to one.',
-      points: ['One-to-one conversations', 'Same place as everything else'],
-      image: 'assets/reader/messages.png',
-      imageAlt: 'A direct message conversation between two members',
+      headline: 'Word from us, straight to you.',
+      body: 'When a new book lands on your shelf or a new season of groups opens, it arrives in your inbox inside the app — not in an email you will never find again.',
+      points: ['Announcements from Impact Ministries', 'Unread count on the app badge', 'Kept until you clear it'],
+      image: 'assets/reader/messages.jpg',
+      imageAlt: 'The in-app inbox showing announcements from Impact Ministries',
       mediaRight: true
     },
     {
@@ -87,7 +87,7 @@ export class DiscipleshipLibraryComponent {
       headline: 'The next book, right where you are reading.',
       body: 'Buy your next resource without leaving the app — it appears on your shelf the moment it is yours.',
       points: ['Buy in the app', 'Straight onto your shelf'],
-      image: 'assets/reader/store.png',
+      image: 'assets/reader/store.jpg',
       imageAlt: 'The in-app store showing available resources'
     },
     {
@@ -96,7 +96,7 @@ export class DiscipleshipLibraryComponent {
       headline: 'Your account, your way.',
       body: 'Your details, your preferences, and the way the app looks — all in one place, all yours to change.',
       points: ['Your profile and preferences', 'Light or dark, your call'],
-      image: 'assets/reader/settings.png',
+      image: 'assets/reader/settings.jpg',
       imageAlt: 'The reader settings screen',
       mediaRight: true
     },
@@ -106,7 +106,7 @@ export class DiscipleshipLibraryComponent {
       headline: 'Help that knows where you are.',
       body: 'Every area has its own help, written for the screen you are actually looking at — not one long manual you have to search.',
       points: ['Help per area, not one manual', 'Written in plain language'],
-      image: 'assets/reader/help.png',
+      image: 'assets/reader/help.jpg',
       imageAlt: 'The contextual help screen'
     }
   ];
