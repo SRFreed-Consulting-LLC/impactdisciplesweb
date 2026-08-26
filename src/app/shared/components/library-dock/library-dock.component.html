@@ -1,6 +1,12 @@
 @if (visible && config) {
   <div class="library-dock" role="complementary" [attr.aria-label]="config.message">
-    <div class="container library-dock__inner">
+    <!-- Deliberately NOT Bootstrap's .container, unlike the site header and
+         footer: that caps the row at the content width (1140px of a 1440px
+         viewport, 720px of 820px), and everything the bar has to fit is on
+         ONE line, so the wasted width came straight out of the message and
+         cut it off with an ellipsis. A single-line bar wants the whole
+         width; its own gutter below keeps it off the screen edges. -->
+    <div class="library-dock__inner">
 
       <p class="library-dock__message">
         @if (config.label) {

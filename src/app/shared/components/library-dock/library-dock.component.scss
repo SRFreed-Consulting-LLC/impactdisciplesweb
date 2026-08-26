@@ -22,8 +22,9 @@
 	align-items: center;
 	gap: 24px;
 	min-height: 60px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	// Full viewport width with its own gutter - see the template's comment
+	// on why this row does not use Bootstrap's .container.
+	padding: 10px 28px;
 }
 
 .library-dock__message {
@@ -129,6 +130,7 @@
 	.library-dock__inner {
 		min-height: 52px;
 		gap: 12px;
+		padding: 8px 14px;
 	}
 
 	.library-dock__eyebrow {
