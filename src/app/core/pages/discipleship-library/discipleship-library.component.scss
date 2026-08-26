@@ -86,19 +86,9 @@
   }
 }
 
-// The site's .impact-btn assumes a light background; these are the two
-// placements it has no variant for.
-.dl-btn--onDark {
-  border-color: variables.$white !important;
-  background: transparent !important;
-  color: variables.$white !important;
-
-  &:hover {
-    background: variables.$white !important;
-    color: variables.$black !important;
-  }
-}
-
+// The site's .impact-btn assumes a light background; this is the one
+// placement it has no variant for. (There was a --onDark sibling for the
+// hero's second CTA; that button was removed, so the rule went with it.)
 .dl-btn--onBlue {
   border-color: variables.$white !important;
   background: variables.$white !important;
