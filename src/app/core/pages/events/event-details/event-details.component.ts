@@ -70,22 +70,46 @@ export class EventDetailsComponent implements OnInit {
     if (eventId) {
       this.eventService.streamById(eventId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
         this.event = event[0];
-        this.cartItem = {
-          id: this.event.id,
-          itemName: this.event.eventName,
-          orderQuantity: 1,
-          price: NumberUtil.isNumber(this.event.costInDollars)?this.event.costInDollars : 0,
-          // 0 = no discount. An early-bird offer fills this in, and both this
-          // page and checkout then read it through PricingService.
-          salePrice: 0,
-          img: this.event.imageUrl,
-          isEBook: false,
-          isEvent: true,
-          isDigitalBook: false,
-          attendees: [{ firstName: '', lastName: '', email: '' }]
+
+        // streamById is a LIVE listener, so this callback runs again every
+        // time the event document changes - staff editing it, or any trigger
+        // touching it. It used to rebuild cartItem and attendeesForm from
+        // scratch each time, which silently threw away everything the visitor
+        // had typed into the attendee form AND reset their attendee count back
+        // to one (quietly re-pricing the order on screen with it).
+        //
+        // Nothing about that failure is visible where it happens: the fields
+        // just empty, and the next click on "Sign UP" does nothing because the
+        // form is now invalid with required fields blank. It was found from an
+        // e2e failure snapshot, not from the page.
+        //
+        // So the visitor's OWN state - the attendee form, how many of them
+        // there are, which sections are open - is built once and then left
+        // alone. Only the event-derived display fields are refreshed, which is
+        // what the live listener is actually for.
+        if (!this.cartItem) {
+          this.cartItem = {
+            id: this.event.id,
+            itemName: this.event.eventName,
+            orderQuantity: 1,
+            price: NumberUtil.isNumber(this.event.costInDollars)?this.event.costInDollars : 0,
+            // 0 = no discount. An early-bird offer fills this in, and both this
+            // page and checkout then read it through PricingService.
+            salePrice: 0,
+            img: this.event.imageUrl,
+            isEBook: false,
+            isEvent: true,
+            isDigitalBook: false,
+            attendees: [{ firstName: '', lastName: '', email: '' }]
+          }
+          this.attendeesForm = this.fb.array([this.buildAttendeeGroup()]);
+          this.openIndexes = new Set([0]);
+        } else {
+          this.cartItem.itemName = this.event.eventName;
+          this.cartItem.price = NumberUtil.isNumber(this.event.costInDollars) ? this.event.costInDollars : 0;
+          this.cartItem.img = this.event.imageUrl;
         }
-        this.attendeesForm = this.fb.array([this.buildAttendeeGroup()]);
-        this.openIndexes = new Set([0]);
+
         if(this.event.agendaItems) {
           this.groupAgendaItemsByMonthAndDate(this.event.agendaItems);
         }

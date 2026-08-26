@@ -1,4 +1,5 @@
 import { FormBuilder } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { PricingService } from 'src/app/core/store/services/pricing.service';
 import { EventDetailsComponent } from './event-details.component';
@@ -139,5 +140,122 @@ describe('EventDetailsComponent pricing (characterization)', () => {
     it('starts with the first attendee open', () => {
       expect(buildComponent().openIndexes.has(0)).toBeTrue();
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// The live-stream rebuild
+//
+// ngOnInit subscribes to a LIVE Firestore listener (eventService.streamById)
+// and, until 2026-08-26, rebuilt cartItem and attendeesForm from scratch on
+// EVERY emission. So any later change to the event document - staff editing it,
+// any trigger touching it - silently discarded whatever the visitor had typed
+// into the attendee form, and reset their attendee count back to one.
+//
+// The failure is invisible where it happens: the fields simply empty, and the
+// next click on "Sign UP" does nothing because the form is now invalid. It was
+// found from an e2e failure snapshot (e2e-cross/02-summit-registration), where
+// all three fields were blank with all three "is required" errors showing.
+//
+// These drive ngOnInit through a Subject so a second emission can be delivered
+// on demand.
+// ---------------------------------------------------------------------------
+
+function buildStreamedComponent(stream: Subject<EventModel[]>): EventDetailsComponent {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  return new EventDetailsComponent(
+    { snapshot: { paramMap: { get: () => 'e1' } } } as any,
+    { navigate: () => undefined } as any,
+    { streamById: () => stream.asObservable() } as any,
+    {} as any,
+    new PricingService() as any,
+    { getActiveOffers: () => Promise.resolve([]) } as any,
+    { get: () => null } as any,
+    // eventRegistrationService: the email control carries an async
+    // "already registered" validator, so patchValue() below reaches it.
+    { isAlreadyRegistered: () => Promise.resolve(false) } as any,
+    {} as any,
+    {} as any,
+    new FormBuilder(),
+    // DestroyRef is only ever handed to takeUntilDestroyed, which just
+    // registers a teardown callback - a duck-typed onDestroy is enough, and
+    // keeps this out of an injection context like the rest of the file.
+    { onDestroy: () => () => undefined } as any
+  );
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+}
+
+const eventDoc = (overrides: Partial<EventModel> = {}): EventModel => ({
+  id: 'e1',
+  eventName: 'Summit',
+  costInDollars: 0,
+  ...overrides
+} as EventModel);
+
+describe('EventDetailsComponent live event stream', () => {
+  it('keeps what the visitor typed when the event document changes', () => {
+    const stream = new Subject<EventModel[]>();
+    const component = buildStreamedComponent(stream);
+    component.ngOnInit();
+
+    stream.next([eventDoc()]);
+    component.attendeesForm.at(0).patchValue({
+      firstName: 'Zara', lastName: 'Zztester', email: 'zztester@summit.test'
+    });
+
+    // Staff touch the event while the visitor is mid-form.
+    stream.next([eventDoc({ eventName: 'Summit (renamed)' })]);
+
+    expect(component.attendeesForm.at(0).value).toEqual({
+      firstName: 'Zara', lastName: 'Zztester', email: 'zztester@summit.test'
+    });
+  });
+
+  it('keeps extra attendees the visitor added', () => {
+    const stream = new Subject<EventModel[]>();
+    const component = buildStreamedComponent(stream);
+    component.ngOnInit();
+
+    stream.next([eventDoc({ costInDollars: 25 })]);
+    component.increment();
+    component.increment();
+    expect(component.attendeesForm.length).toBe(3);
+
+    stream.next([eventDoc({ costInDollars: 25 })]);
+
+    // Resetting to one attendee also silently re-prices the order on screen.
+    expect(component.attendeesForm.length).toBe(3);
+    expect(component.cartItem.orderQuantity).toBe(3);
+    expect(component.total).toBe(75);
+  });
+
+  it('still picks up event fields that genuinely changed', () => {
+    // The rebuild was not pointless - a live listener exists so the page
+    // reflects edits. Fixing the wipe must not turn the page into a snapshot
+    // taken at first load.
+    const stream = new Subject<EventModel[]>();
+    const component = buildStreamedComponent(stream);
+    component.ngOnInit();
+
+    stream.next([eventDoc({ eventName: 'Summit', costInDollars: 25 })]);
+    stream.next([eventDoc({ eventName: 'Summit 2027', costInDollars: 40 })]);
+
+    expect(component.event.eventName).toBe('Summit 2027');
+    expect(component.cartItem.itemName).toBe('Summit 2027');
+    expect(component.cartItem.price).toBe(40);
+    expect(component.total).toBe(40);
+  });
+
+  it('builds the form once on the first emission', () => {
+    const stream = new Subject<EventModel[]>();
+    const component = buildStreamedComponent(stream);
+    component.ngOnInit();
+
+    expect(component.attendeesForm.length).toBe(0);
+
+    stream.next([eventDoc()]);
+
+    expect(component.attendeesForm.length).toBe(1);
+    expect(component.cartItem.orderQuantity).toBe(1);
   });
 });
