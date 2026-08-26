@@ -586,15 +586,32 @@ main {
 // routes, so an always-on gap would leave dead space under the footer on
 // every page it isn't showing on.
 body.has-library-dock {
-	padding-bottom: 60px;
+	// One source of truth for how tall the dock is. Several things have to
+	// clear it and each one needs the same number, so it is declared once
+	// here rather than repeated as a literal in every rule below - the home
+	// slider's pagination dots were missed the first time round precisely
+	// because there was no single place that said "this is what the dock
+	// displaces". Keep in step with .library-dock__inner's min-height.
+	--library-dock-height: 60px;
+
+	padding-bottom: var(--library-dock-height);
 
 	// The back-to-top button is fixed at bottom: 30px (see _common.scss's
 	// `#scroll a`) - lift it clear rather than letting it sit on the dock.
+	// The extra 16px keeps the gap it had against the viewport edge.
 	#scroll a {
-		bottom: 106px;
+		bottom: calc(var(--library-dock-height) + 46px);
+	}
+
+	// The home slider's pagination dots sit 30px up from the bottom of a
+	// slide that is itself nearly the full viewport height, so the dock
+	// covers them. Lift by exactly the dock's height, which preserves the
+	// 30px of clear space they were designed with.
+	.header-slider-pagination {
+		bottom: calc(var(--library-dock-height) + 30px);
 	}
 
 	@media #{variables.$xxs, variables.$xs, variables.$sm} {
-		padding-bottom: 52px;
+		--library-dock-height: 52px;
 	}
 }
