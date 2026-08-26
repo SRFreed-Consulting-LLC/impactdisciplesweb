@@ -1,3 +1,5 @@
+<app-home-header></app-home-header>
+
 <!-- Hero. Dark field so the yellow rule and the white CTA carry, matching the
      home slider's announcement slide this page is linked from. -->
 <section class="dl-hero">
@@ -41,8 +43,13 @@
           @if (feature.isVideo) {
             <!-- Muted, looping and inline: it is illustration, not content the
                  visitor chose to play, so it must never grab audio or fullscreen. -->
+            <!-- [muted] as a PROPERTY, not the bare attribute: Angular sets
+                 attributes after the element is created, and `muted` only
+                 initialises the property at parse time - so the attribute
+                 alone leaves video.muted false and the browser blocks the
+                 autoplay, which is the entire point of this row. -->
             <video [src]="feature.image" [attr.aria-label]="feature.imageAlt"
-                   autoplay muted loop playsinline preload="metadata"></video>
+                   [muted]="true" autoplay loop playsinline preload="metadata"></video>
           } @else {
             <img [src]="feature.image" [alt]="feature.imageAlt" loading="lazy">
           }
@@ -75,3 +82,5 @@
     <a [href]="readerUrl" class="impact-btn dl-btn--onBlue" target="_blank" rel="noopener">Open the Library</a>
   </div>
 </section>
+
+<app-footer></app-footer>
