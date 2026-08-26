@@ -9,6 +9,9 @@ and pick an environment to run against:
 
 ```
 npm run start-local   # local Firebase project config, http://localhost:4200
+npm run start-emu     # Firebase emulator config,      http://localhost:4201
+# Port rule: thousands digit = app (web 4, admin 5, reader 6), last digit =
+# backend (0 = live dev data, 1 = emulator).
 npm run start-dev     # impactdisciplesdev Firebase project
 npm run start-prod    # impactdisciples-a82a8 (production) Firebase project, local serve
 ```

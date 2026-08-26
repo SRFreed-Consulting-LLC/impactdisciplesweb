@@ -9,7 +9,21 @@ import { test, expect, Page } from '@playwright/test';
 // vacuously against ambient data. Seed one first, from the ADMIN repo:
 //
 //   node scripts/seed-e2e-popup.js --project=dev --execute
-//   ...run this suite...
+//
+// SEEDED AND LEFT IN PLACE as of 2026-08-26 - do NOT --remove it as a
+// matter of course. The fixture renders a full-screen `.cpopup__overlay`,
+// so while it was seeded it intercepted pointer events across the rest of
+// this suite (11 specs failed that way), and the workaround was to seed it,
+// run, and delete it again. The cost was that every ordinary run skipped
+// all 9 specs here - the popup is the delivery mechanism for a campaign,
+// so it was the least-covered thing in the suite and looked green.
+//
+// playwright.config.ts now ships a storageState that pre-dismisses THIS
+// fixture's id, so it can stay seeded permanently and the rest of the
+// suite never sees it. visitFresh() below clears those keys per context,
+// which is what keeps these specs seeing a first-time visitor.
+//
+// Remove it only when you actually want the fixture gone:
 //   node scripts/seed-e2e-popup.js --project=dev --remove --execute
 //
 // Without it every test here SKIPS rather than fails - a missing fixture is

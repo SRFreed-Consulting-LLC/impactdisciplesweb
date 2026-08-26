@@ -1,11 +1,11 @@
-﻿import { FIREBASE_PROJECTS, functionUrl } from '@impact-common/shared/config/firebase-projects';
+﻿import { FIREBASE_PROJECTS, LOCAL_APP_URLS, functionUrl } from '@impact-common/shared/config/firebase-projects';
 import { HTTP_FUNCTIONS } from '@impact-common/shared/contract/functions-contract';
 
 export const environment = {
   production: false,
   useEmulators: false,
   firebaseConfig: FIREBASE_PROJECTS.dev,
-  domain: 'http://localhost:4200',
+  domain: LOCAL_APP_URLS.web,
   createPaypalOrderUrl: functionUrl('dev', HTTP_FUNCTIONS.create_paypal_order),
   capturePaypalOrderUrl: functionUrl('dev', HTTP_FUNCTIONS.capture_paypal_order),
   shippingUrl: functionUrl('dev', HTTP_FUNCTIONS.get_shipping_rates),

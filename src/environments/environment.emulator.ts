@@ -1,4 +1,4 @@
-import { FIREBASE_PROJECTS, functionUrl } from '@impact-common/shared/config/firebase-projects';
+import { APP_URLS, FIREBASE_PROJECTS, functionUrl } from '@impact-common/shared/config/firebase-projects';
 import { HTTP_FUNCTIONS } from '@impact-common/shared/contract/functions-contract';
 
 // Firebase EMULATOR SUITE configuration - used only by the cross-app test
@@ -18,7 +18,10 @@ export const environment = {
   production: false,
   useEmulators: true,
   firebaseConfig: FIREBASE_PROJECTS.emulator,
-  domain: 'http://localhost:4200',
+  // Ports come from APP_URLS, never a literal here - it is the one place
+  // the local port rule lives (web 4200/4201, admin 5200/5201, reader
+  // 6200/6201; last digit picks live-data vs emulator).
+  domain: APP_URLS.web.emulator,
   createPaypalOrderUrl: functionUrl('emulator', HTTP_FUNCTIONS.create_paypal_order),
   capturePaypalOrderUrl: functionUrl('emulator', HTTP_FUNCTIONS.capture_paypal_order),
   shippingUrl: functionUrl('emulator', HTTP_FUNCTIONS.get_shipping_rates),
@@ -37,7 +40,7 @@ export const environment = {
   // Where the public Impact Group finder hands off for anything that
   // needs an account - joining a group, starting one. This site has no
   // Firebase Auth; the reader owns every group write.
-  readerAppOrigin: 'http://localhost:4300',
+  readerAppOrigin: APP_URLS.reader.emulator,
   oneGiftUrl: 'https://example.test/one-gift',
   monthlyGiftUrl: 'https://example.test/monthly-gift',
   impactPartnersGiftUrl: 'https://example.test/partners-gift',

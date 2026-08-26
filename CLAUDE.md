@@ -10,6 +10,11 @@ Public marketing/e-commerce site for Impact Disciples Ministries — Angular 20 
 
 ```
 npm install
+# LOCAL PORT RULE (2026-08-26): thousands digit = APP, last digit = BACKEND
+#     web 4200 | admin 5200 | reader 6200   -> live data (impactdisciplesdev)
+#     web 4201 | admin 5201 | reader 6201   -> Firebase emulator
+# Ports live in APP_URLS / LOCAL_APP_URLS in the shared submodule
+# (src/common/src/shared/config/firebase-projects.ts).
 npm run start-local          # local Firebase project config, http://localhost:4200
 npm run start-dev            # impactdisciplesdev Firebase project
 npm run start-prod           # impactdisciples-a82a8 (production) Firebase project, local serve

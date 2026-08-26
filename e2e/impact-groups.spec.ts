@@ -20,6 +20,14 @@ import { test, expect, Page } from '@playwright/test';
 //
 //   node scripts/seed-e2e-groups.js --project=dev --execute
 //   ...run this suite...
+//
+// SEEDED AND LEFT IN PLACE as of 2026-08-26 - do NOT --remove it as a
+// matter of course, or all 13 specs here silently skip again. These
+// fixtures are inert (four discussion groups, every id `e2e-group-`
+// prefixed and marked e2eFixture: true) and two of them exist purely to
+// prove they never reach the public finder.
+//
+// Remove them only when you actually want them gone:
 //   node scripts/seed-e2e-groups.js --project=dev --remove --execute
 //
 // Absent the fixture every test SKIPS rather than fails - a setup gap is
