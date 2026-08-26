@@ -579,3 +579,22 @@ main {
 	}
 }
 
+
+// Room for <app-library-dock>, a bar fixed to the bottom of the viewport.
+// Keyed off a body class the component itself toggles rather than applied
+// unconditionally: the dock is dismissible and is suppressed on several
+// routes, so an always-on gap would leave dead space under the footer on
+// every page it isn't showing on.
+body.has-library-dock {
+	padding-bottom: 60px;
+
+	// The back-to-top button is fixed at bottom: 30px (see _common.scss's
+	// `#scroll a`) - lift it clear rather than letting it sit on the dock.
+	#scroll a {
+		bottom: 106px;
+	}
+
+	@media #{variables.$xxs, variables.$xs, variables.$sm} {
+		padding-bottom: 52px;
+	}
+}

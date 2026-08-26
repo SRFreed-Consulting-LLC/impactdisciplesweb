@@ -1,0 +1,156 @@
+@use '../../../../assets/styles/theme/scss/variables';
+
+// A dark field with the yellow accent and a white primary button, matching
+// the Library marketing page's own hero (dl-hero) - this bar is an echo of
+// that page, so it should read as the same announcement rather than as a
+// separate piece of site furniture.
+.library-dock {
+	position: fixed;
+	inset: auto 0 0 0;
+	// Above page content, deliberately below <app-campaign-popup> (10050):
+	// when a campaign popup is up it should own the screen, not share the
+	// bottom edge with this. Also below #scroll a (999), which the global
+	// stylesheet lifts clear of the dock rather than layering over it.
+	z-index: 900;
+	background: variables.$primary-dark;
+	border-top: 3px solid variables.$theme-color;
+	color: variables.$white;
+}
+
+.library-dock__inner {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	min-height: 60px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.library-dock__message {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+	margin: 0;
+}
+
+.library-dock__eyebrow {
+	color: variables.$theme-color;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 10px;
+	letter-spacing: 1.5px;
+	line-height: 1.2;
+}
+
+.library-dock__headline {
+	font-weight: 600;
+	font-size: 15px;
+	line-height: 1.3;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.library-dock__muted {
+	color: rgba(255, 255, 255, 0.65);
+	font-weight: 400;
+}
+
+.library-dock__actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-left: auto;
+}
+
+// A dock-sized member of the .impact-btn family rather than .impact-btn
+// itself: the real one is 50px tall with 42px of side padding, which is most
+// of this bar's height on its own.
+.library-dock__btn {
+	display: inline-block;
+	white-space: nowrap;
+	text-transform: uppercase;
+	text-align: center;
+	font-weight: 700;
+	font-size: 11px;
+	height: 36px;
+	line-height: 32px;
+	padding: 0 20px;
+	border: 2px solid variables.$white;
+	background: variables.$white;
+	color: variables.$black;
+	cursor: pointer;
+
+	&:hover,
+	&:focus {
+		background: variables.$theme-color;
+		border-color: variables.$theme-color;
+		color: variables.$black;
+	}
+}
+
+.library-dock__btn--ghost {
+	background: transparent;
+	color: variables.$white;
+
+	&:hover,
+	&:focus {
+		background: variables.$white;
+		border-color: variables.$white;
+		color: variables.$black;
+	}
+}
+
+.library-dock__close {
+	flex: 0 0 auto;
+	width: 28px;
+	height: 28px;
+	display: grid;
+	place-items: center;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+
+	&:hover,
+	&:focus {
+		color: variables.$white;
+	}
+}
+
+// On a phone the bar collapses to a single readable line plus one action:
+// screen height is the scarcest thing here, and the ghost button is the one
+// that can go, since "Join a Group" is the ask with somewhere to arrive.
+@media #{variables.$xxs, variables.$xs, variables.$sm} {
+	.library-dock__inner {
+		min-height: 52px;
+		gap: 12px;
+	}
+
+	.library-dock__eyebrow {
+		display: none;
+	}
+
+	.library-dock__headline {
+		font-size: 13px;
+	}
+
+	.library-dock__muted {
+		display: none;
+	}
+
+	.library-dock__btn {
+		height: 32px;
+		line-height: 28px;
+		padding: 0 14px;
+		font-size: 10px;
+	}
+
+	.library-dock__btn--ghost {
+		display: none;
+	}
+}

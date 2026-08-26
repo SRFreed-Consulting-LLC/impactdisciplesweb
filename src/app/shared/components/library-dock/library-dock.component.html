@@ -1,0 +1,27 @@
+@if (visible) {
+  <div class="library-dock" role="complementary" aria-label="Impact Discipleship Library">
+    <div class="container library-dock__inner">
+
+      <p class="library-dock__message">
+        <span class="library-dock__eyebrow">New</span>
+        <span class="library-dock__headline">
+          The Impact Discipleship Library<span class="library-dock__muted"> &middot; free to join</span>
+        </span>
+      </p>
+
+      <div class="library-dock__actions">
+        <!-- Same destination as the home slider's Library slide, which is
+             where this announcement is echoing from. -->
+        <a routerLink="/discipleship-library" class="library-dock__btn library-dock__btn--ghost">See what it does</a>
+        <a routerLink="/impact-groups" class="library-dock__btn">Join a Group</a>
+      </div>
+
+      <button
+        type="button"
+        class="library-dock__close"
+        (click)="dismiss()"
+        aria-label="Hide this announcement">&times;</button>
+
+    </div>
+  </div>
+}

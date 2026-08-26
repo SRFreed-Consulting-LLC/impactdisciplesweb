@@ -23,6 +23,7 @@ import { HeaderComponent } from "./components/header/header.component";
 // sweep notes), not just the homepage, so it lives here in the eagerly
 // loaded SharedModule rather than in a lazy-loaded feature module.
 import { HomeHeaderComponent } from "../core/home/home-header/home-header.component";
+import { LibraryDockComponent } from "./components/library-dock/library-dock.component";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     ConsulationBannerComponent,
     HeaderComponent,
     HomeHeaderComponent,
-    CampaignPopupComponent
+    CampaignPopupComponent,
+    LibraryDockComponent
   ],
   imports: [
     CommonModule,
@@ -69,6 +71,7 @@ import { HomeHeaderComponent } from "../core/home/home-header/home-header.compon
     ConsulationBannerComponent,
     HeaderComponent,
     HomeHeaderComponent,
+    LibraryDockComponent,
   ]
 })
 export class SharedModule { }
