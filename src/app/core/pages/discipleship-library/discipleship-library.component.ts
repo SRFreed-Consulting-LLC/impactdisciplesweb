@@ -55,11 +55,11 @@ export class DiscipleshipLibraryComponent {
       headline: 'Read it, then answer it.',
       body: 'Lessons ask real questions and expect real answers. Type yours — or say it out loud and let voice dictation write it down for you.',
       points: ['Work at your own pace', 'Type or speak your answers', 'Your notes stay with the lesson'],
-      // Swap to dictation.mp4 + isVideo:true once the clip is recorded -
-      // the motion IS the point here, and a still cannot carry it. Until
-      // then a still, rather than a <video> pointing at a 404.
-      image: 'assets/reader/dictation.jpg',
+      // The motion IS the point here - a still cannot show text arriving as
+      // it is spoken - so this row is the one video on the page.
+      image: 'assets/reader/dictation.mp4',
       imageAlt: 'Speaking an answer into a lesson and watching it transcribe',
+      isVideo: true,
       mediaRight: true
     },
     {
