@@ -2,11 +2,19 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     // src/common is the git submodule shared with the admin and reader apps
     // (impact-discipleship-library-common) - same alias those two use.
+    //
+    // 'src/*' replaces the baseUrl dropped 2026-08-26: TypeScript deprecated
+    // baseUrl and 6.0+ reports it as an error in the editor ("will stop
+    // functioning in TypeScript 7.0"), though the 5.8 pinned here still
+    // accepts it. It was load-bearing - 176 imports in this app are written
+    // bare as 'src/app/...' rather than relatively - so it becomes an
+    // explicit mapping rather than a deletion. Since TS 4.4 `paths` resolve
+    // relative to this file, so no baseUrl is needed.
     "paths": {
-      "@impact-common/*": ["./src/common/src/*"]
+      "@impact-common/*": ["./src/common/src/*"],
+      "src/*": ["./src/*"]
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
