@@ -1,19 +1,37 @@
-@if (visible) {
-  <div class="library-dock" role="complementary" aria-label="Impact Discipleship Library">
+@if (visible && config) {
+  <div class="library-dock" role="complementary" [attr.aria-label]="config.message">
     <div class="container library-dock__inner">
 
       <p class="library-dock__message">
-        <span class="library-dock__eyebrow">New</span>
+        @if (config.label) {
+          <span class="library-dock__eyebrow">{{ config.label }}</span>
+        }
         <span class="library-dock__headline">
-          The Impact Discipleship Library<span class="library-dock__muted"> &middot; free to join</span>
+          {{ config.message }}@if (config.note) {<span class="library-dock__muted"> {{ config.note }}</span>}
         </span>
       </p>
 
+      <!-- One or two buttons, in order. The LAST one is the solid button and
+           any before it take the ghost treatment, so the pair reads as
+           secondary-then-primary - the primary ask sits closest to the edge
+           of the bar, which is where the original design put it. A lone
+           button is therefore always the solid one. -->
       <div class="library-dock__actions">
-        <!-- Same destination as the home slider's Library slide, which is
-             where this announcement is echoing from. -->
-        <a routerLink="/discipleship-library" class="library-dock__btn library-dock__btn--ghost">See what it does</a>
-        <a routerLink="/impact-groups" class="library-dock__btn">Join a Group</a>
+        @for (cta of ctas; track cta.title; let last = $last) {
+          @if (isExternal(cta)) {
+            <a
+              [href]="hrefFor(cta)"
+              target="_blank"
+              rel="noopener"
+              class="library-dock__btn"
+              [class.library-dock__btn--ghost]="!last">{{ cta.title }}</a>
+          } @else {
+            <a
+              [routerLink]="cta.destination"
+              class="library-dock__btn"
+              [class.library-dock__btn--ghost]="!last">{{ cta.title }}</a>
+          }
+        }
       </div>
 
       <button
