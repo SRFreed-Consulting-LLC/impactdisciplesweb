@@ -16,6 +16,7 @@ import { EquippingGroupsPastorsComponent } from "./pages/equipping-groups/equipp
 import { EquippingGroupsLeadersComponent } from "./pages/equipping-groups/equipping-groups-leaders/equipping-groups-leaders.component";
 import { EquippingGroupsChurchesComponent } from "./pages/equipping-groups/equipping-groups-churches/equipping-groups-churches.component";
 import { CoachingWithImpactComponent } from "./pages/coaching-with-impact/coaching-with-impact.component";
+import { DiscipleshipLibraryComponent } from "./pages/discipleship-library/discipleship-library.component";
 import { LunchAndLearnComponent } from "./pages/lunch-and-learn/lunch-and-learn.component";
 import { PrivatePolicyComponent } from "./pages/private-policy/private-policy.component";
 import { TermsOfServiceComponent } from "./pages/terms-of-service/terms-of-service.component";
@@ -61,6 +62,8 @@ export const routes: Routes = [
     title: 'Equipping Groups for Churches' },
   { path: 'coaching-with-impact', component: CoachingWithImpactComponent,
     title: 'Coaching with Impact' },
+  { path: 'discipleship-library', component: DiscipleshipLibraryComponent,
+    title: 'The Impact Discipleship Library App' },
   { path: 'lunch-and-learns', component: LunchAndLearnComponent,
     title: 'Lunch and Learns' },
   {
@@ -113,6 +116,7 @@ export const routes: Routes = [
     EquippingGroupsLeadersComponent,
     EquippingGroupsChurchesComponent,
     CoachingWithImpactComponent,
+    DiscipleshipLibraryComponent,
     LunchAndLearnComponent,
     PrivatePolicyComponent,
     TermsOfServiceComponent,

@@ -1,0 +1,313 @@
+@use '../../../../assets/styles/variables.scss';
+
+// Direction A ("alternating rows"): one full row per functional area of the
+// Reader app, media and copy swapping sides down the page. Everything draws
+// from the site's own variables - the page has no palette of its own.
+
+.dl-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: variables.$theme-color;
+  margin: 0 0 18px;
+}
+
+.dl-rule {
+  width: 56px;
+  height: 4px;
+  background: variables.$theme-color;
+  border: 0;
+  margin: 0 0 20px;
+  opacity: 1;
+
+  &--center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+// ---- hero ----------------------------------------------------------------
+
+.dl-hero {
+  background: variables.$black;
+  color: variables.$white;
+  padding: 96px 0;
+
+  &__grid {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+  }
+
+  &__copy {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 56px;
+    line-height: 1.08;
+    font-weight: 900;
+    margin: 0 0 22px;
+    // Explicit: the theme's global h1-h6 rule sets its own colour, so
+    // inheriting white from .dl-hero is not enough.
+    color: variables.$white;
+  }
+
+  &__lede {
+    font-size: 18px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 480px;
+    margin: 0 0 32px;
+  }
+
+  &__ctas {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  &__free {
+    margin: 22px 0 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &__shot {
+    flex: 0 0 300px;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+// The site's .impact-btn assumes a light background; these are the two
+// placements it has no variant for.
+.dl-btn--onDark {
+  border-color: variables.$white !important;
+  background: transparent !important;
+  color: variables.$white !important;
+
+  &:hover {
+    background: variables.$white !important;
+    color: variables.$black !important;
+  }
+}
+
+.dl-btn--onBlue {
+  border-color: variables.$white !important;
+  background: variables.$white !important;
+  color: variables.$black !important;
+}
+
+// ---- jump strip ----------------------------------------------------------
+
+.dl-strip {
+  background: variables.$theme-color;
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 28px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  &__item {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: variables.$black;
+  }
+}
+
+// ---- feature rows --------------------------------------------------------
+
+.dl-row {
+  padding: 88px 0;
+  // White, because <body> is already #f7f7f7 - without this every row is
+  // transparent over the body and the alternation below is invisible.
+  background: variables.$white;
+
+  // Every other row takes the tinted ground, so the alternation reads even
+  // where a row's copy is short.
+  &--alt {
+    background: #f0f3f7;
+  }
+
+  &__grid {
+    display: flex;
+    align-items: center;
+    gap: 72px;
+  }
+
+  // Media right = reverse the row. Both orders keep the same source order,
+  // so the copy still follows its heading for a screen reader.
+  &--mediaRight &__grid {
+    flex-direction: row-reverse;
+  }
+
+  &__media {
+    flex: 0 0 280px;
+
+    img,
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+      box-shadow: 0 20px 50px rgba(28, 28, 28, 0.18);
+    }
+  }
+
+  &__copy {
+    flex: 1;
+  }
+
+  &__tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: variables.$black;
+    background: variables.$theme-color;
+    padding: 6px 11px;
+    margin: 0 0 18px;
+  }
+
+  &__headline {
+    font-size: 36px;
+    line-height: 1.16;
+    font-weight: 900;
+    margin: 0 0 16px;
+    color: variables.$black;
+  }
+
+  &__body {
+    font-size: 17px;
+    line-height: 1.7;
+    color: #454d58;
+    margin: 0 0 20px;
+    max-width: 560px;
+  }
+
+  &__points {
+    margin: 0;
+    padding-left: 20px;
+    color: #454d58;
+    line-height: 2;
+  }
+}
+
+// ---- closing ------------------------------------------------------------
+
+.dl-close {
+  background: variables.$blue;
+  color: variables.$white;
+  padding: 84px 0;
+  text-align: center;
+
+  &__title {
+    font-size: 40px;
+    font-weight: 900;
+    margin: 0 0 20px;
+    color: variables.$white; // see .dl-hero__title
+  }
+
+  &__lede {
+    font-size: 17px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.86);
+    max-width: 520px;
+    margin: 0 auto 30px;
+  }
+}
+
+// ---- responsive ----------------------------------------------------------
+// Below the md breakpoint the rows stack, media first, and the alternation
+// stops mattering - a reversed column would put the picture after the copy
+// on one row and before it on the next, which reads as a bug.
+
+@media #{variables.$xxs, variables.$xs, variables.$sm, variables.$md} {
+  .dl-hero {
+    padding: 56px 0;
+
+    &__grid {
+      flex-direction: column;
+      gap: 40px;
+      text-align: center;
+    }
+
+    &__title {
+      font-size: 34px;
+    }
+
+    &__lede {
+      font-size: 16px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    &__ctas {
+      justify-content: center;
+    }
+
+    &__shot {
+      flex: 0 0 auto;
+      max-width: 240px;
+    }
+  }
+
+  .dl-row {
+    padding: 52px 0;
+
+    &__grid,
+    &--mediaRight &__grid {
+      flex-direction: column;
+      gap: 32px;
+      text-align: center;
+    }
+
+    &__media {
+      // Fixed rather than flex:auto - basis:auto sizes from the image's
+      // intrinsic width, so a narrow asset collapses to nothing here.
+      flex: 0 0 230px;
+      width: 230px;
+      max-width: 100%;
+    }
+
+    &__headline {
+      font-size: 27px;
+    }
+
+    &__body {
+      font-size: 16px;
+    }
+
+    // Centred text with a left-indented bullet list looks broken; inline them.
+    &__points {
+      padding-left: 0;
+      list-style: none;
+    }
+  }
+
+  .dl-rule {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .dl-close {
+    padding: 56px 0;
+
+    &__title {
+      font-size: 29px;
+    }
+  }
+}
