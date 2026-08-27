@@ -80,6 +80,23 @@
         background-position: top center;
         background-color: variables.$black;
       }
+
+      // A slide WITH its own phone picture FILLS the frame instead of fitting
+      // into it.
+      //
+      // The contain rule above is the fallback for a slide that only has the
+      // wide desktop banner: it shows all of that rather than cropping half of
+      // it away, at the cost of shrinking it. A mobile picture was cut FOR
+      // this frame, so there is nothing left to protect - cover fills it edge
+      // to edge, and that in turn lets the overlay and the slide copy sit on
+      // the artwork the way they do on every other slide (owner, 2026-08-27).
+      @media #{variables.$md,variables.$sm,variables.$xs,variables.$xxs}{
+        &--has-mobile {
+          background-size: cover;
+          background-position: center;
+        }
+      }
+
       // ARTWORK THAT CARRIES ITS OWN HEADLINE, on phones and tablets only.
       //
       // Slide images are meant to be text-free, because .gallery__slide-content
