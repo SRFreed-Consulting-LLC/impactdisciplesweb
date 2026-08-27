@@ -50,6 +50,22 @@
       @media #{variables.$sm}{ height: 420px; }
       @media #{variables.$xs}{ height: 380px; }
       @media #{variables.$xxs}{ height: 340px; }
+
+      // ...and below 992px show the WHOLE slide image rather than filling the
+      // frame with part of it - the same choice made for the shared page hero
+      // (owner, 2026-08-27). `contain` never crops; pinning it to the top
+      // collects the leftover space into one band underneath instead of
+      // splitting it, and the band takes the site's own dark so it does not
+      // flash white behind the photo.
+      //
+      // Unlike the page hero this slide already carries a full-bleed
+      // rgba(0,0,0,.6) overlay (&-overlay), so the copy stays readable
+      // wherever it lands and the content does not need re-aligning.
+      @media #{variables.$md,variables.$sm,variables.$xs,variables.$xxs}{
+        background-size: contain;
+        background-position: top center;
+        background-color: variables.$black;
+      }
       &-overlay {
         position: absolute;
         inset: 0;                

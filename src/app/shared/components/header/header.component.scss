@@ -22,17 +22,42 @@
   // with background-position: center keeping only whatever sits dead centre.
   // At 300px tall the same photo loses about 31%.
   //
-  // Height, not `contain`: unlike the summit banner - which is a graphic with
-  // its own baked-in text, and correctly switches to contain on phones - this
-  // hero has the pretitle, title and description drawn OVER it, so it has to
-  // fill the frame. Shortening it is the only lever that does not letterbox.
-  @media #{variables.$md}{ height: 400px; }
-  @media #{variables.$sm}{ height: 340px; }
-  @media #{variables.$xs}{ height: 300px; }
-  @media #{variables.$xxs}{ height: 260px; }
+  // BELOW 992px THE WHOLE PHOTO IS SHOWN - owner's choice from the rendered
+  // options, 2026-08-27. `contain` scales the image to fit rather than fill,
+  // so nothing is ever cropped out of a hero on a phone or tablet.
+  //
+  // Three things have to move together for that to work, because this hero
+  // draws its pretitle, title, description and buttons directly OVER the
+  // image with no scrim:
+  //
+  //   background-position: top   - pins the photo to the top of the frame, so
+  //                                the leftover space collects underneath it
+  //                                in one band instead of splitting above and
+  //                                below (the summit banner does the same).
+  //   background-color           - that leftover band would otherwise be the
+  //                                page behind, which is white, and the
+  //                                title is #fff. $black keeps the type
+  //                                readable and matches the site's own dark.
+  //   align-items: flex-end      - the base rule centres the copy, which with
+  //                                a top-pinned photo would land ON the
+  //                                image. Bottom-aligned, it sits on the
+  //                                solid band under it.
+  //
+  // Heights leave room for the photo plus that copy: a 16:9 image is 219px
+  // tall at 390px wide, so 380px gives roughly 160px of band.
+  @media #{variables.$md,variables.$sm,variables.$xs,variables.$xxs}{
+    background-size: contain;
+    background-position: top center;
+    background-color: variables.$black;
+    align-items: flex-end;
+  }
+  @media #{variables.$md}{ height: 520px; }
+  @media #{variables.$sm}{ height: 440px; }
+  @media #{variables.$xs}{ height: 380px; }
+  @media #{variables.$xxs}{ height: 330px; }
 
   @media #{variables.$sm,variables.$xxs,variables.$xs}{
-    padding: 0 10px;
+    padding: 0 10px 24px;
   }
   &__content {
     width: 60%;
