@@ -7,9 +7,17 @@
   // height, which otherwise has none of its own to inherit -- explicit here
   // as a fallback in case cascade order ever puts Swiper's base CSS after
   // this component's .gallery__slide height rule below.
+  // Height has to be set on the swiper, the wrapper AND .gallery__slide
+  // together - Swiper sizes a slide to 100% of the wrapper, so changing one
+  // without the others just makes the slide disagree with its track.
   .swiper, .swiper-wrapper {
     position: relative;
     height: calc(100vh - 100px);
+
+    @media #{variables.$md}{ height: 480px; }
+    @media #{variables.$sm}{ height: 420px; }
+    @media #{variables.$xs}{ height: 380px; }
+    @media #{variables.$xxs}{ height: 340px; }
   }
 
   .gallery {
@@ -22,18 +30,26 @@
       background-size: cover;
       background-repeat: no-repeat;
 
-      // @media #{$laptop}{
-      //   height: 450px;
-      // }
-      // @media #{$lg}{
-      //   height: 400px;
-      // }
-      // @media #{$md}{
-      //   height: 350px;
-      // }
-      // @media #{$xxs,$xs,$sm}{
-      //   height: 325px;
-      // }
+      // A FULL-VIEWPORT slide is only right on a desktop. On a phone,
+      // calc(100vh - 100px) makes a 390x744 frame - very tall and very narrow -
+      // and `background-size: cover` has to scale a landscape photo up by its
+      // HEIGHT to fill that, so roughly 70% of a 16:9 image is thrown away off
+      // the left and right and `background-position: center` keeps whatever
+      // happens to sit in the middle. That is why subjects were being cropped
+      // out of the slides on mobile (owner report, 2026-08-27).
+      //
+      // Shorter frames are less extreme: at ~400px tall the same photo loses
+      // about 45% instead of 70%, so far more of each image survives. The
+      // heights below were commented out in the original template and are now
+      // live, retuned - the old 325px everywhere below 768px was too squat for
+      // the title and button that still render there (the body copy is already
+      // hidden at those widths, see .text).
+      //
+      // Keep these in lockstep with .swiper/.swiper-wrapper above.
+      @media #{variables.$md}{ height: 480px; }
+      @media #{variables.$sm}{ height: 420px; }
+      @media #{variables.$xs}{ height: 380px; }
+      @media #{variables.$xxs}{ height: 340px; }
       &-overlay {
         position: absolute;
         inset: 0;                

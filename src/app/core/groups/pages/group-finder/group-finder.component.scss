@@ -2,7 +2,22 @@
 
 .group-finder {
   &__body {
-    padding: 60px 0 40px;
+    // The 18px horizontal padding is load-bearing, not cosmetic.
+    //
+    // This .container computes to `padding: 0` in this theme, and the Bootstrap
+    // .row inside it carries the usual gutter compensation, `margin: 0 -12px`
+    // (--bs-gutter-x: 1.5rem). Those negative margins are meant to cancel
+    // against the container's own padding - with none to cancel, the row
+    // measured 414px inside a 390px viewport and the whole page could be
+    // dragged 12px sideways. Measured on a real phone viewport, 2026-08-27,
+    // after an owner report of the page "pushing up on the edges" and sliding
+    // left; identical at 375, 390, 414 and 430.
+    //
+    // 18 > 12 does two jobs at once: it absorbs the row's overhang so nothing
+    // overflows, and the 18px that is left over becomes the gutter that keeps
+    // cards off the screen edge (a column adds its own 12px padding, so a card
+    // ends up exactly 18px in). Do not drop below 12px or the slide returns.
+    padding: 60px 18px 40px;
   }
 
   &__sidebar {
@@ -209,7 +224,10 @@
 @media #{variables.$xxs, variables.$xs, variables.$sm} {
   .group-finder {
     &__body {
-      padding: 36px 0 20px;
+      // Keeps the 18px gutter from the base rule - only the vertical rhythm
+      // tightens on a phone. See the note there for why the horizontal value
+      // cannot go to 0.
+      padding: 36px 18px 20px;
     }
 
     &__grid {
