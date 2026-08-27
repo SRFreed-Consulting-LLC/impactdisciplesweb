@@ -1,8 +1,12 @@
 <app-home-header></app-home-header>
 
 <div class="store">
+  <!-- mobileBackgroundUrl is a phone cut of the same banner: the book covers
+       sit in the right half of the 1622x696 original, so filling a phone frame
+       with the whole thing either shrinks them past reading or crops them out. -->
   <app-header
     [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fstore-header.PNG?alt=media&token=3c39ab6a-0a64-496a-bd7e-631f17f1a51c'"
+    [mobileBackgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fstore-header-mobile.jpg?alt=media&token=cfac43ff-1863-47c0-8a77-4e8f5d2e4b1d'"
     [pretitle]="'DISCIPLE-MAKING RESOURCES'"
     [title]="'IMPACT BOOKS'"
     [buttonClick]="true"

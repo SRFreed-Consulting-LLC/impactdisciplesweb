@@ -22,34 +22,43 @@
   // with background-position: center keeping only whatever sits dead centre.
   // At 300px tall the same photo loses about 31%.
   //
-  // BELOW 992px THE WHOLE PHOTO IS SHOWN - owner's choice from the rendered
-  // options, 2026-08-27. `contain` scales the image to fit rather than fill,
-  // so nothing is ever cropped out of a hero on a phone or tablet.
+  // Below 992px the frame just gets SHORTER; it still fills with cover.
   //
-  // Three things have to move together for that to work, because this hero
-  // draws its pretitle, title, description and buttons directly OVER the
-  // image with no scrim:
+  // This briefly used `contain` instead, so no hero was ever cropped - but
+  // that made every one of them small, because fitting a 1622x696 banner into
+  // a 390px phone is a 4x reduction (owner report on the store page,
+  // 2026-08-27). The answer is not a fitting mode: a hero whose subject sits
+  // off to one side needs a picture cut for the phone, which is what
+  // mobileBackgroundUrl is for. With one supplied, cover fills the frame and
+  // nothing important is lost, because the file was cut for this shape.
   //
-  //   background-position: top   - pins the photo to the top of the frame, so
-  //                                the leftover space collects underneath it
-  //                                in one band instead of splitting above and
-  //                                below (the summit banner does the same).
-  //   background-color           - that leftover band would otherwise be the
-  //                                page behind, which is white, and the
-  //                                title is #fff. $black keeps the type
-  //                                readable and matches the site's own dark.
-  //   align-items: flex-end      - the base rule centres the copy, which with
-  //                                a top-pinned photo would land ON the
-  //                                image. Bottom-aligned, it sits on the
-  //                                solid band under it.
-  //
-  // Heights leave room for the photo plus that copy: a 16:9 image is 219px
-  // tall at 390px wide, so 380px gives roughly 160px of band.
+  // Heroes WITHOUT one are ordinary photographs, and those crop gracefully -
+  // a shorter frame is closer to their own proportions, so the loss is about
+  // 31% rather than the 56% a 500px frame took.
   @media #{variables.$md,variables.$sm,variables.$xs,variables.$xxs}{
-    background-size: contain;
-    background-position: top center;
-    background-color: variables.$black;
-    align-items: flex-end;
+    background-size: cover;
+    background-position: center;
+  }
+
+  // A SCRIM, on devices only. This hero draws its pretitle, title,
+  // description and buttons straight onto the picture with nothing behind
+  // them. That was survivable while a phone cropped the subject out of frame
+  // and the copy landed on empty background; once a hero has artwork cut FOR
+  // the phone, the subject fills the frame and the copy lands right on top of
+  // it - white type over white book covers on /store (2026-08-27).
+  //
+  // 45% rather than the slider's 60%: this is a smaller frame with far less
+  // text on it, and the picture is the reason someone stopped scrolling.
+  // Desktop is untouched, where the copy occupies its own 60% column clear of
+  // the subject.
+  @media #{variables.$md,variables.$sm,variables.$xs,variables.$xxs}{
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      pointer-events: none;
+    }
   }
   @media #{variables.$md}{ height: 520px; }
   @media #{variables.$sm}{ height: 440px; }
@@ -59,7 +68,10 @@
   @media #{variables.$sm,variables.$xxs,variables.$xs}{
     padding: 0 10px 24px;
   }
+  // Above the scrim added for devices, or the copy would sit under it.
   &__content {
+    position: relative;
+    z-index: 1;
     width: 60%;
     display: flex;
     flex-direction: column;
