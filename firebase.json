@@ -26,6 +26,28 @@
           "source": "**",
           "destination": "/index.html"
         }
+      ],
+      "headers": [
+        {
+          "//": "MUST be `**`, not `/index.html`. Hosting matches header rules against the REQUESTED path, not the rewrite destination, and nobody requests /index.html - the site is loaded at `/`, `/store`, `/summit/2026` and so on. Without this every route fell through to Hosting default max-age=3600, so a visitor kept the PREVIOUS index.html for up to an hour after a deploy, and that HTML names the old hashed bundles - which really are immutable - pinning the whole stale site. Diagnosed on the admin app 2026-08-27 and fixed here at the same time.",
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "//": "AFTER the catch-all deliberately: where two rules match, the LAST wins, so hash-named assets keep their long cache. Verified against a live site before shipping - do not reorder.",
+          "source": "**/*.@(js|css|woff|woff2|ttf|eot|otf|png|jpg|jpeg|gif|webp|svg|ico|mp4)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        }
       ]
     },
     {
@@ -53,6 +75,28 @@
         {
           "source": "**",
           "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "//": "MUST be `**`, not `/index.html`. Hosting matches header rules against the REQUESTED path, not the rewrite destination, and nobody requests /index.html - the site is loaded at `/`, `/store`, `/summit/2026` and so on. Without this every route fell through to Hosting default max-age=3600, so a visitor kept the PREVIOUS index.html for up to an hour after a deploy, and that HTML names the old hashed bundles - which really are immutable - pinning the whole stale site. Diagnosed on the admin app 2026-08-27 and fixed here at the same time.",
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "//": "AFTER the catch-all deliberately: where two rules match, the LAST wins, so hash-named assets keep their long cache. Verified against a live site before shipping - do not reorder.",
+          "source": "**/*.@(js|css|woff|woff2|ttf|eot|otf|png|jpg|jpeg|gif|webp|svg|ico|mp4)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
         }
       ]
     }
