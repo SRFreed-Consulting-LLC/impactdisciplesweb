@@ -9,6 +9,28 @@
   background-size: cover;
   background-repeat: no-repeat;
   padding: 0 100px;
+
+  // The shared page hero, on most content pages. Its height was a flat 500px
+  // at every width while everything else here - padding, content column,
+  // pretitle, title - already had breakpoints, which is what cropped the
+  // subject out of hero photos on phones (owner report, 2026-08-27).
+  //
+  // `background-size: cover` scales the image to fill the frame and discards
+  // the rest. A 390x500 frame is far taller in proportion than any of these
+  // landscape photos, so it scales by HEIGHT: a 16:9 image comes out 889px
+  // wide inside a 390px window and loses about 56% off the left and right,
+  // with background-position: center keeping only whatever sits dead centre.
+  // At 300px tall the same photo loses about 31%.
+  //
+  // Height, not `contain`: unlike the summit banner - which is a graphic with
+  // its own baked-in text, and correctly switches to contain on phones - this
+  // hero has the pretitle, title and description drawn OVER it, so it has to
+  // fill the frame. Shortening it is the only lever that does not letterbox.
+  @media #{variables.$md}{ height: 400px; }
+  @media #{variables.$sm}{ height: 340px; }
+  @media #{variables.$xs}{ height: 300px; }
+  @media #{variables.$xxs}{ height: 260px; }
+
   @media #{variables.$sm,variables.$xxs,variables.$xs}{
     padding: 0 10px;
   }
