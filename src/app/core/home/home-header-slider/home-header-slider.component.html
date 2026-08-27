@@ -9,7 +9,7 @@
         <div
           class="swiper-slide gallery__slide"
           [class.gallery__slide--artwork-text]="galleryItem.artworkHasText"
-          [style.backgroundImage]="'url('+galleryItem.image.url+')'">
+          [style.backgroundImage]="'url(' + slideImageUrl(galleryItem) + ')'">
           <div class="gallery__slide-overlay">
             <div class="gallery__slide-content">
               <h2 class="title " appAnimate="fadeInUp">{{galleryItem.title}}</h2>

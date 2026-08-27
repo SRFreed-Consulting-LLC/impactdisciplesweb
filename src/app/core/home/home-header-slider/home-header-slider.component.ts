@@ -14,7 +14,29 @@ export class HomeHeaderSliderComponent implements OnInit, OnDestroy{
   public images: HomePageImageModel[] = [];
   private swiperInstance: Swiper | undefined;
 
+  /** Matches $md's upper bound in the theme's breakpoints - see
+   *  assets/styles/theme/scss/_variables.scss. Above this the desktop image
+   *  is used; at or below it a slide's own mobileImage wins if it has one. */
+  private static readonly MOBILE_MAX_WIDTH = 991;
+
   constructor(private service: HomePageImageService){}
+
+  /**
+   * The picture this slide should show at the CURRENT viewport width.
+   *
+   * A slide may carry a phone/tablet cut of its artwork (mobileImage). Wide
+   * desktop banners do not survive a 390px frame - fitting the whole thing in
+   * shrinks the wordmark past reading, and filling the frame crops half the
+   * picture away - so a slide that matters on a phone gets its own file.
+   *
+   * Falls back to `image` whenever there is no mobile cut, which is every
+   * slide until someone uploads one, so nothing changes by default.
+   */
+  slideImageUrl(item: HomePageImageModel): string | undefined {
+    const isNarrow = typeof window !== 'undefined'
+      && window.innerWidth <= HomeHeaderSliderComponent.MOBILE_MAX_WIDTH;
+    return (isNarrow && item.mobileImage?.url) || item.image?.url;
+  }
 
   async ngOnInit() {
     this.images = await this.service.getAllByValue('isActive', true);

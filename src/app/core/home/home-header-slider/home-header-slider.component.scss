@@ -98,6 +98,15 @@
       // exactly as it was.
       @media #{variables.$md,variables.$sm,variables.$xs,variables.$xxs}{
         &--artwork-text {
+          // CENTRED, unlike every other slide. The others pin their photo to
+          // the top so the leftover space gathers into one band underneath for
+          // the title and description to sit on. These have no copy to make
+          // room for, so a top-pinned strip just left a large empty area below
+          // it; centring puts the artwork in the middle of its frame and
+          // splits the space evenly, which reads as deliberate rather than as
+          // an image that failed to fill (owner, 2026-08-27).
+          background-position: center center;
+
           .gallery__slide-overlay { background: transparent; }
           .title,
           .slider-hr,
