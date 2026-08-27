@@ -2,8 +2,13 @@
   <div class="swiper">
     <div class="swiper-wrapper">
       @for (galleryItem of images; track galleryItem) {
+        <!-- gallery__slide--artwork-text: this slide's picture already has its
+             own headline drawn into it, so on phones and tablets the overlay
+             and the copy below step aside and let the artwork speak. Set per
+             slide in Content Manager > Home Page Images. -->
         <div
           class="swiper-slide gallery__slide"
+          [class.gallery__slide--artwork-text]="galleryItem.artworkHasText"
           [style.backgroundImage]="'url('+galleryItem.image.url+')'">
           <div class="gallery__slide-overlay">
             <div class="gallery__slide-content">

@@ -12,17 +12,31 @@
   // without the others just makes the slide disagree with its track.
   .swiper, .swiper-wrapper {
     position: relative;
-    height: calc(100vh - 100px);
 
-    @media #{variables.$md}{ height: 480px; }
-    @media #{variables.$sm}{ height: 420px; }
-    @media #{variables.$xs}{ height: 380px; }
-    @media #{variables.$xxs}{ height: 340px; }
+    // DESKTOP FRAME MATCHES THE ARTWORK, so nothing is cropped and nothing is
+    // letterboxed. The slides are 2560x1200 banner graphics (32/15 = 2.13:1);
+    // the old `calc(100vh - 100px)` made a frame far taller in proportion than
+    // that - 1024x668 is 1.53:1 - so `cover` had to scale by height and push
+    // the sides out of view. Measured on dev, 2026-08-27: 28% of the width
+    // lost at 1024x768, 20% at 1512x982, 8% at 1920x1080. That is the "right
+    // side cut off" the owner saw after the mobile fix, because the mobile
+    // media queries stopped at 991px and never reached a laptop.
+    //
+    // With the frame on the artwork's own ratio, cover and contain agree and
+    // there is nothing to crop at any desktop width.
+    aspect-ratio: 32 / 15;
+
+    @media #{variables.$md}{ aspect-ratio: auto; height: 480px; }
+    @media #{variables.$sm}{ aspect-ratio: auto; height: 420px; }
+    @media #{variables.$xs}{ aspect-ratio: auto; height: 380px; }
+    @media #{variables.$xxs}{ aspect-ratio: auto; height: 340px; }
   }
 
   .gallery {
     &__slide {
-      height: calc(100vh - 100px);
+      // Matches .swiper/.swiper-wrapper above - Swiper sizes a slide to its
+      // wrapper, so these must agree or the slide disagrees with its track.
+      aspect-ratio: 32 / 15;
       display: flex;
       align-items: center;
       position: relative;
@@ -46,10 +60,10 @@
       // hidden at those widths, see .text).
       //
       // Keep these in lockstep with .swiper/.swiper-wrapper above.
-      @media #{variables.$md}{ height: 480px; }
-      @media #{variables.$sm}{ height: 420px; }
-      @media #{variables.$xs}{ height: 380px; }
-      @media #{variables.$xxs}{ height: 340px; }
+      @media #{variables.$md}{ aspect-ratio: auto; height: 480px; }
+      @media #{variables.$sm}{ aspect-ratio: auto; height: 420px; }
+      @media #{variables.$xs}{ aspect-ratio: auto; height: 380px; }
+      @media #{variables.$xxs}{ aspect-ratio: auto; height: 340px; }
 
       // ...and below 992px show the WHOLE slide image rather than filling the
       // frame with part of it - the same choice made for the shared page hero
@@ -66,10 +80,43 @@
         background-position: top center;
         background-color: variables.$black;
       }
+      // ARTWORK THAT CARRIES ITS OWN HEADLINE, on phones and tablets only.
+      //
+      // Slide images are meant to be text-free, because .gallery__slide-content
+      // draws the title, body and button over the lower-left. The Golf and
+      // Summit artwork has its headline baked in, so a visitor saw two
+      // competing headlines - and the 60%-black overlay below dimmed the
+      // artwork's own words while it was at it.
+      //
+      // With HomePageImageModel.artworkHasText ticked, this slide drops the
+      // tint and the copy on small screens and simply shows the whole picture.
+      // The BUTTON stays: the slide still has to be tappable, and Golf's
+      // "Register Today!" is the entire point of it (owner's call, 2026-08-27).
+      //
+      // Phones and tablets only. Above 991px the frame is wide enough that the
+      // overlaid copy sits clear of the artwork, so the desktop slider is left
+      // exactly as it was.
+      @media #{variables.$md,variables.$sm,variables.$xs,variables.$xxs}{
+        &--artwork-text {
+          .gallery__slide-overlay { background: transparent; }
+          .title,
+          .slider-hr,
+          .text { display: none; }
+
+          // The copy block is otherwise centred and full-height; with only a
+          // button left in it, pin that to the bottom so it sits under the
+          // picture rather than across the middle of it.
+          .gallery__slide-content {
+            justify-content: flex-end;
+            padding-bottom: 18px;
+          }
+        }
+      }
+
       &-overlay {
         position: absolute;
-        inset: 0;                
-        background: rgba(0, 0, 0, 0.6); 
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
       }
       &-content {
         height: 100%;
