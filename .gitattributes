@@ -1,0 +1,42 @@
+# Line endings are a property of THIS REPO, not of each machine's
+# core.autocrlf. Added 2026-08-26, matching the admin and reader repos.
+#
+# What was wrong: core.autocrlf=true with no attributes file. Git wrote CRLF
+# on checkout, every tool that edited a file afterwards wrote LF, and a file
+# edited in place but never re-checked-out ended up half and half - which
+# silently breaks multi-line edits, because a literal match picks one style
+# and misses the other. An audit on 2026-08-26 found 362 tracked text files:
+# the committed blobs were already 362/362 pure LF, but the working tree was
+# 211 CRLF / 145 LF / 6 MIXED.
+#
+# LF is the canonical form here because it is what is already committed and
+# what every tool in this stack writes. Do not "fix" this to crlf - that is
+# the arrangement that produced the drift.
+#
+# No .bat/.cmd/.ps1/.sh files are tracked in this repo, so there are no
+# endings-sensitive exceptions. ADD ONE HERE (e.g. `*.bat text eol=crlf`)
+# before committing any such file - a .bat with LF endings can fail to run.
+#
+# NOTE: this does NOT reach into src/common. A submodule is its own repo and
+# carries its own attributes file.
+
+* text=auto eol=lf
+
+# Binary files: never touched, never diffed as text. `text=auto` already
+# detects most of these, but being explicit means a detection miss cannot
+# corrupt one by rewriting its bytes.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.svg   text eol=lf
+*.pdf   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary
+*.mp4   binary
+*.zip   binary
+*.xlsx  binary
