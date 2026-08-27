@@ -70,7 +70,16 @@ export abstract class CartLinesBase {
 
     this.couponMessage = result.message;
     this.couponMessageType = result.applied ? 'success' : 'error';
-    this.cartService.setCouponCode(result.applied ? this.couponCode : '');
+    // Persist the coupon's CANONICAL code, not what the shopper typed.
+    // Matching is deliberately case-insensitive (lookup_coupon, and the
+    // server's own pickActiveCoupon), but the code that gets STORED must be
+    // the one on the coupon document: it travels into the purchase record,
+    // where `purchases.couponCode` is expected to join exactly against
+    // `coupons.code`. Falls back to the typed code only if the lookup
+    // somehow returned no document alongside applied:true.
+    this.cartService.setCouponCode(
+      result.applied ? (result.coupon?.code ?? this.couponCode) : ''
+    );
 
     // validateAndApply() mutates item.discount/discountPrice IN PLACE on
     // the same cart-item objects CartService holds -- touch() re-persists

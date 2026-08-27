@@ -24,6 +24,7 @@ describe('cart lines shared behaviour', () => {
   let applyResult: {
     applied: boolean; message: string;
     lineResults: { itemId: string; skippedReason?: string }[];
+    coupon?: { code: string };
   };
 
   const cartService = () => ({
@@ -69,14 +70,39 @@ describe('cart lines shared behaviour', () => {
   });
 
   it('applies a valid coupon, persists the code, and re-persists the cart', async () => {
-    await component.applyCoupon();
+    // couponCode is assigned BEFORE the call deliberately: setting it
+    // afterwards made this assertion vacuous, since it only ever observed
+    // the empty initial value. With no coupon doc on the result this also
+    // pins the fallback - the typed code is used when the lookup returned
+    // applied:true without a document.
     component.couponCode = 'SAVE10';
 
+    await component.applyCoupon();
+
     expect(calls).toEqual([
-      'clear', 'validateAndApply', 'setCouponCode:', 'touch'
+      'clear', 'validateAndApply', 'setCouponCode:SAVE10', 'touch'
     ]);
     expect(component.couponMessage).toBe('Coupon applied');
     expect(component.couponMessageType).toBe('success');
+  });
+
+  it('persists the coupon CANONICAL code, not the casing typed', async () => {
+    // Matching is case-insensitive on purpose (lookup_coupon, and the
+    // server's pickActiveCoupon), but the code that gets STORED travels
+    // into the purchase record, where purchases.couponCode is expected to
+    // join exactly against coupons.code. Persisting "save" for a coupon
+    // stored as "SAVE" is what broke that join.
+    applyResult = {
+      applied: true,
+      message: 'Coupon applied',
+      lineResults: [],
+      coupon: { code: 'SAVE' }
+    };
+    component.couponCode = 'save';
+
+    await component.applyCoupon();
+
+    expect(calls).toContain('setCouponCode:SAVE');
   });
 
   it('clears the stored code when the coupon did not apply', async () => {
