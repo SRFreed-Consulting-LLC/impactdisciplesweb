@@ -61,7 +61,8 @@
                 }
               ],
               "optimization": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "outputHashing": "all"
             },
             "local": {
               "fileReplacements": [
