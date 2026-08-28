@@ -202,8 +202,11 @@ export class CampaignPopupComponent implements OnInit {
           formName: `Popup: ${popup.title || 'Campaign'}`,
           fieldSnapshot: fields.map((f) => ({ id: f, label: this.fieldLabel(f), type: f === 'email' ? 'email' : 'text' })),
           values: Object.fromEntries(fields.map((f) => [f, f === 'email' ? email : this.formValues[f].trim()])),
-          submittedAt: new Date(),
-          newRecordStatus: 'new'
+          submittedAt: new Date()
+          // Not set here - see dynamic-form.component.ts. The alert
+          // trigger skips any submission that arrives already carrying
+          // newRecordStatus, so setting it hid popup conversions from the
+          // staff bell. Sweep finding S7, 2026-08-28.
         } as FormSubmissionModel;
         await this.formSubmissionService.add(submission);
       } else {

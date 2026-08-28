@@ -103,8 +103,13 @@ export class DynamicFormComponent implements OnChanges {
       formName: this.formDef.name,
       fieldSnapshot: dataFields.map((f) => ({ id: f.id, label: f.label, type: f.type })),
       values: this.form.getRawValue(),
-      submittedAt: new Date(),
-      newRecordStatus: 'new'
+      submittedAt: new Date()
+      // newRecordStatus is deliberately NOT set here. The
+      // onFormSubmissionCreated trigger treats a doc that ARRIVES with the
+      // field as one it has already counted and skips it, so setting it
+      // client-side meant every public submission was invisible to the
+      // staff alert bell. The trigger is the field's only writer now.
+      // Sweep finding S7, 2026-08-28 - do not add it back.
     };
 
     this.formSubmissionService
