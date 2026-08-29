@@ -23,6 +23,12 @@ describe('PrayerTeamComponent subscribe flow', () => {
     // The real SubscribeFormService, built from the same three duck-typed
     // deps the component itself used to take. Only this construction
     // changed in the extraction - every assertion below is untouched.
+    //
+    // The second argument is the page-content lookup added 2026-08-29 so
+    // this page's heading can be edited in the admin. It plays no part in
+    // the subscribe flow these tests cover, so it is a stub that returns no
+    // blocks - which is also the state the live page is in until someone
+    // saves something.
     component = new PrayerTeamComponent(
       new SubscribeFormService(
         { createSubscription } as never,
@@ -33,7 +39,8 @@ describe('PrayerTeamComponent subscribe flow', () => {
             return of('EC-9012');
           }
         } as never
-      )
+      ),
+      { blocksFor: () => of({}) } as never
     );
     component.prayerTeamSubscription.firstName = 'Casey';
     component.prayerTeamSubscription.lastName = 'Contact';

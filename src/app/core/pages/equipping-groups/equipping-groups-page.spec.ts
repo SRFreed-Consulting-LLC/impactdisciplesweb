@@ -1,3 +1,4 @@
+import { of } from 'rxjs';
 import { EquippingGroupsComponent } from './equipping-groups.component';
 import { EquippingGroupsPastorsComponent } from './equipping-groups-pastors/equipping-groups-pastors.component';
 import { EquippingGroupsLeadersComponent } from './equipping-groups-leaders/equipping-groups-leaders.component';
@@ -36,7 +37,11 @@ describe('equipping-groups pages', () => {
           ngOnInit(): Promise<void>; playVideo(): void;
         })(
           {} as never,
-          { getAll: () => Promise.resolve(configs) } as never
+          { getAll: () => Promise.resolve(configs) } as never,
+          // The page-content lookup added 2026-08-29. It plays no part in what
+          // this test pins, so it returns no blocks - which is the state the
+          // live pages are in until someone saves something.
+          { blocksFor: () => of({}) } as never
         );
 
         await component.ngOnInit();
@@ -47,7 +52,11 @@ describe('equipping-groups pages', () => {
       it('starts with the video paused and plays on demand', () => {
         const component = new (Cls as never as new (...a: unknown[]) => {
           isPlaying: boolean; playVideo(): void;
-        })({} as never, { getAll: () => Promise.resolve([]) } as never);
+        })(
+          {} as never,
+          { getAll: () => Promise.resolve([]) } as never,
+          { blocksFor: () => of({}) } as never
+        );
 
         expect(component.isPlaying).toBe(false);
         component.playVideo();
