@@ -38,6 +38,7 @@ import { GiveSectionComponent } from "./pages/give/give-section/give-section.com
 import { ContactSectionComponent } from "./pages/contact/contact-section/contact-section.component";
 import { LibrarySectionComponent } from "./pages/discipleship-library/library-section/library-section.component";
 import { PrayerSectionComponent } from "./pages/prayer-team/prayer-section/prayer-section.component";
+import { CoachingSectionComponent } from "./pages/coaching-with-impact/coaching-section/coaching-section.component";
 
 // Exported for form-page.contract.spec.ts: the three form pages carry
 // their form ids in route data now, and a wrong id fails silently on a
@@ -145,7 +146,8 @@ export const routes: Routes = [
     GiveSectionComponent,
     ContactSectionComponent,
     LibrarySectionComponent,
-    PrayerSectionComponent
+    PrayerSectionComponent,
+    CoachingSectionComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,214 @@
+@switch (block.type) {
+
+  <!-- The hero at the top of the page. -->
+  @case (types.PAGE_HEADER) {
+    <app-header
+      [backgroundUrl]="block.image?.url"
+      [pretitle]="block.subheading"
+      [title]="block.heading"
+    ></app-header>
+  }
+
+  <!-- A lead line, a passage, and up to two buttons. -->
+  @case (types.PROSE) {
+    <section class="cwi-intro">
+      <div class="container">
+        <div class="cwi-intro__inner">
+          <h4 appAnimate="fadeInUp" class="cwi-intro__lead" [innerHTML]="block.heading"></h4>
+          <hr class="slider-hr-solid" />
+          <div appAnimate="fadeInUpTwo" class="cwi-intro__body" [innerHTML]="block.body"></div>
+          @if (block.ctaTitle || block.ctaTitle2) {
+            <div class="cwi-intro__actions">
+              @if (block.ctaTitle) {
+                <a class="impact-btn impact-btn-blue" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+              }
+              @if (block.ctaTitle2) {
+                <a class="impact-btn" [href]="block.ctaUrl2"
+                   target="_blank" rel="noopener">{{ block.ctaTitle2 }}</a>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- The quote carousel. The section stores only the ORDER; whether a quote
+       appears is its own Live switch - see the component. -->
+  @case (types.TESTIMONIALS) {
+    <section class="cwi-testimonials"
+             [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+      <div class="container">
+        <div class="cwi-section-head cwi-section-head--center">
+          <p class="slider-small-pretitle">{{ block.subheading }}</p>
+          <h2 class="cwi-section-head__title" [innerHTML]="block.heading"></h2>
+          <hr class="slider-hr-solid" />
+        </div>
+
+        <div class="cwi-testimonials__swiper swiper">
+          <div class="swiper-wrapper">
+            @for (testimonial of testimonials; track testimonial.name) {
+              <div class="swiper-slide">
+                <figure class="cwi-quote">
+                  <i class="fas fa-quote-left cwi-quote__mark" aria-hidden="true"></i>
+                  <blockquote class="cwi-quote__body">
+                    @for (paragraph of testimonial.quote; track $index) {
+                      <p>{{ paragraph }}</p>
+                    }
+                  </blockquote>
+                  <figcaption class="cwi-quote__attribution">
+                    <span class="cwi-quote__name">{{ testimonial.name }}</span>
+                    @if (testimonial.role) {
+                      <span class="cwi-quote__role">{{ testimonial.role }}</span>
+                    }
+                  </figcaption>
+                </figure>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="cwi-testimonials__controls">
+          <button type="button" class="cwi-testimonials__prev" aria-label="Previous testimonial">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          </button>
+          <div class="cwi-testimonials__pagination"></div>
+          <button type="button" class="cwi-testimonials__next" aria-label="Next testimonial">
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- A heading, a passage, a click-to-play video and a button. -->
+  @case (types.MISSION) {
+    <section class="cwi-report">
+      <div class="container">
+        <div class="cwi-section-head cwi-section-head--center">
+          <p class="slider-small-pretitle">{{ block.subheading }}</p>
+          <h2 class="cwi-section-head__title" [innerHTML]="block.heading"></h2>
+          <hr class="slider-hr-solid" />
+        </div>
+        <div class="cwi-report__copy" [innerHTML]="block.body"></div>
+
+        <div class="cwi-video">
+          @if (!isPlaying) {
+            <div class="cwi-video__poster"
+                 [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+              <a
+                (click)="playVideo()"
+                (keydown.enter)="playVideo()"
+                (keydown.space)="playVideo()"
+                tabindex="0"
+                role="button"
+                aria-label="Play the progress report"
+                class="cwi-video__button cursor-pointer"
+              >
+                <i class="fas fa-play" aria-hidden="true"></i>
+              </a>
+            </div>
+          } @else {
+            <!-- disablePlaceholder: this component shows its OWN thumbnail-with-
+                 a-play-button before it loads the API, which here meant two
+                 posters and two play buttons in a row - ours, then YouTube's -
+                 each a different size. We already have a poster above, so the
+                 click that reveals this player should load the real thing. -->
+            <div class="cwi-video__player-wrapper">
+              <youtube-player
+                [videoId]="block.videoId"
+                [playerVars]="{ autoplay: 1 }"
+                [disablePlaceholder]="true"
+                class="cwi-video__player"
+              ></youtube-player>
+            </div>
+          }
+        </div>
+
+        @if (block.ctaTitle) {
+          <div class="cwi-report__actions">
+            <a class="impact-btn impact-btn-blue" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Resource articles: a cover, a heading, copy and a button. They
+       alternate which side the cover sits on BY POSITION, the same rule the
+       rest of the site follows, so reordering cannot stack two the same way. -->
+  @case (types.CARDS) {
+    <section class="cwi-resources">
+      <div class="container">
+        @for (resource of liveItems; track $index) {
+          <article class="cwi-resource" [class.cwi-resource--reverse]="$odd">
+            <div class="cwi-resource__media">
+              <img loading="lazy" [src]="resource.image?.url" [alt]="resource.title" />
+            </div>
+            <div class="cwi-resource__content">
+              <h3>{{ resource.title }}</h3>
+              <hr class="slider-hr-solid" />
+              <div [innerHTML]="resource.body"></div>
+              @if (resource.ctaTitle) {
+                <a class="impact-btn impact-btn-blue"
+                   [href]="resource.ctaUrl">{{ resource.ctaTitle }}</a>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- A heading, a passage and a grid of pictures. -->
+  @case (types.GALLERY) {
+    <section class="cwi-online">
+      <div class="container">
+        <div class="cwi-section-head cwi-section-head--center">
+          <p class="slider-small-pretitle">{{ block.subheading }}</p>
+          <h2 class="cwi-section-head__title" [innerHTML]="block.heading"></h2>
+          <hr class="slider-hr-solid" />
+        </div>
+        <div class="cwi-online__copy" [innerHTML]="block.body"></div>
+        <div class="cwi-online__grid">
+          @for (shot of liveItems; track $index) {
+            <img loading="lazy" [src]="shot.image?.url" [alt]="shot.title" />
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- A picture beside a heading and a story. -->
+  @case (types.STORY) {
+    <section class="cwi-echs">
+      <div class="container">
+        <div class="cwi-echs__inner">
+          <div class="cwi-echs__media">
+            <img loading="lazy" [src]="block.image?.url" [alt]="block.image?.name" />
+          </div>
+          <div class="cwi-echs__content">
+            <h3 [innerHTML]="block.heading"></h3>
+            <hr class="slider-hr-solid" />
+            <div [innerHTML]="block.body"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- The closing band: a heading, a line and a button. -->
+  @case (types.BANNER) {
+    <section class="cwi-contact">
+      <div class="container">
+        <h2 class="cwi-contact__title" [innerHTML]="block.heading"></h2>
+        <div class="cwi-contact__copy" [innerHTML]="block.body"></div>
+        @if (block.ctaTitle) {
+          <a class="impact-btn impact-btn-blue" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+        }
+      </div>
+    </section>
+  }
+
+  @default {}
+}

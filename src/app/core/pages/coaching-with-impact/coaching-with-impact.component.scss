@@ -4,6 +4,58 @@
 // rule below is either a layout the theme has no class for, or a token the
 // theme already defines being applied to this page's own sections.
 
+// -------------------------------------------------------------- RICH TEXT
+//
+// Rules whose TARGET arrives through [innerHTML] have to be ::ng-deep, and
+// that is not a style preference - it is the only thing that works.
+//
+// Angular's emulated encapsulation stamps `_ngcontent-x` onto the elements a
+// component's TEMPLATE renders, and compiles `.a p` into `.a p[_ngcontent-x]`.
+// Content assigned to [innerHTML] carries no attribute, so that rule can
+// never match it. See seminars.component.scss for the measurements that made
+// this a rule here rather than a guess - six pages lost their emphasis for a
+// week before anyone noticed, because the words and the layout were right.
+//
+// Nearly every passage on THIS page became rich text on 2026-08-29, so most
+// of what used to be nested rules lives here now. The quote carousel's
+// paragraphs are the exception and stay above: they are real template markup,
+// one <p> per paragraph of a testimonial.
+//
+// :host anchors it so ::ng-deep cannot leak past this component's subtree.
+:host ::ng-deep {
+  .cwi-intro__lead strong {
+    color: variables.$blue;
+  }
+
+  .cwi-intro__body p {
+    margin-bottom: 20px;
+    font-size: 16px;
+    line-height: 1.85;
+    color: variables.$body-text-color;
+
+    a {
+      color: variables.$blue;
+    }
+  }
+
+  .cwi-resource__content p,
+  .cwi-echs__content p {
+    margin-bottom: 18px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: variables.$body-text-color;
+  }
+
+  // The container already sets the size, colour and spacing for these three;
+  // a <p> the editor wraps a single sentence in must not add its own block
+  // margins on top of that.
+  .cwi-report__copy p,
+  .cwi-online__copy p,
+  .cwi-contact__copy p {
+    margin: 0;
+  }
+}
+
 .cwi {
   &-section-head {
     margin-bottom: 42px;
@@ -68,26 +120,16 @@
     font-size: 30px;
     line-height: 1.35;
     color: variables.$heading-color;
-
-    strong {
-      color: variables.$blue;
-    }
+    // The emphasis inside it is rich text - see the ::ng-deep block at the
+    // foot of this file.
   }
 
   .slider-hr-solid {
     margin: 22px auto 30px;
   }
 
-  &__body p {
-    margin-bottom: 20px;
-    font-size: 16px;
-    line-height: 1.85;
-    color: variables.$body-text-color;
-
-    a {
-      color: variables.$blue;
-    }
-  }
+  // The paragraphs here are rich text - see the ::ng-deep block at the foot
+  // of this file.
 
   &__actions {
     display: flex;
@@ -377,12 +419,8 @@
       margin: 18px 0 22px;
     }
 
-    p {
-      margin-bottom: 18px;
-      font-size: 15px;
-      line-height: 1.85;
-      color: variables.$body-text-color;
-    }
+    // The paragraphs here are rich text - see the ::ng-deep block at the
+    // foot of this file.
   }
 }
 
