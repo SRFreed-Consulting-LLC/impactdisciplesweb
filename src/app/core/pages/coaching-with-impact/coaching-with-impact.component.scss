@@ -245,9 +245,15 @@
   max-width: 900px;
   margin: 0 auto;
 
+  // 16:9, THE SAME AS THE PLAYER BELOW - that is the whole point of it being
+  // here rather than a height. The poster used to be a fixed 460px while the
+  // player was 16:9, so pressing play resized the box: +46px at 900px wide,
+  // and -34px on a phone, where the fixed height was 240px (measured
+  // 2026-08-29). The poster is a cover-cropped background and adapts to any
+  // shape; the video genuinely is 16:9, so the video's ratio wins.
   &__poster {
     position: relative;
-    height: 460px;
+    aspect-ratio: 16 / 9;
     background-size: cover;
     background-position: center;
 
@@ -282,20 +288,44 @@
   }
 
   // 16:9 without relying on aspect-ratio, matching the other video pages.
+  // Was the padding-bottom: 56.25% / height: 0 hack. Now the same
+  // aspect-ratio the poster uses, so the two cannot drift apart again - one
+  // technique, one ratio, stated once each.
   &__player-wrapper {
     position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
+    aspect-ratio: 16 / 9;
   }
 
   &__player {
     position: absolute;
     inset: 0;
+    // A custom element is inline by default; absolute positioning blockifies
+    // it, but saying so keeps the box predictable if the positioning ever
+    // changes.
+    display: block;
   }
 
-  ::ng-deep .cwi-video__player iframe {
+  // The component sizes its iframe from numeric width/height inputs that
+  // default to 640x390, and renders it inside a wrapper div of its own.
+  //
+  // POSITIONED, not height: 100%. A percentage height resolves against the
+  // parent, and that inner div has no height of its own - so `height: 100%`
+  // silently fell back to the browser's default 150px for a replaced element
+  // and the player came out 900x150 (measured 2026-08-29). Anchoring the
+  // iframe to the host instead skips every element in between, so it cannot
+  // be broken again by a change to the component's internal markup.
+  //
+  // &__player above is position: absolute, which makes it the containing
+  // block this relies on.
+  ::ng-deep .cwi-video__player iframe,
+  ::ng-deep .cwi-video__player youtube-player-placeholder,
+  ::ng-deep .cwi-video__player img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
+    display: block;
+    border: 0;
   }
 }
 
@@ -472,10 +502,9 @@
     }
   }
 
-  .cwi-video__poster {
-    height: 240px;
-  }
-
+  // No height override here any more: the poster is 16:9 at every width, the
+  // same as the player, so a phone gets a correctly-shaped box for free. A
+  // fixed 240px here is what made the video SHRINK by 34px on play.
   .cwi-video__button {
     width: 62px;
     height: 62px;

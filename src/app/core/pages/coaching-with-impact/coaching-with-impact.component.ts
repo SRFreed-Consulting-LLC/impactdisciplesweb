@@ -1,11 +1,37 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import Swiper from 'swiper';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { TestimonialModel } from '@impact-common/shared/models/domain/testimonial.model';
+import { TESTIMONIAL_TYPES } from '@impact-common/shared/lists/testimonial_types.enum';
+import { CoachingPageService } from 'src/app/common/services/data/coaching-page.service';
+import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 
 export interface CoachTestimonial {
   quote: string[];
   name: string;
   role: string;
+}
+
+/**
+ * A stored testimonial as this page renders it.
+ *
+ * PARAGRAPHS ARE THE POINT. TestimonialModel.text is one string, but three of
+ * these quotes run to two or three paragraphs, and running them together
+ * turns a considered testimonial into a wall. Blank lines are the paragraph
+ * break - that is the shape the migration wrote and the shape the admin
+ * screen preserves - so a single quote is simply a one-item array.
+ */
+export function toCoachTestimonial(t: TestimonialModel): CoachTestimonial {
+  const quote = (t.text ?? '')
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+
+  return {
+    quote: quote.length ? quote : [(t.text ?? '').trim()],
+    name: t.author ?? '',
+    role: t.title ?? ''
+  };
 }
 
 /**
@@ -33,10 +59,15 @@ export interface CoachTestimonial {
     styleUrls: ['./coaching-with-impact.component.scss'],
     standalone: false
 })
-export class CoachingWithImpactComponent implements AfterViewInit, OnDestroy {
+export class CoachingWithImpactComponent implements OnInit, AfterViewInit, OnDestroy {
   isPlaying = false;
 
   private swiper: Swiper | undefined;
+
+  constructor(
+    private coachingPageService: CoachingPageService,
+    private testimonialService: TestimonialService
+  ) {}
 
   // Storage paths, kept as named constants so a re-upload is a one-line
   // change rather than a hunt through the template.
@@ -54,13 +85,17 @@ export class CoachingWithImpactComponent implements AfterViewInit, OnDestroy {
   readonly echsGroupImage =
     `${CoachingWithImpactComponent.BUCKET}/Coaching-With-Impact%2FIMG_1707.JPG?alt=media&token=3f98f870-7d49-425a-9640-880defd337eb`;
 
-  /** The four Zoom-group screenshots that ran alongside the online copy. */
-  readonly onlineScreenshots = [
+  /** The four Zoom-group screenshots that ran alongside the online copy -
+   *  the shipped default; the admin screen replaces this list. */
+  readonly fallbackScreenshots = [
     `${CoachingWithImpactComponent.BUCKET}/Coaching-With-Impact%2FScreenshot%202025-01-06%20at%208.27.18%20AM.PNG?alt=media&token=db721517-b361-4509-bb6f-b88d51d51cd0`,
     `${CoachingWithImpactComponent.BUCKET}/Coaching-With-Impact%2FScreenshot%202025-01-06%20at%208.31.57%20AM.PNG?alt=media&token=819ea4e6-4911-40e8-bc41-84f59aa71073`,
     `${CoachingWithImpactComponent.BUCKET}/Coaching-With-Impact%2FScreenshot%202025-01-06%20at%208.32.05%20AM.PNG?alt=media&token=f4d7a657-e466-4834-8b2d-b949345916f4`,
     `${CoachingWithImpactComponent.BUCKET}/Coaching-With-Impact%2FScreenshot%202025-01-06%20at%208.32.14%20AM.PNG?alt=media&token=aa7ba169-93da-48c3-9a88-111993d0a2a3`,
   ];
+
+  /** What the "A movement of multiplication" grid actually renders. */
+  onlineScreenshots: string[] = this.fallbackScreenshots;
 
   // Product ids the old page already linked to - the CTAs were rewired to
   // Angular routes at some point before this rebuild, so they carry over.
@@ -68,14 +103,25 @@ export class CoachingWithImpactComponent implements AfterViewInit, OnDestroy {
   readonly competingBookRoute = '/product-details/Th0IrFrIUElnj5urBzl6';
   readonly kevinBurrellRoute = '/team-details/AP4yP449P3iI7L0PsOVp';
   readonly consultationUrl = 'https://impact-discipleship-ministries.mykajabi.com/pl/2148229316';
-  readonly progressReportVideoId = 'krHPH7SoQwU';
+
+  /**
+   * What this page SHIPS with, used until the admin screen has saved
+   * something (Page Manager > Coaching with Impact, 2026-08-29).
+   *
+   * Kept rather than deleted so the page cannot go blank: the config document
+   * may not exist yet, a visitor may be offline, and the web build and the
+   * data can be deployed in either order. Whatever is here is what a visitor
+   * sees when there is nothing to read.
+   */
+  readonly fallbackVideoId = 'krHPH7SoQwU';
+  progressReportVideoId = this.fallbackVideoId;
 
   /**
    * Every testimonial from the WordPress page, in full and unedited - they
    * are the strongest thing on this page, so the carousel exists to keep
    * all seven rather than to cut any.
    */
-  readonly testimonials: CoachTestimonial[] = [
+  readonly fallbackTestimonials: CoachTestimonial[] = [
     {
       quote: [
         'Going through "Coaching with Impact" these past two years have been life changing and a true blessing. Meeting with my brothers in Christ; Kevin Burrell, John Small, Cam Smith, and Mark Bowles has really helped my growth and spiritual maturity in Christ. The sincerity that we each brought while working through the "Coaching with Impact" book has been priceless. Being and Building disciples of Christ, while exercising the character and conduct of Christ has been life changing for all of us. I know with certainty that this venture has helped my growth with the fruits of the spirit of love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, and self control. "GO, and make disciples of all nations, baptizing them in the name of the Father, Son, and Holy Spirit."',
@@ -132,15 +178,99 @@ export class CoachingWithImpactComponent implements AfterViewInit, OnDestroy {
     },
   ];
 
+  /** What the carousel actually renders. */
+  testimonials: CoachTestimonial[] = this.fallbackTestimonials;
+
   playVideo(): void {
     this.isPlaying = true;
   }
 
+  /**
+   * Loads whatever staff have configured, falling back to the shipped
+   * content for anything they have not set.
+   *
+   * Every branch is "keep the default" rather than "empty the section": a
+   * missing document, an empty list or a read that fails all leave the page
+   * exactly as it ships. The only way a section empties is a deliberate
+   * choice in the admin screen, and even then only for the one section.
+   */
+  async ngOnInit(): Promise<void> {
+    const config = await this.coachingPageService.get();
+
+    if (config?.videoId) {
+      this.progressReportVideoId = config.videoId;
+    }
+
+    const shots = (config?.screenshots ?? [])
+      .filter((s) => s.isActive && s.image?.url)
+      .sort((a, b) => a.order - b.order)
+      .map((s) => s.image!.url);
+    if (shots.length) {
+      this.onlineScreenshots = shots;
+    }
+
+    // Deliberately NOT behind `if (config)`: the config carries only the
+    // ORDER. Whether a quote appears is its own Live switch, so live coach
+    // testimonials should render even on a page whose order has never been
+    // saved. Guarded so a failed read leaves the shipped quotes standing
+    // rather than throwing out of ngOnInit half way through.
+    try {
+      await this.loadTestimonials(config?.testimonialIds ?? []);
+    } catch {
+      // Keep the fallback - see fallbackTestimonials.
+    }
+  }
+
+  /**
+   * The coach testimonials this page shows, and the order it shows them in.
+   *
+   * TWO SEPARATE RULES, matching the admin screen exactly (see its
+   * CoachingPageComponent.orderTestimonials):
+   *
+   *   - WHETHER a quote appears is its own `isActive` - the Live switch. It
+   *     is a property of the testimonial, not of this page.
+   *   - THE ORDER is the page's, held in `testimonialIds`. Ids the config
+   *     knows come first, in its order; any other live coach testimonial is
+   *     appended by author.
+   *
+   * That appending is what makes a newly added quote appear without anyone
+   * re-saving the coaching screen - and it is why an empty `ids` is not an
+   * early return: a page that has never had its order saved should still show
+   * its live testimonials.
+   *
+   * An id that no longer resolves is skipped - deleting a testimonial should
+   * shorten the carousel, not leave a blank slide in it.
+   */
+  private async loadTestimonials(ids: string[]): Promise<void> {
+    const all = await this.testimonialService.getAllByValue('type', TESTIMONIAL_TYPES.COACHING);
+    const live = (all ?? []).filter((t) => t.isActive);
+    if (!live.length) {
+      return;
+    }
+
+    const byId = new Map(live.map((t) => [t.id, t]));
+
+    const known = ids
+      .map((id) => byId.get(id))
+      .filter((t): t is TestimonialModel => !!t);
+
+    const knownIds = new Set(known.map((t) => t.id));
+    const rest = live
+      .filter((t) => !knownIds.has(t.id))
+      .sort((a, b) => (a.author ?? '').localeCompare(b.author ?? ''));
+
+    this.testimonials = [...known, ...rest].map((t) => toCoachTestimonial(t));
+  }
+
   ngAfterViewInit(): void {
-    // The slides are static markup here (no async fetch as in
-    // home-header-slider), so the view is already painted - but Swiper still
-    // has to run after the @for has rendered, which ngAfterViewInit
-    // guarantees.
+    // The slides used to be static markup, so ngAfterViewInit alone was
+    // enough. They are fetched now, and that fetch resolves AFTER this hook -
+    // so Swiper has to wait for the change-detection pass that paints them,
+    // the same setTimeout(0) home-header-slider uses and for the same reason.
+    setTimeout(() => this.initSwiper());
+  }
+
+  private initSwiper(): void {
     this.swiper = new Swiper('.cwi-testimonials__swiper', {
       modules: [Autoplay, Navigation, Pagination],
       slidesPerView: 1,

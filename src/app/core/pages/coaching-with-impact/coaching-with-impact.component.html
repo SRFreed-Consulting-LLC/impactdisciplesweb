@@ -115,10 +115,16 @@
             </a>
           </div>
         } @else {
+          <!-- disablePlaceholder: this component shows its OWN thumbnail-with-
+               a-play-button before it loads the API, which here meant two
+               posters and two play buttons in a row - ours, then YouTube's -
+               each a different size. We already have a poster above, so the
+               click that reveals this player should load the real thing. -->
           <div class="cwi-video__player-wrapper">
             <youtube-player
               [videoId]="progressReportVideoId"
               [playerVars]="{ autoplay: 1 }"
+              [disablePlaceholder]="true"
               class="cwi-video__player"
             ></youtube-player>
           </div>
