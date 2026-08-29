@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
 import { HomeSectionModel } from '@impact-common/shared/models/domain/home-section.model';
 import { HomeSectionService } from 'src/app/common/services/data/home-sections.service';
+import { PagePreviewService } from 'src/app/common/services/data/page-preview.service';
 import { DEFAULT_HOME_SECTIONS } from 'src/app/shared/utils/data/home-section-defaults';
 
 /**
@@ -33,10 +34,22 @@ import { DEFAULT_HOME_SECTIONS } from 'src/app/shared/utils/data/home-section-de
 export class HomeComponent implements OnInit {
   sections$!: Observable<HomeSectionModel[]>;
 
-  constructor(private homeSections: HomeSectionService) {}
+  constructor(
+    private homeSections: HomeSectionService,
+    // Page Manager's previewer, and nothing else: it narrows this page to the
+    // one section being edited and swaps in the unsaved copy as staff type.
+    // A no-op on an ordinary visit. See PagePreviewService.
+    private preview: PagePreviewService
+  ) {}
 
   ngOnInit(): void {
-    this.sections$ = this.homeSections.streamAll().pipe(
+    // The preview transform runs BEFORE the visibility filter on purpose: it
+    // forces the one section being edited back on, and a filter ahead of it
+    // would already have dropped a switched-off one - leaving staff editing a
+    // section against a blank rail.
+    this.sections$ = this.preview.applyHomeSections(
+      this.homeSections.streamAll()
+    ).pipe(
       map((sections) => this.visible(sections)),
       // streamAll() already swallows Firestore errors and emits [] rather
       // than leaving the observable stuck, so an empty result is the shape a

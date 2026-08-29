@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { PageContentBlock, PageContentModel } from '@impact-common/shared/models/domain/page-content.model';
+import { HomeSectionModel } from '@impact-common/shared/models/domain/home-section.model';
 import { APP_URLS, LOCAL_APP_URLS } from '@impact-common/shared/config/firebase-projects';
 import { isAdminPreview, previewSectionKey } from 'src/app/shared/utils/admin-preview';
 
@@ -57,7 +58,15 @@ export class PagePreviewService {
    *  life of the page - the frame reloads when it changes. */
   readonly sectionKey: string | null = previewSectionKey();
 
-  private readonly override$ = new BehaviorSubject<PageContentBlock | null>(null);
+  /**
+   * The section being edited, as it currently stands.
+   *
+   * Typed loosely because it carries either shape: the other eleven pages
+   * store a PageContentBlock keyed by `key`, and the home page stores a
+   * HomeSectionModel keyed by `id`. Everything here works off whichever one
+   * a section has - see identify().
+   */
+  private readonly override$ = new BehaviorSubject<PreviewSection | null>(null);
 
   constructor(private zone: NgZone) {
     if (!isAdminPreview()) {
@@ -88,7 +97,7 @@ export class PagePreviewService {
     }
     return new Observable<PageContentModel | null>((subscriber) => {
       let latestDoc: PageContentModel | null = null;
-      let latestOverride: PageContentBlock | null = null;
+      let latestOverride: PreviewSection | null = null;
       const emit = () => subscriber.next(this.transform(latestDoc, latestOverride));
 
       const docSub = doc$.subscribe({
@@ -105,23 +114,41 @@ export class PagePreviewService {
     });
   }
 
+  /**
+   * The same two rules for the HOME page, whose sections are a collection of
+   * their own rather than blocks inside one document.
+   *
+   * A separate method rather than a shape-shifting one: the two really are
+   * different collections with different models, and pretending otherwise
+   * would mean casting at both call sites instead of here.
+   */
+  applyHomeSections(sections$: Observable<HomeSectionModel[]>): Observable<HomeSectionModel[]> {
+    if (!isAdminPreview()) {
+      return sections$;
+    }
+    return this.apply(
+      sections$.pipe(map((sections) => ({ blocks: sections } as unknown as PageContentModel)))
+    ).pipe(map((doc) => ((doc?.blocks ?? []) as unknown as HomeSectionModel[])));
+  }
+
   private transform(
     doc: PageContentModel | null,
-    override: PageContentBlock | null
+    override: PreviewSection | null
   ): PageContentModel | null {
     if (!doc) {
       // An unsaved section still has to draw before its page has loaded -
       // otherwise a brand new section previews as nothing.
-      return override && this.sectionKey === override.key
-        ? ({ blocks: [override] } as PageContentModel)
+      return override && this.sectionKey === identify(override)
+        ? ({ blocks: [override] } as unknown as PageContentModel)
         : doc;
     }
 
-    let blocks = doc.blocks ?? [];
+    let blocks = (doc.blocks ?? []) as PreviewSection[];
     if (override) {
-      blocks = blocks.map((b) => (b.key === override.key ? override : b));
+      const id = identify(override);
+      blocks = blocks.map((b) => (identify(b) === id ? override : b));
       // A section added but not yet saved is not in the document at all.
-      if (!blocks.some((b) => b.key === override.key)) {
+      if (!blocks.some((b) => identify(b) === id)) {
         blocks = [...blocks, override];
       }
     }
@@ -130,10 +157,10 @@ export class PagePreviewService {
       // looking at it precisely because they are working on it, and a blank
       // rail would read as a broken preview.
       blocks = blocks
-        .filter((b) => b.key === this.sectionKey)
+        .filter((b) => identify(b) === this.sectionKey)
         .map((b) => ({ ...b, isActive: true }));
     }
-    return { ...doc, blocks } as PageContentModel;
+    return { ...doc, blocks } as unknown as PageContentModel;
   }
 
   private onMessage(event: MessageEvent): void {
@@ -151,11 +178,26 @@ export class PagePreviewService {
   }
 }
 
-/** A shape check, not a schema: everything on a block is optional except a
- *  key, and a message that cannot name a section cannot replace one. */
-function isBlock(value: unknown): value is PageContentBlock {
+/**
+ * Either shape of section: a page's block, keyed by `key`, or a home-page
+ * section, keyed by `id`. Deliberately loose - this file only ever reads the
+ * identifier and hands the rest through untouched.
+ */
+type PreviewSection = (PageContentBlock | HomeSectionModel) & {
+  key?: string;
+  id?: string;
+  isActive?: boolean;
+};
+
+/** Whichever identifier this kind of section carries. */
+function identify(section: PreviewSection): string {
+  return section.key ?? section.id ?? '';
+}
+
+/** A shape check, not a schema: everything on a section is optional except
+ *  its identifier, and a message that cannot name one cannot replace one. */
+function isBlock(value: unknown): value is PreviewSection {
   return !!value
     && typeof value === 'object'
-    && typeof (value as PageContentBlock).key === 'string'
-    && !!(value as PageContentBlock).key;
+    && !!identify(value as PreviewSection);
 }
