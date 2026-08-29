@@ -1,9 +1,5 @@
 <app-home-header></app-home-header>
-<!-- <app-nav-bar></app-nav-bar> -->
-<app-home-header-slider></app-home-header-slider>
-<app-home-services></app-home-services>
-<app-disciple-making-summit-banner></app-disciple-making-summit-banner>
-<app-home-video></app-home-video>
-<app-book-banner></app-book-banner>
-<app-subscribe-area></app-subscribe-area>
+@for (section of sections$ | async; track section.id) {
+  <app-home-section [section]="section"></app-home-section>
+}
 <app-footer></app-footer>

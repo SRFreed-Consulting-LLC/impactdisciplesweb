@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { EventService } from 'src/app/common/services/data/event.service';
+import { HOME_SUMMIT_DEFAULT } from 'src/app/shared/utils/data/home-section-defaults';
 
 /**
  * The Disciple-Making Summit banner: a background, a heading, a live
@@ -22,13 +23,11 @@ import { EventService } from 'src/app/common/services/data/event.service';
 })
 export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
   /** Rendered as two lines: everything before the last word, then the word. */
-  @Input() title = 'DISCIPLE-MAKING SUMMIT';
+  @Input() title = HOME_SUMMIT_DEFAULT.title;
 
-  @Input() backgroundUrl =
-    'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/' +
-    'Web-Pages%2FShared%2Fsummit-banner-large.PNG?alt=media&token=74f6f522-2b3e-48f0-bdb9-2b363abbe80e';
+  @Input() backgroundUrl = HOME_SUMMIT_DEFAULT.backgroundUrl;
 
-  @Input() ctaTitle = 'REGISTER NOW';
+  @Input() ctaTitle = HOME_SUMMIT_DEFAULT.ctaTitle;
 
   public dms: EventModel;
   public days = 0;

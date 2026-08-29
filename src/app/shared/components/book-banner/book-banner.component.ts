@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { HOME_BANNER_DEFAULT } from 'src/app/shared/utils/data/home-section-defaults';
 
 /**
  * Picture on one side, copy and a button on the other.
@@ -14,24 +15,17 @@ import { Component, Input } from '@angular/core';
     standalone: false
 })
 export class BookBannerComponent {
-  /** The word wrapped in <strong> is the one before the last line break. */
-  @Input() title = 'DISCOVER <strong>POWERFUL</strong> DISCIPLE-MAKING RESOURCES';
+  /** Rendered with innerHTML - the copy carries <strong> markup. */
+  @Input() title = HOME_BANNER_DEFAULT.title;
 
-  @Input() subtitle =
-    'Explore our store for impactful resources crafted to guide your ' +
-    'disciple-making efforts. Our collection of books is designed to ' +
-    'provide practical tools and biblical insights that will deepen your ' +
-    'faith and extend your impact. Start your journey today with the ' +
-    'perfect resource.';
+  @Input() subtitle = HOME_BANNER_DEFAULT.subtitle;
 
-  @Input() imageUrl =
-    'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/' +
-    'Store%2FDMC-Series_Five-Images-1.png?alt=media&token=97f755c0-3c73-4545-979c-6428c3f2ab98';
+  @Input() imageUrl = HOME_BANNER_DEFAULT.imageUrl;
 
-  @Input() ctaTitle = 'VISIT OUR STORE';
+  @Input() ctaTitle = HOME_BANNER_DEFAULT.ctaTitle;
 
   /** An in-app route, or 'external' to use ctaUrl instead. */
-  @Input() ctaDestination = '/store';
+  @Input() ctaDestination = HOME_BANNER_DEFAULT.ctaDestination;
 
   @Input() ctaUrl?: string;
 

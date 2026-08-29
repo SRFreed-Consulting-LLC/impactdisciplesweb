@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { SubscriptionModel } from 'src/app/common/models/domain/subscription.model';
 import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-form.service';
+import { HOME_SUBSCRIBE_DEFAULT } from 'src/app/shared/utils/data/home-section-defaults';
 
 /**
  * The mailing-list signup block.
@@ -19,14 +20,11 @@ import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-fo
     standalone: false
 })
 export class SubscribeAreaComponent {
-  @Input() title = 'STAY IN THE LOOP';
+  @Input() title = HOME_SUBSCRIBE_DEFAULT.title;
 
-  @Input() subtitle =
-    'Join our mailing list and receive the latest news and updates from our team.';
+  @Input() subtitle = HOME_SUBSCRIBE_DEFAULT.subtitle;
 
-  @Input() backgroundUrl =
-    'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/' +
-    'Web-Pages%2FShared%2Fnewsletter-banner.PNG?alt=media&token=928f4a44-6a3a-420b-8bf2-9aa127c1f48a';
+  @Input() backgroundUrl = HOME_SUBSCRIBE_DEFAULT.backgroundUrl;
 
   subscription: SubscriptionModel = {... new SubscriptionModel(), type: 'newsletter'};
 

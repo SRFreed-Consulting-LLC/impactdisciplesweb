@@ -1,4 +1,4 @@
-<section class="dms" [style.backgroundImage]="'url(' + backgroundUrl + ')'">
+<section class="dms" [style.backgroundImage]="backgroundUrl ? 'url(' + backgroundUrl + ')' : null">
   <div class="dms__overlay">
     <div class="dms__title">
       <h2 appAnimate="fadeInUp">{{ titleLead }} <span>{{ titleAccent }}</span></h2>

@@ -5,7 +5,7 @@
     <p>{{ subtitle }}</p>
   </div>
   @if (!isPlaying) {
-    <div class="video__container" [style.backgroundImage]="'url(' + posterUrl + ')'">
+    <div class="video__container" [style.backgroundImage]="posterUrl ? 'url(' + posterUrl + ')' : null">
       <div class="container">
         <div class="video__content text-center">
           <div class="video__button">

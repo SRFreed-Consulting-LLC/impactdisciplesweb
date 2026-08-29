@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { HOME_VIDEO_DEFAULT } from 'src/app/shared/utils/data/home-section-defaults';
 
 /**
  * The OUR VISION section - a heading, a line of copy, and a poster image
@@ -19,19 +20,15 @@ import { Component, Input } from '@angular/core';
     standalone: false
 })
 export class HomeVideoComponent {
-  @Input() title = 'OUR VISION';
+  @Input() title = HOME_VIDEO_DEFAULT.title;
 
-  @Input() subtitle =
-    'Impact Discipleship Ministries exists to inspire people and churches ' +
-    'to be and build disciples of Jesus Christ.';
+  @Input() subtitle = HOME_VIDEO_DEFAULT.subtitle;
 
   /** The still shown behind the play button, before anyone clicks. */
-  @Input() posterUrl =
-    'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/' +
-    'Web-Pages%2FShared%2Fmap.jpg?alt=media&token=9db9c6f4-c852-4722-807e-5fa5d93f881a';
+  @Input() posterUrl = HOME_VIDEO_DEFAULT.posterUrl;
 
   /** The bare YouTube id - `youtube-player` takes an id, not a URL. */
-  @Input() videoId = 'HxKSa24hF60';
+  @Input() videoId = HOME_VIDEO_DEFAULT.videoId;
 
   isPlaying = false;
 
