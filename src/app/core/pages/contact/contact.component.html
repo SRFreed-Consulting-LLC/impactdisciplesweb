@@ -1,6 +1,9 @@
 <app-home-header></app-home-header>
-<!-- Editable copy from Page Manager > Contact, by slot key.
-     EVERY use is `?? the original`. -->
+<!-- Copy from Page Manager > Contact, by slot key.
+     There is NO fallback here: the page_content document IS the only copy
+     of this text. A block that is missing renders nothing (Shane's call,
+     2026-08-29) - the templates used to carry a duplicate and it was
+     removed with the seed, so nothing can silently disagree with it. -->
 @let c = (content$ | async) ?? {};
 
 <!-- contact -->
@@ -10,7 +13,7 @@
       <div class="row">
         <div class="col-xl-6 col-lg-6">
           <div class="contact__info">
-            <h3 [innerHTML]="c['intro']?.heading || 'Find us here.'"></h3>
+            <h3 [innerHTML]="c['intro']?.heading"></h3>
             <ul class="mb-55">
               <li class="d-flex mb-35">
                 <div class="contact__info-icon mr-20">
@@ -67,7 +70,7 @@
         </div>
         <div class="col-xl-6 col-lg-6">
           <div class="contact__form">
-            <h3 [innerHTML]="c['form']?.heading || 'Contact Us.'"></h3>
+            <h3 [innerHTML]="c['form']?.heading"></h3>
             <!-- Was a dx-form with NO submit handler wired up anywhere in
             contact.component.ts -- clicking "Send Message" did nothing at
             all. Converted to the same admin-authored dynamic-form engine

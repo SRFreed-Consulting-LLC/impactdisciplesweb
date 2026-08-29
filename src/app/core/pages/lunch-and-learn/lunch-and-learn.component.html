@@ -1,6 +1,9 @@
 <app-home-header></app-home-header>
-<!-- Editable copy from Page Manager > Lunch and Learns, by slot key.
-     EVERY use is `?? the original`. -->
+<!-- Copy from Page Manager > Lunch and Learns, by slot key.
+     There is NO fallback here: the page_content document IS the only copy
+     of this text. A block that is missing renders nothing (Shane's call,
+     2026-08-29) - the templates used to carry a duplicate and it was
+     removed with the seed, so nothing can silently disagree with it. -->
 @let c = (content$ | async) ?? {};
 <div class="lunch">
   <app-header
@@ -12,18 +15,13 @@
     [buttonLink]="'/lunch-and-learn-form'"
   ></app-header>
   <div class="lunch__overview">
-    <h2 appAnimate="fadeInUp" [innerHTML]="c['overview']?.heading || 'OVERVIEW'"></h2>
-    @if (c['overview']?.body) {
-      <div [innerHTML]="c['overview']?.body"></div>
-    } @else {
-      <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples. One of the best ways we do that is by providing training and resources for churches who need help implementing a proven strategy to grow their ministries.
-      Let us join you for lunch and give you more information on how we can come alongside you to help your church multiply disciples.</p>
-    }
+    <h2 appAnimate="fadeInUp" [innerHTML]="c['overview']?.heading"></h2>
+    <div [innerHTML]="c['overview']?.body"></div>
   </div>
   <hr appAnimate="fadeInLeftToRight" class="solid-line mt-60 mb-60">
   <div class="lunch__offers">
     <div class="content">
-      <h1 [innerHTML]="c['whatyouget']?.heading || 'WHAT YOU <strong> GET</strong>'"></h1>
+      <h1 [innerHTML]="c['whatyouget']?.heading"></h1>
       <hr appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w60 slider-hr-thick">
       <ul class="custom-bullets">
         <li appAnimate="fadeInUpTwo">Meet and Greet with Our Team</li>

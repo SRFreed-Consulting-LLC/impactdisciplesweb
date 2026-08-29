@@ -1,6 +1,9 @@
 <app-home-header></app-home-header>
-<!-- Editable copy from Page Manager > Equipping - Pastors, by slot key.
-     EVERY use is `?? the original`. -->
+<!-- Copy from Page Manager > Equipping - Pastors, by slot key.
+     There is NO fallback here: the page_content document IS the only copy
+     of this text. A block that is missing renders nothing (Shane's call,
+     2026-08-29) - the templates used to carry a duplicate and it was
+     removed with the seed, so nothing can silently disagree with it. -->
 @let c = (content$ | async) ?? {};
 <div class="equipping-groups">
   <app-header
@@ -15,28 +18,8 @@
   <div class="equipping-groups__approach">
     <div class="content">
       <h4 appAnimate="fadeInUp" class="content__title mb-10"
-          [innerHTML]="c['overview']?.heading || 'OUR APPROACH TO <strong>EQUIPPING PASTORS</strong>'"></h4>
-      @if (c['overview']?.body) {
-        <div appAnimate="fadeInUpTwo" [innerHTML]="c['overview']?.body"></div>
-      } @else {
-      <div appAnimate="fadeInUpTwo">
-        <p>
-          Many pastors today have not been personally discipled and lack disciple-making training in their theological education. Our course seeks to address this gap by providing pastors with the tools to become influential disciple-making leaders in their churches.
-        </p>
-        <p>
-          Drawing on over 30 years of “on-the-job” disciple-making experience, we offer a strategic and intentional process for pastors seeking to lead their congregations toward becoming movements of multiplication. The course covers six crucial priorities of Disciple-Making Pastors, modeled after Jesus’ approach to disciple-making.
-        </p>
-        <p>
-          The course consists of seven online sessions where pastors meet with a group of twelve peers to discuss the strategic content developed by our team. Pastors will receive personalized coaching and accountability throughout the course to help them develop the necessary skills to fulfill Jesus’ mission of making disciples.
-        </p>
-        <p>
-          As a pastor, the course creator, Ken Adams, knows firsthand the challenges of leading a church to become a Disciple-Making Movement. He is committed to sharing the most important things he has learned about this ministry to help pastors progress as Disciple-Making Pastors.
-        </p>
-        <p>
-          Join us in “The Making of a Disciple-Making Pastor” group and take the first step towards leading your congregation to fulfill the mission of making disciples.
-        </p>
-      </div>
-      }
+          [innerHTML]="c['overview']?.heading"></h4>
+      <div appAnimate="fadeInUpTwo" [innerHTML]="c['overview']?.body"></div>
     </div>
     <div class="video">
       @if (!isPlaying) {
@@ -72,18 +55,10 @@
   <div class="equipping-groups__about">
     <div class="content">
       <div class="content__left">
-        <h5 [innerHTML]="c['basics']?.heading || 'EQUIPPING BASICS'"></h5>
-        @if (c['basics']?.body) {
-          <div [innerHTML]="c['basics']?.body"></div>
-        } @else {
-          <p>Our online pastor’s equipping groups consist of bi-weekly content developed over 30 years of “on-the-job” discipleship work. It consists of reading, video training, tailored projects, and online meetings with your trainer and peer group.</p>
-        }
-        <h5 [innerHTML]="c['cost']?.heading || 'COST'"></h5>
-        @if (c['cost']?.body) {
-          <div [innerHTML]="c['cost']?.body"></div>
-        } @else {
-          <p>We offer 2 options to pay for this service:</p>
-        }
+        <h5 [innerHTML]="c['basics']?.heading"></h5>
+        <div [innerHTML]="c['basics']?.body"></div>
+        <h5 [innerHTML]="c['cost']?.heading"></h5>
+        <div [innerHTML]="c['cost']?.body"></div>
         <div>
           <h6>Save with Full Payment: ${{webConfig.equippingGroupTotalCost}}</h6>
           <p><i>One‑time payment for all 7 weeks of live, interactive Zoom sessions plus bonus materials.</i></p>
@@ -92,34 +67,15 @@
           <h6>4 Month Plan: ${{webConfig.equippingGroupPaymentCost}}/month</h6>
           <p><i>Join the 7‑week live Zoom equipping series on a 4‑month billing plan.</i></p>
         </div>
-        <a [href]="c['cost']?.ctaUrl || '/events'" class="impact-btn impact-btn-blue-border mt-30">{{ c['cost']?.ctaTitle || 'Get Started' }}</a>
+        <a [href]="c['cost']?.ctaUrl" class="impact-btn impact-btn-blue-border mt-30">{{ c['cost']?.ctaTitle }}</a>
       </div>
       <div class="content__right">
-        <h5 [innerHTML]="c['pitch']?.heading || 'Pastors, are you ready to lead with greater purpose and clarity?'"></h5>
+        <h5 [innerHTML]="c['pitch']?.heading"></h5>
 
-        @if (c['pitch']?.body) {
-          <div class="mt-10" [innerHTML]="c['pitch']?.body"></div>
-        } @else {
-          <div class="mt-10">
-            Enrolling in <b>The Making of a Disciple‑Making Pastor</b> equipping group could be one of the most transformative steps in your ministry. Rooted in 30 years of real‑life disciple‑making experience, this seven‑week online Zoom training will equip you with a practical, Christ‑centered strategy to align your leadership and ministry with the mission of making disciples.
-          </div>
-          <div class="mt-10">
-            It all begins with you—deepening your personal and spiritual growth to build a ministry that truly impacts your church and community. If you want to make and multiply disciples in your ministry, deciding to enroll in this group could be life‑changing.
-          </div>
-        }
+        <div class="mt-10" [innerHTML]="c['pitch']?.body"></div>
         <div class="mt-10">
-          <h5 [innerHTML]="c['experience']?.heading || 'What You’ll Experiences'"></h5>
-          @if (c['experience']?.body) {
-            <div [innerHTML]="c['experience']?.body"></div>
-          } @else {
-          <ul>
-            <li class="mb-5">* <b>Seven live weekly Zoom sessions</b> led by veteran pastors</li>
-            <li class="mb-5">* <b>Personalized coaching</b> to develop your disciple‑making skills</li>
-            <li class="mb-5">* <b>Six crucial priorities</b> every Disciple‑Making Pastor must master</li>
-            <li class="mb-5">* <b>Practical tools and resources</b> grounded in decades of experience</li>
-            <li class="mb-5">* <b>Join us today</b> and take the first step toward leading your congregation into a movement of multiplying disciples!</li>
-          </ul>
-          }
+          <h5 [innerHTML]="c['experience']?.heading"></h5>
+          <div [innerHTML]="c['experience']?.body"></div>
         </div>
       </div>
     </div>

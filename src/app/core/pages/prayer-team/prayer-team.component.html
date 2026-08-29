@@ -1,6 +1,9 @@
 <app-home-header></app-home-header>
-<!-- Editable copy from Page Manager > Prayer Team, by slot key.
-     EVERY use is `?? the original`. -->
+<!-- Copy from Page Manager > Prayer Team, by slot key.
+     There is NO fallback here: the page_content document IS the only copy
+     of this text. A block that is missing renders nothing (Shane's call,
+     2026-08-29) - the templates used to carry a duplicate and it was
+     removed with the seed, so nothing can silently disagree with it. -->
 @let c = (content$ | async) ?? {};
 
 <main class="prayer-team grey-bg">
@@ -13,7 +16,7 @@
             <div class="row">
               <div class="col-xl-12">
                 <div class="slider__content slider__content-4 pr-50">
-                  <h5 appAnimate="fadeInUp" class="slider-pretitle" [innerHTML]="c['hero']?.heading || 'GROW AS DISCIPLES TOGETHER'"></h5>
+                  <h5 appAnimate="fadeInUp" class="slider-pretitle" [innerHTML]="c['hero']?.heading"></h5>
                   <h1 appAnimate="fadeInUpTwo" class="slider-medium-title">Join the Prayer Team</h1>
                   <hr appAnimate="fadeInLeftToRight" class="slider-hr mb-30">
                   <a appAnimate="fadeInUpThree" href="/newsletter" class="impact-btn impact-btn-blue">NEWSLETTER<i class="fa fa-envelope-open-text ml-10"></i></a>

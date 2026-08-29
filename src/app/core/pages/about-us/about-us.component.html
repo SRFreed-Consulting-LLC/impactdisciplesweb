@@ -1,7 +1,9 @@
 <app-home-header></app-home-header>
-<!-- Editable copy from Page Manager > About Us, by slot key. EVERY use is
-     `?? the original`, so a missing document, a missing block or a failed
-     read leaves this page exactly as it was. -->
+<!-- Copy from Page Manager > About Us, by slot key.
+     There is NO fallback here: the page_content document IS the only copy
+     of this text. A block that is missing renders nothing (Shane's call,
+     2026-08-29) - the templates used to carry a duplicate and it was
+     removed with the seed, so nothing can silently disagree with it. -->
 @let c = (content$ | async) ?? {};
 <!-- our story -->
 <main>
@@ -11,19 +13,15 @@
         <div class="row g-0 justify-content-center align-items-center">
           <div class="story__text-area col-xl-4 col-lg-4 d-flex">
             <h4 appAnimate="fadeInUp" class="story__title mb-10"
-                [innerHTML]="c['story-1']?.heading || 'OUR STORY BEGAN WITH A <strong>NEED</strong>'"></h4>
-            @if (c['story-1']?.body) {
-              <div appAnimate="fadeInUpTwo" [innerHTML]="c['story-1']?.body"></div>
-            } @else {
-              <p appAnimate="fadeInUpTwo">When Ken Adams began pastoring Crossroads Church in 1989, he envisioned that church becoming a part of the mission and movement of Jesus by making and multiplying disciples. The church needed a curriculum that would drive the goals and strategy its leadership had established, but there was a problem…</p>
-            }
-            <a appAnimate="fadeInUpThree" [href]="c['story-1']?.ctaUrl || '#history'" class="impact-btn impact-btn-blue">
-              <span class="banner__area-2 pb-30">{{ c['story-1']?.ctaTitle || 'READ MORE' }}</span>
+                [innerHTML]="c['story-1']?.heading"></h4>
+            <div appAnimate="fadeInUpTwo" [innerHTML]="c['story-1']?.body"></div>
+            <a appAnimate="fadeInUpThree" [href]="c['story-1']?.ctaUrl" class="impact-btn impact-btn-blue">
+              <span class="banner__area-2 pb-30">{{ c['story-1']?.ctaTitle }}</span>
             </a>
           </div>
           <div class="col-xl-4 col-lg-4">
             <div class="w-img">
-              <img loading="lazy" [src]="c['story-1']?.image?.url || 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fstory-1.PNG?alt=media&token=c1daf9a0-35db-4a1e-b502-71d23c701762'" alt="banner">
+              <img loading="lazy" [src]="c['story-1']?.image?.url" alt="banner">
             </div>
           </div>
         </div>
@@ -35,19 +33,15 @@
         <div class="row g-0 justify-content-center align-items-center">
           <div class="col-xl-4 col-lg-4">
             <div class="w-img">
-              <img loading="lazy" [src]="c['story-2']?.image?.url || 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fstory-2.jpg?alt=media&token=35028e2e-f4fe-40ca-8d92-042b2cda016d'" alt="banner">
+              <img loading="lazy" [src]="c['story-2']?.image?.url" alt="banner">
             </div>
           </div>
           <div class="story__text-area col-xl-4 col-lg-4 d-flex">
             <h4 appAnimate="fadeInUp" class="story__title mb-10"
-                [innerHTML]="c['story-2']?.heading || 'MORE ABOUT <strong>OUR MINISTRY</strong>'"></h4>
-            @if (c['story-2']?.body) {
-              <div appAnimate="fadeInUpTwo" [innerHTML]="c['story-2']?.body"></div>
-            } @else {
-              <p appAnimate="fadeInUpTwo">Did you know that we have Disciple-Making Churches and pastors all over the world in our disciple making network? We’d love to connect you to other ministry partners pursuing the same goals with the same passion and dedication as you.</p>
-            }
-            <a appAnimate="fadeInUpThree" [href]="c['story-2']?.ctaUrl || '#history'" class="impact-btn impact-btn-blue">
-              <span class="banner__area-2 pb-30">{{ c['story-2']?.ctaTitle || 'READ MORE' }}</span>
+                [innerHTML]="c['story-2']?.heading"></h4>
+            <div appAnimate="fadeInUpTwo" [innerHTML]="c['story-2']?.body"></div>
+            <a appAnimate="fadeInUpThree" [href]="c['story-2']?.ctaUrl" class="impact-btn impact-btn-blue">
+              <span class="banner__area-2 pb-30">{{ c['story-2']?.ctaTitle }}</span>
             </a>
           </div>
         </div>
@@ -58,19 +52,15 @@
         <div class="row g-0 justify-content-center align-items-center">
           <div class="story__text-area col-xl-4 col-lg-4 d-flex">
             <h4 appAnimate="fadeInUp" class="story__title mb-10"
-                [innerHTML]="c['story-3']?.heading || 'WHY CHOOSE <strong>US</strong>'"></h4>
-            @if (c['story-3']?.body) {
-              <div appAnimate="fadeInUpTwo" [innerHTML]="c['story-3']?.body"></div>
-            } @else {
-              <p appAnimate="fadeInUpTwo">Jesus spent time one-on-one with His disciples, but then He took them out into the wide world to apply what they had learned with Him in a small group setting. Our director began his ministry based on Jesus’ strategy using Jesus’ methods in the early 1990s and has continued refining those efforts to the present day.</p>
-            }
-            <a appAnimate="fadeInUpThree" [href]="c['story-3']?.ctaUrl || '#history'" class="impact-btn impact-btn-blue">
-              <span class="banner__area-2 pb-30">{{ c['story-3']?.ctaTitle || 'READ MORE' }}</span>
+                [innerHTML]="c['story-3']?.heading"></h4>
+            <div appAnimate="fadeInUpTwo" [innerHTML]="c['story-3']?.body"></div>
+            <a appAnimate="fadeInUpThree" [href]="c['story-3']?.ctaUrl" class="impact-btn impact-btn-blue">
+              <span class="banner__area-2 pb-30">{{ c['story-3']?.ctaTitle }}</span>
             </a>
           </div>
           <div class="col-xl-4 col-lg-4">
             <div class="w-img">
-              <img loading="lazy" [src]="c['story-3']?.image?.url || 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fstory-3.jpg?alt=media&token=4a367383-4b7e-4a9a-a696-934086475cd0'" alt="banner">
+              <img loading="lazy" [src]="c['story-3']?.image?.url" alt="banner">
             </div>
           </div>
         </div>
@@ -85,7 +75,7 @@
         <div class="single-slider slider__height d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fhistory-header.PNG?alt=media&token=f3e35d82-8571-4cee-8a7a-db7894d21578)'">
           <div class="container h-100 d-flex justify-content-center">
             <h2 class="history-header__title title-xl"
-                [innerHTML]="c['history']?.heading || 'OUR HISTORY'"></h2>
+                [innerHTML]="c['history']?.heading"></h2>
           </div>
         </div>
       </div>
@@ -99,15 +89,10 @@
         <div class="row justify-content-center align-items-center">
           <div class="col-xl-5 col-lg-5 d-flex history-section__text-area z-index-1">
             <div class="history-section__title mb-10">
-              <h4 appAnimate="fadeInUp" [innerHTML]="c['mission']?.heading || 'OUR <strong> MISSION</strong>'"></h4>
+              <h4 appAnimate="fadeInUp" [innerHTML]="c['mission']?.heading"></h4>
               <hr appAnimate="fadeInLeftToRight" class="custom-hr">
             </div>
-            @if (c['mission']?.body) {
-              <div appAnimate="fadeInUpThree" [innerHTML]="c['mission']?.body"></div>
-            } @else {
-              <p appAnimate="fadeInUpThree"><strong>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples of Jesus Christ.</strong></p>
-              <p appAnimate="fadeInUpThree">We provide disciple making resources, training, and consultations. We help people explore the concepts of disciple making, we educate people and churches in the principles of disciple making, we assist people and churches to establish disciple-making movements, and engage individuals and churches in developing movements of multiplication.</p>
-            }
+            <div appAnimate="fadeInUpThree" [innerHTML]="c['mission']?.body"></div>
           </div>
           <div class="col-xl-5 col-lg-5">
             @if (!isPlaying) {
@@ -200,20 +185,11 @@
   <section class="countries-banner page__title p-relative d-flex align-items-center mt-80 mb-80" [style.background-image]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fyellow-world-banner.PNG?alt=media&token=a2f4b0e2-dacb-4101-b6f6-8de82c5de4dc)'">
     <div class="row justify-content-center">
       <div class="col-xl-5 countries-banner__left">
-        <h1 appAnimate="fadeInUp" [innerHTML]="c['countries-count']?.heading || '<strong>15</strong>'"></h1>
-        @if (c['countries-count']?.body) {
-          <h3 appAnimate="fadeInUp" [innerHTML]="c['countries-count']?.body"></h3>
-        } @else {
-          <h3 appAnimate="fadeInUp">Countries with <br> Disciple-Making <br> Churches</h3>
-        }
+        <h1 appAnimate="fadeInUp" [innerHTML]="c['countries-count']?.heading"></h1>
+        <h3 appAnimate="fadeInUp" [innerHTML]="c['countries-count']?.body"></h3>
       </div>
       <div class="col-xl-5 countries-banner__right">
-        @if (c['countries-copy']?.body) {
-          <div appAnimate="fadeInUpTwo" class="countries-banner__copy" [innerHTML]="c['countries-copy']?.body"></div>
-        } @else {
-          <h3 appAnimate="fadeInUpTwo"><strong>Impact works with churches, pastors, and individuals all over the world to be and build disciples of Jesus.</strong></h3>
-          <h5 appAnimate="fadeInUpThree">We currently have Disciple-Making Church partners in the <strong>United States, Montenegro, Brazil, Dominican Republic, Haiti, the Philippines, Zambia, India, Thailand, Kosovo, Albania, Serbia, Italy, Cambodia</strong>, and closed countries that will not be listed here for safety purposes.</h5>
-        }
+        <div appAnimate="fadeInUpTwo" class="countries-banner__copy" [innerHTML]="c['countries-copy']?.body"></div>
       </div>
     </div>
   </section>
