@@ -1,4 +1,8 @@
 <app-home-header></app-home-header>
+<!-- Editable copy from Page Manager > Equipping Groups, by slot key. EVERY
+     use is `?? the original`, so a missing document or block leaves this
+     page exactly as it was. -->
+@let c = (content$ | async) ?? {};
 <div class="equipping-groups">
   <app-header
     [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fhome-header.jpg?alt=media&token=4a6de836-e6fc-4c12-9e2a-e8c063ffdcc3'"
@@ -9,21 +13,26 @@
   ></app-header>
   <div class="equipping-groups__approach">
     <div class="content">
-      <h4 appAnimate="fadeInUp" class="content__title mb-10">OUR APPROACH TO <strong>EQUIPPING</strong></h4>
-      <div appAnimate="fadeInUpTwo">
-        <p>
-          <b>Impact Discipleship Equipping Groups</b> are designed to help pastors and church leaders rediscover and live out Jesus’ original vision for the church—a movement of multiplying disciples.
-        </p>
-        <p>
-          Drawing from over 30 years of real-life ministry experience, these small-group learning environments invite leaders to study the life and methods of Jesus alongside other like-minded pastors and leaders.
-        </p>
-        <p>
-          Through short videos, focused articles, and live Zoom discussions, each equipping group provides practical, biblical insight you can immediately apply in your local church.
-        </p>
-        <p>
-          It’s a simple investment that produces lasting impact—helping you lead, build, and multiply disciples the way Jesus intended.
-        </p>
-      </div>
+      <h4 appAnimate="fadeInUp" class="content__title mb-10"
+          [innerHTML]="c['overview']?.heading || 'OUR APPROACH TO <strong>EQUIPPING</strong>'"></h4>
+      @if (c['overview']?.body) {
+        <div appAnimate="fadeInUpTwo" [innerHTML]="c['overview']?.body"></div>
+      } @else {
+        <div appAnimate="fadeInUpTwo">
+          <p>
+            <b>Impact Discipleship Equipping Groups</b> are designed to help pastors and church leaders rediscover and live out Jesus’ original vision for the church—a movement of multiplying disciples.
+          </p>
+          <p>
+            Drawing from over 30 years of real-life ministry experience, these small-group learning environments invite leaders to study the life and methods of Jesus alongside other like-minded pastors and leaders.
+          </p>
+          <p>
+            Through short videos, focused articles, and live Zoom discussions, each equipping group provides practical, biblical insight you can immediately apply in your local church.
+          </p>
+          <p>
+            It’s a simple investment that produces lasting impact—helping you lead, build, and multiply disciples the way Jesus intended.
+          </p>
+        </div>
+      }
     </div>
     <div class="video">
       @if (!isPlaying) {
@@ -57,39 +66,53 @@
     </div>
   </div>
   <div class="equipping-groups__about">
-    <h1 appAnimate="fadeInUp">Impact Discipleship offers three Equipping Group courses.</h1>
+    <h1 appAnimate="fadeInUp"
+        [innerHTML]="c['courses']?.heading || 'Impact Discipleship offers three Equipping Group courses.'"></h1>
     <div class="content__center" style="display: flex; justify-content: center;">
       <div class="mt-10" style="width: 50%;">
-        <div class="row align-items-center pb-10">
-          <div class="col-md-4 col-sm-6 align-items-start my-3">
-            <a [href]="'/equipping-groups-churches'" class="impact-btn-outlined">
-              Disciple-Making Church
-            </a>
+        @if (c['courses']?.items?.length) {
+          @for (course of c['courses']?.items; track $index) {
+            @if (course.isActive) {
+              <div class="row align-items-center pb-20">
+                <div class="col-md-4 col-sm-6 align-items-start my-3">
+                  <a [href]="course.link" class="impact-btn-outlined">{{ course.title }}</a>
+                </div>
+                <div class="col-md-8 col-sm-6">{{ course.description }}</div>
+              </div>
+            }
+          }
+        } @else {
+          <div class="row align-items-center pb-10">
+            <div class="col-md-4 col-sm-6 align-items-start my-3">
+              <a [href]="'/equipping-groups-churches'" class="impact-btn-outlined">
+                Disciple-Making Church
+              </a>
+            </div>
+            <div class="col-md-8 col-sm-6">
+              Designed for churches ready to move from good intentions to intentional disciple-making. This equipping group helps pastors and key leaders align their church around a shared mission, model, and practical pathway to build a sustainable disciple-making culture—together.
+            </div>
           </div>
-          <div class="col-md-8 col-sm-6">
-            Designed for churches ready to move from good intentions to intentional disciple-making. This equipping group helps pastors and key leaders align their church around a shared mission, model, and practical pathway to build a sustainable disciple-making culture—together.
+          <div class="row align-items-center pb-20">
+            <div class="col-md-4 col-sm-6 align-items-start my-3">
+              <a [href]="'/equipping-groups-pastors'" class="impact-btn-outlined">
+                Disciple-Making Pastor
+              </a>
+            </div>
+            <div class="col-md-8 col-sm-6">
+              Created specifically for pastors who want to lead with greater clarity, confidence, and multiplication. Rooted in 30+ years of real-world experience, this equipping group focuses on the six priorities every Disciple-Making Pastor must embrace to lead their congregation toward a movement of disciples who make disciples.
+            </div>
           </div>
-        </div>
-        <div class="row align-items-center pb-20">
-          <div class="col-md-4 col-sm-6 align-items-start my-3">
-            <a [href]="'/equipping-groups-pastors'" class="impact-btn-outlined">
-              Disciple-Making Pastor
-            </a>
+          <div class="row align-items-center">
+            <div class="col-md-4 col-sm-6 align-items-start my-3">
+              <a [href]="'/equipping-groups-leaders'" class="impact-btn-outlined">
+                Disciple-Making Leader
+              </a>
+            </div>
+            <div class="col-md-8 col-sm-6">
+              Built for everyday leaders who want to live out and lead the mission of making disciples in their ministry context. This equipping group focuses on personal spiritual growth, practical disciple-making tools, and faithfulness over the long haul—no formal ministry role required.
+            </div>
           </div>
-          <div class="col-md-8 col-sm-6">
-            Created specifically for pastors who want to lead with greater clarity, confidence, and multiplication. Rooted in 30+ years of real-world experience, this equipping group focuses on the six priorities every Disciple-Making Pastor must embrace to lead their congregation toward a movement of disciples who make disciples.
-          </div>
-        </div>
-        <div class="row align-items-center">
-          <div class="col-md-4 col-sm-6 align-items-start my-3">
-            <a [href]="'/equipping-groups-leaders'" class="impact-btn-outlined">
-              Disciple-Making Leader
-            </a>
-          </div>
-          <div class="col-md-8 col-sm-6">
-            Built for everyday leaders who want to live out and lead the mission of making disciples in their ministry context. This equipping group focuses on personal spiritual growth, practical disciple-making tools, and faithfulness over the long haul—no formal ministry role required.
-          </div>
-        </div>
+        }
       </div>
     </div>
   </div>

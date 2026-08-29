@@ -1,4 +1,7 @@
 <app-home-header></app-home-header>
+<!-- Editable copy from Page Manager > Give. The payment URLs stay in
+     environment.ts on purpose - see editable-pages.ts. -->
+@let c = (content$ | async) ?? {};
 
 <div class="give">
   <app-header
@@ -14,26 +17,30 @@
   <div class="give__main">
     <div class="options">
       <div class="options__item">
-        <h3>One-Time</h3>
+        <h3 [innerHTML]="c['onetime']?.heading || 'One-Time'"></h3>
         <i class="large-icon fas fa-dollar-sign"></i>
         <div class="buttons">
           <button class="impact-btn" (click)="window.open(environment.oneGiftUrl, '_blank')">SEND DONATION</button>
         </div>
       </div>
       <div class="options__item">
-        <h3>Monthly</h3>
+        <h3 [innerHTML]="c['monthly']?.heading || 'Monthly'"></h3>
         <i class="large-icon fas fa-calendar-days"></i>
         <div class="buttons">
           <button class="impact-btn" (click)="window.open(environment.monthlyGiftUrl, '_blank')">SEND DONATION</button>
         </div>
       </div>
       <div class="options__item">
-        <h3>Psalms 78:6 Impact Partners</h3>
+        <h3 [innerHTML]="c['partners']?.heading || 'Psalms 78:6 Impact Partners'"></h3>
         <i class="large-icon fas fa-calendar-days"></i>
-        <p>Would you be willing to invest in the next generation of disciples?<br>
-        "Become an Impact Partner”<br>
-        Psalm 78:6 - “So the next generation would know… and they would tell their children.”<br>
-        Your support multiplies the mission of Jesus!</p>
+        @if (c['partners']?.body) {
+          <div [innerHTML]="c['partners']?.body"></div>
+        } @else {
+          <p>Would you be willing to invest in the next generation of disciples?<br>
+          "Become an Impact Partner”<br>
+          Psalm 78:6 - “So the next generation would know… and they would tell their children.”<br>
+          Your support multiplies the mission of Jesus!</p>
+        }
 
         <div class="buttons">
           <button class="impact-btn" (click)="window.open(environment.impactPartnersGiftUrl, '_blank')">BECOME A PARTNER</button>

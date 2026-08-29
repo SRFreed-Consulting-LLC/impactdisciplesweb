@@ -1,4 +1,7 @@
 <app-home-header></app-home-header>
+<!-- Editable copy from Page Manager > Discipleship Library, by slot key.
+     EVERY use is `?? the original`. -->
+@let c = (content$ | async) ?? {};
 
 <!-- Hero. Dark field so the yellow rule and the white CTA carry, matching the
      home slider's announcement slide this page is linked from. -->
@@ -7,11 +10,15 @@
     <div class="dl-hero__grid">
       <div class="dl-hero__copy">
         <p class="dl-eyebrow">The Impact Discipleship Library</p>
-        <h1 class="dl-hero__title">Your discipleship library,<br>in your pocket.</h1>
-        <p class="dl-hero__lede">
-          Read every title, work through the lessons at your own pace, and walk through
-          them together with your Impact Group — on any phone, with nothing to install.
-        </p>
+        <h1 class="dl-hero__title" [innerHTML]="c['hero']?.heading || 'Your discipleship library,<br>in your pocket.'"></h1>
+        @if (c['hero']?.body) {
+          <div class="dl-hero__lede" [innerHTML]="c['hero']?.body"></div>
+        } @else {
+          <p class="dl-hero__lede">
+            Read every title, work through the lessons at your own pace, and walk through
+            them together with your Impact Group — on any phone, with nothing to install.
+          </p>
+        }
         <div class="dl-hero__ctas">
           <a [href]="readerUrl" class="impact-btn impact-btn-blue" target="_blank" rel="noopener">Open the Library</a>
         </div>
@@ -74,11 +81,15 @@
 
 <section class="dl-close">
   <div class="container">
-    <h2 class="dl-close__title">Start reading today.</h2>
+    <h2 class="dl-close__title" [innerHTML]="c['closing']?.heading || 'Start reading today.'"></h2>
     <hr class="dl-rule dl-rule--center">
-    <p class="dl-close__lede">
-      Anyone can sign up. Open it in your browser, sign in, and your shelf is waiting.
-    </p>
+    @if (c['closing']?.body) {
+      <div class="dl-close__lede" [innerHTML]="c['closing']?.body"></div>
+    } @else {
+      <p class="dl-close__lede">
+        Anyone can sign up. Open it in your browser, sign in, and your shelf is waiting.
+      </p>
+    }
     <a [href]="readerUrl" class="impact-btn dl-btn--onBlue" target="_blank" rel="noopener">Open the Library</a>
   </div>
 </section>

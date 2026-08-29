@@ -1,4 +1,7 @@
 <app-home-header></app-home-header>
+<!-- Editable copy from Page Manager > Equipping - Leaders, by slot key.
+     EVERY use is `?? the original`. -->
+@let c = (content$ | async) ?? {};
 <div class="equipping-groups">
   <app-header
     [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2F20210129-IMG_0151-2.jpg?alt=media&token=d1ae9d34-5eef-432d-9f11-f6269404a2cf'"
@@ -11,18 +14,23 @@
   ></app-header>
   <div class="equipping-groups__approach">
     <div class="content">
-      <h4 appAnimate="fadeInUp" class="content__title mb-10">OUR APPROACH TO <strong>EQUIPPING LEADERS</strong></h4>
-      <div appAnimate="fadeInUpTwo">
-        <p>
-          <b>The Disciple-Making Leader Equipping Group</b> is a new online training experience designed to equip everyday church leaders to live out and lead the mission of making disciples. This group focuses on personal spiritual growth and practical, real-life disciple-making—helping leaders know, model, and multiply the mission in their everyday ministry.
-        </p>
-        <p>
-          Designed to be accessible, relational, and actionable, this experience is for small group leaders, ministry and team leaders, volunteers, emerging leaders, and churches seeking to develop disciple-making leaders at every level. No formal ministry role required—just a desire to grow and faithfully lead others.
-        </p>
-        <p>
-          Launching soon. More details coming.
-        </p>
-      </div>
+      <h4 appAnimate="fadeInUp" class="content__title mb-10"
+          [innerHTML]="c['overview']?.heading || 'OUR APPROACH TO <strong>EQUIPPING LEADERS</strong>'"></h4>
+      @if (c['overview']?.body) {
+        <div appAnimate="fadeInUpTwo" [innerHTML]="c['overview']?.body"></div>
+      } @else {
+        <div appAnimate="fadeInUpTwo">
+          <p>
+            <b>The Disciple-Making Leader Equipping Group</b> is a new online training experience designed to equip everyday church leaders to live out and lead the mission of making disciples. This group focuses on personal spiritual growth and practical, real-life disciple-making—helping leaders know, model, and multiply the mission in their everyday ministry.
+          </p>
+          <p>
+            Designed to be accessible, relational, and actionable, this experience is for small group leaders, ministry and team leaders, volunteers, emerging leaders, and churches seeking to develop disciple-making leaders at every level. No formal ministry role required—just a desire to grow and faithfully lead others.
+          </p>
+          <p>
+            Launching soon. More details coming.
+          </p>
+        </div>
+      }
     </div>
     <div class="video">
       @if (!isPlaying) {
@@ -58,17 +66,17 @@
   <div class="equipping-groups__about">
     <div class="content">
       <div class="content__left">
-        <h5>EQUIPPING BASICS</h5>
+        <h5 [innerHTML]="c['basics']?.heading || 'EQUIPPING BASICS'"></h5>
         <p>The Disciple-Making Leader Equipping Group is launching soon.</p>
         <p>If you are passionate about helping leaders in your church grow in clarity, faithfulness, and disciple-making impact, this upcoming equipping group is designed with you in mind.</p>
         <p>Stay tuned for registration details.</p>
-        <h5>COST</h5>
+        <h5 [innerHTML]="c['cost']?.heading || 'COST'"></h5>
         <p>Pricing and registration details will be announced soon.</p>
         <p>This equipping group will follow a similar structure and investment model as our other Impact equipping groups.</p>
 
       </div>
       <div class="content__right">
-        <h5>Leaders, are you ready to lead with greater purpose and clarity?</h5>
+        <h5 [innerHTML]="c['pitch']?.heading || 'Leaders, are you ready to lead with greater purpose and clarity?'"></h5>
 
         <div class="mt-10">
           The <b>Disciple-Making Leader Equipping Group</b> is a brand-new online training experience designed to equip everyday leaders in the local church to live out and lead the mission of making disciples.
@@ -78,7 +86,7 @@
         </div>
 
         <div class="mt-10">
-          <h5>Six Priorities of a Disciple-Making Leader</h5>
+          <h5 [innerHTML]="c['priorities']?.heading || 'Six Priorities of a Disciple-Making Leader'"></h5>
           <h5>A Disciple-Making Leader:</h5>
           <ol>
             <li class="mb-5">Knows the Mission - Understands God’s heart and purpose for making disciples.</li>
@@ -90,7 +98,7 @@
           </ol>
         </div>
         <div class="mt-10">
-          <h5>What This Equipping Group Will Include</h5>
+          <h5 [innerHTML]="c['includes']?.heading || 'What This Equipping Group Will Include'"></h5>
           <ul>
             <li class="mb-5">* Live online sessions designed for church leaders at every level</li>
             <li class="mb-5">* Practical teaching rooted in real-life disciple-making</li>
@@ -102,7 +110,7 @@
         </div>
 
         <div class="mt-10">
-          <h5>Who This Is For</h5>
+          <h5 [innerHTML]="c['audience']?.heading || 'Who This Is For'"></h5>
           <ul>
             <li class="mb-5">* Small group leaders</li>
             <li class="mb-5">* Ministry leaders and team leaders</li>

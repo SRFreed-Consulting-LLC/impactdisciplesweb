@@ -7,4 +7,6 @@ import { EquippingGroupsPageBase } from '../equipping-groups-page.base';
     styleUrls: ['../equipping-groups-page.shared.scss'],
     standalone: false
 })
-export class EquippingGroupsChurchesComponent extends EquippingGroupsPageBase {}
+export class EquippingGroupsChurchesComponent extends EquippingGroupsPageBase {
+  protected readonly pageSlug = 'equipping-groups-churches';
+}

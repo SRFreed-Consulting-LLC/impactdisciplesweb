@@ -1,4 +1,7 @@
 <app-home-header></app-home-header>
+<!-- Editable copy from Page Manager > Lunch and Learns, by slot key.
+     EVERY use is `?? the original`. -->
+@let c = (content$ | async) ?? {};
 <div class="lunch">
   <app-header
     [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Flunchlearn-header.png?alt=media&token=557bdabf-9daa-4475-80a6-a9f6410d4d74'"
@@ -9,14 +12,18 @@
     [buttonLink]="'/lunch-and-learn-form'"
   ></app-header>
   <div class="lunch__overview">
-    <h2 appAnimate="fadeInUp">OVERVIEW</h2>
-    <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples. One of the best ways we do that is by providing training and resources for churches who need help implementing a proven strategy to grow their ministries.
-    Let us join you for lunch and give you more information on how we can come alongside you to help your church multiply disciples.</p>
+    <h2 appAnimate="fadeInUp" [innerHTML]="c['overview']?.heading || 'OVERVIEW'"></h2>
+    @if (c['overview']?.body) {
+      <div [innerHTML]="c['overview']?.body"></div>
+    } @else {
+      <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples. One of the best ways we do that is by providing training and resources for churches who need help implementing a proven strategy to grow their ministries.
+      Let us join you for lunch and give you more information on how we can come alongside you to help your church multiply disciples.</p>
+    }
   </div>
   <hr appAnimate="fadeInLeftToRight" class="solid-line mt-60 mb-60">
   <div class="lunch__offers">
     <div class="content">
-      <h1>WHAT YOU <strong> GET</strong></h1>
+      <h1 [innerHTML]="c['whatyouget']?.heading || 'WHAT YOU <strong> GET</strong>'"></h1>
       <hr appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w60 slider-hr-thick">
       <ul class="custom-bullets">
         <li appAnimate="fadeInUpTwo">Meet and Greet with Our Team</li>

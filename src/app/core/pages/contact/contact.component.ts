@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
+import { Observable } from 'rxjs';
+import { PageContentBlock } from '@impact-common/shared/models/domain/page-content.model';
+import { PageContentService } from 'src/app/common/services/data/page-content.service';
 
 // Now backed by app-dynamic-form (src/app/shared/form-renderer/), same
 // pattern as SeminarFormComponent/LunchAndLearnFormComponent - see
@@ -20,6 +23,13 @@ import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data
     standalone: false
 })
 export class ContactComponent {
+  /** Editable copy by slot key; every template use falls back to its own. */
+  readonly content$: Observable<Record<string, PageContentBlock>>;
+
+  constructor(pageContent: PageContentService) {
+    this.content$ = pageContent.blocksFor('contact');
+  }
+
   public impactDisciplesInfo = impactDisciplesInfo;
   readonly formId = 'N0ynW6zeYKdXQS2EkBii';
 }

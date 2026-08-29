@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { PageContentBlock } from '@impact-common/shared/models/domain/page-content.model';
+import { PageContentService } from 'src/app/common/services/data/page-content.service';
 
 /** One functional area of the Reader app, as a row on the page. */
 export interface ReaderFeature {
@@ -36,6 +39,13 @@ export interface ReaderFeature {
   standalone: false
 })
 export class DiscipleshipLibraryComponent {
+  /** Editable copy by slot key; every template use falls back to its own. */
+  readonly content$: Observable<Record<string, PageContentBlock>>;
+
+  constructor(pageContent: PageContentService) {
+    this.content$ = pageContent.blocksFor('discipleship-library');
+  }
+
   /** Where every call to action on this page goes. */
   readonly readerUrl = 'https://impactdisciples-library.web.app';
 
