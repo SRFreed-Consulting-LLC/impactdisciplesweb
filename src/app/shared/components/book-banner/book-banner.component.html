@@ -3,13 +3,17 @@
     <div class="container-fluid p-0">
       <div class="row g-0 justify-content-center align-items-center">
         <div class="book__text-area col-xl-4 col-lg-4 d-flex">
-          <h4 appAnimate="fadeInUp" class="book__title mb-10">DISCOVER <strong> POWERFUL</strong> DISCIPLE-MAKING RESOURCES</h4>
-          <p appAnimate="fadeInUpTwo">Explore our store for impactful resources crafted to guide your disciple-making efforts. Our collection of books is designed to provide practical tools and biblical insights that will deepen your faith and extend your impact. Start your journey today with the perfect resource.</p>
-          <a appAnimate="fadeInUpThree" [routerLink]="['/store']" class="impact-btn impact-btn-blue">VISIT OUR STORE</a>
+          <h4 appAnimate="fadeInUp" class="book__title mb-10" [innerHTML]="title"></h4>
+          <p appAnimate="fadeInUpTwo">{{ subtitle }}</p>
+          @if (isExternal) {
+            <a appAnimate="fadeInUpThree" [href]="ctaUrl" class="impact-btn impact-btn-blue">{{ ctaTitle }}</a>
+          } @else {
+            <a appAnimate="fadeInUpThree" [routerLink]="[ctaDestination]" class="impact-btn impact-btn-blue">{{ ctaTitle }}</a>
+          }
         </div>
         <div class="col-xl-6 col-lg-6">
-          <div class="w-img">                  
-            <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Store%2FDMC-Series_Five-Images-1.png?alt=media&token=97f755c0-3c73-4545-979c-6428c3f2ab98" alt="banner">
+          <div class="w-img">
+            <img loading="lazy" [src]="imageUrl" alt="banner">
           </div>
         </div>
       </div>

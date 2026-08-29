@@ -1,35 +1,57 @@
-import { HomeServicesModel } from "../models/home-services.model";
+import { HomeSectionItem } from '@impact-common/shared/models/domain/home-section.model';
 
-
-const services: HomeServicesModel[] = [
+/**
+ * What the services strip has always shown.
+ *
+ * Kept as the component's DEFAULT rather than deleted: a `services` section
+ * record that carries no items of its own renders these, so the home page
+ * still says something sensible if the collection is unreachable.
+ *
+ * Now typed as HomeSectionItem - the same shape staff will edit in the
+ * admin - rather than the app-local HomeServicesModel it used to use, so
+ * there is one description of a service card instead of two.
+ */
+const services: HomeSectionItem[] = [
   {
-    id: 0,
-    img: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-seminars.PNG?alt=media&token=ec3a4fd3-5364-40b7-82d4-42898a5c2d81',
-    title: "SEMINARS",
-    description: "Host a Disciple-Making Church seminar for your ministry",
-    link: '/seminars'
+    image: {
+      name: 'service-seminars',
+      url: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-seminars.PNG?alt=media&token=ec3a4fd3-5364-40b7-82d4-42898a5c2d81'
+    },
+    title: 'SEMINARS',
+    description: 'Host a Disciple-Making Church seminar for your ministry',
+    link: '/seminars',
+    isActive: true
   },
   {
-    id: 1,
-    img: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-consultation.PNG?alt=media&token=ad3369ad-87ee-495c-8579-a04551bd6939',
-    title: "Training",
-    description: "Schedule your first consultation on us",
-    link: '/equipping-groups'
+    image: {
+      name: 'service-consultation',
+      url: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-consultation.PNG?alt=media&token=ad3369ad-87ee-495c-8579-a04551bd6939'
+    },
+    title: 'Training',
+    description: 'Schedule your first consultation on us',
+    link: '/equipping-groups',
+    isActive: true
   },
   {
-    id: 2,
-    img: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-support-our-mission.PNG?alt=media&token=4f49643b-4193-4940-9bd7-d0c8360245c7',
-    title: "SUPPORT OUR MISSION",
-    description: "Partner with us by praying and giving",
-    link: '/give'
+    image: {
+      name: 'service-support-our-mission',
+      url: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-support-our-mission.PNG?alt=media&token=4f49643b-4193-4940-9bd7-d0c8360245c7'
+    },
+    title: 'SUPPORT OUR MISSION',
+    description: 'Partner with us by praying and giving',
+    link: '/give',
+    isActive: true
   },
   {
-    id: 3,
-    img: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-connect-with-us.PNG?alt=media&token=be61d4b9-6349-4022-bd0e-6f1d0603025f',
-    title: "CONNECT WITH US",
-    description: "Let us know how we can support your ministry",
-    link: '/contact'
+    image: {
+      name: 'service-connect-with-us',
+      url: 'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHome%2Fservice-connect-with-us.PNG?alt=media&token=be61d4b9-6349-4022-bd0e-6f1d0603025f'
+    },
+    title: 'CONNECT WITH US',
+    description: 'Let us know how we can support your ministry',
+    link: '/contact',
+    isActive: true
   }
-]
+];
 
 export default services;

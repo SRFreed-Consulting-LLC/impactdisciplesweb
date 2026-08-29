@@ -1,9 +1,9 @@
 <div class="services">
-  @for (item of services; track item) {
+  @for (item of visibleItems; track item.title) {
     <div>
       <div class="services__item">
         <a [href]="item.link">
-          <img loading="lazy" [src]="item.img" alt="banner" />
+          <img loading="lazy" [src]="item.image?.url" alt="banner" />
         </a>
         <div class="services__item-content">
           <div [innerHTML]="item.title" class="title"></div>

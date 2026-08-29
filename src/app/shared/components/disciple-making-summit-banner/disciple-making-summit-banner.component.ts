@@ -3,6 +3,17 @@ import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 
+/**
+ * The Disciple-Making Summit banner: a background, a heading, a live
+ * countdown and a register button.
+ *
+ * The COUNTDOWN and the register link come from the summit EVENT, not from
+ * a section record - a date staff can type on a page would drift from the
+ * event it is counting down to. Only the presentation is editable.
+ *
+ * Used on the home page and the events page, so the defaults have to stand
+ * on their own: the events page passes nothing.
+ */
 @Component({
     selector: 'app-disciple-making-summit-banner',
     templateUrl: './disciple-making-summit-banner.component.html',
@@ -10,7 +21,14 @@ import { EventService } from 'src/app/common/services/data/event.service';
     standalone: false
 })
 export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
-  @Input() large = false;
+  /** Rendered as two lines: everything before the last word, then the word. */
+  @Input() title = 'DISCIPLE-MAKING SUMMIT';
+
+  @Input() backgroundUrl =
+    'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/' +
+    'Web-Pages%2FShared%2Fsummit-banner-large.PNG?alt=media&token=74f6f522-2b3e-48f0-bdb9-2b363abbe80e';
+
+  @Input() ctaTitle = 'REGISTER NOW';
 
   public dms: EventModel;
   public days = 0;
@@ -22,6 +40,21 @@ export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
   private destroyed = false;
 
   constructor(private eventService: EventService){}
+
+  /**
+   * The heading is drawn with its last word in the accent colour, which the
+   * template used to do with a hardcoded <span>. Splitting here keeps that
+   * treatment working for whatever staff type.
+   */
+  get titleLead(): string {
+    const words = (this.title ?? '').trim().split(/\s+/);
+    return words.slice(0, -1).join(' ');
+  }
+
+  get titleAccent(): string {
+    const words = (this.title ?? '').trim().split(/\s+/);
+    return words.length ? words[words.length - 1] : '';
+  }
 
   ngOnInit(): void {
     // One-time, summit-only fetch instead of a live whole-collection
