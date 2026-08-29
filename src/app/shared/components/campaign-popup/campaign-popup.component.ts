@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { CampaignPopupService, CampaignPopup, PopupCtaField } from 'src/app/common/services/data/campaign-popup.service';
 import { FormSubmissionService } from 'src/app/common/services/data/form-submission.service';
 import { FormSubmissionModel } from '@impact-common/shared/models/domain/form-submission.model';
+import { isAdminPreview } from 'src/app/shared/utils/admin-preview';
 
 // Web-campaign popup renderer (Campaign Manager v2, Phase 5) - mounted in
 // the app shell, shows the first ACTIVE campaign popup whose date window
@@ -69,6 +70,24 @@ export class CampaignPopupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // NOT SHOWN IN PAGE MANAGER'S PREVIEWER, and the return is here - before
+    // the stream - rather than at the point of opening, so nothing is
+    // listened to, nothing is evaluated and above all NO BEACON IS FIRED.
+    //
+    // The beacon is the real reason. `open()` logs a `web_shown` impression
+    // against the campaign, guarded once per visitor per popup in
+    // localStorage - so a framed home page would have every staff browser
+    // quietly counting a fake impression each time someone opened the Home
+    // screen. The overlay covering the preview is the visible half of the
+    // problem; this is the half that would have shown up later as numbers
+    // nobody could explain.
+    //
+    // A popup has its own editor and its own previewer in Campaigns. See
+    // shared/utils/admin-preview.ts.
+    if (isAdminPreview()) {
+      return;
+    }
+
     this.popupService.streamAllByValue('isActive', true)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((popups) => {
