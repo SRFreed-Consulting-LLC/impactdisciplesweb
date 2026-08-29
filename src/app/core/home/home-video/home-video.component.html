@@ -1,0 +1,30 @@
+<div class="video">
+  <div class="video__title">
+    <h1>OUR VISION</h1>
+    <hr appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w100 slider-hr-thick">
+    <p>Impact Discipleship Ministries exists to inspire people and churches to be and build disciples of Jesus Christ. </p>
+  </div>
+  @if (!isPlaying) {
+    <div class="video__container" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap.jpg?alt=media&token=9db9c6f4-c852-4722-807e-5fa5d93f881a)">
+      <div class="container">
+        <div class="video__content text-center">
+          <div class="video__button">
+            <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
+              <i class="fas fa-play"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+  @if (isPlaying) {
+    <div id="video-overlay">
+      <youtube-player
+        [videoId]="'HxKSa24hF60'"
+        [height]="400"
+        suggestedQuality="highres"
+        [playerVars]="{ autoplay: 1 }"
+      ></youtube-player>
+    </div>
+  }
+</div>

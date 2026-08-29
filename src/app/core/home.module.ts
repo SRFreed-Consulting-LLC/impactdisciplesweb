@@ -7,6 +7,7 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { HomeComponent } from "./home/home.component";
 import { HomeHeaderSliderComponent } from "./home/home-header-slider/home-header-slider.component";
 import { HomeServicesComponent } from "./home/home-services/home-services.component";
+import { HomeVideoComponent } from "./home/home-video/home-video.component";
 
 const routes: Routes = [
   {
@@ -19,7 +20,8 @@ const routes: Routes = [
   declarations: [
     HomeComponent,
     HomeHeaderSliderComponent,
-    HomeServicesComponent
+    HomeServicesComponent,
+    HomeVideoComponent
   ],
   imports: [
     CommonModule,

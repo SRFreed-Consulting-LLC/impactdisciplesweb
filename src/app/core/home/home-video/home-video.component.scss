@@ -1,4 +1,4 @@
-@use '../../../assets/styles/theme/scss/variables';
+@use '../../../../assets/styles/theme/scss/variables';
 
 .video {
   display: flex;
@@ -27,7 +27,7 @@
       font-size: 100px;
       color: variables.$theme-color;
        display: inline;
-      white-space: nowrap; 
+      white-space: nowrap;
 
       @media #{variables.$xxs,variables.$xs} {
         font-size: 40px;
@@ -71,6 +71,11 @@
     }
   }
 
+  // DEAD, and moved here unchanged rather than fixed - see the note in the
+  // component. Every other video on the site wraps its player in
+  // .video__player-wrapper, and these rules are written for that. This
+  // template alone uses id="video-overlay", which nothing here styles, so
+  // the player renders unsized. Flagged for a separate decision.
   &__player-wrapper {
     position: relative;
     width: 100%;
