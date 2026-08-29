@@ -1,200 +1,22 @@
 <app-home-header></app-home-header>
-<!-- Copy from Page Manager > About Us, by slot key.
-     There is NO fallback here: the page_content document IS the only copy
-     of this text. A block that is missing renders nothing (Shane's call,
-     2026-08-29) - the templates used to carry a duplicate and it was
-     removed with the seed, so nothing can silently disagree with it. -->
-@let c = (content$ | async) ?? {};
-<!-- our story -->
+
+<!-- About Us is a DISPATCHER: it renders whatever sections page_content
+     says, in the order it says. Staff reorder them in Page Manager > About
+     Us and this follows with no code change. Which section each block draws
+     is its `type`; app-about-section is the only thing that knows how a
+     type maps onto markup.
+
+     There is NO fallback copy here. The page_content document is the only
+     copy of this page's text (Shane's call, 2026-08-29), so an unreadable
+     read renders an empty page - which is why page_content has to exist in
+     an environment before this build ships there. -->
+@let view = view$ | async;
 <main>
-  <div class="story">
-    <div class="banner__area-2 pb-60">
-      <div class="container-fluid p-0">
-        <div class="row g-0 justify-content-center align-items-center">
-          <div class="story__text-area col-xl-4 col-lg-4 d-flex">
-            <h4 appAnimate="fadeInUp" class="story__title mb-10"
-                [innerHTML]="c['story-1']?.heading"></h4>
-            <div appAnimate="fadeInUpTwo" [innerHTML]="c['story-1']?.body"></div>
-            <a appAnimate="fadeInUpThree" [href]="c['story-1']?.ctaUrl" class="impact-btn impact-btn-blue">
-              <span class="banner__area-2 pb-30">{{ c['story-1']?.ctaTitle }}</span>
-            </a>
-          </div>
-          <div class="col-xl-4 col-lg-4">
-            <div class="w-img">
-              <img loading="lazy" [src]="c['story-1']?.image?.url" alt="banner">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="banner__area-2 pb-60">
-      <div class="container-fluid p-0">
-        <div class="row g-0 justify-content-center align-items-center">
-          <div class="col-xl-4 col-lg-4">
-            <div class="w-img">
-              <img loading="lazy" [src]="c['story-2']?.image?.url" alt="banner">
-            </div>
-          </div>
-          <div class="story__text-area col-xl-4 col-lg-4 d-flex">
-            <h4 appAnimate="fadeInUp" class="story__title mb-10"
-                [innerHTML]="c['story-2']?.heading"></h4>
-            <div appAnimate="fadeInUpTwo" [innerHTML]="c['story-2']?.body"></div>
-            <a appAnimate="fadeInUpThree" [href]="c['story-2']?.ctaUrl" class="impact-btn impact-btn-blue">
-              <span class="banner__area-2 pb-30">{{ c['story-2']?.ctaTitle }}</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="banner__area-2 pb-60">
-      <div class="container-fluid p-0">
-        <div class="row g-0 justify-content-center align-items-center">
-          <div class="story__text-area col-xl-4 col-lg-4 d-flex">
-            <h4 appAnimate="fadeInUp" class="story__title mb-10"
-                [innerHTML]="c['story-3']?.heading"></h4>
-            <div appAnimate="fadeInUpTwo" [innerHTML]="c['story-3']?.body"></div>
-            <a appAnimate="fadeInUpThree" [href]="c['story-3']?.ctaUrl" class="impact-btn impact-btn-blue">
-              <span class="banner__area-2 pb-30">{{ c['story-3']?.ctaTitle }}</span>
-            </a>
-          </div>
-          <div class="col-xl-4 col-lg-4">
-            <div class="w-img">
-              <img loading="lazy" [src]="c['story-3']?.image?.url" alt="banner">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HISTORY HEADER -->
-  <section class="slider__area p-relative" id="history">
-    <div class="slider-active swiper-container" #heroSliderContainer>
-      <div class="swiper-wrapper">
-        <div class="single-slider slider__height d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fhistory-header.PNG?alt=media&token=f3e35d82-8571-4cee-8a7a-db7894d21578)'">
-          <div class="container h-100 d-flex justify-content-center">
-            <h2 class="history-header__title title-xl"
-                [innerHTML]="c['history']?.heading"></h2>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HISTORY TIMELINE -->
-  <div class="history-section banner__area">
-    <div class="container-xxl">
-      <div class="banner__inner p-relative z-index-1 pt-50">
-        <div class="row justify-content-center align-items-center">
-          <div class="col-xl-5 col-lg-5 d-flex history-section__text-area z-index-1">
-            <div class="history-section__title mb-10">
-              <h4 appAnimate="fadeInUp" [innerHTML]="c['mission']?.heading"></h4>
-              <hr appAnimate="fadeInLeftToRight" class="custom-hr">
-            </div>
-            <div appAnimate="fadeInUpThree" [innerHTML]="c['mission']?.body"></div>
-          </div>
-          <div class="col-xl-5 col-lg-5">
-            @if (!isPlaying) {
-              <div class="video__area-df mb-60" style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fmap.jpg?alt=media&token=9db9c6f4-c852-4722-807e-5fa5d93f881a)">
-                <div class="container">
-                  <div class="video__content text-center">
-                    <div class="video__button mb-60">
-                      <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
-                        <i class="fas fa-play"></i>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            }
-            @if (isPlaying) {
-              <div id="video-overlay"  class="mb-60">
-                <youtube-player [videoId]="'HxKSa24hF60'" [width]="550" [height]="300" suggestedQuality="highres" [playerVars]="{'autoplay': 1}"></youtube-player>
-              </div>
-            }
-          </div>
-        </div>
-
-        <hr class="light-hr z-index-1 p-relative">
-
-        <div class="text-overlay">
-          <span class="large-text">1989</span>
-          <span appAnimate="fadeInUpTwo" class="small-text">1989</span>
-        </div>
-
-        <div class="timeline">
-          <div class="timeline-dot"></div>
-          <div class="timeline-section row">
-            <div class="timeline-item-left col-lg-5 mr-60">
-              <div class="timeline-content">
-                <p appAnimate="fadeInUp">Ken Adams was called as the first pastor of Crossroads Church in Newnan, Georgia in 1989. He was passionate about the Great Commission and wanted his church to be a part of the movement and mission of Jesus. Ken wanted everything at Crossroads to revolve around being and building disciples of Jesus.</p>
-              </div>
-            </div>
-            <div class="timeline-img-col col-lg-5 ml-60">
-              <img loading="lazy" class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2Fhistory-1.jpg?alt=media&token=b97d532d-c943-429f-b81b-02f428d6ed06" alt="Image 1">
-            </div>
-          </div>
-
-          <div class="timeline-section row">
-            <div class="timeline-img-col col-lg-5 mr-60">
-              <img loading="lazy" class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2Fhistory-2.PNG?alt=media&token=34a67ae1-7124-405a-b739-00395a6a5659" alt="Image 2">
-            </div>
-            <div class="timeline-item-right col-lg-5">
-              <div class="timeline-content">
-                <p appAnimate="fadeInUp">In the early 1990s, Crossroads was well on its way multiplying disciples, but the church was having a major problem finding resources that would accomplish its mission. While a lot of resources provided insight on how to have a discipleship program in a church, there were few resources that taught how to build a church that entirely revolved around a Jesus-style strategy for disciple making.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-section row">
-            <div class="timeline-item-left col-lg-5">
-              <div class="timeline-content">
-                <p appAnimate="fadeInUp">Out of this need, Ken began writing his own curriculum for Crossroads. He emphasized important topics in his writing like how to define a disciple, how to train a disciple, how to multiply disciples, and how to create church and small group environments that multiply disciples. Ken’s curriculum was a huge hit with the Crossroads, and pretty soon, disciples and small groups were multiplying exponentially in the church.</p>
-              </div>
-            </div>
-            <div class="timeline-img-col col-lg-5 ml-60">
-              <img loading="lazy" class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2Fhistory-3.PNG?alt=media&token=75dcda00-f148-489d-a885-794276e2235c" alt="Image 3">
-            </div>
-          </div>
-
-          <div class="timeline-section row">
-            <div class="timeline-img-col col-lg-5 mr-60">
-              <img loading="lazy" class="timeline-img" src="https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FContent%2Fhistory-4.PNG?alt=media&token=23516f82-74de-423a-adb5-12e49531678e" alt="Image 4">
-            </div>
-            <div class="timeline-item-right col-lg-5">
-              <div class="timeline-content">
-                <p appAnimate="fadeInUp">Under Ken’s leadership, Crossroads has grown to 3,000+ in attendance, meets on three campuses, and has planted eight other churches as of 2020.
-                  In 2001, Ken decided to make his resources available to other churches. He founded Impact Discipleship Ministries as a non-profit of Crossroads Church specifically for the purpose of providing disciple making resources and training.
-                  Today, Impact Discipleship Ministries serves pastors, churches, and individuals all over the world.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="text-overlay">
-          <span class="large-text">2019</span>
-          <span appAnimate="fadeInUpTwo" class="small-text">2019</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COUNTRIES SERVED BANNER -->
-  <section class="countries-banner page__title p-relative d-flex align-items-center mt-80 mb-80" [style.background-image]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fyellow-world-banner.PNG?alt=media&token=a2f4b0e2-dacb-4101-b6f6-8de82c5de4dc)'">
-    <div class="row justify-content-center">
-      <div class="col-xl-5 countries-banner__left">
-        <h1 appAnimate="fadeInUp" [innerHTML]="c['countries-count']?.heading"></h1>
-        <h3 appAnimate="fadeInUp" [innerHTML]="c['countries-count']?.body"></h3>
-      </div>
-      <div class="col-xl-5 countries-banner__right">
-        <div appAnimate="fadeInUpTwo" class="countries-banner__copy" [innerHTML]="c['countries-copy']?.body"></div>
-      </div>
-    </div>
-  </section>
-
-
+  @for (section of view?.sections ?? []; track section.key) {
+    <app-about-section
+      [block]="section"
+      [typeIndex]="view?.typeIndex?.[section.key] ?? 0"></app-about-section>
+  }
 </main>
 
 <app-footer></app-footer>

@@ -1,0 +1,177 @@
+@switch (block.type) {
+
+  <!-- Copy and a button beside a picture. The picture side alternates by
+       the block's position among story blocks - see pictureLeft(). -->
+  @case (types.STORY) {
+    <!-- .story is the ancestor .story__title and .impact-btn-blue are
+         nested under in the stylesheet. The page used to wrap all three
+         columns in one; each section carries its own now, which selects
+         identically because those rules are descendant-based. -->
+    <div class="story">
+    <div class="banner__area-2 pb-60">
+      <div class="container-fluid p-0">
+        <div class="row g-0 justify-content-center align-items-center">
+          @if (pictureLeft) {
+            <div class="col-xl-4 col-lg-4">
+              <div class="w-img">
+                <img loading="lazy" [src]="block.image?.url" alt="banner">
+              </div>
+            </div>
+          }
+          <div class="story__text-area col-xl-4 col-lg-4 d-flex">
+            <h4 appAnimate="fadeInUp" class="story__title mb-10" [innerHTML]="block.heading"></h4>
+            <div appAnimate="fadeInUpTwo" [innerHTML]="block.body"></div>
+            @if (block.ctaTitle) {
+              <a appAnimate="fadeInUpThree" [href]="block.ctaUrl" class="impact-btn impact-btn-blue">
+                <span class="banner__area-2 pb-30">{{ block.ctaTitle }}</span>
+              </a>
+            }
+          </div>
+          @if (!pictureLeft) {
+            <div class="col-xl-4 col-lg-4">
+              <div class="w-img">
+                <img loading="lazy" [src]="block.image?.url" alt="banner">
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    </div>
+  }
+
+  <!-- A full-width band: background photo, heading over it. Keeps the
+       #history anchor the story buttons point at. -->
+  @case (types.BANNER) {
+    <section class="slider__area p-relative" id="history">
+      <div class="slider-active swiper-container">
+        <div class="swiper-wrapper">
+          <div class="single-slider slider__height d-flex align-items-center swiper-slide"
+               [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+            <div class="container h-100 d-flex justify-content-center">
+              <h2 class="history-header__title title-xl" [innerHTML]="block.heading"></h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Copy on the left, a click-to-play video on the right. -->
+  @case (types.MISSION) {
+    <div class="history-section banner__area">
+      <div class="container-xxl">
+        <div class="banner__inner p-relative z-index-1 pt-50">
+          <div class="row justify-content-center align-items-center">
+            <div class="col-xl-5 col-lg-5 d-flex history-section__text-area z-index-1">
+              <div class="history-section__title mb-10">
+                <h4 appAnimate="fadeInUp" [innerHTML]="block.heading"></h4>
+                <hr appAnimate="fadeInLeftToRight" class="custom-hr">
+              </div>
+              <div appAnimate="fadeInUpThree" [innerHTML]="block.body"></div>
+            </div>
+            <div class="col-xl-5 col-lg-5">
+              @if (!isPlaying) {
+                <div class="video__area-df mb-60"
+                     [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+                  <div class="container">
+                    <div class="video__content text-center">
+                      <div class="video__button mb-60">
+                        <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()"
+                           tabindex="0" role="button" class="cursor-pointer">
+                          <i class="fas fa-play"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              } @else {
+                <div class="video__player-wrapper mb-60">
+                  <youtube-player
+                    [videoId]="block.videoId"
+                    suggestedQuality="highres"
+                    [playerVars]="{ autoplay: 1 }"
+                    class="video__player"
+                  ></youtube-player>
+                </div>
+              }
+            </div>
+          </div>
+          <hr class="light-hr z-index-1 p-relative">
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Dated entries down a centre line. Sides alternate by position, so
+       reordering can never stack two photos on the same side.
+
+       The YEARS are markers, not per-entry labels: the page opens with one
+       big year and closes with another (1989 … 2019). An entry that names
+       a year draws it above itself, so staff can mark any point in the
+       run; the block's own subheading closes the timeline off. -->
+  @case (types.TIMELINE) {
+    <div class="history-section banner__area">
+      <div class="container-xxl">
+        <div class="timeline">
+          <div class="timeline-dot"></div>
+          @for (entry of liveItems; track $index) {
+            @if (entry.title) {
+              <div class="text-overlay">
+                <span class="large-text">{{ entry.title }}</span>
+                <span appAnimate="fadeInUpTwo" class="small-text">{{ entry.title }}</span>
+              </div>
+            }
+            <div class="timeline-section row">
+              @if (entryOnLeft($index)) {
+                <div class="timeline-item-left col-lg-5 mr-60">
+                  <div class="timeline-content">
+                    <p appAnimate="fadeInUp">{{ entry.description }}</p>
+                  </div>
+                </div>
+                <div class="timeline-img-col col-lg-5 ml-60">
+                  <img loading="lazy" class="timeline-img" [src]="entry.image?.url" [alt]="entry.title">
+                </div>
+              } @else {
+                <div class="timeline-img-col col-lg-5 mr-60">
+                  <img loading="lazy" class="timeline-img" [src]="entry.image?.url" [alt]="entry.title">
+                </div>
+                <div class="timeline-item-right col-lg-5">
+                  <div class="timeline-content">
+                    <p appAnimate="fadeInUp">{{ entry.description }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+        @if (block.subheading) {
+          <div class="text-overlay">
+            <span class="large-text">{{ block.subheading }}</span>
+            <span appAnimate="fadeInUpTwo" class="small-text">{{ block.subheading }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- A big figure with a label, and a paragraph beside it. -->
+  @case (types.COUNTRIES) {
+    <section class="countries-banner page__title p-relative d-flex align-items-center mt-80 mb-80"
+             [style.background-image]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+      <div class="row justify-content-center">
+        <div class="col-xl-5 countries-banner__left">
+          <h1 appAnimate="fadeInUp" [innerHTML]="block.heading"></h1>
+          <h3 appAnimate="fadeInUp" [innerHTML]="block.subheading"></h3>
+        </div>
+        <div class="col-xl-5 countries-banner__right">
+          <div appAnimate="fadeInUpTwo" class="countries-banner__copy" [innerHTML]="block.body"></div>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- A type this build cannot draw. Skipped rather than crashing: the data
+       outlives the build, and a newer admin may have written it. -->
+  @default {}
+}

@@ -7,6 +7,7 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { SharedModule } from "../shared/shared.module";
 import { FormRendererModule } from "../shared/form-renderer/form-renderer.module";
 import { AboutUsComponent } from "./pages/about-us/about-us.component";
+import { AboutSectionComponent } from "./pages/about-us/about-section/about-section.component";
 import { ContactComponent } from "./pages/contact/contact.component";
 import { NewsletterComponent } from "./pages/newsletter/newsletter.component";
 import { GiveComponent } from "./pages/give/give.component";
@@ -106,6 +107,7 @@ export const routes: Routes = [
 @NgModule({
   declarations: [
     AboutUsComponent,
+    AboutSectionComponent,
     ContactComponent,
     NewsletterComponent,
     GiveComponent,

@@ -1,0 +1,275 @@
+@use '../../../../../assets/styles/theme/scss/variables';
+
+// Moved here VERBATIM from about-us.component.scss when About Us became a
+// dispatcher (2026-08-29). Only the scope changed: Angular emulated
+// encapsulation tags the elements a component renders, so once this markup
+// moved into a child component the page stylesheet stopped reaching it -
+// measured, not assumed: .large-text computed to position:static and the
+// year overlay sat 602px off centre.
+//
+// Carried across UNCHANGED, dead rules included, so the move is provable by
+// diff. Note that everything nested under .history is dead and always was:
+// class="history" appears nowhere in the template, before or after this
+// change. Flagged rather than deleted here, so this commit changes scope
+// and nothing else.
+
+
+.story {
+  &__title {
+    color: variables.$black;
+    font-size: 36px;
+
+    strong {
+      color: variables.$theme-color;
+    }
+  }
+
+  &__text-area {
+    margin: 25px;
+    padding: 20px;
+    flex-direction: column;
+  }
+
+  .impact-btn-blue {
+    width: 50%;
+  }
+}
+
+.history {
+  font-family: 'Lato', sans-serif;
+  .light-hr {
+    width: 80%;
+    border: 0;
+    border-top: 2px solid #C2C1C1;
+    margin: 20px auto;
+    opacity: 1;
+  }
+  .slider__height {
+    height: 825px;
+    @media #{variables.$xxs,variables.$xs} {
+      height: 425px;
+    }
+  }
+  .banner__inner {
+    margin-top: -300px;
+    @media #{variables.$xxs,variables.$xs} {
+      margin-top: 0;
+    }
+  }
+  .banner__inner::before {
+    border: 1px solid #c2c1c1;
+  }
+  .history-header {
+    &__title {
+      position: absolute;
+      top: 150px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 2px;
+      @media #{variables.$xxs,variables.$xs} {
+      text-align: center;
+      }
+    }
+  }
+  .history-section {
+    &__text-area {
+      margin: 25px;
+      padding: 20px;
+      flex-direction: column;
+    }
+    &__title {
+      text-align: center;
+      h4 {
+        color: variables.$black;
+        font-size: 36px;
+
+        strong {
+          color: variables.$theme-color;
+        }
+      }
+      .custom-hr {
+        width: 200px;
+        border: 0;
+        border-top: 6px solid variables.$theme-color;
+        margin: 20px auto;
+        opacity: 1;
+      }
+    }
+    .video__area-df {
+      min-height: 300px;
+    }
+  }
+  .countries-banner {
+    &__left {
+      text-align: center;
+      h1 {
+        font-size: 120px;
+        font-family: 'Lato', sans-serif;
+      }
+      h3{
+        font-size: 30px;
+      }
+    }
+    &__right {
+      h3 {
+        font-size: 30px;
+        margin-bottom: 70px;
+      }
+      h5 {
+        font-size: 20px;
+      }
+    }
+  }
+}
+#video-overlay {
+  z-index: 1;
+  position: relative;
+}
+.text-overlay {
+  position: relative;
+  text-align: center;
+  display: inline-block;
+  margin: 100px 0;
+  width: 100%;
+  .large-text {
+    font-size: 150px;
+    color: rgb(0 0 0 / 4%);
+    position: absolute;
+    top: -20px;
+    left: 53%;
+    transform: translateX(-50%);
+    font-style: italic;
+    z-index: 1;
+  }
+
+  .small-text {
+    font-size: 60px;
+    font-weight: 600;
+    color: black;
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+.timeline-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 100px;
+}
+
+.timeline-img-col {
+  @media #{variables.$xxs,variables.$xs} {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  &-left {
+    margin-right: 60px;
+    @media #{variables.$xxs,variables.$xs} {
+      margin-right: 0;
+    }
+  }
+  &-right {
+    margin-left: 60px;
+    @media #{variables.$xxs,variables.$xs} {
+      margin-left: 0;
+    }
+  }
+
+}
+
+.timeline-img {
+  height: 300px;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-dot {
+  width: 20px;
+  height: 20px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.timeline-content {
+  background-color: white;
+  padding: 20px;
+  position: relative;
+  text-align: left;
+  @media #{variables.$xxs,variables.$xs} {
+    text-align: center;
+  }
+  p {
+    font-size: 20px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    color: #000;
+  }
+}
+
+.timeline-content h2 {
+  margin-top: 0;
+}
+
+.timeline-content img {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.timeline:before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  background-color: black;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+.video__player-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.video__player {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+// The load-bearing rule, and the one that is easy to miss: <youtube-player>
+// renders an intervening plain <div> with auto height between its host and
+// the iframe, so a percentage height on the iframe resolves against an
+// indefinite box and collapses to the iframe default of 150px. Positioning
+// it against the wrapper does not care what youtube-player renders inside.
+// Measured on the home page 2026-08-29; every other video on this site
+// still has the collapsed version of this bug.
+::ng-deep .video__player iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
