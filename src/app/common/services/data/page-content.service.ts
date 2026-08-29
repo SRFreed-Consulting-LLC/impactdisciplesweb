@@ -3,6 +3,7 @@ import { Observable, map, of, shareReplay, startWith, catchError } from 'rxjs';
 import { PageContentModel } from '@impact-common/shared/models/domain/page-content.model';
 import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
 import { BaseService } from './base.service';
+import { PagePreviewService } from './page-preview.service';
 
 /**
  * The editable content of a public page, by page slug.
@@ -32,7 +33,16 @@ export class PageContentService extends BaseService<PageContentModel> {
    *  the page plus its children) must not each open a listener. */
   private readonly cache = new Map<string, Observable<PageContentModel | null>>();
 
-  constructor(public override dao: FirebaseDAO<PageContentModel>) {
+  constructor(
+    public override dao: FirebaseDAO<PageContentModel>,
+    // Page Manager's previewer, and NOTHING else, needs the saved content
+    // bent on its way out: narrowed to one section, with an unsaved edit
+    // swapped in. It composes here rather than in eleven page components
+    // because this is the one seam every one of them shares - and it is a
+    // no-op on an ordinary visit, which is the only reason a data service is
+    // allowed to know about a preview at all. See PagePreviewService.
+    private preview: PagePreviewService
+  ) {
     super(dao)
     this.table = "page_content"
   }
@@ -48,10 +58,12 @@ export class PageContentService extends BaseService<PageContentModel> {
       // empty array before the real snapshot lands, and permanently for a
       // missing doc - see its comment in FirebaseDAO. It already swallows
       // errors into [], which is the same shape as "not seeded yet".
-      this.cache.set(slug, this.dao.streamByDocId(slug, this.table, this.fromFirestore).pipe(
+      const saved = this.dao.streamByDocId(slug, this.table, this.fromFirestore).pipe(
         map((rows) => rows[0] ?? null),
         catchError(() => of(null)),
-        startWith(null),
+        startWith(null)
+      );
+      this.cache.set(slug, this.preview.apply(saved).pipe(
         shareReplay({ bufferSize: 1, refCount: false })
       ));
     }

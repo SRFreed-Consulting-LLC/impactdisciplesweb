@@ -81,7 +81,7 @@ export class FrameHeightService {
   }
 
   private measure(): void {
-    const height = Math.ceil(document.documentElement.scrollHeight);
+    const height = Math.ceil(contentHeight());
     // Only on a real change: the parent sets a CSS height from this, and
     // posting an unchanged number every tick would be noise.
     if (height === this.last || height < 1) {
@@ -90,4 +90,24 @@ export class FrameHeightService {
     this.last = height;
     window.parent.postMessage({ impactPageHeight: height }, '*');
   }
+}
+
+/**
+ * How tall this page's CONTENT is - which is not `documentElement.scrollHeight`.
+ *
+ * That is `max(content, viewport)`, and the viewport of a frame is whatever
+ * height the parent gave it. So a SHORT page inside a tall frame reports the
+ * frame's own height straight back, the parent believes it, and nothing ever
+ * shrinks. Circular, and it showed the moment the previewer started rendering
+ * ONE section: a 200px block reported 2,400 and drew in a box of white.
+ *
+ * `app-root` measures the content itself - 2814 / 6412 / 1608 on three pages,
+ * matching scrollHeight exactly where the page IS taller than the frame, and
+ * telling the truth where it is not. scrollHeight stays as the fallback for a
+ * bootstrap where app-root is not in the DOM yet.
+ */
+function contentHeight(): number {
+  const root = document.querySelector('app-root');
+  const measured = root?.getBoundingClientRect().height ?? 0;
+  return measured > 0 ? measured : document.documentElement.scrollHeight;
 }

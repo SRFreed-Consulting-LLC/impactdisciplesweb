@@ -580,6 +580,35 @@ main {
 }
 
 
+// ONE SECTION, previewed on its own in Page Manager's editor rail.
+//
+// The rail shows the section being worked on rather than the whole page, so
+// the site's furniture around it is noise: a header and a footer taller than
+// the section itself, plus a dock and a back-to-top button that belong to a
+// page nobody is looking at. The sections themselves keep every page-level
+// wrapper they need, because those are in the page template around the loop -
+// only the chrome outside it goes.
+//
+// A body class rather than eleven template changes, and set only when
+// `?section=` is in the URL - see PagePreviewService.
+body.impact-preview-section {
+	app-home-header,
+	app-footer,
+	app-library-dock,
+	app-back-to-top {
+		display: none;
+	}
+}
+
+// The dock's own body class is set by its component and reserves a gap at the
+// foot of the page. Compounded rather than a bare `body.impact-preview-section`
+// so it outranks that rule, which is declared below this one - equal
+// specificity would have let the later rule win and left the gap under a
+// dock that is not there.
+body.impact-preview-section.has-library-dock {
+	padding-bottom: 0;
+}
+
 // Room for <app-library-dock>, a bar fixed to the bottom of the viewport.
 // Keyed off a body class the component itself toggles rather than applied
 // unconditionally: the dock is dismissible and is suppressed on several

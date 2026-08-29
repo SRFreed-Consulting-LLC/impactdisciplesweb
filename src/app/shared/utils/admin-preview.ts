@@ -2,6 +2,10 @@
  *  frames. See the admin's page-live-preview.component.ts. */
 const PREVIEW_PARAM = 'adminPreview';
 
+/** Names ONE section, when the previewer is showing a single section being
+ *  edited rather than the whole page. */
+const SECTION_PARAM = 'section';
+
 /**
  * Latched, deliberately. Once this window is a preview it stays one: the
  * frame reloads with a new value of the parameter on every save, but an
@@ -50,6 +54,25 @@ export function isAdminPreview(search: string = currentSearch()): boolean {
     latched = false;
   }
   return latched;
+}
+
+/**
+ * The one section the previewer is showing, or null for the whole page.
+ *
+ * NOT latched, unlike the preview flag itself: which section is being edited
+ * changes every time staff open a different one, and the frame reloads with a
+ * new value each time. What must not come back is the popup; what must follow
+ * the editor is this.
+ */
+export function previewSectionKey(search: string = currentSearch()): string | null {
+  if (!isAdminPreview(search)) {
+    return null;
+  }
+  try {
+    return new URLSearchParams(search).get(SECTION_PARAM);
+  } catch {
+    return null;
+  }
 }
 
 function currentSearch(): string {
