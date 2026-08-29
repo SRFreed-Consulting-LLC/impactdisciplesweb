@@ -113,6 +113,12 @@
   @case (types.TIMELINE) {
     <div class="history-section banner__area">
       <div class="container-xxl">
+        @if (block.heading) {
+          <div class="text-overlay">
+            <span class="large-text">{{ block.heading }}</span>
+            <span appAnimate="fadeInUpTwo" class="small-text">{{ block.heading }}</span>
+          </div>
+        }
         <div class="timeline">
           <div class="timeline-dot"></div>
           @for (entry of liveItems; track $index) {
