@@ -1,0 +1,25 @@
+<app-home-header></app-home-header>
+
+<!-- ONE template for all four equipping pages - the hub and the pastors,
+     leaders and churches pages.
+
+     They are DISPATCHERS: each renders whatever sections its own
+     page_content document says, in the order it says. Staff reorder them in
+     Page Manager and this follows with no code change. The four pages stay
+     four documents, because the copy is genuinely different per audience -
+     which is the reason these templates used to be separate, and the reason
+     they no longer need to be.
+
+     There is NO fallback copy here. The page_content document is the only
+     copy of these pages' text (Shane's call, 2026-08-29), so an unreadable
+     read renders an empty page - which is why page_content has to exist in
+     an environment before this build ships there. -->
+<div class="equipping-groups">
+  @for (section of sections$ | async; track section.key) {
+    <app-equipping-section
+      [block]="section"
+      [webConfig]="webConfig"></app-equipping-section>
+  }
+</div>
+
+<app-footer></app-footer>

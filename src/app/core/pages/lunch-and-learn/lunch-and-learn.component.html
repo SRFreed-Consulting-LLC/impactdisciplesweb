@@ -1,68 +1,14 @@
 <app-home-header></app-home-header>
-<!-- Copy from Page Manager > Lunch and Learns, by slot key.
-     There is NO fallback here: the page_content document IS the only copy
-     of this text. A block that is missing renders nothing (Shane's call,
-     2026-08-29) - the templates used to carry a duplicate and it was
-     removed with the seed, so nothing can silently disagree with it. -->
-@let c = (content$ | async) ?? {};
+
+<!-- A DISPATCHER: it renders whatever sections page_content/lunch-and-learns
+     says, in the order it says. Staff reorder them in Page Manager > Lunch
+     and Learns and this follows with no code change.
+
+     There is NO fallback copy here - see lunch-and-learn.component.ts. -->
 <div class="lunch">
-  <app-header
-    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Flunchlearn-header.png?alt=media&token=557bdabf-9daa-4475-80a6-a9f6410d4d74'"
-    [pretitle]="'DISCIPLE-MAKING CHURCH'"
-    [title]="'Lunch & Learns'"
-    [description]="'Structure your church to make and multiply disciples with the Disciple-Making Church strategy. We come to you and give you a free overview of a proven strategy to multiply disciples through your ministry.'"
-    [buttonText]="'Request to Book a Lunch and Learn'"
-    [buttonLink]="'/lunch-and-learn-form'"
-  ></app-header>
-  <div class="lunch__overview">
-    <h2 appAnimate="fadeInUp" [innerHTML]="c['overview']?.heading"></h2>
-    <div [innerHTML]="c['overview']?.body"></div>
-  </div>
-  <hr appAnimate="fadeInLeftToRight" class="solid-line mt-60 mb-60">
-  <div class="lunch__offers">
-    <div class="content">
-      <h1 [innerHTML]="c['whatyouget']?.heading"></h1>
-      <hr appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w60 slider-hr-thick">
-      <ul class="custom-bullets">
-        <li appAnimate="fadeInUpTwo">Meet and Greet with Our Team</li>
-        <li appAnimate="fadeInUpThree">An Overview of Our Strategy and Resources</li>
-        <li appAnimate="fadeInUpFour">Follow-up Support</li>
-      </ul>
-    </div>
-
-    <div class="video">
-      @if (!isPlaying) {
-        <div
-          class="video__container"
-          style="background-image: url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Flunch-and-learn-thumbnail.jpg?alt=media&token=88186f35-4e15-4ba1-b115-e02c613b513d)"
-          >
-          <div class="container">
-            <div class="video__content text-center">
-              <div class="video__button">
-                <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()" tabindex="0" role="button" class="cursor-pointer">
-                  <i class="fas fa-play"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-
-      @if (isPlaying) {
-        <div class="video__container">
-          <div class="video__player-wrapper">
-            <youtube-player
-              [videoId]="'HxKSa24hF60'"
-              [playerVars]="{ autoplay: 1 }"
-              class="video__player"
-            ></youtube-player>
-          </div>
-        </div>
-      }
-    </div>
-  </div>
+  @for (section of sections$ | async; track section.key) {
+    <app-lunch-section [block]="section"></app-lunch-section>
+  }
 </div>
-
-
 
 <app-footer></app-footer>

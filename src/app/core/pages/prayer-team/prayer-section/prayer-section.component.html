@@ -1,0 +1,75 @@
+@switch (block.type) {
+
+  <!-- The hero band. Its buttons are ENTRIES rather than two fixed slots, so
+       staff can add a third, reorder them, or change an icon. -->
+  @case (types.PAGE_HEADER) {
+    <section class="slider__area slider__area-4 p-relative">
+      <div class="slider-active swiper-container">
+        <div class="swiper-wrapper">
+          <div class="prayer-team__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide"
+               [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+            <div class="row">
+              <div class="col-xl-12">
+                <div class="slider__content slider__content-4 pr-50">
+                  <h5 appAnimate="fadeInUp" class="slider-pretitle" [innerHTML]="block.subheading"></h5>
+                  <h1 appAnimate="fadeInUpTwo" class="slider-medium-title" [innerHTML]="block.heading"></h1>
+                  <hr appAnimate="fadeInLeftToRight" class="slider-hr mb-30">
+                  @for (button of liveItems; track $index) {
+                    <a appAnimate="fadeInUpThree" [href]="button.link"
+                       class="impact-btn impact-btn-blue">{{ button.title }}
+                      @if (button.icon) {
+                        <i [class]="button.icon + ' ml-10'"></i>
+                      }
+                    </a>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- The copy above the join form. WHICH DETAILS THE FORM ASKS FOR stays in
+       the markup - that is a decision about a mailing list, not page copy. -->
+  @case (types.SIGNUP) {
+    <section class="text-center mt-80 mb-80">
+      <div [innerHTML]="block.body"></div>
+      <form (ngSubmit)="handleFormSubmit()">
+        <div class="prayer-team__form row d-flex justify-content-center align-items-center">
+          <div class="col-lg-4 col-sm-12">
+            <div class="contact__input mb-20">
+              <label for="prayer-team-firstName">First Name <span class="required">*</span></label>
+              <input id="prayer-team-firstName" required type="name" name="firstName"
+                     [(ngModel)]="prayerTeamSubscription.firstName">
+            </div>
+          </div>
+          <div class="col-lg-4 col-sm-12">
+            <div class="contact__input mb-20">
+              <label for="prayer-team-lastName">Last Name <span class="required">*</span></label>
+              <input id="prayer-team-lastName" required type="name" name="lastName"
+                     [(ngModel)]="prayerTeamSubscription.lastName">
+            </div>
+          </div>
+          <div class="col-lg-4 col-sm-12">
+            <div class="contact__input mb-20">
+              <label for="prayer-team-email">Email <span class="required">*</span></label>
+              <input id="prayer-team-email" required type="email" name="email"
+                     [(ngModel)]="prayerTeamSubscription.email">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-center">
+            <button class="subscribe__button os-btn os-btn-2 os-btn-3" type="submit">
+              {{ block.ctaTitle }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+  }
+
+  @default {}
+}

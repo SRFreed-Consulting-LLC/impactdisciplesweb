@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
-import { SubscriptionModel } from 'src/app/common/models/domain/subscription.model';
-import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-form.service';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { PageContentBlock } from '@impact-common/shared/models/domain/page-content.model';
 import { PageContentService } from 'src/app/common/services/data/page-content.service';
+import { liveSections } from 'src/app/shared/utils/page-sections';
 
+/**
+ * Prayer Team - an ordered stack of sections read from
+ * `page_content/prayer-team`.
+ *
+ * The join form and its submit moved into app-prayer-section with the markup
+ * that draws them: this page is a loop and owns nothing.
+ *
+ * NO FALLBACK - see seminars.component.ts. The stylesheet stays because the
+ * `.prayer-team__container` wrapper is in THIS template.
+ */
 @Component({
     selector: 'app-prayer-team',
     templateUrl: './prayer-team.component.html',
@@ -12,16 +21,10 @@ import { PageContentService } from 'src/app/common/services/data/page-content.se
     standalone: false
 })
 export class PrayerTeamComponent {
-  /** Editable copy by slot key; every template use falls back to its own. */
-  readonly content$: Observable<Record<string, PageContentBlock>>;
+  /** The ordered sections this page draws. Empty until the read lands. */
+  readonly sections$: Observable<PageContentBlock[]>;
 
-  prayerTeamSubscription: SubscriptionModel = {... new SubscriptionModel(), type: 'prayer'};
-
-  constructor(private subscribeForm: SubscribeFormService, private pageContent: PageContentService) {
-    this.content$ = pageContent.blocksFor('prayer-team');
-  }
-
-  handleFormSubmit() {
-    return this.subscribeForm.submit('prayer', this.prayerTeamSubscription);
+  constructor(pageContent: PageContentService) {
+    this.sections$ = pageContent.forPage('prayer-team').pipe(map(liveSections));
   }
 }

@@ -1,0 +1,98 @@
+@switch (block.type) {
+
+  <!-- The hero. Dark field so the yellow rule and the white CTA carry,
+       matching the home slider's announcement slide this page is linked
+       from. -->
+  @case (types.PAGE_HEADER) {
+    <section class="dl-hero">
+      <div class="container">
+        <div class="dl-hero__grid">
+          <div class="dl-hero__copy">
+            <p class="dl-eyebrow">{{ block.subheading }}</p>
+            <h1 class="dl-hero__title" [innerHTML]="block.heading"></h1>
+            <div class="dl-hero__lede" [innerHTML]="block.body"></div>
+            @if (block.ctaTitle) {
+              <div class="dl-hero__ctas">
+                <a [href]="readerUrl" class="impact-btn impact-btn-blue"
+                   target="_blank" rel="noopener">{{ block.ctaTitle }}</a>
+              </div>
+            }
+            @if (block.note) {
+              <p class="dl-hero__free">{{ block.note }}</p>
+            }
+          </div>
+          <div class="dl-hero__shot">
+            <img [src]="block.image?.url" [alt]="block.image?.name" loading="eager">
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- The seven functional areas: a jump strip so the whole scope is visible
+       before scrolling, then one row each, alternating side to side.
+       BOTH come from the same list - the strip is not a second thing to keep
+       in step. -->
+  @case (types.FEATURES) {
+    <nav class="dl-strip" aria-label="What the app does">
+      <div class="container dl-strip__inner">
+        @for (feature of liveItems; track $index) {
+          <span class="dl-strip__item">{{ feature.title }}</span>
+        }
+      </div>
+    </nav>
+
+    <div id="what-it-does">
+      @for (feature of liveItems; track $index) {
+        <section class="dl-row" [class.dl-row--alt]="$even"
+                 [class.dl-row--mediaRight]="mediaRight($index)">
+          <div class="container dl-row__grid">
+
+            <div class="dl-row__media">
+              @if (isVideo(feature)) {
+                <!-- Muted, looping and inline: it is illustration, not content
+                     the visitor chose to play, so it must never grab audio or
+                     fullscreen. -->
+                <!-- [muted] as a PROPERTY, not the bare attribute: Angular sets
+                     attributes after the element is created, and `muted` only
+                     initialises the property at parse time - so the attribute
+                     alone leaves video.muted false and the browser blocks the
+                     autoplay, which is the entire point of this row. -->
+                <video [src]="feature.image?.url" [attr.aria-label]="altFor(feature)"
+                       [muted]="true" autoplay loop playsinline preload="metadata"></video>
+              } @else {
+                <img [src]="feature.image?.url" [alt]="altFor(feature)" loading="lazy">
+              }
+            </div>
+
+            <div class="dl-row__copy">
+              <p class="dl-row__tag">{{ chip($index) }} &middot; {{ feature.title }}</p>
+              <h2 class="dl-row__headline">{{ feature.heading }}</h2>
+              <hr class="dl-rule">
+              <p class="dl-row__body">{{ feature.description }}</p>
+              <div class="dl-row__points" [innerHTML]="feature.body"></div>
+            </div>
+
+          </div>
+        </section>
+      }
+    </div>
+  }
+
+  <!-- The closing block: a heading, a line, and the way in. -->
+  @case (types.PROSE) {
+    <section class="dl-close">
+      <div class="container">
+        <h2 class="dl-close__title" [innerHTML]="block.heading"></h2>
+        <hr class="dl-rule dl-rule--center">
+        <div class="dl-close__lede" [innerHTML]="block.body"></div>
+        @if (block.ctaTitle) {
+          <a [href]="readerUrl" class="impact-btn dl-btn--onBlue"
+             target="_blank" rel="noopener">{{ block.ctaTitle }}</a>
+        }
+      </div>
+    </section>
+  }
+
+  @default {}
+}

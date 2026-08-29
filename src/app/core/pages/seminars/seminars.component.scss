@@ -87,9 +87,8 @@
         @media #{variables.$sm,variables.$md} {
           font-size: 40px;
         }
-        strong {
-          color: variables.$theme-color;
-        }
+        // The emphasis inside it is rich text - see the ::ng-deep block at
+        // the foot of this file.
       }
     }
 
@@ -153,15 +152,8 @@
       @media #{variables.$lg} {
         font-size: 75px;
       }
-      strong {
-        background-color: variables.$theme-color-2;
-        font-weight: 900;
-        color: #fff;
-        padding: 0 30px 15px 30px;
-        @media #{variables.$xxs,variables.$xs} {
-          padding: 0 15px 5px 15px;
-        }
-      } 
+      // The emphasis inside it is rich text - see the ::ng-deep block at the
+      // foot of this file.
     }
     .content {
       display: flex;
@@ -301,6 +293,44 @@
       }
     }
   }
+  // The bullet lists are rich text now - see the ::ng-deep block below.
+}
+
+// -------------------------------------------------------------- RICH TEXT
+//
+// Rules whose TARGET arrives through [innerHTML] have to be ::ng-deep, and
+// that is not a style preference - it is the only thing that works.
+//
+// Angular's emulated encapsulation stamps `_ngcontent-x` onto the elements a
+// component's TEMPLATE renders, and compiles `.a li` into
+// `.a li[_ngcontent-x]`. Content assigned to [innerHTML] is inserted at
+// runtime and carries no attribute, so that rule can never match it. It is
+// not a specificity problem and no amount of nesting fixes it.
+//
+// Three things on this page broke silently when its copy moved into
+// page_content, and a text-and-height check passed all three because the
+// words and the layout were right. Measured 2026-08-29: every bullet list
+// computed padding-left 0 with the ::before marker at `content: none`, so the
+// gold dots were gone and the discs were clipped; and both <strong> runs -
+// the gold GET, and the white-on-blue "Growing" - computed rgb(32,31,31),
+// their parent's black, inherited.
+//
+// :host anchors it so ::ng-deep cannot leak past this component's subtree.
+:host ::ng-deep {
+  .seminars__offers .content h1 strong {
+    color: variables.$theme-color;
+  }
+
+  .seminars__missions .main-title strong {
+    background-color: variables.$theme-color-2;
+    font-weight: 900;
+    color: #fff;
+    padding: 0 30px 15px 30px;
+    @media #{variables.$xxs,variables.$xs} {
+      padding: 0 15px 5px 15px;
+    }
+  }
+
   .custom-bullets {
     margin: 15px 0;
     padding: 0;

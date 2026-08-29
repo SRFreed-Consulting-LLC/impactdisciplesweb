@@ -21,16 +21,8 @@
         font-size: 44px;
       }
     }
-    p {
-      line-height: 2em;
-      font-size: 20px;
-      @media #{variables.$xxs,variables.$xs} {
-        font-size: 14px;
-      }
-      @media #{variables.$sm,variables.$md} {
-        font-size: 16px;
-      }
-    }
+    // The paragraphs here are rich text - see the ::ng-deep block at the
+    // foot of this file.
   }
   &__offers {
     display: flex;
@@ -52,9 +44,8 @@
         @media #{variables.$xxs,variables.$xs} {
           font-size: 30px;
         }
-        strong {
-          color: variables.$theme-color;
-        }
+        // The emphasis inside it is rich text - see the ::ng-deep block at
+        // the foot of this file.
       }
     }
 
@@ -95,6 +86,33 @@
       }
     }
   }
+  // The bullet list is rich text now - see the ::ng-deep block below.
+}
+
+// -------------------------------------------------------------- RICH TEXT
+//
+// Rules whose TARGET arrives through [innerHTML] have to be ::ng-deep: with
+// emulated encapsulation `.a li` compiles to `.a li[_ngcontent-x]`, and
+// content inserted at runtime carries no such attribute. See
+// seminars.component.scss for the full explanation and the measurements.
+//
+// :host anchors it so ::ng-deep cannot leak past this component's subtree.
+:host ::ng-deep {
+  .lunch__overview p {
+    line-height: 2em;
+    font-size: 20px;
+    @media #{variables.$xxs,variables.$xs} {
+      font-size: 14px;
+    }
+    @media #{variables.$sm,variables.$md} {
+      font-size: 16px;
+    }
+  }
+
+  .lunch__offers .content h1 strong {
+    color: variables.$theme-color;
+  }
+
   .custom-bullets {
     margin: 15px 0;
     padding: 0;

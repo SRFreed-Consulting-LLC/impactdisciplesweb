@@ -1,0 +1,68 @@
+@switch (block.type) {
+
+  @case (types.PAGE_HEADER) {
+    <app-header
+      [backgroundUrl]="block.image?.url"
+      [pretitle]="block.subheading"
+      [title]="block.heading"
+      [description]="block.body"
+      [buttonLink]="block.ctaUrl"
+      [buttonText]="block.ctaTitle"
+      [buttonLink2]="block.ctaUrl2"
+      [buttonText2]="block.ctaTitle2"
+    ></app-header>
+  }
+
+  <!-- A heading and a passage, full width. -->
+  @case (types.PROSE) {
+    <div class="lunch__overview">
+      <h2 appAnimate="fadeInUp" [innerHTML]="block.heading"></h2>
+      <div [innerHTML]="block.body"></div>
+    </div>
+  }
+
+  <!-- Copy on the left, a click-to-play video on the right.
+       The rule above it belongs to this section rather than sitting loose
+       between two of them, so dragging this takes its divider along instead
+       of leaving a line floating in the middle of the page. -->
+  @case (types.MISSION) {
+    <hr appAnimate="fadeInLeftToRight" class="solid-line mt-60 mb-60">
+    <div class="lunch__offers">
+      <div class="content">
+        <h1 [innerHTML]="block.heading"></h1>
+        <hr appAnimate="fadeInLeftToRight" class="slider-hr slider-hr-w60 slider-hr-thick">
+        <div appAnimate="fadeInUpTwo" [innerHTML]="block.body"></div>
+      </div>
+
+      <div class="video">
+        @if (!isPlaying) {
+          <div class="video__container"
+               [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+            <div class="container">
+              <div class="video__content text-center">
+                <div class="video__button">
+                  <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()"
+                     tabindex="0" role="button" class="cursor-pointer">
+                    <i class="fas fa-play"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <div class="video__container">
+            <div class="video__player-wrapper">
+              <youtube-player
+                [videoId]="block.videoId"
+                [playerVars]="{ autoplay: 1 }"
+                class="video__player"
+              ></youtube-player>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @default {}
+}

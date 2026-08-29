@@ -1,21 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Observable, map, of, shareReplay, startWith, catchError } from 'rxjs';
-import { PageContentBlock, PageContentModel } from '@impact-common/shared/models/domain/page-content.model';
+import { PageContentModel } from '@impact-common/shared/models/domain/page-content.model';
 import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
 import { BaseService } from './base.service';
 
 /**
  * The editable content of a public page, by page slug.
  *
- * THE CONTRACT EVERY PAGE RELIES ON: a page asks for a block by key and gets
- * back either what staff saved or `undefined`, and the template supplies its
- * own default for `undefined`. So a page whose document is missing, empty,
- * unreadable, or simply short a block renders exactly what it rendered
- * before any of this existed. There is no state in which a rules mistake or
- * an unseeded collection blanks a marketing page.
+ * ONE DOCUMENT PER PAGE, holding an ordered stack of typed sections. Every
+ * wired page is a dispatcher: it loops over what this returns and draws each
+ * section according to its type.
  *
- * That is also why nothing here throws. A failed read resolves to "no
- * content", which is the same path as "not seeded yet".
+ * THERE IS NO FALLBACK, and an earlier version of this comment promised the
+ * opposite. It said a page short a block "renders exactly what it rendered
+ * before any of this existed", because the templates carried a duplicate of
+ * every string. That duplicate was removed when the pages were seeded
+ * (Shane's call, 2026-08-29) - one copy that can be edited beats two that can
+ * silently disagree - so a document that cannot be read now renders an empty
+ * page, and page_content must exist in an environment BEFORE the web build
+ * that reads it ships there.
+ *
+ * Nothing here throws even so. A failed read resolves to "no content", which
+ * is the same path as "not seeded yet"; a page that renders empty is bad, but
+ * an unhandled error in a shared stream takes the site down.
  */
 @Injectable({
   providedIn: 'root'
@@ -50,23 +57,11 @@ export class PageContentService extends BaseService<PageContentModel> {
     }
     return this.cache.get(slug)!;
   }
-
-  /**
-   * A map of key -> block for one page, which is what a template wants: it
-   * asks `content['hero']?.heading` and falls back with `??`.
-   */
-  blocksFor(slug: string): Observable<Record<string, PageContentBlock>> {
-    return this.forPage(slug).pipe(map((doc) => toBlockMap(doc)));
-  }
 }
 
-/** Switched-off blocks are left out, so `?? default` catches them too. */
-export function toBlockMap(doc: PageContentModel | null): Record<string, PageContentBlock> {
-  const map: Record<string, PageContentBlock> = {};
-  for (const block of doc?.blocks ?? []) {
-    if (block?.key && block.isActive !== false) {
-      map[block.key] = block;
-    }
-  }
-  return map;
-}
+// `blocksFor()` and `toBlockMap()` used to live here, returning a key -> block
+// map for templates that asked `content['hero']?.heading`. Every page reads
+// `type` and the array's ORDER now, so a lookup by key would answer a question
+// no page asks - and would quietly keep working while a section it could not
+// see went unrendered. Dropped 2026-08-29 with the last fixed-layout page.
+// See src/app/shared/utils/page-sections.ts for what replaced them.

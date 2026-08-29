@@ -1,87 +1,15 @@
 <app-home-header></app-home-header>
-<!-- Copy from Page Manager > Discipleship Library, by slot key.
-     There is NO fallback here: the page_content document IS the only copy
-     of this text. A block that is missing renders nothing (Shane's call,
-     2026-08-29) - the templates used to carry a duplicate and it was
-     removed with the seed, so nothing can silently disagree with it. -->
-@let c = (content$ | async) ?? {};
 
-<!-- Hero. Dark field so the yellow rule and the white CTA carry, matching the
-     home slider's announcement slide this page is linked from. -->
-<section class="dl-hero">
-  <div class="container">
-    <div class="dl-hero__grid">
-      <div class="dl-hero__copy">
-        <p class="dl-eyebrow">The Impact Discipleship Library</p>
-        <h1 class="dl-hero__title" [innerHTML]="c['hero']?.heading"></h1>
-        <div class="dl-hero__lede" [innerHTML]="c['hero']?.body"></div>
-        <div class="dl-hero__ctas">
-          <a [href]="readerUrl" class="impact-btn impact-btn-blue" target="_blank" rel="noopener">Open the Library</a>
-        </div>
-        <p class="dl-hero__free">Free to join — anyone can sign up.</p>
-      </div>
-      <div class="dl-hero__shot">
-        <img src="assets/reader/hero-lesson.jpg" alt="A lesson open in the Impact Discipleship Library" loading="eager">
-      </div>
-    </div>
-  </div>
-</section>
+<!-- A DISPATCHER: it renders whatever sections
+     page_content/discipleship-library says, in the order it says. Staff
+     reorder them in Page Manager > Discipleship Library and this follows with
+     no code change.
 
-<!-- Jump strip: the seven areas, so the whole scope is visible before scrolling. -->
-<nav class="dl-strip" aria-label="What the app does">
-  <div class="container dl-strip__inner">
-    @for (feature of features; track feature.index) {
-      <span class="dl-strip__item">{{ feature.name }}</span>
-    }
-  </div>
-</nav>
-
-<!-- One row per functional area, alternating side to side. -->
-<div id="what-it-does">
-  @for (feature of features; track feature.index) {
-    <section class="dl-row" [class.dl-row--alt]="$even" [class.dl-row--mediaRight]="feature.mediaRight">
-      <div class="container dl-row__grid">
-
-        <div class="dl-row__media">
-          @if (feature.isVideo) {
-            <!-- Muted, looping and inline: it is illustration, not content the
-                 visitor chose to play, so it must never grab audio or fullscreen. -->
-            <!-- [muted] as a PROPERTY, not the bare attribute: Angular sets
-                 attributes after the element is created, and `muted` only
-                 initialises the property at parse time - so the attribute
-                 alone leaves video.muted false and the browser blocks the
-                 autoplay, which is the entire point of this row. -->
-            <video [src]="feature.image" [attr.aria-label]="feature.imageAlt"
-                   [muted]="true" autoplay loop playsinline preload="metadata"></video>
-          } @else {
-            <img [src]="feature.image" [alt]="feature.imageAlt" loading="lazy">
-          }
-        </div>
-
-        <div class="dl-row__copy">
-          <p class="dl-row__tag">{{ feature.index }} &middot; {{ feature.name }}</p>
-          <h2 class="dl-row__headline">{{ feature.headline }}</h2>
-          <hr class="dl-rule">
-          <p class="dl-row__body">{{ feature.body }}</p>
-          <ul class="dl-row__points">
-            @for (point of feature.points; track point) {
-              <li>{{ point }}</li>
-            }
-          </ul>
-        </div>
-
-      </div>
-    </section>
-  }
-</div>
-
-<section class="dl-close">
-  <div class="container">
-    <h2 class="dl-close__title" [innerHTML]="c['closing']?.heading"></h2>
-    <hr class="dl-rule dl-rule--center">
-    <div class="dl-close__lede" [innerHTML]="c['closing']?.body"></div>
-    <a [href]="readerUrl" class="impact-btn dl-btn--onBlue" target="_blank" rel="noopener">Open the Library</a>
-  </div>
-</section>
+     There is NO fallback copy here - see discipleship-library.component.ts. -->
+@for (section of sections$ | async; track section.key) {
+  <app-library-section
+    [block]="section"
+    [readerUrl]="readerUrl"></app-library-section>
+}
 
 <app-footer></app-footer>

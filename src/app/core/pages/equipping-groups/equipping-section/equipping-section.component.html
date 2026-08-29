@@ -1,0 +1,133 @@
+@switch (block.type) {
+
+  <!-- The hero at the top of the page. -->
+  @case (types.PAGE_HEADER) {
+    <app-header
+      [backgroundUrl]="block.image?.url"
+      [pretitle]="block.subheading"
+      [title]="block.heading"
+      [description]="block.body"
+      [buttonLink]="block.ctaUrl"
+      [buttonText]="block.ctaTitle"
+      [buttonLink2]="block.ctaUrl2"
+      [buttonText2]="block.ctaTitle2"
+    ></app-header>
+  }
+
+  <!-- Copy on the left, a click-to-play video on the right. -->
+  @case (types.MISSION) {
+    <div class="equipping-groups__approach">
+      <div class="content">
+        <h4 appAnimate="fadeInUp" class="content__title mb-10" [innerHTML]="block.heading"></h4>
+        <div appAnimate="fadeInUpTwo" [innerHTML]="block.body"></div>
+      </div>
+      <div class="video">
+        @if (!isPlaying) {
+          <div class="video__container"
+               [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+            <div class="container">
+              <div class="video__content text-center">
+                <div class="video__button">
+                  <a (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()"
+                     tabindex="0" role="button" class="cursor-pointer">
+                    <i class="fas fa-play"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <div class="video__container">
+            <div class="video__player-wrapper">
+              <youtube-player
+                [videoId]="block.videoId"
+                [playerVars]="{ autoplay: 1 }"
+                class="video__player"
+              ></youtube-player>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- A heading over a list of courses: a button that goes somewhere, and a
+       line saying what it is. -->
+  @case (types.CARDS) {
+    <div class="equipping-groups__about">
+      <h1 appAnimate="fadeInUp" [innerHTML]="block.heading"></h1>
+      <!-- The two inline styles this markup used to carry - the centring on
+           the row and the 50% width on the list - are rules in the
+           stylesheet now. Same result, and a width that can respond. -->
+      <div class="content__center">
+        <div class="mt-10 content__cards">
+          @for (card of liveItems; track $index) {
+            <div class="row align-items-center pb-20">
+              <div class="col-md-4 col-sm-6 align-items-start my-3">
+                <a [href]="card.link" class="impact-btn-outlined">{{ card.title }}</a>
+              </div>
+              <div class="col-md-8 col-sm-6">{{ card.description }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Two columns of headed passages. Which column an entry sits in is
+       stored on the entry, NOT derived: these columns say different kinds of
+       thing - the facts on the left, the pitch on the right - in runs of two
+       and four, so there is no alternation to derive it from. -->
+  @case (types.COLUMNS) {
+    <div class="equipping-groups__about">
+      <div class="content">
+        <div class="content__left">
+          @for (item of leftItems; track $index) {
+            <ng-container *ngTemplateOutlet="passage; context: { $implicit: item }"></ng-container>
+          }
+        </div>
+        <div class="content__right">
+          @for (item of rightItems; track $index) {
+            <ng-container *ngTemplateOutlet="passage; context: { $implicit: item }"></ng-container>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- The shared free-consultation band. Nothing on it is edited here; it is
+       a section so it can be moved and switched off. -->
+  @case (types.CONSULT_BANNER) {
+    <app-consulation-banner></app-consulation-banner>
+  }
+
+  <!-- A type this build cannot draw. Skipped rather than crashing: the data
+       outlives the build, and a newer admin may have written it. -->
+  @default {}
+}
+
+<!-- ONE passage, used by both columns.
+     A passage can be any of three things and often two at once: a heading
+     over copy, a price line whose AMOUNT comes from Web Config, and a
+     button. Keeping them one entry rather than three types is what lets
+     staff drag the Get Started button away from the price it currently sits
+     under. -->
+<ng-template #passage let-item>
+  @if (item.title && !item.amountKey) {
+    <h5 [innerHTML]="item.title"></h5>
+  }
+  @if (item.body) {
+    <div class="mt-10" [innerHTML]="item.body"></div>
+  }
+  @if (item.amountKey && amount(item) !== null) {
+    <div>
+      <h6>{{ item.title }}: ${{ amount(item) }}{{ item.amountSuffix }}</h6>
+      @if (item.description) {
+        <p><i>{{ item.description }}</i></p>
+      }
+    </div>
+  }
+  @if (item.ctaTitle) {
+    <a [href]="item.ctaUrl" class="impact-btn impact-btn-blue-border mt-30">{{ item.ctaTitle }}</a>
+  }
+</ng-template>

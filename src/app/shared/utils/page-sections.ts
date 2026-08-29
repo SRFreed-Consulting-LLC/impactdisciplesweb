@@ -1,0 +1,46 @@
+import { PageContentBlock, PageContentModel } from '@impact-common/shared/models/domain/page-content.model';
+
+/**
+ * Turning a page_content document into what a dispatcher page draws.
+ *
+ * Every wired public page is a dispatcher now: it loops over an ordered list
+ * of typed sections and hands each one to its page's section component. Two
+ * rules are shared by all of them and live here rather than in eleven
+ * templates, because getting either one different on one page is exactly the
+ * bug nobody would notice.
+ */
+
+/** What a template needs: the live sections, and each one's position among
+ *  sections of its own type. */
+export interface PageView {
+  sections: PageContentBlock[];
+  typeIndex: Record<string, number>;
+}
+
+/**
+ * The sections a visitor actually sees, in order, with their type positions.
+ *
+ * SWITCHED-OFF SECTIONS ARE DROPPED FIRST, before anything is counted. The
+ * positions feed layout rules that alternate - which side a story column's
+ * picture sits on, which side a feature row's screenshot sits on - so
+ * counting a hidden section would leave two pictures stacked together the
+ * moment staff switched one off.
+ */
+export function buildPageView(doc: { blocks?: PageContentBlock[] } | null): PageView {
+  const sections = (doc?.blocks ?? []).filter((b) => b.isActive !== false);
+
+  const seen = new Map<string, number>();
+  const typeIndex: Record<string, number> = {};
+  for (const block of sections) {
+    const type = block.type ?? '';
+    const n = seen.get(type) ?? 0;
+    typeIndex[block.key] = n;
+    seen.set(type, n + 1);
+  }
+  return { sections, typeIndex };
+}
+
+/** The same, for a page with no alternating layout to index. */
+export function liveSections(doc: PageContentModel | null): PageContentBlock[] {
+  return (doc?.blocks ?? []).filter((b) => b.isActive !== false);
+}

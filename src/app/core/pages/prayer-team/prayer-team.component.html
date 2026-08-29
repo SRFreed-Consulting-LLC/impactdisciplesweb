@@ -1,64 +1,15 @@
 <app-home-header></app-home-header>
-<!-- Copy from Page Manager > Prayer Team, by slot key.
-     There is NO fallback here: the page_content document IS the only copy
-     of this text. A block that is missing renders nothing (Shane's call,
-     2026-08-29) - the templates used to carry a duplicate and it was
-     removed with the seed, so nothing can silently disagree with it. -->
-@let c = (content$ | async) ?? {};
 
+<!-- A DISPATCHER: it renders whatever sections page_content/prayer-team says,
+     in the order it says. Staff reorder them in Page Manager > Prayer Team
+     and this follows with no code change.
+
+     There is NO fallback copy here - see prayer-team.component.ts. -->
 <main class="prayer-team grey-bg">
   <div class="prayer-team__container container">
-    <!--PRAYER TEAM HEADER - SWIPER-->
-    <section class="slider__area slider__area-4 p-relative">
-      <div class="slider-active swiper-container" #heroSliderContainer >
-        <div class="swiper-wrapper">
-          <div class="prayer-team__header single-slider single-slider-2 slider__height-3 mt-10 d-flex align-items-center swiper-slide" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fprayer-team-header.png?alt=media&token=84dfb8e7-2ffe-482e-9490-804c4c4cccb9)'">
-            <div class="row">
-              <div class="col-xl-12">
-                <div class="slider__content slider__content-4 pr-50">
-                  <h5 appAnimate="fadeInUp" class="slider-pretitle" [innerHTML]="c['hero']?.heading"></h5>
-                  <h1 appAnimate="fadeInUpTwo" class="slider-medium-title">Join the Prayer Team</h1>
-                  <hr appAnimate="fadeInLeftToRight" class="slider-hr mb-30">
-                  <a appAnimate="fadeInUpThree" href="/newsletter" class="impact-btn impact-btn-blue">NEWSLETTER<i class="fa fa-envelope-open-text ml-10"></i></a>
-                  <a appAnimate="fadeInUpThree" href="/give" class="impact-btn impact-btn-blue">GIVE<i class="fa-solid fa-hand-holding-medical ml-10"></i></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="text-center mt-80 mb-80">
-      <p>Join our prayer team and you will receive an exclusive monthly email newsletter detailing specific prayer needs for Impact and Impact partners.</p>
-      <form (ngSubmit)="handleFormSubmit()">
-        <div class="prayer-team__form row d-flex justify-content-center align-items-center">
-          <div class="col-lg-4 col-sm-12">
-            <div class="contact__input mb-20">
-              <label for="prayer-team-firstName">First Name <span class="required">*</span></label>
-              <input id="prayer-team-firstName" required type="name" name="firstName" [(ngModel)]="prayerTeamSubscription.firstName">
-            </div>
-          </div>
-          <div class="col-lg-4 col-sm-12">
-            <div class="contact__input mb-20">
-              <label for="prayer-team-lastName">Last Name <span class="required">*</span></label>
-              <input id="prayer-team-lastName" required type="name" name="lastName" [(ngModel)]="prayerTeamSubscription.lastName">
-            </div>
-          </div>
-          <div class="col-lg-4 col-sm-12">
-            <div class="contact__input mb-20">
-              <label for="prayer-team-email">Email <span class="required">*</span></label>
-              <input id="prayer-team-email" required type="email" name="email" [(ngModel)]="prayerTeamSubscription.email">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12 text-center">
-            <button class="subscribe__button os-btn os-btn-2 os-btn-3" type="submit">JOIN THE PRAYER TEAM</button>
-          </div>
-        </div>
-      </form>
-    </section>
+    @for (section of sections$ | async; track section.key) {
+      <app-prayer-section [block]="section"></app-prayer-section>
+    }
   </div>
 </main>
 

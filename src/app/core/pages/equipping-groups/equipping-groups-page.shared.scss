@@ -1,5 +1,35 @@
 @use '../../../../assets/styles/theme/scss/variables';
 
+// -------------------------------------------------------------- RICH TEXT
+//
+// Rules whose TARGET arrives through [innerHTML] have to be ::ng-deep, and
+// that is not a style preference - it is the only thing that works.
+//
+// Angular's emulated encapsulation stamps `_ngcontent-x` onto the elements a
+// component's TEMPLATE renders, and compiles `.a p` into `.a p[_ngcontent-x]`.
+// Content assigned to [innerHTML] is inserted at runtime and carries no
+// attribute, so that rule can never match it. It is not a specificity problem
+// and no amount of nesting fixes it.
+//
+// Both of these broke silently when these pages started reading their copy
+// from page_content, and a text-and-height check passed them because the
+// words and the layout were right. Measured 2026-08-29: the left panel's
+// paragraphs computed rgb(132,139,138) - the site-wide grey - on its
+// rgb(88,138,199) blue, a contrast ratio of 1.03:1 where 4.5:1 is the floor.
+// They were meant to be white. The emphasis in a section title had inherited
+// black instead of #ffcc00.
+//
+// :host anchors it so ::ng-deep cannot leak past this component's subtree.
+:host ::ng-deep {
+  .equipping-groups__about .content__left p {
+    color: #ffffff;
+  }
+
+  .equipping-groups__approach .content__title strong {
+    color: variables.$theme-color;
+  }
+}
+
 .equipping-groups {
   &__key-words {
     display: grid;
@@ -53,8 +83,30 @@
           font-size: 20px;
           letter-spacing: 1.5px;
         }
+        // The paragraphs here are rich text - see the ::ng-deep block at the
+        // foot of this file for why their colour cannot live in this rule.
+      }
+      &__center {
+        align-self: center;
+        padding: 20px;
+        // Was two inline styles on the hub page's markup. Moved here with
+        // the section rework so the list has a width that can respond -
+        // 50% of a phone is unreadable.
+        display: flex;
+        justify-content: center;
+        h5 {
+          font-weight: 800;
+          font-size: 20px;
+          letter-spacing: 1.5px;
+        }
         p {
           color: #ffffff;
+        }
+      }
+      &__cards {
+        width: 50%;
+        @media #{variables.$xxs,variables.$xs,variables.$sm} {
+          width: 100%;
         }
       }
       &__right {
@@ -90,9 +142,8 @@
         @media #{variables.$xxs,variables.$xs,variables.$sm} {
           font-size: 26px;
         }
-        strong {
-          color: variables.$theme-color;
-        }
+        // The emphasis inside it is rich text - see the ::ng-deep block at
+        // the foot of this file.
       }
     }
     .video {

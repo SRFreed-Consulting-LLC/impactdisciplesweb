@@ -1,5 +1,39 @@
 @use '../../../../assets/styles/variables.scss';
 
+// -------------------------------------------------------------- RICH TEXT
+//
+// Rules whose TARGET arrives through [innerHTML] have to be ::ng-deep: with
+// emulated encapsulation `.a ul` compiles to `.a ul[_ngcontent-x]`, and
+// content inserted at runtime carries no such attribute. See
+// seminars.component.scss for the full explanation and the measurements.
+//
+// The bullets under each feature row are the case here: their <ul> arrives
+// from the editor, and without this it takes the browser default indent on a
+// wrapper that already has one.
+//
+// :host anchors it so ::ng-deep cannot leak past this component's subtree.
+:host ::ng-deep {
+  .dl-row__points {
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  @media #{variables.$xxs, variables.$xs, variables.$sm, variables.$md} {
+    .dl-row__points ul,
+    .dl-row__points ol {
+      padding-left: 0;
+      list-style: none;
+    }
+  }
+}
+
 // Direction A ("alternating rows"): one full row per functional area of the
 // Reader app, media and copy swapping sides down the page. Everything draws
 // from the site's own variables - the page has no palette of its own.
@@ -188,9 +222,12 @@
     max-width: 560px;
   }
 
+  // The bullets arrive as rich text now (one editable box per feature row)
+  // rather than as a string[] in the component, so the list is nested inside
+  // this element instead of being it. The wrapper is template markup and can
+  // be styled here; the list inside it cannot - see the ::ng-deep block at
+  // the foot of this file.
   &__points {
-    margin: 0;
-    padding-left: 20px;
     color: #454d58;
     line-height: 2;
   }
@@ -282,10 +319,8 @@
     }
 
     // Centred text with a left-indented bullet list looks broken; inline them.
-    &__points {
-      padding-left: 0;
-      list-style: none;
-    }
+    // The phone cut of the bullet list - also rich text, also ::ng-deep at
+    // the foot of this file.
   }
 
   .dl-rule {

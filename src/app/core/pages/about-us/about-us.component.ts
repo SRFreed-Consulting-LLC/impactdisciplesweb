@@ -1,14 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { PageContentBlock } from '@impact-common/shared/models/domain/page-content.model';
 import { PageContentService } from 'src/app/common/services/data/page-content.service';
-
-/** What the template needs: the live sections, and each one's position
- *  among blocks of its own type. */
-export interface AboutView {
-  sections: PageContentBlock[];
-  typeIndex: Record<string, number>;
-}
+import { PageView, buildPageView } from 'src/app/shared/utils/page-sections';
 
 /**
  * About Us - an ordered stack of sections read from `page_content/about-us`.
@@ -17,6 +10,12 @@ export interface AboutView {
  * app-about-section draws each block according to its type. Staff reorder
  * sections, switch one off, and edit any of them from Page Manager > About
  * Us, and this follows with no deploy.
+ *
+ * It asks for the full PageView rather than just the live sections because
+ * its story columns alternate which side their picture sits on, and that
+ * needs each block's position among blocks of its OWN type. buildPageView is
+ * shared with every other dispatcher page for exactly that reason - the rule
+ * is subtle enough that eleven copies would drift.
  *
  * NO FALLBACK. The document is the only copy of this page's text - the
  * duplicate that used to live in this template was removed when the page
@@ -35,27 +34,9 @@ export interface AboutView {
     standalone: false
 })
 export class AboutUsComponent {
-  readonly view$: Observable<AboutView>;
+  readonly view$: Observable<PageView>;
 
   constructor(pageContent: PageContentService) {
-    this.view$ = pageContent.forPage('about-us').pipe(map(buildView));
+    this.view$ = pageContent.forPage('about-us').pipe(map(buildPageView));
   }
-}
-
-/** Pure, so the alternation rule can be tested without a component. */
-export function buildView(doc: { blocks?: PageContentBlock[] } | null): AboutView {
-  // Switched-off sections are left out FIRST, so the index a story column
-  // alternates on counts only what a visitor actually sees - hiding one
-  // must not leave two pictures stacked on the same side.
-  const sections = (doc?.blocks ?? []).filter((b) => b.isActive !== false);
-
-  const seen = new Map<string, number>();
-  const typeIndex: Record<string, number> = {};
-  for (const block of sections) {
-    const type = block.type ?? '';
-    const n = seen.get(type) ?? 0;
-    typeIndex[block.key] = n;
-    seen.set(type, n + 1);
-  }
-  return { sections, typeIndex };
 }

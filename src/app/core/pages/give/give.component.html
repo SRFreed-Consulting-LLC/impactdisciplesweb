@@ -1,59 +1,15 @@
 <app-home-header></app-home-header>
-<!-- Copy from Page Manager > Give, by slot key.
-     There is NO fallback here: the page_content document IS the only copy
-     of this text. A block that is missing renders nothing (Shane's call,
-     2026-08-29) - the templates used to carry a duplicate and it was
-     removed with the seed, so nothing can silently disagree with it.
-     The payment URLs are the exception and stay in environment.ts on
-     purpose - see editable-pages.ts. -->
-@let c = (content$ | async) ?? {};
 
+<!-- A DISPATCHER: it renders whatever sections page_content/give says, in the
+     order it says. Staff reorder them in Page Manager > Give and this follows
+     with no code change.
+
+     There is NO fallback copy here - see give.component.ts. The payment URLs
+     are the deliberate exception and stay in environment.ts. -->
 <div class="give">
-  <app-header
-    [backgroundUrl]="'https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FHeaders%2Fgive-header.PNG?alt=media&token=ae05b066-c061-4991-ba0d-189f37607431'"
-    [pretitle]="'YOUR SUPPORT'"
-    [title]="'Makes the Difference'"
-    [description]="'Meet the Impact Disciple-Making Team and learn more about who you are supporting'"
-  ></app-header>
-  <div class="give__main">
-    <div class="options">
-    </div>
-  </div>
-  <div class="give__main">
-    <div class="options">
-      <div class="options__item">
-        <h3 [innerHTML]="c['onetime']?.heading"></h3>
-        <i class="large-icon fas fa-dollar-sign"></i>
-        <div class="buttons">
-          <button class="impact-btn" (click)="window.open(environment.oneGiftUrl, '_blank')">SEND DONATION</button>
-        </div>
-      </div>
-      <div class="options__item">
-        <h3 [innerHTML]="c['monthly']?.heading"></h3>
-        <i class="large-icon fas fa-calendar-days"></i>
-        <div class="buttons">
-          <button class="impact-btn" (click)="window.open(environment.monthlyGiftUrl, '_blank')">SEND DONATION</button>
-        </div>
-      </div>
-      <div class="options__item">
-        <h3 [innerHTML]="c['partners']?.heading"></h3>
-        <i class="large-icon fas fa-calendar-days"></i>
-        <div [innerHTML]="c['partners']?.body"></div>
-
-        <div class="buttons">
-          <button class="impact-btn" (click)="window.open(environment.impactPartnersGiftUrl, '_blank')">BECOME A PARTNER</button>
-        </div>
-      </div>
-    </div>
-    <div class="intro">Your gift makes a difference in the lives of individual disciples, Disciple-Making Pastors, and Disciple-Making Churches all over the world. Consider partnering with us financially in one of the ways below.</div>
-
-    <div class="mailto" [style.background-image]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Fyellow-world-banner.PNG?alt=media&token=a2f4b0e2-dacb-4101-b6f6-8de82c5de4dc)'">
-      <div class="mailto__content">
-        <div class="title">Mail Donations by Check To:</div>
-        <div class="subtitle">Impact Discipleship Ministries</div>
-        <div class="address">{{ impactDisciplesInfo.address }}</div>
-      </div>
-    </div>
-  </div>
+  @for (section of sections$ | async; track section.key) {
+    <app-give-section [block]="section"></app-give-section>
+  }
 </div>
+
 <app-footer></app-footer>

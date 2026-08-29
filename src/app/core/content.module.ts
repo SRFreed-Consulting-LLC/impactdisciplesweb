@@ -25,6 +25,19 @@ import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-revi
 import { MonthlyNewsletterComponent } from "./pages/monthly-newsletter/monthly-newsletter.component";
 import { NewsletterViewComponent } from "./pages/monthly-newsletter/newsletter-view/newsletter-view.component";
 import { PrayerTeamComponent } from "./pages/prayer-team/prayer-team.component";
+// One SECTION renderer per page. Every wired page is a dispatcher now: it
+// loops over the ordered sections in its page_content document and hands each
+// one to its page's section component, which is the only thing that knows how
+// a type maps onto that page's markup. They are separate per page on purpose -
+// a `mission` is a dark band on About Us and a light two-up on the equipping
+// pages, and one component drawing both would be a switch inside a switch.
+import { EquippingSectionComponent } from "./pages/equipping-groups/equipping-section/equipping-section.component";
+import { SeminarsSectionComponent } from "./pages/seminars/seminars-section/seminars-section.component";
+import { LunchSectionComponent } from "./pages/lunch-and-learn/lunch-section/lunch-section.component";
+import { GiveSectionComponent } from "./pages/give/give-section/give-section.component";
+import { ContactSectionComponent } from "./pages/contact/contact-section/contact-section.component";
+import { LibrarySectionComponent } from "./pages/discipleship-library/library-section/library-section.component";
+import { PrayerSectionComponent } from "./pages/prayer-team/prayer-section/prayer-section.component";
 
 // Exported for form-page.contract.spec.ts: the three form pages carry
 // their form ids in route data now, and a wrong id fails silently on a
@@ -125,7 +138,14 @@ export const routes: Routes = [
     CustomerReviewsComponent,
     MonthlyNewsletterComponent,
     NewsletterViewComponent,
-    PrayerTeamComponent
+    PrayerTeamComponent,
+    EquippingSectionComponent,
+    SeminarsSectionComponent,
+    LunchSectionComponent,
+    GiveSectionComponent,
+    ContactSectionComponent,
+    LibrarySectionComponent,
+    PrayerSectionComponent
   ],
   imports: [
     CommonModule,

@@ -1,10 +1,42 @@
 @use '../../../../assets/styles/theme/scss/variables';
 
+// -------------------------------------------------------------- RICH TEXT
+//
+// Rules whose TARGET arrives through [innerHTML] have to be ::ng-deep: with
+// emulated encapsulation `.a p` compiles to `.a p[_ngcontent-x]`, and content
+// inserted at runtime carries no such attribute. See seminars.component.scss
+// for the full explanation and the measurements.
+//
+// Measured 2026-08-29: the copy on the Impact Partners tile computed
+// rgb(132,139,138) - the site-wide grey a global `p` rule supplies - rather
+// than inheriting the tile's white, because a global rule beats inheritance.
+//
+// :host anchors it so ::ng-deep cannot leak past this component's subtree.
+:host ::ng-deep {
+  .options__item p {
+    font-size: 14px;
+    color: inherit;
+  }
+
+  .intro p {
+    margin: 0;
+  }
+}
+
 .give {
+  // The breathing room under the last section, which the single wrapper
+  // below used to provide before every block on this page became its own
+  // section.
+  padding-bottom: 50px;
+
   &__main {
-    padding: 50px;
+    // HORIZONTAL gutters only. This was `padding: 50px` on ONE wrapper
+    // around every block on the page; each section carries its own wrapper
+    // now, and 50px of vertical padding per section would stack up into a
+    // gap between every pair of them.
+    padding: 0 50px;
     @media #{variables.$xxs,variables.$xs} {
-      padding: 10px;
+      padding: 0 10px;
     }
     .intro {
       font-size: 40px;
@@ -17,6 +49,8 @@
         margin: 30px 0 50px;
       }
     }
+    // The line is one sentence, so a <p> the editor wraps it in must not
+    // add its own block margins on top of the 100px above.
     .options {
       display: flex;
       flex-wrap: wrap;
@@ -45,9 +79,8 @@
 
         }
 
-        p {
-          font-size: 14px;
-        }
+        // The copy in a tile is rich text - see the ::ng-deep block at the
+        // foot of this file.
 
         .large-icon {
           font-size: 60px;

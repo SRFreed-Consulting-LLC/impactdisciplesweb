@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { PrayerTeamComponent } from './prayer-team.component';
+import { PrayerSectionComponent } from './prayer-section/prayer-section.component';
 import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-form.service';
 
 // Characterization suite written BEFORE the subscribe-flow extraction
@@ -7,13 +7,19 @@ import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-fo
 // rationale. This is the one of the three that is NOT a newsletter form -
 // it subscribes type 'prayer' and every user-facing string differs, which
 // is exactly what the extraction has to keep straight.
+//
+// 2026-08-29: the flow moved from PrayerTeamComponent to
+// PrayerSectionComponent when the page became a dispatcher - the form belongs
+// to the section that draws it, and the page is now a loop that owns nothing.
+// Only the construction below changed; every assertion is untouched, which is
+// the whole point of having had these.
 const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
-describe('PrayerTeamComponent subscribe flow', () => {
+describe('Prayer team subscribe flow', () => {
   let toasts: { message: string; type: string }[];
   let logged: { type: string; createdBy: string; message: string }[];
   let createSubscription: jasmine.Spy;
-  let component: PrayerTeamComponent;
+  let component: PrayerSectionComponent;
 
   beforeEach(() => {
     toasts = [];
@@ -21,15 +27,8 @@ describe('PrayerTeamComponent subscribe flow', () => {
     createSubscription = jasmine.createSpy('createSubscription');
 
     // The real SubscribeFormService, built from the same three duck-typed
-    // deps the component itself used to take. Only this construction
-    // changed in the extraction - every assertion below is untouched.
-    //
-    // The second argument is the page-content lookup added 2026-08-29 so
-    // this page's heading can be edited in the admin. It plays no part in
-    // the subscribe flow these tests cover, so it is a stub that returns no
-    // blocks - which is also the state the live page is in until someone
-    // saves something.
-    component = new PrayerTeamComponent(
+    // deps the component itself used to take.
+    component = new PrayerSectionComponent(
       new SubscribeFormService(
         { createSubscription } as never,
         { notify: (o: { message: string; type: string }) => toasts.push(o) } as never,
@@ -39,8 +38,7 @@ describe('PrayerTeamComponent subscribe flow', () => {
             return of('EC-9012');
           }
         } as never
-      ),
-      { blocksFor: () => of({}) } as never
+      )
     );
     component.prayerTeamSubscription.firstName = 'Casey';
     component.prayerTeamSubscription.lastName = 'Contact';
