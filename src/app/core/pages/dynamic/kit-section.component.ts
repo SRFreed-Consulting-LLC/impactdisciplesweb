@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PageContentBlock, PageContentItem } from '@impact-common/shared/models/domain/page-content.model';
+import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import {
   DEFAULT_PAGE_THEME,
   PageTheme,
@@ -49,6 +50,17 @@ export class KitSectionComponent {
    * second source of truth that reordering silently breaks.
    */
   @Input() typeIndex = 0;
+
+  /**
+   * The site settings, for the one thing a section may READ but never store:
+   * a price.
+   *
+   * An amount lives in Web Config and a tile names the field it wants, so a
+   * figure only ever exists in one place. Handed down by the page rather than
+   * injected here, so a page of twenty sections makes one read rather than
+   * twenty - the same shape the equipping and seminars pages already use.
+   */
+  @Input() webConfig: WebConfigModel | null = null;
 
   readonly archetypes = SECTION_ARCHETYPE;
 
@@ -105,5 +117,26 @@ export class KitSectionComponent {
    *  written before variants existed still draws something. */
   get variant(): string {
     return variantDef(this.block.type ?? '', this.block.variant)?.key ?? '';
+  }
+
+  /**
+   * The figure an entry NAMES, resolved from Web Config.
+   *
+   * Null rather than 0 when it cannot be resolved, and the template draws no
+   * price line at all in that case: a tile reading "$0" is worse than one
+   * with no price, because it looks like an answer.
+   *
+   * The template used to print `amountKey` itself, which put the literal text
+   * "inpersonSeminarCost" on the page where a price belonged - directly under
+   * a comment claiming the page resolved it. Caught by looking at the page,
+   * which no spec had done.
+   */
+  amount(item: PageContentItem): number | null {
+    const key = item.amountKey;
+    if (!key || !this.webConfig) {
+      return null;
+    }
+    const value = (this.webConfig as unknown as Record<string, unknown>)[key];
+    return typeof value === 'number' ? value : null;
   }
 }

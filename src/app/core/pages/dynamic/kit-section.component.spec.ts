@@ -185,6 +185,40 @@ describe('the two axes a section is drawn on', () => {
     expect(renderWith(light).style.backgroundImage).toBe('');
   });
 
+  it('shows a resolved figure for a price tile, never the field name', () => {
+    // THE BUG THIS EXISTS FOR. The template printed `amountKey`, so the page
+    // read "inpersonSeminarCost" where a price belonged - directly under a
+    // comment claiming the page resolved it. Every spec was green; it was
+    // caught by looking at the rendered page.
+    const block = {
+      ...blockFor(SECTION_ARCHETYPE.LIST_GRID, 'price'),
+      items: [{ title: 'In person', amountKey: 'inpersonSeminarCost', amountSuffix: '/seat', isActive: true }]
+    };
+    fixture.componentInstance.block = block;
+    fixture.componentInstance.webConfig = { inpersonSeminarCost: 249 } as never;
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('$249/seat');
+    expect(text)
+      .withContext('the Web Config FIELD NAME reached the page instead of its value')
+      .not.toContain('inpersonSeminarCost');
+  });
+
+  it('draws no price line at all when the figure cannot be resolved', () => {
+    // "$0" looks like an answer. A missing price line looks like what it is.
+    const block = {
+      ...blockFor(SECTION_ARCHETYPE.LIST_GRID, 'price'),
+      items: [{ title: 'In person', amountKey: 'noSuchField', isActive: true }]
+    };
+    fixture.componentInstance.block = block;
+    fixture.componentInstance.webConfig = { inpersonSeminarCost: 249 } as never;
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.kit-tile__price')).toBeNull();
+    expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('$0');
+  });
+
   it('alternates the media side by position, without storing it', () => {
     // A stored side is a second source of truth that reordering breaks. The
     // rule is the same one About Us's story columns already follow.

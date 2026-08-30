@@ -3,8 +3,10 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map, of, switchMap, catchError, startWith } from 'rxjs';
 import { PageContentModel } from '@impact-common/shared/models/domain/page-content.model';
+import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { DEFAULT_PAGE_THEME, PageTheme } from '@impact-common/shared/lists/section_kit';
 import { PageContentService } from 'src/app/common/services/data/page-content.service';
+import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { PageView, buildPageView } from 'src/app/shared/utils/page-sections';
 
 /** What the template is waiting on. Three states, not two: a page that has
@@ -50,17 +52,38 @@ type DynamicPageState =
 export class DynamicPageComponent implements OnInit {
   state$: Observable<DynamicPageState> = of({ status: 'loading' });
 
+  /**
+   * The site settings, handed down to every section.
+   *
+   * Read ONCE here rather than injected per section: a price tile names a
+   * figure from Web Config, and a page of twenty sections should make one
+   * read, not twenty. Same shape the equipping and seminars pages use.
+   *
+   * Null until it lands, which is fine - a section with an unresolvable
+   * amount draws no price line rather than a wrong one.
+   */
+  webConfig: WebConfigModel | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private pageContent: PageContentService,
+    private webConfigService: WebConfigService,
     private title: Title
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.state$ = this.route.paramMap.pipe(
       map((params) => params.get('slug') ?? ''),
       switchMap((slug) => this.load(slug))
     );
+
+    // `web_config` is treated as a singleton collection app-wide; this exact
+    // getAll()[0] idiom appears at 14 sites and consolidating it is its own
+    // item. Failing to read it must not take the page down - the only thing
+    // that depends on it is whether a price line appears.
+    this.webConfig = await this.webConfigService.getAll()
+      .then((configs) => configs[0] ?? null)
+      .catch(() => null);
   }
 
   private load(slug: string): Observable<DynamicPageState> {

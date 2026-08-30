@@ -145,11 +145,12 @@
               }
 
               <!-- The AMOUNT is not stored on the tile - it names a figure
-                   from the site settings and the page resolves it. A tile
-                   whose figure cannot be resolved shows no price line rather
-                   than "$0". -->
-              @if (variant === 'price' && tile.amountKey) {
-                <p class="kit-tile__price">{{ tile.amountKey }}{{ tile.amountSuffix }}</p>
+                   from the site settings and the page resolves it, so a price
+                   only ever lives in one place. A tile whose figure cannot be
+                   resolved shows NO price line rather than "$0", which would
+                   look like an answer. -->
+              @if (variant === 'price' && amount(tile) !== null) {
+                <p class="kit-tile__price">${{ amount(tile) }}{{ tile.amountSuffix }}</p>
               }
 
               @if (tile.description) {
