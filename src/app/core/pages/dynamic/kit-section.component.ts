@@ -157,7 +157,9 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return [
       `kit-hs--${this.block.headingStyle ?? 'bold'}`,
       `kit-ct--${this.block.copyTone ?? 'soft'}`,
-      `kit-bl--${this.block.bullets ?? 'dots'}`
+      `kit-bl--${this.block.bullets ?? 'dots'}`,
+      `kit-cs--${this.block.copySize ?? 'compact'}`,
+      `kit-ms--${this.block.mediaSize ?? 'large'}`
     ].join(' ');
   }
 

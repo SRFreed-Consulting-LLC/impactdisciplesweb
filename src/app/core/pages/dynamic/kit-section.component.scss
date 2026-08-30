@@ -66,6 +66,64 @@
   }
 }
 
+// The site's OTHER big heading: OVERVIEW measures 50px at weight 500 - the
+// prose sections were never 900. Same rule treatment.
+.kit-hs--light {
+  .kit-heading {
+    font-size: clamp(2rem, 4.2vw, 3.125rem);
+    font-weight: 500;
+  }
+
+  .kit-rule {
+    width: min(60%, 375px);
+    height: 5px;
+  }
+}
+
+// A word the editor wrapped in <strong> inside a HEADING takes the brand
+// yellow - "WHAT YOU <strong>GET</strong>" is exactly how the original
+// stores it, so the same markup means the same thing before and after a
+// migration. ::ng-deep because headings arrive through [innerHTML]; scoped
+// under this component's own heading classes.
+.kit-heading ::ng-deep strong,
+.kit-hero__title ::ng-deep strong,
+.kit-herosplit__title ::ng-deep strong,
+.kit-band__title ::ng-deep strong {
+  color: var(--kit-rule);
+}
+
+// The site's TWO copy scales, measured: large is the OVERVIEW passages -
+// 20px on a 40px line, running the width of the container, centred or not
+// as the section says. Compact (the default) is copy beside media, 14/24.
+// The extra .kit-centred selector is SPECIFICITY, not scoping: the centred
+// archetype's own block sets .kit-centred .kit-copy { max-width: 70ch }
+// later in this file, and at equal specificity file order won - measured as
+// copy stuck at 879px (70ch at 20px) when the option said run wide.
+.kit-cs--large .kit-copy,
+.kit-cs--large .kit-centred .kit-copy {
+  font-size: 20px;
+  line-height: 2;
+  max-width: none;
+}
+
+// Media takes the larger share of a split, as the originals do (~700px of a
+// 1600 screen). 'balanced' is the even split for anyone who wants it.
+.kit-ms--large .kit-split {
+  grid-template-columns: 1fr 1.15fr;
+}
+
+// When the media is on the LEFT the order swaps but the grid tracks do not,
+// so the wider track has to swap with it or the copy gets the media share.
+.kit-ms--large .kit-split--mediaLeft {
+  grid-template-columns: 1.15fr 1fr;
+}
+
+// Compact copy, the default: 14px on a 24px line, measured off the mission
+// bands.
+.kit-cs--compact .kit-copy {
+  font-size: 14px;
+}
+
 // On the LIGHT ground the soft tone is the original's exact #848b8a; the
 // other grounds keep their own soft tokens - grey-on-dark is a different
 // grey. Heading stays full ink either way.
@@ -144,7 +202,10 @@
 // --------------------------------------------------------------- shared
 
 .kit-wrap {
-  max-width: 1200px;
+  // 1400, not 1200: the site itself runs container-xxl - OVERVIEW copy
+  // measures 1400 wide on a 1600 screen, and a narrower wrap made every kit
+  // section read cramped beside its original.
+  max-width: 1400px;
   margin: 0 auto;
   padding: 80px 24px;
 }
@@ -232,6 +293,14 @@
 .kit-hero {
   padding-top: 130px;
   padding-bottom: 130px;
+
+  // The measured original hero copy: 20px on a 24px line, held to ~840px -
+  // the kit let it run the full screen, which Shane called out on sight.
+  .kit-copy {
+    max-width: 840px;
+    font-size: 20px;
+    line-height: 1.2;
+  }
 
   &__title {
     margin: 0;
