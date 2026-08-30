@@ -170,6 +170,13 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return this.surface === 'photo' && url ? `url(${url})` : null;
   }
 
+  /** Which part of the photo the band keeps when it crops - 'top' holds
+   *  faces, 'bottom' foregrounds. A string, so safe as a getter. */
+  get backgroundPosition(): string {
+    const focus = this.block.photoFocus ?? 'center';
+    return focus === 'center' ? 'center' : `center ${focus}`;
+  }
+
   /**
    * Whether the media sits on the LEFT.
    *

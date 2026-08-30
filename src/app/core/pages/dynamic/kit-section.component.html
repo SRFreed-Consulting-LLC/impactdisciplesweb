@@ -2,7 +2,8 @@
      style binding, so no markup below ever mentions a colour. That is what
      makes `surface` a setting rather than five copies of a layout. -->
 <section class="kit-section" [class]="'kit-section ' + surfaceClass + ' ' + styleClasses"
-         [style.backgroundImage]="backgroundImage">
+         [style.backgroundImage]="backgroundImage"
+         [style.backgroundPosition]="backgroundPosition">
 
   @switch (block.type) {
 
