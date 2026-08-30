@@ -281,7 +281,11 @@
   .kit-btn.kit-tile__cta {
     order: 4;
     align-self: center;
-    margin-top: 6px;
+    // BOTTOM-ALIGNED (Shane): auto top margin pushes the button to the foot
+    // of its flex column, so the three buttons sit on one line however the
+    // copy above them differs - the grid already stretches the boxes equal.
+    margin-top: auto;
+    padding-top: 6px;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
