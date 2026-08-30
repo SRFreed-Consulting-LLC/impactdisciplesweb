@@ -131,7 +131,7 @@
           <div class="kit-copy kit-copy--centre" [innerHTML]="block.body"></div>
         }
 
-        <div class="kit-grid">
+        <div class="kit-grid" [class]="'kit-grid ' + gridGroundClasses">
           @for (tile of liveItems; track $index) {
             <article class="kit-tile">
               @if (variant === 'icon' && tile.icon) {
@@ -287,12 +287,12 @@
          thing rather than alternating. -->
     @case (archetypes.LIST_COLUMNS) {
       <div class="kit-wrap kit-columns">
-        <div class="kit-columns__col">
+        <div class="kit-columns__col" [class]="'kit-columns__col ' + leftColClasses">
           @for (item of leftItems; track $index) {
             <ng-container *ngTemplateOutlet="passage; context: { $implicit: item }"></ng-container>
           }
         </div>
-        <div class="kit-columns__col">
+        <div class="kit-columns__col" [class]="'kit-columns__col ' + rightColClasses">
           @for (item of rightItems; track $index) {
             <ng-container *ngTemplateOutlet="passage; context: { $implicit: item }"></ng-container>
           }

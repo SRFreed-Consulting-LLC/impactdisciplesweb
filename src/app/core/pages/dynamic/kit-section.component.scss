@@ -135,6 +135,39 @@
   font-size: 14px;
 }
 
+// ---------------------------------------------------------- card grounds
+//
+// A box behind a column or a tile, from the SAME fixed palette as the
+// surfaces - never a colour picker. The box re-declares the ink tokens, so
+// every rule inside (headings, copy tone, bullets, buttons) follows the box
+// without knowing it exists; the ink lever just picks which pair.
+// 'brand' + dark ink is the equipping pages' blue facts box, measured:
+// #588AC7 behind near-black headings and #848b8a copy, 20px padding.
+
+.kit-card--panel { --kit-card-bg: #{variables.$grey}; }
+.kit-card--brand { --kit-card-bg: #{variables.$blue}; }
+.kit-card--dark { --kit-card-bg: #{variables.$black}; }
+
+.kit-cardink--dark {
+  --kit-ink: #{variables.$black};
+  --kit-ink-soft: #848b8a;
+}
+
+.kit-cardink--light {
+  --kit-ink: #{variables.$white};
+  --kit-ink-soft: #e7eef7;
+}
+
+.kit-columns__col[class*='kit-card--'] {
+  background: var(--kit-card-bg);
+  padding: 20px; // the measured original box padding
+}
+
+.kit-grid[class*='kit-card--'] .kit-tile {
+  background: var(--kit-card-bg);
+  border-color: transparent;
+}
+
 // On the LIGHT ground the soft tone is the original's exact #848b8a; the
 // other grounds keep their own soft tokens - grey-on-dark is a different
 // grey. Heading stays full ink either way.

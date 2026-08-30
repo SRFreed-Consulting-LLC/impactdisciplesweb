@@ -178,6 +178,35 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
   }
 
   /**
+   * The card-ground classes for one column or for the tile grid. Each
+   * ground defaults its ink to what READS on it - brand defaults dark
+   * because that is what the original equipping pages do - and the stored
+   * ink overrides. Strings, so safe as computed values.
+   */
+  private groundClasses(
+    ground: 'none' | 'panel' | 'brand' | 'dark' | undefined,
+    ink: 'dark' | 'light' | undefined
+  ): string {
+    if (!ground || ground === 'none') {
+      return '';
+    }
+    const defaultInk = ground === 'dark' ? 'light' : 'dark';
+    return `kit-card--${ground} kit-cardink--${ink ?? defaultInk}`;
+  }
+
+  get leftColClasses(): string {
+    return this.groundClasses(this.block.leftGround, this.block.leftInk);
+  }
+
+  get rightColClasses(): string {
+    return this.groundClasses(this.block.rightGround, this.block.rightInk);
+  }
+
+  get gridGroundClasses(): string {
+    return this.groundClasses(this.block.cardGround, this.block.cardInk);
+  }
+
+  /**
    * Whether the media sits on the LEFT.
    *
    * `auto` alternates by position, which is what About Us's story columns and
