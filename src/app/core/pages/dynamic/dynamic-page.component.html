@@ -1,0 +1,44 @@
+<!-- The frame every public page wears. Drawn outside the state switch so a
+     page that is loading, missing or ready all keep a header and a way out -
+     the blank-page-with-no-way-back bug is what the wildcard route was added
+     to fix, and this route is greedier than the wildcard. -->
+<app-home-header></app-home-header>
+
+@if (state$ | async; as state) {
+  @switch (state.status) {
+
+    @case ('ready') {
+      <main class="dynamic-page">
+        <!-- typeIndex is what lets a section alternate which side its media
+             sits on. Counted among sections OF ITS OWN TYPE and only over
+             the ones a visitor can see, so switching one off never leaves
+             two pictures stacked - buildPageView owns that rule for every
+             dispatcher page on the site. -->
+        @for (section of state.view.sections; track section.key) {
+          <app-kit-section
+            [block]="section"
+            [theme]="state.theme"
+            [typeIndex]="state.view.typeIndex[section.key]"></app-kit-section>
+        }
+      </main>
+    }
+
+    @case ('missing') {
+      <!-- The same Not Found page the wildcard route renders. This route
+           consumes any single unclaimed segment, so a typo'd URL arrives
+           here rather than at the wildcard, and it has to answer the same
+           way. -->
+      <app-not-found></app-not-found>
+    }
+
+    @default {
+      <!-- Loading. Deliberately not a spinner: the read is usually faster
+           than a spinner's own fade-in, and a flash of one reads as
+           slowness that is not there. The height keeps the footer off the
+           fold so the page does not jump when content lands. -->
+      <div class="dynamic-page__loading" aria-busy="true"></div>
+    }
+  }
+}
+
+<app-footer></app-footer>

@@ -24,6 +24,12 @@ import { HeaderComponent } from "./components/header/header.component";
 // loaded SharedModule rather than in a lazy-loaded feature module.
 import { HomeHeaderComponent } from "../core/home/home-header/home-header.component";
 import { LibraryDockComponent } from "./components/library-dock/library-dock.component";
+// Moved here from AppModule 2026-08-30. It was declared there and not
+// exported, so only the wildcard route could reach it - and the dynamic-page
+// route has to render the SAME Not Found page, because it consumes any single
+// unclaimed segment and a typo'd URL now arrives there instead of at the
+// wildcard. AppModule imports SharedModule, so the wildcard is unaffected.
+import { NotFoundComponent } from "../core/pages/not-found/not-found.component";
 
 @NgModule({
   declarations: [
@@ -44,7 +50,8 @@ import { LibraryDockComponent } from "./components/library-dock/library-dock.com
     HeaderComponent,
     HomeHeaderComponent,
     CampaignPopupComponent,
-    LibraryDockComponent
+    LibraryDockComponent,
+    NotFoundComponent
   ],
   imports: [
     CommonModule,
@@ -72,6 +79,7 @@ import { LibraryDockComponent } from "./components/library-dock/library-dock.com
     HeaderComponent,
     HomeHeaderComponent,
     LibraryDockComponent,
+    NotFoundComponent,
   ]
 })
 export class SharedModule { }

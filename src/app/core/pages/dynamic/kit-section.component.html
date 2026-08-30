@@ -1,0 +1,217 @@
+<!-- Every archetype hangs its colours off ONE class and its photo off ONE
+     style binding, so no markup below ever mentions a colour. That is what
+     makes `surface` a setting rather than five copies of a layout. -->
+<section class="kit-section" [class]="'kit-section ' + surfaceClass"
+         [style.backgroundImage]="backgroundImage">
+
+  @switch (block.type) {
+
+    <!-- A photo across the top with the page title over it. Five of the six
+         heroes on the site today are already one shared component; this is
+         that layout, drawn from the kit's own fields. -->
+    @case (archetypes.HERO_BAND) {
+      <div class="kit-wrap kit-hero">
+        @if (block.subheading) {
+          <p class="kit-eyebrow">{{ block.subheading }}</p>
+        }
+        <h1 class="kit-hero__title" [innerHTML]="block.heading"></h1>
+        <hr class="kit-rule">
+        @if (block.body) {
+          <div class="kit-copy" [innerHTML]="block.body"></div>
+        }
+
+        @if (variant === 'buttonList') {
+          <!-- Buttons as ENTRIES rather than two fixed slots, so a third can
+               be added and the order changed. -->
+          <div class="kit-actions">
+            @for (button of liveItems; track $index) {
+              <a class="kit-btn" [href]="button.link">
+                {{ button.title }}
+                @if (button.icon) {
+                  <i [class]="button.icon + ' kit-btn__icon'" aria-hidden="true"></i>
+                }
+              </a>
+            }
+          </div>
+        } @else if (block.ctaTitle || block.ctaTitle2) {
+          <div class="kit-actions">
+            @if (block.ctaTitle) {
+              <a class="kit-btn" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+            }
+            @if (block.ctaTitle2) {
+              <a class="kit-btn kit-btn--ghost" [href]="block.ctaUrl2">{{ block.ctaTitle2 }}</a>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- A heading, a rule, a passage, sometimes buttons - centred and full
+         width. The workhorse. What separates the site's seven of these today
+         is almost entirely ground colour, which is now a setting. -->
+    @case (archetypes.COPY_CENTRED) {
+      <div class="kit-wrap kit-centred">
+        @if (block.subheading) {
+          <p class="kit-eyebrow">{{ block.subheading }}</p>
+        }
+        @if (block.heading) {
+          <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
+        }
+        <hr class="kit-rule kit-rule--centre">
+        @if (block.body) {
+          <div class="kit-copy" [innerHTML]="block.body"></div>
+        }
+
+        @if (variant === 'mediaBelow') {
+          <!-- The video sits BELOW the copy rather than beside it. A
+               structural difference, so a variant and not a surface. -->
+          <div class="kit-media kit-media--below">
+            <ng-container *ngTemplateOutlet="video"></ng-container>
+          </div>
+        }
+
+        @if (block.ctaTitle || block.ctaTitle2) {
+          <div class="kit-actions kit-actions--centre">
+            @if (block.ctaTitle) {
+              <a class="kit-btn" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+            }
+            @if (block.ctaTitle2) {
+              <a class="kit-btn kit-btn--ghost" [href]="block.ctaUrl2">{{ block.ctaTitle2 }}</a>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- A heading and a passage beside a picture or a click-to-play video.
+         The largest family on the site. Which side the media sits on comes
+         from the variant, or alternates by position - never from stored
+         data, so reordering cannot stack two the same way. -->
+    @case (archetypes.COPY_MEDIA) {
+      <div class="kit-wrap kit-split" [class.kit-split--mediaLeft]="mediaLeft">
+        <div class="kit-split__copy">
+          @if (block.subheading) {
+            <p class="kit-eyebrow">{{ block.subheading }}</p>
+          }
+          @if (block.heading) {
+            <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
+          }
+          <hr class="kit-rule">
+          @if (block.body) {
+            <div class="kit-copy" [innerHTML]="block.body"></div>
+          }
+          @if (block.ctaTitle) {
+            <div class="kit-actions">
+              <a class="kit-btn" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+            </div>
+          }
+        </div>
+
+        <div class="kit-split__media">
+          @if (variant === 'video') {
+            <ng-container *ngTemplateOutlet="video"></ng-container>
+          } @else {
+            <img class="kit-img" loading="lazy"
+                 [src]="block.image?.url" [alt]="block.image?.name || ''">
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Repeated tiles. Three variants, and what differs between them is
+         only what a tile carries: a picture, an icon, or a price. -->
+    @case (archetypes.LIST_GRID) {
+      <div class="kit-wrap">
+        @if (block.heading) {
+          <h2 class="kit-heading kit-heading--centre" [innerHTML]="block.heading"></h2>
+          <hr class="kit-rule kit-rule--centre">
+        }
+        @if (block.body) {
+          <div class="kit-copy kit-copy--centre" [innerHTML]="block.body"></div>
+        }
+
+        <div class="kit-grid">
+          @for (tile of liveItems; track $index) {
+            <article class="kit-tile">
+              @if (variant === 'icon' && tile.icon) {
+                <i [class]="tile.icon + ' kit-tile__icon'" aria-hidden="true"></i>
+              } @else if (variant !== 'icon' && tile.image?.url) {
+                <img class="kit-tile__img" loading="lazy"
+                     [src]="tile.image?.url" [alt]="tile.title || ''">
+              }
+
+              @if (tile.title) {
+                <h3 class="kit-tile__title">{{ tile.title }}</h3>
+              }
+
+              <!-- The AMOUNT is not stored on the tile - it names a figure
+                   from the site settings and the page resolves it. A tile
+                   whose figure cannot be resolved shows no price line rather
+                   than "$0". -->
+              @if (variant === 'price' && tile.amountKey) {
+                <p class="kit-tile__price">{{ tile.amountKey }}{{ tile.amountSuffix }}</p>
+              }
+
+              @if (tile.description) {
+                <p class="kit-tile__desc">{{ tile.description }}</p>
+              }
+              @if (tile.body) {
+                <div class="kit-copy" [innerHTML]="tile.body"></div>
+              }
+              @if (tile.ctaTitle) {
+                <a class="kit-btn kit-tile__cta" [href]="tile.ctaUrl">{{ tile.ctaTitle }}</a>
+              }
+            </article>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- A full-width photo with words over it and nothing beside it. Always
+         drawn on the 'photo' surface, which is what paints the image. -->
+    @case (archetypes.PHOTO_BAND) {
+      <div class="kit-wrap kit-band" [class.kit-band--figure]="variant === 'figure'">
+        <div class="kit-band__lead">
+          <h2 class="kit-band__title" [innerHTML]="block.heading"></h2>
+          @if (block.subheading) {
+            <p class="kit-band__sub" [innerHTML]="block.subheading"></p>
+          }
+        </div>
+        @if (block.body) {
+          <div class="kit-band__copy kit-copy" [innerHTML]="block.body"></div>
+        }
+      </div>
+    }
+
+    <!-- An archetype this build cannot draw. Skipped rather than crashing:
+         the data outlives the build, and a newer admin may have written it.
+         The silence is deliberate AND dangerous, which is why the spec
+         renders every archetype in the kit and fails on an empty one. -->
+    @default {}
+  }
+</section>
+
+<!-- ONE video treatment, used by both archetypes that have one. Click to
+     play: the poster is the block's own image, and the real player is only
+     created on the click, so a page of these costs one request rather than
+     one iframe per section. -->
+<ng-template #video>
+  @if (!isPlaying) {
+    <div class="kit-video__poster"
+         [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+      <a class="kit-video__button" role="button" tabindex="0"
+         [attr.aria-label]="'Play ' + (block.heading || 'the video')"
+         (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()">
+        <i class="fas fa-play" aria-hidden="true"></i>
+      </a>
+    </div>
+  } @else {
+    <!-- disablePlaceholder: the player draws its OWN thumbnail and play
+         button before it loads, which after our poster meant two of each in
+         a row, at different sizes. -->
+    <div class="kit-video__player">
+      <youtube-player [videoId]="block.videoId" [playerVars]="{ autoplay: 1 }"
+                      [disablePlaceholder]="true"></youtube-player>
+    </div>
+  }
+</ng-template>

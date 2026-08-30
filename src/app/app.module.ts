@@ -1,6 +1,5 @@
 import { ErrorHandler, NgModule } from '@angular/core';
 import { TitleStrategy } from '@angular/router';
-import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { PageTitleStrategy } from './shared/utils/services/page-title.strategy';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
@@ -13,8 +12,9 @@ import { GlobalErrorHandler } from './core/global-error-handler';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NotFoundComponent
+    // NotFoundComponent moved to SharedModule (imported below) so the
+    // dynamic-page route can render it too - see the note there.
+    AppComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 import { Route, UrlSegment, UrlSegmentGroup } from '@angular/router';
-import { routes } from './app-routing.module';
-import { SITE_ROUTES } from '@impact-common/shared/lists/site_routes';
+import { CLAIMED_FIRST_SEGMENTS, routes } from './app-routing.module';
+import { RESERVED_SLUGS, SITE_ROUTES } from '@impact-common/shared/lists/site_routes';
 
 // THE CHECK THAT KEEPS THE ROUTE CATALOGUE HONEST (2026-08-29).
 //
@@ -24,14 +24,32 @@ function segmentsOf(path: string): UrlSegment[] {
   return path.split('/').filter(Boolean).map((part) => new UrlSegment(part, {}));
 }
 
-/** True when some real lazy route claims this path. The wildcard is excluded
- *  deliberately - it has no `matcher`, and "the 404 page will take it" is the
- *  answer this spec exists to reject. */
+/**
+ * True when some real lazy route claims this path.
+ *
+ * TWO routes are excluded, for the same reason: they answer "yes" to things
+ * nothing was really written for.
+ *   - The WILDCARD has no `matcher`, and "the 404 page will take it" is the
+ *     answer this spec exists to reject.
+ *   - The DYNAMIC-PAGES route claims EVERY single segment, so once it existed
+ *     this helper would return true for every one-word path on earth - and
+ *     the catalogue assertion below would go on passing after a real route
+ *     was deleted. It is found by its `data.dynamicPages` marker rather than
+ *     by position, so reordering the array cannot quietly re-break this.
+ */
 function claimedByALazyModule(path: string): boolean {
   const segments = segmentsOf(path);
   return routes.some((route: Route) =>
     !!route.matcher
+    && !route.data?.['dynamicPages']
     && route.matcher(segments, null as unknown as UrlSegmentGroup, route) !== null);
+}
+
+/** Whether the dynamic-pages route - and only it - would take this path. */
+function claimedByDynamicPages(path: string): boolean {
+  const route = routes.find((r: Route) => r.data?.['dynamicPages']);
+  return !!route?.matcher
+    && route.matcher(segmentsOf(path), null as unknown as UrlSegmentGroup, route) !== null;
 }
 
 describe('the shared route catalogue against the real router', () => {
@@ -65,7 +83,13 @@ describe('the shared route catalogue against the real router', () => {
   it('does NOT claim a path nobody routes', () => {
     // The control. Without this, a helper that returned true for everything
     // would pass every other assertion in this file.
+    //
+    // It used to read '/this-route-does-not-exist'. That stopped being a
+    // control on 2026-08-30: the dynamic-pages route claims every single
+    // segment, so the helper now excludes it, and the honest control is a
+    // path that route would not take either.
     expect(claimedByALazyModule('/this-route-does-not-exist')).toBeFalse();
+    expect(claimedByALazyModule('/nobody/routes/this')).toBeFalse();
   });
 
   it('keeps the wildcard last, so it cannot shadow a real route', () => {
@@ -75,5 +99,66 @@ describe('the shared route catalogue against the real router', () => {
     const wildcardIndex = routes.findIndex((route) => route.path === '**');
     expect(wildcardIndex).withContext('there is no wildcard route').toBeGreaterThan(-1);
     expect(wildcardIndex).toBe(routes.length - 1);
+  });
+});
+
+// PAGES STAFF CREATE (2026-08-30).
+//
+// A page created in the admin becomes a route by existing: one matcher takes
+// any single segment nothing else claimed and looks the slug up in
+// `page_content`. Two things have to hold for that to be safe, and neither is
+// visible from either side on its own.
+
+describe('the dynamic-pages route', () => {
+  it('sits second to last, after every hand-written route', () => {
+    // The position IS the safety. Anywhere higher and a page called 'store'
+    // would shadow the shop; the whole design rests on every real matcher
+    // winning first.
+    const index = routes.findIndex((route: Route) => route.data?.['dynamicPages']);
+    expect(index).withContext('there is no dynamic-pages route').toBeGreaterThan(-1);
+    expect(index).toBe(routes.length - 2);
+  });
+
+  it('takes a single segment nothing else claimed, so a new page works at all', () => {
+    expect(claimedByDynamicPages('/mens-retreat')).toBeTrue();
+  });
+
+  it('leaves multi-segment URLs to the wildcard', () => {
+    // Staff pages are one segment. Taking '/a/b' would mean rendering a
+    // blank page instead of the 404 for every mistyped deep link.
+    expect(claimedByDynamicPages('/summit/2027')).toBeFalse();
+    expect(claimedByDynamicPages('/')).toBeFalse();
+  });
+});
+
+describe('the reserved slug list against the real router', () => {
+  // RESERVED_SLUGS lives in the shared submodule because the ADMIN is what
+  // enforces it, and the admin cannot read this router. Same rot as
+  // SITE_ROUTES above, with a nastier failure: a slug that looks free is a
+  // page that saves cleanly, appears in the menu, and opens somebody else's
+  // screen. Nothing anywhere would report it.
+
+  it('reserves every segment this router claims', () => {
+    const unreserved = CLAIMED_FIRST_SEGMENTS.filter((segment) => !RESERVED_SLUGS.includes(segment));
+
+    expect(unreserved)
+      .withContext(
+        'These first segments are routed here but are NOT in RESERVED_SLUGS, so the admin '
+        + 'would let staff create a page with that slug. The page would never be reachable - '
+        + 'this router matches it first - and nothing would say so. Add them to '
+        + 'RESERVED_SLUGS in the shared catalogue.')
+      .toEqual([]);
+  });
+
+  it('reserves nothing this router does not claim', () => {
+    // The other direction. A stale entry needlessly blocks a name staff
+    // could legitimately use, and there is nothing to tell them why.
+    const stale = RESERVED_SLUGS.filter((slug) => !CLAIMED_FIRST_SEGMENTS.includes(slug));
+
+    expect(stale)
+      .withContext(
+        'These are reserved but no route claims them any more - staff are being refused '
+        + 'a slug that is actually free.')
+      .toEqual([]);
   });
 });
