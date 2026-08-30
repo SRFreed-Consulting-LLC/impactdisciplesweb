@@ -106,6 +106,17 @@
   max-width: none;
 }
 
+// ON THE PARAGRAPHS THEMSELVES, not just the container. The theme's global
+// stylesheet sets an explicit p { font-size } - so the words inside the
+// [innerHTML] never inherit the container's 20px, and a check that measured
+// the DIV said "large" while every actual word stayed 14px. Measure the
+// element the ink is on.
+.kit-cs--large .kit-copy ::ng-deep p,
+.kit-cs--large .kit-copy ::ng-deep li {
+  font-size: 20px;
+  line-height: 2;
+}
+
 // Media takes the larger share of a split, as the originals do (~700px of a
 // 1600 screen). 'balanced' is the even split for anyone who wants it.
 .kit-ms--large .kit-split {
