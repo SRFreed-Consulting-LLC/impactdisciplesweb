@@ -44,3 +44,24 @@ export function buildPageView(doc: { blocks?: PageContentBlock[] } | null): Page
 export function liveSections(doc: PageContentModel | null): PageContentBlock[] {
   return (doc?.blocks ?? []).filter((b) => b.isActive !== false);
 }
+
+/**
+ * KIT PAGES ONLY: the live sections grouped into rows, honouring
+ * `pairWithNext` - a section that shares its row takes the next one in
+ * beside it (Contact's two parallel halves). A pair with nothing after it
+ * quietly stacks; the twelve originals never call this.
+ */
+export function pairKitRows(sections: PageContentBlock[]): PageContentBlock[][] {
+  const rows: PageContentBlock[][] = [];
+  let i = 0;
+  while (i < sections.length) {
+    if (sections[i].pairWithNext && i + 1 < sections.length) {
+      rows.push([sections[i], sections[i + 1]]);
+      i += 2;
+    } else {
+      rows.push([sections[i]]);
+      i += 1;
+    }
+  }
+  return rows;
+}

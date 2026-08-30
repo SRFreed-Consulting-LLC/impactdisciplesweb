@@ -644,3 +644,17 @@ body.has-library-dock {
 		--library-dock-height: 52px;
 	}
 }
+
+/* Two kit sections sharing one row, half and half - the Contact page's
+   parallel halves (pairWithNext). Global because both the dynamic page and
+   the kit preview render the wrapper; collapses to a stack on phones. */
+.kit-pair-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 900px) {
+  .kit-pair-row {
+    grid-template-columns: 1fr;
+  }
+}

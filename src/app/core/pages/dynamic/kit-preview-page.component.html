@@ -35,12 +35,19 @@
      flow, so the tag would draw a phantom white band between it and the
      first section - measured at exactly 82px before this comment existed. -->
 <div role="main">
-        @for (section of state.view.sections; track section.key) {
-          <app-kit-section
-            [block]="section"
-            [theme]="state.theme"
-            [webConfig]="webConfig"
-            [typeIndex]="state.view.typeIndex[section.key]"></app-kit-section>
+        @for (row of state.rows; track row[0].key) {
+          <!-- pairWithNext puts two sections side by side, half and half -
+               the Contact page's parallel halves. One-section rows render
+               exactly as before. -->
+          <div [class.kit-pair-row]="row.length > 1">
+            @for (section of row; track section.key) {
+              <app-kit-section
+                [block]="section"
+                [theme]="state.theme"
+                [webConfig]="webConfig"
+                [typeIndex]="state.view.typeIndex[section.key]"></app-kit-section>
+            }
+          </div>
         }
       </div>
     }

@@ -18,12 +18,19 @@
              the ones a visitor can see, so switching one off never leaves
              two pictures stacked - buildPageView owns that rule for every
              dispatcher page on the site. -->
-        @for (section of state.view.sections; track section.key) {
-          <app-kit-section
-            [block]="section"
-            [theme]="state.theme"
-            [webConfig]="webConfig"
-            [typeIndex]="state.view.typeIndex[section.key]"></app-kit-section>
+        @for (row of state.rows; track row[0].key) {
+          <!-- pairWithNext puts two sections side by side, half and half -
+               the Contact page's parallel halves. One-section rows render
+               exactly as before. -->
+          <div [class.kit-pair-row]="row.length > 1">
+            @for (section of row; track section.key) {
+              <app-kit-section
+                [block]="section"
+                [theme]="state.theme"
+                [webConfig]="webConfig"
+                [typeIndex]="state.view.typeIndex[section.key]"></app-kit-section>
+            }
+          </div>
         }
       </div>
     }

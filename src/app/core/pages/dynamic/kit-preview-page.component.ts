@@ -6,12 +6,12 @@ import { PageContentBlock } from '@impact-common/shared/models/domain/page-conte
 import { DEFAULT_PAGE_THEME, PageTheme, toKitBlocks } from '@impact-common/shared/lists/section_kit';
 import { PageContentService } from 'src/app/common/services/data/page-content.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
-import { PageView, buildPageView } from 'src/app/shared/utils/page-sections';
+import { PageView, buildPageView, pairKitRows } from 'src/app/shared/utils/page-sections';
 
 type PreviewState =
   | { status: 'loading' }
   | { status: 'missing' }
-  | { status: 'ready'; view: PageView; theme: PageTheme; problems: string[] };
+  | { status: 'ready'; view: PageView; rows: PageContentBlock[][]; theme: PageTheme; problems: string[] };
 
 /**
  * WHAT THE KIT WOULD DO to one of the twelve original pages - without doing
@@ -86,9 +86,11 @@ export class KitPreviewPageComponent implements OnInit {
             return { status: 'missing' } as PreviewState;
           }
           const flipped = toKitBlocks(slug, doc.blocks as unknown as Record<string, unknown>[]);
+          const view = buildPageView({ blocks: flipped.blocks as unknown as PageContentBlock[] });
           return {
             status: 'ready',
-            view: buildPageView({ blocks: flipped.blocks as unknown as PageContentBlock[] }),
+            view,
+            rows: pairKitRows(view.sections),
             theme: DEFAULT_PAGE_THEME,
             problems: flipped.problems
           } as PreviewState;
