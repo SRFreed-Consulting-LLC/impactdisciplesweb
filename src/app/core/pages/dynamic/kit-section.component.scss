@@ -27,7 +27,10 @@
 .kit-section {
   --kit-ground: #{variables.$white};
   --kit-ink: #{variables.$black};
-  --kit-ink-soft: #6b6b6b;
+  // The original pages' copy grey, measured (#848b8a on Lunch and Learns).
+  // 2.9:1 on white - the purchased theme's own choice, kept because the kit
+  // must match the site before it can improve it.
+  --kit-ink-soft: #848b8a;
   --kit-rule: #{variables.$theme-color};
   --kit-btn-bg: #{variables.$blue};
   --kit-btn-ink: #{variables.$white};
@@ -40,6 +43,64 @@
   background-size: cover;
   background-position: center;
   color: var(--kit-ink);
+}
+
+// --------------------------------------------------- text-style options
+//
+// Three per-section choices (headingStyle / copyTone / bullets), each
+// DEFAULTING to the site's own measured style so a migrated page looks like
+// itself: heading Lato 900 at 50px over a 375px 5px rule, copy #848b8a,
+// grey dot bullets (the theme reset eats native markers, so dots are drawn).
+// Shane's call on the first Lunch and Learns comparison - "as close as we
+// can, but as options in the editor".
+
+.kit-hs--bold {
+  .kit-heading {
+    font-size: clamp(2rem, 4.2vw, 3.125rem); // 50px, the measured original
+    font-weight: 900;
+  }
+
+  .kit-rule {
+    width: min(60%, 375px);
+    height: 5px;
+  }
+}
+
+// On the LIGHT ground the soft tone is the original's exact #848b8a; the
+// other grounds keep their own soft tokens - grey-on-dark is a different
+// grey. Heading stays full ink either way.
+.kit-ct--soft .kit-copy,
+.kit-ct--soft .kit-copy ::ng-deep p,
+.kit-ct--soft .kit-copy ::ng-deep li {
+  color: var(--kit-ink-soft);
+}
+
+.kit-bl--dots .kit-copy ::ng-deep {
+  ul { list-style: none; padding-left: 0; }
+
+  li {
+    position: relative;
+    padding-left: 20px; // the measured original indent
+
+    // Drawn, not native: the purchased theme's reset strips ::marker
+    // site-wide, which is why kit lists had NO bullets at all until this.
+    &::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 0.55em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+  }
+}
+
+.kit-bl--none .kit-copy ::ng-deep {
+  ul { list-style: none; padding-left: 0; }
+  li { padding-left: 0; }
+  li::before { content: none; }
 }
 
 .kit--dark {

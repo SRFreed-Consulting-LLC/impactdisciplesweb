@@ -144,6 +144,23 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return `kit--${this.surface}`;
   }
 
+  /**
+   * The text-style options, as classes beside the surface class.
+   *
+   * ABSENT DEFAULTS TO THE SITE'S OWN STYLE - bold Lato-900 heading over the
+   * wide 5px rule, soft #848b8a copy, grey dot bullets - measured off the
+   * original pages, because Shane's verdict on the first comparison was
+   * "as close as we can, but as options". A getter returning a STRING is
+   * safe where the object getters were not: strings compare by value.
+   */
+  get styleClasses(): string {
+    return [
+      `kit-hs--${this.block.headingStyle ?? 'bold'}`,
+      `kit-ct--${this.block.copyTone ?? 'soft'}`,
+      `kit-bl--${this.block.bullets ?? 'dots'}`
+    ].join(' ');
+  }
+
   /** Only a 'photo' surface paints the block's image behind the words; every
    *  other surface uses that image as content. */
   get backgroundImage(): string | null {
