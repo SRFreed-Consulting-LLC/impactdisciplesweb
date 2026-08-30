@@ -8,7 +8,11 @@
   @switch (state.status) {
 
     @case ('ready') {
-      <main class="dynamic-page">
+      <!-- A DIV, not <main>: styles.scss gives main{padding-top:82.3px}
+     (182.3 on phones) for screens whose header is fixed. This header is in
+     flow, so the tag would draw a phantom white band between it and the
+     first section on EVERY created page. -->
+<div role="main" class="dynamic-page">
         <!-- typeIndex is what lets a section alternate which side its media
              sits on. Counted among sections OF ITS OWN TYPE and only over
              the ones a visitor can see, so switching one off never leaves
@@ -21,7 +25,7 @@
             [webConfig]="webConfig"
             [typeIndex]="state.view.typeIndex[section.key]"></app-kit-section>
         }
-      </main>
+      </div>
     }
 
     @case ('missing') {

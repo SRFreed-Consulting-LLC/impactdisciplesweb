@@ -44,6 +44,17 @@ export class KitPreviewPageComponent implements OnInit {
 
   webConfig: WebConfigModel | null = null;
 
+  /**
+   * True when the admin's Compare screen is framing this page (?framed=1).
+   *
+   * Framed, it wears the SAME site header and footer as the live page and
+   * drops the ribbon - the first thing Shane compared was the chrome, and
+   * two frames that start differently make every real difference harder to
+   * see. Visited directly it keeps the ribbon and no site chrome, so nobody
+   * mistakes a preview for the page it previews.
+   */
+  framed = false;
+
   constructor(
     private route: ActivatedRoute,
     private pageContent: PageContentService,
@@ -51,6 +62,7 @@ export class KitPreviewPageComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.framed = this.route.snapshot.queryParamMap.get('framed') === '1';
     this.state$ = this.route.paramMap.pipe(
       map((params) => params.get('slug') ?? ''),
       switchMap((slug) => this.load(slug))
