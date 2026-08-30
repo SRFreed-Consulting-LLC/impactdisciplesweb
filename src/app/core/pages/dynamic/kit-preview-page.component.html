@@ -1,0 +1,50 @@
+<!-- No app-home-header/footer: this page exists to be FRAMED beside the live
+     one in the admin's Compare view, and the chrome would be the same on both
+     sides - noise that pushes the actual differences below the fold. The
+     ribbon says what this is if anyone lands here directly. -->
+<div class="kit-preview__ribbon">
+  Section-kit preview &mdash; how this page would look after migrating.
+  Nothing about the real page has changed.
+</div>
+
+@if (state$ | async; as state) {
+  @switch (state.status) {
+
+    @case ('ready') {
+      @if (state.problems.length) {
+        <!-- Sections the flip could not map. Shown, never swallowed: a
+             preview that quietly renders a shorter page is how a section
+             gets lost with everyone watching it happen. -->
+        <div class="kit-preview__problems" role="alert">
+          <strong>{{ state.problems.length }} section(s) would be LOST by this migration:</strong>
+          <ul>
+            @for (problem of state.problems; track problem) {
+              <li>{{ problem }}</li>
+            }
+          </ul>
+        </div>
+      }
+
+      <main>
+        @for (section of state.view.sections; track section.key) {
+          <app-kit-section
+            [block]="section"
+            [theme]="state.theme"
+            [webConfig]="webConfig"
+            [typeIndex]="state.view.typeIndex[section.key]"></app-kit-section>
+        }
+      </main>
+    }
+
+    @case ('missing') {
+      <p class="kit-preview__missing">
+        No page content found for this address &mdash; the preview only works for
+        pages whose sections live in <code>page_content</code>.
+      </p>
+    }
+
+    @default {
+      <div class="kit-preview__loading" aria-busy="true"></div>
+    }
+  }
+}
