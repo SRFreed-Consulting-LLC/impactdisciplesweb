@@ -209,8 +209,10 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
 
   get gridGroundClasses(): string {
     // The variant class rides along so a grid can be styled per LOOK - the
-    // price tiles centre as a row, the picture rows go horizontal.
-    return `kit-gv--${this.variant} ${this.groundClasses(this.block.cardGround, this.block.cardInk)}`;
+    // price tiles centre as a row, the picture rows go horizontal - and the
+    // cards-per-row choice as a counted class (absent = as many as fit).
+    const perRow = this.block.cardsPerRow ? ` kit-cols--${this.block.cardsPerRow}` : '';
+    return `kit-gv--${this.variant}${perRow} ${this.groundClasses(this.block.cardGround, this.block.cardInk)}`;
   }
 
   /**
