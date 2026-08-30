@@ -1,164 +1,164 @@
-<section class="footer__area dark-soft-bg">
-  <div class="footer__top pt-100 pb-50" [style.backgroundImage]="'url(https://firebasestorage.googleapis.com/v0/b/impactdisciples-a82a8.appspot.com/o/Web-Pages%2FShared%2Ffooter.PNG?alt=media&token=d3761dba-c027-414a-8487-931627a7304f)'">
-    <div class="container custom-container-3">
-      <div class="row">
-        <div class="col-xl-4 col-lg-6 col-md-6 col-12">
-          <div class="footer__widget mb-30">
-            <div class="footer__widget-title mb-10">
-              <a routerLink="/">
-                Impact Discipleship Ministries
-              </a>
-            </div>
-            <div class="footer__title-links mb-25">
-              <a href="/give">Give </a><span>|</span><a href="/prayer-team"> Join the Prayer Team</a>
-            </div>
-            <div class="footer__widget-content">
-              <p>&#64;2024 Ken Adams All Right reserved.</p>
-              <div class="footer__contact">
-                <ul>
-                  <li>
-                    <div class="icon">
-                      <i class="fal fa-map-marker-alt"></i>
-                    </div>
-                    <div class="text">
-                      <span>Address: {{ impactDisciplesInfo.address }}</span>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="icon">
-                      <i class="fal fa-envelope-open-text"></i>
-                    </div>
-                    <div class="text">
-                      <span>Email: {{ impactDisciplesInfo.email }}</span>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="icon">
-                      <i class="fal fa-phone-alt"></i>
-                    </div>
-                    <div class="text">
-                      <span>Phone Number: {{ impactDisciplesInfo.phone }}</span>
-                    </div>
-                  </li>
-                </ul>
+<!-- Every word here comes from Firestore as of 2026-08-30 - `site_footer` for
+     the headings, columns and copyright, and `web_config` for the address,
+     phone, email and social links. It was all hardcoded before, and the
+     contact block was reading a SECOND copy of details that already lived in
+     an editable config, so changing the address in the admin changed nothing
+     on the site. See FooterComponent and SiteFooterService. -->
+@if (footer; as f) {
+  <section class="footer__area dark-soft-bg">
+    <div class="footer__top pt-100 pb-50" [style.backgroundImage]="'url(' + f.backgroundImage + ')'">
+      <div class="container custom-container-3">
+        <div class="row">
+          <div class="col-xl-4 col-lg-6 col-md-6 col-12">
+            <div class="footer__widget mb-30">
+              <div class="footer__widget-title mb-10">
+                <a routerLink="/">
+                  {{ f.brandTitle }}
+                </a>
+              </div>
+              <div class="footer__title-links mb-25">
+                @for (link of f.brandLinks; track link.title; let last = $last) {
+                  @if (link.external) {
+                    <a [href]="link.href" target="_blank" rel="noopener">{{ link.title }}</a>
+                  } @else {
+                    <a [href]="link.href">{{ link.title }}</a>
+                  }
+                  @if (!last) {
+                    <span>|</span>
+                  }
+                }
+              </div>
+              <div class="footer__widget-content">
+                <p>{{ f.attribution }}</p>
+                <div class="footer__contact">
+                  <ul>
+                    <li>
+                      <div class="icon">
+                        <i class="fal fa-map-marker-alt"></i>
+                      </div>
+                      <div class="text">
+                        <span>Address: {{ addressLine }}</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="icon">
+                        <i class="fal fa-envelope-open-text"></i>
+                      </div>
+                      <div class="text">
+                        <span>Email: {{ config?.email }}</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="icon">
+                        <i class="fal fa-phone-alt"></i>
+                      </div>
+                      <div class="text">
+                        <span>Phone Number: {{ config?.phone }}</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-xl-2 col-lg-3 col-md-3 col-12">
-          <div class="footer__widget mb-30">
-            <div class="footer__widget-title">
-              <h5>Information</h5>
-            </div>
-            <div class="footer__widget-content">
-              <div class="footer__links">
-                <ul>
-                  <li><a href="/events">Events</a></li>
-                  <li><a href="/store">Shop</a></li>
-                  <li><a href="/team">Meet the Team</a></li>
-                  <li><a href="/about-us">About Us</a></li>
-                  <li><a href="/private-policy">Privacy Policy</a></li>
-                  <li><a href="/terms">Terms & Condition</a></li>
-                </ul>
+
+          <!-- The link columns. Three today, but the count is the data's -
+               the widths below are what the old markup used for each. -->
+          @for (column of f.columns; track column.heading) {
+            <div class="col-xl-2 col-lg-3 col-md-3 col-12">
+              <div class="footer__widget mb-30">
+                <div class="footer__widget-title mb-25">
+                  <h5>{{ column.heading }}</h5>
+                </div>
+                <div class="footer__widget-content">
+                  <div class="footer__links">
+                    <ul>
+                      @for (link of column.links; track link.title) {
+                        <li>
+                          @if (link.external) {
+                            <a [href]="link.href" target="_blank" rel="noopener">{{ link.title }}</a>
+                          } @else {
+                            <a [href]="link.href">{{ link.title }}</a>
+                          }
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="col-xl-2 col-lg-3 col-md-3 col-12">
-          <div class="footer__widget mb-30">
-            <div class="footer__widget-title mb-25">
-              <h5>Training</h5>
-            </div>
-            <div class="footer__widget-content">
-              <div class="footer__links">
-                <ul>
-                  <li><a href="/events">Upcoming Training</a></li>
-                  <li><a href="/seminars">Seminars</a></li>
-                  <li><a href="/equipping-groups">Equipping Groups</a></li>
-                  <li><a href="/coaching-with-impact">Coaching with Impact</a></li>
-                  <li><a href="/lunch-and-learns">Lunch and Learns</a></li>
-                </ul>
+          }
+
+          <div class="col-xl-2 col-lg-3 col-md-6 col-12">
+            <div class="footer__widget mb-30">
+              <div class="footer__widget-title mb-25">
+                <h5>{{ f.newsletterHeading }}</h5>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-2 col-lg-3 col-md-3 col-12">
-          <div class="footer__widget mb-30">
-            <div class="footer__widget-title mb-25">
-              <h5>Free Resources</h5>
-            </div>
-            <div class="footer__widget-content">
-              <div class="footer__links">
-                <ul>
-                  <li><a href="/e-books">E-Books</a></li>
-                  <li><a href="/podcasts">Podcasts</a></li>
-                  <li><a href="/disciple-making-minute">Disciple-Making Minute</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-2 col-lg-3 col-md-6 col-12">
-          <div class="footer__widget mb-30">
-            <div class="footer__widget-title mb-25">
-              <h5>newsletter</h5>
-            </div>
-            <div class="footer__widget-content">
-              <p>Join over 1,000 people who get free and fresh content delivered automatically each time we publish.</p>
-              <div class="form-group">
-                <form (ngSubmit)="handleFormSubmit()">
-                  <input required type="name" name="firstName" class="form-control" [(ngModel)]="subscription.firstName" placeholder="First Name">
-                  <input required type="name" name="lastName" class="form-control" [(ngModel)]="subscription.lastName" placeholder="Last Name">
-                  <input required type="email" name="email" class="form-control" [(ngModel)]="subscription.email" placeholder="Email">
-                  <button class="ss-btn btnNewsletter" type="submit">Subscribe</button>
-                </form>
+              <div class="footer__widget-content">
+                <p>{{ f.newsletterBlurb }}</p>
+                <div class="form-group">
+                  <!-- The FORM is behaviour and stays in the app; only its
+                       words are editable. -->
+                  <form (ngSubmit)="handleFormSubmit()">
+                    <input required type="name" name="firstName" class="form-control" [(ngModel)]="subscription.firstName" placeholder="First Name">
+                    <input required type="name" name="lastName" class="form-control" [(ngModel)]="subscription.lastName" placeholder="Last Name">
+                    <input required type="email" name="email" class="form-control" [(ngModel)]="subscription.email" placeholder="Email">
+                    <button class="ss-btn btnNewsletter" type="submit">Subscribe</button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="footer__bottom footer__bottom-3">
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-6 col-lg-7 col-md-8">
-          <div class="footer__copyright footer__copyright-3">
-            <p>Copyright © SRFreedConsulting all rights reserved. For inquiries, <a href="mailto:shane.freed@srfreedconsulting.com" class="link">contact</a>.</p>
+
+    <div class="footer__bottom footer__bottom-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-6 col-lg-7 col-md-8">
+            <div class="footer__copyright footer__copyright-3">
+              <p>
+                {{ f.bottomText }}<!--
+                --->@if (f.bottomLinkLabel && f.bottomLinkUrl) {
+                  <a [href]="f.bottomLinkUrl" class="link">{{ f.bottomLinkLabel }}</a>.
+                }
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="col-xl-6 col-lg-5">
-          <div class="footer__social f-right">
-            <ul>
-              @if (impactDisciplesInfo.facebook) {
-                <li>
-                  <a [href]="impactDisciplesInfo.facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                </li>
-              }
-              @if (impactDisciplesInfo.twitter) {
-                <li>
-                  <a [href]="impactDisciplesInfo.twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-                </li>
-              }
-              @if (impactDisciplesInfo.youtube) {
-                <li>
-                  <a [href]="impactDisciplesInfo.youtube" target="_blank"><i class="fab fa-youtube"></i></a>
-                </li>
-              }
-              @if (impactDisciplesInfo.linkedin) {
-                <li>
-                  <a [href]="impactDisciplesInfo.linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                </li>
-              }
-              @if (impactDisciplesInfo.instagram) {
-                <li>
-                  <a [href]="impactDisciplesInfo.instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-                </li>
-              }
-            </ul>
+          <div class="col-xl-6 col-lg-5">
+            <div class="footer__social f-right">
+              <ul>
+                @if (config?.facebook) {
+                  <li>
+                    <a [href]="config?.facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                  </li>
+                }
+                @if (config?.twitter) {
+                  <li>
+                    <a [href]="config?.twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+                  </li>
+                }
+                @if (config?.youtube) {
+                  <li>
+                    <a [href]="config?.youtube" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                  </li>
+                }
+                @if (config?.linkedIn) {
+                  <li>
+                    <a [href]="config?.linkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+                  </li>
+                }
+                @if (config?.instagram) {
+                  <li>
+                    <a [href]="config?.instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                  </li>
+                }
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+}

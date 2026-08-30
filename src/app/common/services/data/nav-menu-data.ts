@@ -1,6 +1,22 @@
-import { MenuModel, MobileMenuModel } from "src/app/common/models/utils/nav-menu.model";
+import { MenuModel } from "src/app/common/models/utils/nav-menu.model";
 
-
+// THE BUNDLED FALLBACK MENU, and nothing else now (2026-08-29).
+//
+// The site's menu lives in Firestore (`site_navigation/main`) and is edited
+// from the admin - see SiteNavigationService. This array is what renders when
+// that document is missing or unreadable, because a site with NO NAVIGATION
+// on any page is the worst thing this change could ship. It also means a web
+// build can reach an environment before that environment is seeded.
+//
+// It is deliberately still here rather than deleted, and it is deliberately
+// temporary: once every environment is confirmed seeded, this file and the
+// fallback branch in SiteNavigationService go together.
+//
+// `mobileMenuData` USED TO LIVE HERE TOO and was deleted with this change. It
+// was a second hand-maintained copy for the mobile menu, and it had drifted:
+// its Store was a flat link with no dropdown, so Impact Merchandise could not
+// be reached from a phone at all, and Impact Golf Tournament was missing
+// entirely. Both menus render one list now. Do not reintroduce a second one.
 
 const menuData: MenuModel[] = [
   {
@@ -51,35 +67,3 @@ const menuData: MenuModel[] = [
 ]
 
 export default menuData;
-
-export const mobileMenuData: MobileMenuModel[] = [
-  { link: '/', title: 'Home', visible: true },
-  {
-    title: 'Training',
-    dropdownMenu: [
-      { link: '/seminars', title: 'Seminars', visible: true },
-      { link: '/equipping-groups', title: 'Equipping Groups', visible: true },
-      { link: '/impact-groups', title: 'Find an Impact Group', visible: true },
-      { link: '/coaching-with-impact', title: 'Coaching with Impact', visible: true },
-      { link: '/lunch-and-learns', title: 'Lunch and Learns', visible: true },
-      { link: '/events', title: 'Upcoming Training', visible: true }
-    ],
-    visible: true,
-  },
-  {
-    title: 'Resources',
-    dropdownMenu: [
-      { link: '/e-books', title: 'E-Books', visible: true },
-      { link: '/podcasts', title: 'Podcasts', visible: true },
-      { link: '/disciple-making-minute', title: 'Disciple-Making Minute', visible: true },
-      { link: '/monthly-newsletter', title: 'Monthly Newsletter', visible: true },
-      { link: '/store?category=spanish-resources', title: 'Spanish Resources', visible: true },
-    ],
-    visible: true
-  },
-  { link: '/store', title: 'Store', visible: true },
-  { link: '/give', title: 'Donate', visible: true },
-  { link: '/team', title: 'Team', visible: true },
-  { link: '/summit/2027', title: 'Summit 2027', external: false, visible: true, highlight: true },
-
-]

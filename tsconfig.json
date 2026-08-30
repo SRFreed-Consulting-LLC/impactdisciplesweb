@@ -16,6 +16,17 @@
       "@impact-common/*": ["./src/common/src/*"],
       "src/*": ["./src/*"]
     },
+    // Added 2026-08-29 so nav-menu-data.spec.ts can import the shared
+    // site-navigation-seed.json and prove the seeded menu converts to
+    // exactly what the site renders today. Without it that proof would have
+    // to be a hand-copied fixture, which would agree with itself forever.
+    "resolveJsonModule": true,
+    // Its companion, and needed for the same one import: a JSON module has
+    // only a default export as far as the bundler is concerned, so the spec
+    // must default-import it - and without this flag TypeScript rejects that
+    // while the bundler rejects the namespace form. Type-checking only; it
+    // changes no emitted code.
+    "allowSyntheticDefaultImports": true,
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,

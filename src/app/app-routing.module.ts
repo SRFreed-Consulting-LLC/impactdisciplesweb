@@ -25,7 +25,13 @@ function firstSegmentMatcher(allowedFirstSegments: string[]) {
   };
 }
 
-const routes: Routes = [
+// Exported for app-routing.spec.ts, which resolves every destination in the
+// shared route catalogue (SITE_ROUTES) against these matchers. The admin's
+// Navigation screen offers that catalogue as the list of pages you can put in
+// the menu, and the admin cannot read this router at runtime - so without a
+// check on this side, renaming a first segment here silently turns every menu
+// item pointing at it into a 404 nobody is told about.
+export const routes: Routes = [
   {
     matcher: (segments: UrlSegment[]) => segments.length === 0 ? { consumed: [] } : null,
     loadChildren: () => import('./core/home.module').then(m => m.HomeModule)

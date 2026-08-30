@@ -39,12 +39,18 @@ describe('FooterComponent subscribe flow', () => {
     // The real SubscribeFormService, built from the same three duck-typed
     // deps the component itself used to take. Only this construction
     // changed in the extraction - every assertion below is untouched.
+    // The footer gained two more dependencies on 2026-08-30 when its words
+    // moved to Firestore and its contact block moved onto web_config. Neither
+    // is reached by this suite - ngOnInit is never called here - so they are
+    // stubs, and every assertion below is still untouched.
     component = new FooterComponent(
       new SubscribeFormService(
         { createSubscription } as never,
         { notify: (o: { message: string; type: string }) => toasts.push(o) } as never,
         { logMessage } as never
-      )
+      ),
+      { footer$: of(undefined) } as never,
+      { getAll: () => Promise.resolve([]) } as never
     );
     component.subscription.firstName = 'Casey';
     component.subscription.lastName = 'Contact';

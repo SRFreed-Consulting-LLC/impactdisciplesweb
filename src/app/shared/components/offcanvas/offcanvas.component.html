@@ -9,27 +9,40 @@
     <!-- side-mobile-menu start -->
     <nav class="side-mobile-menu d-block d-lg-none mm-menu">
       <ul>
-        @for (menu of mobileMenuData; track menu; let i = $index) {
-          @if (menu.dropdownMenu) {
+        <!-- Renders the SAME list as the desktop header (2026-08-29) - see
+        OffcanvasComponent. Each link asks the same three questions the
+        header asks, in the same order: off-site, internal-with-a-query, or
+        a plain route. The children loop used to ask NONE of them and always
+        used [routerLink], which is why an off-site child could not be put
+        in a mobile dropdown at all - it would have tried to route to
+        asbshops.com inside the app. -->
+        @for (menu of menuItems; track menu; let i = $index) {
+          @if (menu.hasDropdown) {
             <li [ngClass]="'menu-item-has-children has-droupdown ' + (activeMenu === menu.title ? 'active' : '')">
               <a (click)="handleOpenMenu(menu.title)" (keydown.enter)="handleOpenMenu(menu.title)" (keydown.space)="handleOpenMenu(menu.title)" tabindex="0" role="button">{{ menu.title }}</a>
               <ul [ngClass]="'sub-menu ' + (activeMenu === menu.title ? 'active' : '')">
-                @for (sub_m of menu.dropdownMenu; track sub_m; let index = $index) {
+                @for (sub_m of menu.dropdownItems; track sub_m; let index = $index) {
                   <li>
-                    <a [routerLink]="sub_m.link">{{ sub_m.title }}</a>
+                    @if (sub_m.external) {
+                      <a [href]="sub_m.link" target="_blank" rel="noopener">{{ sub_m.title }}</a>
+                    } @else if (hasQuery(sub_m.link)) {
+                      <a [attr.href]="sub_m.link" (click)="go($event, sub_m.link)">{{ sub_m.title }}</a>
+                    } @else {
+                      <a [routerLink]="sub_m.link">{{ sub_m.title }}</a>
+                    }
                   </li>
                 }
               </ul>
             </li>
-          }
-          @if (!menu.dropdownMenu && !menu.external) {
+          } @else {
             <li>
-              <a [routerLink]="menu.link">{{ menu.title }}</a>
-            </li>
-          }
-          @if (!menu.dropdownMenu && menu.external) {
-            <li>
-              <a [href]="menu.link">{{ menu.title }}</a>
+              @if (menu.external) {
+                <a [href]="menu.link" target="_blank" rel="noopener">{{ menu.title }}</a>
+              } @else if (hasQuery(menu.link)) {
+                <a [attr.href]="menu.link" (click)="go($event, menu.link)">{{ menu.title }}</a>
+              } @else {
+                <a [routerLink]="menu.link">{{ menu.title }}</a>
+              }
             </li>
           }
         }
