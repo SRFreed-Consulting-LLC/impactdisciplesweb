@@ -18,7 +18,6 @@ import { EquippingGroupsLeadersComponent } from "./pages/equipping-groups/equipp
 import { EquippingGroupsChurchesComponent } from "./pages/equipping-groups/equipping-groups-churches/equipping-groups-churches.component";
 import { CoachingWithImpactComponent } from "./pages/coaching-with-impact/coaching-with-impact.component";
 import { DiscipleshipLibraryComponent } from "./pages/discipleship-library/discipleship-library.component";
-import { LunchAndLearnComponent } from "./pages/lunch-and-learn/lunch-and-learn.component";
 import { PrivatePolicyComponent } from "./pages/private-policy/private-policy.component";
 import { TermsOfServiceComponent } from "./pages/terms-of-service/terms-of-service.component";
 import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-reviews.component";
@@ -33,7 +32,6 @@ import { PrayerTeamComponent } from "./pages/prayer-team/prayer-team.component";
 // pages, and one component drawing both would be a switch inside a switch.
 import { EquippingSectionComponent } from "./pages/equipping-groups/equipping-section/equipping-section.component";
 import { SeminarsSectionComponent } from "./pages/seminars/seminars-section/seminars-section.component";
-import { LunchSectionComponent } from "./pages/lunch-and-learn/lunch-section/lunch-section.component";
 import { GiveSectionComponent } from "./pages/give/give-section/give-section.component";
 import { ContactSectionComponent } from "./pages/contact/contact-section/contact-section.component";
 import { LibrarySectionComponent } from "./pages/discipleship-library/library-section/library-section.component";
@@ -79,8 +77,6 @@ export const routes: Routes = [
     title: 'Coaching with Impact' },
   { path: 'discipleship-library', component: DiscipleshipLibraryComponent,
     title: 'The Impact Discipleship Library App' },
-  { path: 'lunch-and-learns', component: LunchAndLearnComponent,
-    title: 'Lunch and Learns' },
   {
     path: 'lunch-and-learn-form', component: FormPageComponent,
     title: 'Lunch and Learn Request Form',
@@ -133,7 +129,6 @@ export const routes: Routes = [
     EquippingGroupsChurchesComponent,
     CoachingWithImpactComponent,
     DiscipleshipLibraryComponent,
-    LunchAndLearnComponent,
     PrivatePolicyComponent,
     TermsOfServiceComponent,
     CustomerReviewsComponent,
@@ -142,7 +137,6 @@ export const routes: Routes = [
     PrayerTeamComponent,
     EquippingSectionComponent,
     SeminarsSectionComponent,
-    LunchSectionComponent,
     GiveSectionComponent,
     ContactSectionComponent,
     LibrarySectionComponent,

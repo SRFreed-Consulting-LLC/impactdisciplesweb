@@ -54,8 +54,13 @@ function claimedByDynamicPages(path: string): boolean {
 
 describe('the shared route catalogue against the real router', () => {
   it('routes every destination the admin offers as a page', () => {
+    // A destination is alive if a hand-written module claims it OR it has
+    // been CUT OVER to the kit - a single free segment the dynamic-pages
+    // route serves from page_content (lunch-and-learns was the first,
+    // 2026-08-30). Multi-segment paths can never ride the dynamic route, so
+    // a deleted '/summit/2027' still fails here as it must.
     const dead = SITE_ROUTES
-      .filter((route) => !claimedByALazyModule(route.path))
+      .filter((route) => !claimedByALazyModule(route.path) && !claimedByDynamicPages(route.path))
       .map((route) => `${route.key} -> ${route.path}`);
 
     expect(dead)
