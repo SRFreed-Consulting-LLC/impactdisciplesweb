@@ -133,6 +133,19 @@
 
         <div class="kit-grid" [class]="'kit-grid ' + gridGroundClasses">
           @for (tile of liveItems; track $index) {
+            @if (variant === 'pictureRows') {
+              <!-- The Seminars arrangement, measured: a dark rounded card
+                   with a 175px square picture on the left. A variant, not
+                   styling - no CSS turns a vertical tile into this. -->
+              <article class="kit-rowcard">
+                <img class="kit-rowcard__img" loading="lazy"
+                     [src]="tile.image?.url" [alt]="tile.title || ''">
+                <div class="kit-rowcard__body">
+                  <h3 class="kit-rowcard__title">{{ tile.title }}</h3>
+                  <p class="kit-rowcard__desc">{{ tile.description }}</p>
+                </div>
+              </article>
+            } @else {
             <article class="kit-tile">
               @if (variant === 'icon' && tile.icon) {
                 <i [class]="tile.icon + ' kit-tile__icon'" aria-hidden="true"></i>
@@ -164,6 +177,7 @@
                 <a class="kit-btn kit-tile__cta" [href]="tile.ctaUrl">{{ tile.ctaTitle }}</a>
               }
             </article>
+            }
           }
         </div>
       </div>

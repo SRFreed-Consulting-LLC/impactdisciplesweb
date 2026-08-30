@@ -168,6 +168,76 @@
   border-color: transparent;
 }
 
+// A column's passage headings in the brand blue - the audience pages'
+// right-side questions, measured at #588AC7.
+.kit-tt--brand .kit-columns__title {
+  color: #{variables.$blue};
+}
+
+// ------------------------------------------------------- grid variants
+
+// Price tiles, the Seminars way (measured): the pair sits CENTRED as a row
+// on the dark band, the title in the brand yellow at 28px, the price
+// enormous - 80px white. The tile keeps its box; text stays left, as the
+// original's does.
+.kit-gv--price {
+  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 420px));
+
+  .kit-tile__title {
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--kit-rule);
+  }
+
+  .kit-tile__price {
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 600;
+  }
+}
+
+// Picture rows, the Seminars picture cards (measured): dark rounded cards,
+// a 175px square picture on the left, yellow 22/800 title and 12px copy
+// beside it, two to a row.
+.kit-gv--pictureRows {
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+}
+
+.kit-rowcard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #{variables.$black};
+  border-radius: 10px;
+  overflow: hidden;
+
+  &__img {
+    flex: 0 0 175px;
+    width: 175px;
+    height: 175px;
+    object-fit: cover;
+  }
+
+  &__body {
+    padding: 16px 20px 16px 0;
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--kit-rule);
+  }
+
+  &__desc {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #{variables.$white};
+  }
+}
+
 // On the LIGHT ground the soft tone is the original's exact #848b8a; the
 // other grounds keep their own soft tokens - grey-on-dark is a different
 // grey. Heading stays full ink either way.
@@ -798,6 +868,11 @@
 // --------------------------------------------------------- responsive
 
 @media (max-width: 900px) {
+  .kit-gv--pictureRows { grid-template-columns: 1fr; }
+  .kit-rowcard { flex-direction: column; align-items: stretch; }
+  .kit-rowcard__img { width: 100%; flex-basis: auto; }
+  .kit-rowcard__body { padding: 16px 20px; }
+
   .kit-wrap { padding: 56px 20px; }
   .kit-hero { padding-top: 92px; padding-bottom: 92px; }
 

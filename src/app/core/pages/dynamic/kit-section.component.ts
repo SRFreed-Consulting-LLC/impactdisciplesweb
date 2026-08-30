@@ -190,20 +190,27 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     if (!ground || ground === 'none') {
       return '';
     }
-    const defaultInk = ground === 'dark' ? 'light' : 'dark';
+    // Brand defaults LIGHT, deliberately departing from the original: its
+    // grey-on-blue measures ~1.4:1 and Shane's verdict was "terrible".
+    // Light on this blue is 3.6:1 - and Dark text stays one click away.
+    const defaultInk = ground === 'panel' ? 'dark' : 'light';
     return `kit-card--${ground} kit-cardink--${ink ?? defaultInk}`;
   }
 
   get leftColClasses(): string {
-    return this.groundClasses(this.block.leftGround, this.block.leftInk);
+    return this.groundClasses(this.block.leftGround, this.block.leftInk)
+      + (this.block.leftTitleTone === 'brand' ? ' kit-tt--brand' : '');
   }
 
   get rightColClasses(): string {
-    return this.groundClasses(this.block.rightGround, this.block.rightInk);
+    return this.groundClasses(this.block.rightGround, this.block.rightInk)
+      + (this.block.rightTitleTone === 'brand' ? ' kit-tt--brand' : '');
   }
 
   get gridGroundClasses(): string {
-    return this.groundClasses(this.block.cardGround, this.block.cardInk);
+    // The variant class rides along so a grid can be styled per LOOK - the
+    // price tiles centre as a row, the picture rows go horizontal.
+    return `kit-gv--${this.variant} ${this.groundClasses(this.block.cardGround, this.block.cardInk)}`;
   }
 
   /**
