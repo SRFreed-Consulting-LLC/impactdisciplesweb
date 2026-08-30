@@ -70,6 +70,32 @@ export class FooterComponent implements OnInit, OnDestroy {
     return parts.filter((part) => !!part && String(part).trim()).join(', ');
   }
 
+  /**
+   * The phone number, spaced out to read as one.
+   *
+   * web_config stores it as bare digits - "6788549322" - while the hardcoded
+   * copy the footer used to render was already formatted, "+ 678 854 9322".
+   * Caught by comparing the live site against this one: everything else about
+   * the footer matched and the phone came out as a run of ten digits, which
+   * is a real regression rather than a difference worth accepting.
+   *
+   * Formatted here rather than reformatting the stored value, because the
+   * stored digits are what other things dial and match on.
+   */
+  get phoneLine(): string {
+    const raw = (this.config?.phone ?? '').trim();
+    const digits = raw.replace(/\D/g, '');
+    if (digits.length === 10) {
+      return `+ ${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+    }
+    if (digits.length === 11 && digits.startsWith('1')) {
+      return `+ ${digits.slice(1, 4)} ${digits.slice(4, 7)} ${digits.slice(7)}`;
+    }
+    // Anything else is left exactly as stored - a guess at an unfamiliar
+    // shape would be worse than showing what somebody typed.
+    return raw;
+  }
+
   handleFormSubmit() {
     return this.subscribeForm.submit('newsletter', this.subscription);
   }
