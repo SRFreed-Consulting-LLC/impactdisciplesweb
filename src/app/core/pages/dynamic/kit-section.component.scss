@@ -196,6 +196,7 @@
     margin: 0 0 10px;
     font-size: 28px;
     font-weight: 400;
+    line-height: 1.4; // the original's 39.2px box
     text-align: center;
     color: var(--kit-rule);
   }
@@ -204,6 +205,11 @@
     margin: 10px 0 20px;
     font-size: clamp(3rem, 5vw, 5rem);
     font-weight: 600;
+    // THE SQUISH. The theme's global p rule pins line-height to 24px, so the
+    // 80px digits sat in a 24px line box and overlapped the rows around
+    // them - margins correct, glyphs colliding. The original gives the
+    // price a full-height line.
+    line-height: 1;
     text-align: center;
   }
 
