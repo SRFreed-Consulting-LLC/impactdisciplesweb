@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { YouTubePlayerModule } from '@angular/youtube-player';
+import { FormRendererModule } from 'src/app/shared/form-renderer/form-renderer.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DynamicPageComponent } from './dynamic-page.component';
 import { KitSectionComponent } from './kit-section.component';
@@ -34,7 +36,12 @@ const routes: Routes = [
     SharedModule,
     // The click-to-play video two archetypes use. Loaded with this chunk
     // rather than eagerly: a page with no video never pays for it.
-    YouTubePlayerModule
+    YouTubePlayerModule,
+    // The Form Builder renderer a FORM section shows - the section stores
+    // WHICH form as an id picked by name in the admin, never typed.
+    FormRendererModule,
+    // ngModel, for the three-field sign-up form.
+    FormsModule
   ]
 })
 export class DynamicPageModule { }

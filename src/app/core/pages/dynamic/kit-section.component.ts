@@ -1,6 +1,12 @@
-import { Component, Input } from '@angular/core';
+import {
+  AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy
+} from '@angular/core';
+import Swiper from 'swiper';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { PageContentBlock, PageContentItem } from '@impact-common/shared/models/domain/page-content.model';
 import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
+import { TestimonialModel } from '@impact-common/shared/models/domain/testimonial.model';
+import { TESTIMONIAL_TYPES } from '@impact-common/shared/lists/testimonial_types.enum';
 import {
   DEFAULT_PAGE_THEME,
   PageTheme,
@@ -9,6 +15,13 @@ import {
   resolveSurface,
   variantDef
 } from '@impact-common/shared/lists/section_kit';
+import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
+import { SubscribeFormService, SubscriberDetails } from 'src/app/shared/utils/services/subscribe-form.service';
+// The transform is coaching-section's, imported rather than copied: the
+// paragraph-splitting rule ("blank lines are the break") is the shape the
+// migration wrote, and two copies of it is how one page's quotes wrap
+// differently from another's.
+import { CoachTestimonial, toCoachTestimonial } from '../coaching-with-impact/coaching-section/coaching-section.component';
 
 /**
  * ONE section of a staff-created page, whichever archetype it is.
@@ -26,11 +39,16 @@ import {
  * their look lives in 2,006 lines of page SCSS, 47 rules of which reach into
  * [innerHTML] content, and none of that has been carried across here.
  *
- * FIVE OF THE FOURTEEN ARCHETYPES so far - the ones a new page cannot be
- * built without. An archetype this build cannot draw renders NOTHING rather
- * than failing, the same rule the other nine follow: the data outlives the
- * build. That silence is exactly why `kit-section.component.spec.ts` renders
- * every archetype in the kit and fails if one produces no output.
+ * ALL FOURTEEN ARCHETYPES render (since 2026-08-30). An archetype a FUTURE
+ * build cannot draw still renders NOTHING rather than failing, the same rule
+ * the other nine components follow: the data outlives the build. That silence
+ * is exactly why `kit-section.component.spec.ts` renders every archetype in
+ * the kit and fails if one produces no output.
+ *
+ * THE TWO SERVICES INJECTED HERE are the two behaviours a section owns rather
+ * than reads: the quote carousel resolves its stored testimonial ids, and the
+ * sign-up form submits to a mailing list. Everything else arrives through
+ * inputs, handed down by the page so twenty sections cost one read.
  */
 @Component({
   selector: 'app-kit-section',
@@ -38,7 +56,7 @@ import {
   styleUrls: ['./kit-section.component.scss'],
   standalone: false
 })
-export class KitSectionComponent {
+export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input({ required: true }) block!: PageContentBlock;
 
   /** The page's prevailing look, which a section on 'inherit' takes. */
@@ -65,6 +83,44 @@ export class KitSectionComponent {
   readonly archetypes = SECTION_ARCHETYPE;
 
   isPlaying = false;
+
+  // ------------------------------------------------------------- carousel
+
+  /** The resolved quotes a CAROUSEL section shows. Empty until the read
+   *  lands, and empty forever on every other archetype. */
+  testimonials: CoachTestimonial[] = [];
+
+  private swiper: Swiper | undefined;
+
+  // -------------------------------------------------------------- sign-up
+
+  /** The sign-up form's fields - the same three the prayer page asks for.
+   *  WHICH details it asks for stays here in the site; only the list it
+   *  joins is the section's. */
+  signup: SubscriberDetails = { firstName: '', lastName: '', email: '' };
+  signupBusy = false;
+
+  constructor(
+    private host: ElementRef<HTMLElement>,
+    private testimonialService: TestimonialService,
+    private subscribeForm: SubscribeFormService
+  ) {}
+
+  ngOnChanges(): void {
+    if (this.block?.type === SECTION_ARCHETYPE.CAROUSEL) {
+      this.loadTestimonials(this.block.testimonialIds ?? []).catch(() => undefined);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.block?.type === SECTION_ARCHETYPE.CAROUSEL) {
+      setTimeout(() => this.initSwiper());
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.swiper?.destroy();
+  }
 
   playVideo(): void {
     this.isPlaying = true;
@@ -138,5 +194,139 @@ export class KitSectionComponent {
     }
     const value = (this.webConfig as unknown as Record<string, unknown>)[key];
     return typeof value === 'number' ? value : null;
+  }
+
+  // ------------------------------------------------------------- columns
+
+  /** The passages of a LIST_COLUMNS section, split by the ONE stored
+   *  position an entry may carry - see PageContentItem.column for why these
+   *  two columns are assigned rather than derived. */
+  get leftItems(): PageContentItem[] {
+    return this.liveItems.filter((item) => item.column !== 'right');
+  }
+
+  get rightItems(): PageContentItem[] {
+    return this.liveItems.filter((item) => item.column === 'right');
+  }
+
+  // ------------------------------------------ alternation, per entry
+
+  /** Timeline and article rows alternate by their own position - counted,
+   *  never stored, so dragging an entry cannot stack two the same way. */
+  entryOnLeft(i: number): boolean {
+    return i % 2 === 0;
+  }
+
+  /** The "01 / 02" chip on a numbered article row, counted from the order
+   *  exactly as the strip is - neither is stored. */
+  chip(i: number): string {
+    return String(i + 1).padStart(2, '0');
+  }
+
+  /** An .mp4 in the image slot plays muted inline instead of drawing as a
+   *  broken picture - the library feature rows' rule. */
+  isVideo(item: PageContentItem): boolean {
+    return /\.mp4(\?|$)/i.test(item.image?.url ?? '');
+  }
+
+  altFor(item: PageContentItem): string {
+    return item.title || item.heading || '';
+  }
+
+  // ------------------------------------------------------------- carousel
+
+  /**
+   * Coaching-section's rules, kept identical so the eventual migration is a
+   * data move and not a behaviour change: WHETHER a quote appears is its own
+   * isActive; the section holds only the ORDER, ids first, every other live
+   * quote appended by author; an id that no longer resolves is skipped.
+   */
+  private async loadTestimonials(ids: string[]): Promise<void> {
+    const all = await this.testimonialService.getAllByValue('type', TESTIMONIAL_TYPES.COACHING);
+    const live = (all ?? []).filter((t) => t.isActive);
+    if (!live.length) {
+      return;
+    }
+
+    const byId = new Map(live.map((t) => [t.id, t]));
+    const known = ids
+      .map((id) => byId.get(id))
+      .filter((t): t is TestimonialModel => !!t);
+    const knownIds = new Set(known.map((t) => t.id));
+    const rest = live
+      .filter((t) => !knownIds.has(t.id))
+      .sort((a, b) => (a.author ?? '').localeCompare(b.author ?? ''));
+
+    this.testimonials = [...known, ...rest].map((t) => toCoachTestimonial(t));
+
+    // The slides paint after this resolves - Swiper has to wait for that
+    // change-detection pass, the same setTimeout(0) coaching uses.
+    setTimeout(() => this.initSwiper());
+  }
+
+  private initSwiper(): void {
+    if (this.swiper || !this.testimonials.length) {
+      return;
+    }
+    // Scoped to THIS component's element, not a document-wide class lookup:
+    // the carousel is a singleton per page, but a selector that reaches the
+    // whole document is one carousel away from initialising somebody else's.
+    const el = this.host.nativeElement.querySelector<HTMLElement>('.kit-carousel__swiper');
+    if (!el) {
+      return;
+    }
+    this.swiper = new Swiper(el, {
+      modules: [Autoplay, Navigation, Pagination],
+      slidesPerView: 1,
+      spaceBetween: 24,
+      loop: true,
+      speed: 600,
+      autoHeight: true,
+      // Deliberately slow, same as Coaching: long quotes, and a reader
+      // part-way through one should not have it move under them.
+      autoplay: { delay: 12000, disableOnInteraction: true },
+      pagination: {
+        el: this.host.nativeElement.querySelector<HTMLElement>('.kit-carousel__pagination'),
+        clickable: true
+      },
+      navigation: {
+        nextEl: this.host.nativeElement.querySelector<HTMLElement>('.kit-carousel__next'),
+        prevEl: this.host.nativeElement.querySelector<HTMLElement>('.kit-carousel__prev')
+      },
+      breakpoints: {
+        992: { slidesPerView: 2 }
+      }
+    });
+  }
+
+  // ------------------------------------------------------ contact details
+
+  /** The postal address as one line, the same joining rule the footer uses -
+   *  the details come from Web Config, which already feeds it. */
+  get addressLine(): string {
+    const address = this.webConfig?.address;
+    if (!address) {
+      return '';
+    }
+    const parts = [address.address1, address.address2, address.city, address.state, address.zip];
+    return parts.filter((part) => !!part && String(part).trim()).join(', ');
+  }
+
+  // -------------------------------------------------------------- sign-up
+
+  /** Joins the list the SECTION names - 'prayer' on a migrated Prayer Team,
+   *  'newsletter' by default. The service owns the endpoint and the
+   *  success/failure messaging, exactly as it does for the prayer page. */
+  async handleSignup(): Promise<void> {
+    if (this.signupBusy) {
+      return;
+    }
+    this.signupBusy = true;
+    try {
+      await this.subscribeForm.submit(this.block.signupList ?? 'newsletter', this.signup);
+      this.signup = { firstName: '', lastName: '', email: '' };
+    } finally {
+      this.signupBusy = false;
+    }
   }
 }

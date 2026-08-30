@@ -1,7 +1,11 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 import { PageContentBlock } from '@impact-common/shared/models/domain/page-content.model';
 import { SECTION_ARCHETYPE, SECTION_KIT } from '@impact-common/shared/lists/section_kit';
+import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
+import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-form.service';
 import { KitSectionComponent } from './kit-section.component';
 
 /**
@@ -25,19 +29,30 @@ import { KitSectionComponent } from './kit-section.component';
  */
 
 /**
- * Archetypes the renderer can draw TODAY - five of the fourteen, the ones a
- * new page cannot be built without.
+ * Archetypes the renderer can draw TODAY - all fourteen since 2026-08-30.
  *
  * Kept as an explicit list rather than derived, so it fails in BOTH
  * directions: an archetype here that draws nothing is a missing `@case`, and
  * one absent from here that DOES draw is a renderer somebody added without
  * saying so. Either way the list stays honest, which a derived one could not.
+ * Its unimplemented-stays-silent counterpart below currently iterates an
+ * empty set, and STAYS - it is what catches archetype fifteen arriving in the
+ * kit without a renderer.
  */
 const IMPLEMENTED: readonly SECTION_ARCHETYPE[] = [
   SECTION_ARCHETYPE.HERO_BAND,
+  SECTION_ARCHETYPE.HERO_SPLIT,
   SECTION_ARCHETYPE.COPY_CENTRED,
   SECTION_ARCHETYPE.COPY_MEDIA,
   SECTION_ARCHETYPE.LIST_GRID,
+  SECTION_ARCHETYPE.LIST_ROWS,
+  SECTION_ARCHETYPE.LIST_ARTICLES,
+  SECTION_ARCHETYPE.LIST_COLUMNS,
+  SECTION_ARCHETYPE.TIMELINE,
+  SECTION_ARCHETYPE.CAROUSEL,
+  SECTION_ARCHETYPE.FORM,
+  SECTION_ARCHETYPE.CONTACT_DETAILS,
+  SECTION_ARCHETYPE.FIXED_BAND,
   SECTION_ARCHETYPE.PHOTO_BAND
 ];
 
@@ -59,6 +74,9 @@ function blockFor(archetype: SECTION_ARCHETYPE, variant?: string): PageContentBl
     ctaTitle2: 'Secondary',
     ctaUrl2: '/elsewhere',
     videoId: 'abc123',
+    formId: 'a-real-form-id',
+    signupList: 'newsletter',
+    testimonialIds: ['t1'],
     items: [
       { title: 'One', description: 'First', body: '<p>x</p>', icon: 'fas fa-heart', link: '/a', isActive: true },
       { title: 'Two', description: 'Second', body: '<p>y</p>', icon: 'fas fa-church', link: '/b', isActive: true }
@@ -73,7 +91,15 @@ describe('the kit section renderer', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [KitSectionComponent],
-      imports: [YouTubePlayerModule]
+      imports: [YouTubePlayerModule, FormsModule],
+      providers: [
+        { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
+        { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
+      ],
+      // app-dynamic-form and app-consulation-banner belong to modules too
+      // heavy to drag into a renderer spec; the schema lets them stand as
+      // inert elements, which is all a draws-something check needs.
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(KitSectionComponent);
@@ -85,14 +111,21 @@ describe('the kit section renderer', () => {
     return fixture.nativeElement as HTMLElement;
   }
 
-  /** What the section actually put on the page, ignoring the wrapper the
-   *  template always emits. An empty wrapper IS the failure. */
-  function drawnText(el: HTMLElement): string {
-    return (el.querySelector('.kit-section')?.textContent ?? '').trim();
+  /**
+   * Whether the section actually put anything on the page.
+   *
+   * Child ELEMENTS, not text: `@default {}` leaves only the comment nodes
+   * Angular's control flow always writes, so zero elements is exactly "the
+   * case is missing" - and FIXED_BAND legitimately renders one element with
+   * no text at all (`app-consulation-banner`), which a text check would
+   * falsely flag.
+   */
+  function drawn(el: HTMLElement): boolean {
+    return (el.querySelector('.kit-section')?.children.length ?? 0) > 0;
   }
 
   it('draws something for every archetype it claims to implement', () => {
-    const silent = IMPLEMENTED.filter((archetype) => !drawnText(render(blockFor(archetype))));
+    const silent = IMPLEMENTED.filter((archetype) => !drawn(render(blockFor(archetype))));
 
     expect(silent)
       .withContext(
@@ -111,7 +144,7 @@ describe('the kit section renderer', () => {
         continue;
       }
       for (const variant of def.variants) {
-        if (!drawnText(render(blockFor(def.archetype, variant.key)))) {
+        if (!drawn(render(blockFor(def.archetype, variant.key)))) {
           silent.push(`${def.archetype}/${variant.key}`);
         }
       }
@@ -126,7 +159,7 @@ describe('the kit section renderer', () => {
     // assertion above would be testing less than it claims.
     const unexpected = Object.values(SECTION_ARCHETYPE)
       .filter((archetype) => !IMPLEMENTED.includes(archetype))
-      .filter((archetype) => !!drawnText(render(blockFor(archetype))));
+      .filter((archetype) => drawn(render(blockFor(archetype))));
 
     expect(unexpected)
       .withContext('These now draw something but are not listed in IMPLEMENTED - add them.')
@@ -145,7 +178,15 @@ describe('the two axes a section is drawn on', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [KitSectionComponent],
-      imports: [YouTubePlayerModule]
+      imports: [YouTubePlayerModule, FormsModule],
+      providers: [
+        { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
+        { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
+      ],
+      // app-dynamic-form and app-consulation-banner belong to modules too
+      // heavy to drag into a renderer spec; the schema lets them stand as
+      // inert elements, which is all a draws-something check needs.
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
     fixture = TestBed.createComponent(KitSectionComponent);
   });
@@ -241,5 +282,96 @@ describe('the two axes a section is drawn on', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.kit-split--mediaLeft')).toBeNull();
+  });
+});
+
+describe('the behaviours the new archetypes own', () => {
+  let fixture: ComponentFixture<KitSectionComponent>;
+  let submitted: { list: string; who: { email: string } }[];
+
+  beforeEach(async () => {
+    submitted = [];
+    await TestBed.configureTestingModule({
+      declarations: [KitSectionComponent],
+      imports: [YouTubePlayerModule, FormsModule],
+      providers: [
+        { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
+        {
+          provide: SubscribeFormService,
+          useValue: {
+            submit: (list: string, who: { email: string }) => {
+              submitted.push({ list, who });
+              return Promise.resolve();
+            }
+          }
+        }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+    fixture = TestBed.createComponent(KitSectionComponent);
+  });
+
+  it('shows a Form Builder form ONLY when one has been picked', () => {
+    // A half-configured section must not draw a broken widget - the words
+    // render alone until a form is chosen in the admin.
+    fixture.componentInstance.block = blockFor(SECTION_ARCHETYPE.FORM, 'plain');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-dynamic-form'))
+      .withContext('a picked form did not render').not.toBeNull();
+
+    fixture.componentInstance.block = { ...blockFor(SECTION_ARCHETYPE.FORM, 'plain'), formId: undefined };
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-dynamic-form'))
+      .withContext('an UNpicked form rendered a widget anyway').toBeNull();
+  });
+
+  it('signs up to the list the SECTION names', async () => {
+    fixture.componentInstance.block = { ...blockFor(SECTION_ARCHETYPE.FORM, 'mailingList'), signupList: 'prayer' };
+    fixture.componentInstance.signup = { firstName: 'A', lastName: 'B', email: 'a@b.c' };
+
+    await fixture.componentInstance.handleSignup();
+
+    expect(submitted.length).toBe(1);
+    expect(submitted[0].list).toBe('prayer');
+    expect(submitted[0].who.email).toBe('a@b.c');
+    // And the fields clear, so a second visitor at a kiosk does not inherit
+    // the first one's details.
+    expect(fixture.componentInstance.signup.email).toBe('');
+  });
+
+  it('defaults an unset list to the newsletter, never to prayer', async () => {
+    // The generic case. Joining the PRAYER team is a commitment someone must
+    // choose; the newsletter is the list "sign up" plainly means.
+    fixture.componentInstance.block = { ...blockFor(SECTION_ARCHETYPE.FORM, 'mailingList'), signupList: undefined };
+    fixture.componentInstance.signup = { firstName: 'A', lastName: 'B', email: 'a@b.c' };
+
+    await fixture.componentInstance.handleSignup();
+
+    expect(submitted[0].list).toBe('newsletter');
+  });
+
+  it('splits a two-column section by the STORED column, defaulting left', () => {
+    fixture.componentInstance.block = {
+      ...blockFor(SECTION_ARCHETYPE.LIST_COLUMNS, 'twoColumn'),
+      items: [
+        { title: 'Facts', isActive: true, column: 'left' },
+        { title: 'Pitch', isActive: true, column: 'right' },
+        { title: 'Unassigned', isActive: true }
+      ] as never
+    };
+
+    expect(fixture.componentInstance.leftItems.map((i) => i.title)).toEqual(['Facts', 'Unassigned']);
+    expect(fixture.componentInstance.rightItems.map((i) => i.title)).toEqual(['Pitch']);
+  });
+
+  it('counts the numbered rows chip from position, zero-padded', () => {
+    expect(fixture.componentInstance.chip(0)).toBe('01');
+    expect(fixture.componentInstance.chip(11)).toBe('12');
+  });
+
+  it('treats an .mp4 in the image slot as a video, case-insensitively', () => {
+    const item = (url: string) => ({ title: 't', isActive: true, image: { url } }) as never;
+    expect(fixture.componentInstance.isVideo(item('https://x/clip.MP4?alt=media'))).toBeTrue();
+    expect(fixture.componentInstance.isVideo(item('https://x/pic.jpg'))).toBeFalse();
   });
 });

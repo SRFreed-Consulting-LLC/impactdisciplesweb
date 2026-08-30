@@ -184,6 +184,317 @@
       </div>
     }
 
+    <!-- Copy on one side, a product shot on the other. The reader-app hero's
+         layout; the only archetype using the `note` field. -->
+    @case (archetypes.HERO_SPLIT) {
+      <div class="kit-wrap kit-split kit-herosplit">
+        <div class="kit-split__copy">
+          @if (block.subheading) {
+            <p class="kit-eyebrow">{{ block.subheading }}</p>
+          }
+          <h1 class="kit-herosplit__title" [innerHTML]="block.heading"></h1>
+          <hr class="kit-rule">
+          @if (block.body) {
+            <div class="kit-copy" [innerHTML]="block.body"></div>
+          }
+          @if (block.ctaTitle) {
+            <div class="kit-actions">
+              <a class="kit-btn" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+            </div>
+          }
+          @if (block.note) {
+            <p class="kit-herosplit__note">{{ block.note }}</p>
+          }
+        </div>
+        <div class="kit-split__media">
+          <img class="kit-img" [src]="block.image?.url" [alt]="block.image?.name || ''" loading="eager">
+        </div>
+      </div>
+    }
+
+    <!-- One row per item: a button on the left, a line saying what it is. -->
+    @case (archetypes.LIST_ROWS) {
+      <div class="kit-wrap">
+        @if (block.heading) {
+          <h2 class="kit-heading kit-heading--centre" [innerHTML]="block.heading"></h2>
+          <hr class="kit-rule kit-rule--centre">
+        }
+        <div class="kit-rows">
+          @for (row of liveItems; track $index) {
+            <div class="kit-rows__row">
+              <a class="kit-btn kit-btn--ghost kit-rows__btn" [href]="row.link">{{ row.title }}</a>
+              <p class="kit-rows__desc">{{ row.description }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- A full-width row per item, the media swapping sides as it goes down -
+         by position, never stored. The numbered variant adds the jump strip
+         (built from the SAME list, so it cannot fall out of step) and a
+         counted chip per row. -->
+    @case (archetypes.LIST_ARTICLES) {
+      @if (variant === 'numbered') {
+        <nav class="kit-strip" aria-label="What is on this page">
+          <div class="kit-wrap kit-strip__inner">
+            @for (row of liveItems; track $index) {
+              <span class="kit-strip__item">{{ row.title }}</span>
+            }
+          </div>
+        </nav>
+      }
+      <div class="kit-wrap">
+        @for (row of liveItems; track $index) {
+          <article class="kit-article" [class.kit-article--reverse]="!entryOnLeft($index)">
+            <div class="kit-article__media">
+              @if (isVideo(row)) {
+                <!-- [muted] as a PROPERTY, not the bare attribute: Angular
+                     sets attributes after the element exists, and `muted`
+                     only initialises the property at parse time - the
+                     attribute alone leaves video.muted false and the browser
+                     blocks the autoplay. The library rows' hard-won fix. -->
+                <video [src]="row.image?.url" [attr.aria-label]="altFor(row)"
+                       [muted]="true" autoplay loop playsinline preload="metadata"></video>
+              } @else {
+                <img loading="lazy" [src]="row.image?.url" [alt]="altFor(row)">
+              }
+            </div>
+            <div class="kit-article__copy">
+              @if (variant === 'numbered') {
+                <p class="kit-article__tag">{{ chip($index) }} &middot; {{ row.title }}</p>
+              }
+              <h3 class="kit-article__title">{{ row.heading || row.title }}</h3>
+              <hr class="kit-rule">
+              @if (row.description) {
+                <p class="kit-article__lede">{{ row.description }}</p>
+              }
+              @if (row.body) {
+                <div class="kit-copy" [innerHTML]="row.body"></div>
+              }
+              @if (row.ctaTitle) {
+                <a class="kit-btn" [href]="row.ctaUrl">{{ row.ctaTitle }}</a>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <!-- Headed passages in two columns YOU assign - the one stored position
+         an entry may carry, because these columns say different kinds of
+         thing rather than alternating. -->
+    @case (archetypes.LIST_COLUMNS) {
+      <div class="kit-wrap kit-columns">
+        <div class="kit-columns__col">
+          @for (item of leftItems; track $index) {
+            <ng-container *ngTemplateOutlet="passage; context: { $implicit: item }"></ng-container>
+          }
+        </div>
+        <div class="kit-columns__col">
+          @for (item of rightItems; track $index) {
+            <ng-container *ngTemplateOutlet="passage; context: { $implicit: item }"></ng-container>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Dated entries down a centre line, alternating by position. An entry
+         that names a year draws it as a marker above itself; the block's own
+         heading opens the run and its subheading closes it. -->
+    @case (archetypes.TIMELINE) {
+      <div class="kit-wrap kit-timeline">
+        @if (block.heading) {
+          <p class="kit-timeline__year">{{ block.heading }}</p>
+        }
+        <div class="kit-timeline__line">
+          @for (entry of liveItems; track $index) {
+            @if (entry.title) {
+              <p class="kit-timeline__year">{{ entry.title }}</p>
+            }
+            <div class="kit-timeline__row" [class.kit-timeline__row--flip]="!entryOnLeft($index)">
+              <div class="kit-timeline__copy">
+                <p>{{ entry.description }}</p>
+              </div>
+              <div class="kit-timeline__media">
+                @if (entry.image?.url) {
+                  <img loading="lazy" [src]="entry.image?.url" [alt]="entry.title || ''">
+                }
+              </div>
+            </div>
+          }
+        </div>
+        @if (block.subheading) {
+          <p class="kit-timeline__year">{{ block.subheading }}</p>
+        }
+      </div>
+    }
+
+    <!-- Quotes on a slider. The section stores only the ORDER - whether a
+         quote appears is its own Live switch on the Testimonials screen. -->
+    @case (archetypes.CAROUSEL) {
+      <div class="kit-wrap kit-carousel">
+        <div class="kit-carousel__head">
+          @if (block.subheading) {
+            <p class="kit-eyebrow">{{ block.subheading }}</p>
+          }
+          @if (block.heading) {
+            <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
+          }
+          <hr class="kit-rule kit-rule--centre">
+        </div>
+
+        <div class="kit-carousel__swiper swiper">
+          <div class="swiper-wrapper">
+            @for (testimonial of testimonials; track testimonial.name) {
+              <div class="swiper-slide">
+                <figure class="kit-quote">
+                  <i class="fas fa-quote-left kit-quote__mark" aria-hidden="true"></i>
+                  <blockquote class="kit-quote__body">
+                    @for (paragraph of testimonial.quote; track $index) {
+                      <p>{{ paragraph }}</p>
+                    }
+                  </blockquote>
+                  <figcaption class="kit-quote__who">
+                    <span class="kit-quote__name">{{ testimonial.name }}</span>
+                    @if (testimonial.role) {
+                      <span class="kit-quote__role">{{ testimonial.role }}</span>
+                    }
+                  </figcaption>
+                </figure>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="kit-carousel__controls">
+          <button type="button" class="kit-carousel__prev" aria-label="Previous testimonial">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+          </button>
+          <div class="kit-carousel__pagination"></div>
+          <button type="button" class="kit-carousel__next" aria-label="Next testimonial">
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Words around a form. plain/withCopy show a Form Builder form the
+         section PICKED (stored id, chosen by name, never typed); mailingList
+         is the three-field sign-up joining the list the section names. -->
+    @case (archetypes.FORM) {
+      <div class="kit-wrap"
+           [class.kit-formsplit]="variant === 'withCopy'">
+        @if (variant === 'mailingList') {
+          <div class="kit-signup">
+            @if (block.body) {
+              <div class="kit-copy kit-copy--centre" [innerHTML]="block.body"></div>
+            }
+            <form class="kit-signup__form" (ngSubmit)="handleSignup()">
+              <div class="kit-signup__fields">
+                <label class="kit-signup__field">
+                  <span>First Name <span class="kit-signup__req">*</span></span>
+                  <input required type="text" name="firstName" [(ngModel)]="signup.firstName">
+                </label>
+                <label class="kit-signup__field">
+                  <span>Last Name <span class="kit-signup__req">*</span></span>
+                  <input required type="text" name="lastName" [(ngModel)]="signup.lastName">
+                </label>
+                <label class="kit-signup__field">
+                  <span>Email <span class="kit-signup__req">*</span></span>
+                  <input required type="email" name="email" [(ngModel)]="signup.email">
+                </label>
+              </div>
+              <button class="kit-btn" type="submit" [disabled]="signupBusy">
+                {{ block.ctaTitle || 'Sign up' }}
+              </button>
+            </form>
+          </div>
+        } @else {
+          @if (variant === 'withCopy') {
+            <div class="kit-formsplit__copy">
+              @if (block.heading) {
+                <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
+                <hr class="kit-rule">
+              }
+              @if (block.body) {
+                <div class="kit-copy" [innerHTML]="block.body"></div>
+              }
+            </div>
+          } @else if (block.heading) {
+            <h2 class="kit-heading kit-heading--centre" [innerHTML]="block.heading"></h2>
+            <hr class="kit-rule kit-rule--centre">
+          }
+          <!-- No form picked yet renders the words alone - a half-configured
+               section must not draw a broken widget. -->
+          @if (block.formId) {
+            <div class="kit-form">
+              <app-dynamic-form [formId]="block.formId"
+                                [submitButtonText]="block.ctaTitle"></app-dynamic-form>
+            </div>
+          }
+        }
+      </div>
+    }
+
+    <!-- The address, email, phone and social links - all from Web Config,
+         which already feeds the footer. Only the heading and the passage are
+         the section's own. -->
+    @case (archetypes.CONTACT_DETAILS) {
+      <div class="kit-wrap kit-contact">
+        @if (block.heading) {
+          <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
+          <hr class="kit-rule">
+        }
+        <ul class="kit-contact__list">
+          @if (addressLine) {
+            <li>
+              <i class="fal fa-map-marker-alt" aria-hidden="true"></i>
+              <div><h6>Address</h6><span>{{ addressLine }}</span></div>
+            </li>
+          }
+          @if (webConfig?.email) {
+            <li>
+              <i class="fal fa-envelope-open-text" aria-hidden="true"></i>
+              <div><h6>Email</h6><span>{{ webConfig?.email }}</span></div>
+            </li>
+          }
+          @if (webConfig?.phone) {
+            <li>
+              <i class="fal fa-phone-alt" aria-hidden="true"></i>
+              <div><h6>Phone</h6><span>{{ webConfig?.phone }}</span></div>
+            </li>
+          }
+        </ul>
+        @if (block.body) {
+          <div class="kit-copy" [innerHTML]="block.body"></div>
+        }
+        <ul class="kit-contact__social">
+          @if (webConfig?.facebook) {
+            <li><a [href]="webConfig?.facebook" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a></li>
+          }
+          @if (webConfig?.twitter) {
+            <li><a [href]="webConfig?.twitter" aria-label="X"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+          }
+          @if (webConfig?.instagram) {
+            <li><a [href]="webConfig?.instagram" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+          }
+          @if (webConfig?.youtube) {
+            <li><a [href]="webConfig?.youtube" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a></li>
+          }
+          @if (webConfig?.linkedIn) {
+            <li><a [href]="webConfig?.linkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a></li>
+          }
+        </ul>
+      </div>
+    }
+
+    <!-- The shared consultation band. Nothing on it is edited; it is a
+         section only so it can be moved and switched off. -->
+    @case (archetypes.FIXED_BAND) {
+      <app-consulation-banner></app-consulation-banner>
+    }
+
     <!-- An archetype this build cannot draw. Skipped rather than crashing:
          the data outlives the build, and a newer admin may have written it.
          The silence is deliberate AND dangerous, which is why the spec
@@ -191,6 +502,31 @@
     @default {}
   }
 </section>
+
+<!-- ONE passage, used by both columns of LIST_COLUMNS. A passage can be any
+     of three things and often two at once: a heading over copy, a price line
+     whose AMOUNT comes from Web Config, and a button - one entry rather than
+     three types, so a button can be dragged away from the price it sits
+     under. The equipping pages' rule, kept identical for the migration. -->
+<ng-template #passage let-item>
+  @if (item.title && !item.amountKey) {
+    <h5 class="kit-columns__title" [innerHTML]="item.title"></h5>
+  }
+  @if (item.body) {
+    <div class="kit-copy" [innerHTML]="item.body"></div>
+  }
+  @if (item.amountKey && amount(item) !== null) {
+    <div class="kit-columns__price">
+      <h6>{{ item.title }}: ${{ amount(item) }}{{ item.amountSuffix }}</h6>
+      @if (item.description) {
+        <p><i>{{ item.description }}</i></p>
+      }
+    </div>
+  }
+  @if (item.ctaTitle) {
+    <a [href]="item.ctaUrl" class="kit-btn kit-btn--ghost kit-columns__cta">{{ item.ctaTitle }}</a>
+  }
+</ng-template>
 
 <!-- ONE video treatment, used by both archetypes that have one. Click to
      play: the poster is the block's own image, and the real player is only

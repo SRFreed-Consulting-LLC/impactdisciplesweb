@@ -298,6 +298,329 @@
 
 .kit-media--below { max-width: 860px; margin: 34px auto 0; }
 
+// ----------------------------------------------------------- hero split
+
+.kit-herosplit {
+  padding-top: 96px;
+  padding-bottom: 96px;
+
+  &__title {
+    margin: 0;
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    line-height: 1.1;
+    color: var(--kit-ink);
+  }
+
+  &__note {
+    margin: 12px 0 0;
+    font-size: 0.9rem;
+    color: var(--kit-ink-soft);
+  }
+}
+
+// ------------------------------------------------------- labelled rows
+
+.kit-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 34px;
+}
+
+.kit-rows__row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 2fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.kit-rows__btn { text-align: center; }
+.kit-rows__desc { margin: 0; color: var(--kit-ink); }
+
+// ------------------------------------------------------ article rows
+
+.kit-strip {
+  border-bottom: 1px solid var(--kit-tile-line);
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 26px;
+    justify-content: center;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  &__item {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kit-ink-soft);
+  }
+}
+
+.kit-article {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  padding: 34px 0;
+
+  // Same order trick as the split - one copy of everything, sides swapped
+  // from the entry's POSITION, never a stored field.
+  &--reverse {
+    .kit-article__media { order: 2; }
+    .kit-article__copy { order: 1; }
+  }
+
+  &__media img,
+  &__media video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+  }
+
+  &__tag {
+    margin: 0 0 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kit-ink-soft);
+  }
+
+  &__title { margin: 0; font-size: 1.5rem; color: var(--kit-ink); }
+  &__lede { margin: 0 0 10px; color: var(--kit-ink-soft); }
+}
+
+// ---------------------------------------------------------- two columns
+
+.kit-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+
+  &__col { display: flex; flex-direction: column; gap: 14px; }
+  &__title { margin: 8px 0 0; font-size: 1.15rem; color: var(--kit-ink); }
+  &__price h6 { margin: 0; font-size: 1.05rem; color: var(--kit-ink); }
+  &__price p { margin: 2px 0 0; font-size: 0.9rem; color: var(--kit-ink-soft); }
+  &__cta { align-self: flex-start; }
+}
+
+// ------------------------------------------------------------- timeline
+
+.kit-timeline {
+  &__year {
+    margin: 0 0 8px;
+    text-align: center;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 600;
+    color: var(--kit-ink-soft);
+  }
+
+  &__line {
+    position: relative;
+    padding: 12px 0;
+
+    // The centre line the entries alternate around.
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto 0 50%;
+      width: 2px;
+      background: var(--kit-rule);
+    }
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+    padding: 18px 0;
+
+    &--flip {
+      .kit-timeline__copy { order: 2; }
+      .kit-timeline__media { order: 1; }
+    }
+  }
+
+  &__copy p { margin: 0; color: var(--kit-ink); line-height: 1.7; }
+
+  &__media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+  }
+}
+
+// ------------------------------------------------------------- carousel
+
+.kit-carousel {
+  &__head { text-align: center; margin-bottom: 30px; }
+
+  &__swiper { overflow: hidden; }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 26px;
+  }
+
+  &__prev,
+  &__next {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--kit-tile-line);
+    border-radius: 50%;
+    background: none;
+    color: var(--kit-ink);
+    cursor: pointer;
+
+    &:hover, &:focus-visible { border-color: var(--kit-rule); }
+  }
+
+  &__pagination {
+    display: flex;
+    gap: 6px;
+
+    ::ng-deep .swiper-pagination-bullet {
+      background: var(--kit-ink-soft);
+      opacity: 0.5;
+    }
+
+    ::ng-deep .swiper-pagination-bullet-active {
+      background: var(--kit-rule);
+      opacity: 1;
+    }
+  }
+}
+
+.kit-quote {
+  margin: 0;
+  padding: 26px;
+  background: var(--kit-tile-bg);
+  border: 1px solid var(--kit-tile-line);
+  border-radius: 3px;
+
+  &__mark { font-size: 1.4rem; color: var(--kit-rule); }
+
+  &__body {
+    margin: 10px 0 14px;
+    p { margin: 0 0 0.8em; color: var(--kit-ink); line-height: 1.7; }
+    p:last-child { margin-bottom: 0; }
+  }
+
+  &__who { display: flex; flex-direction: column; }
+  &__name { font-weight: 600; color: var(--kit-ink); }
+  &__role { font-size: 0.85rem; color: var(--kit-ink-soft); }
+}
+
+// ----------------------------------------------------------------- form
+
+.kit-formsplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.kit-form ::ng-deep {
+  // The form renderer arrives unstyled for this context; its inputs take the
+  // section's ink so a form on a dark band stays readable. Scoped under
+  // .kit-form - a bare ::ng-deep here would restyle every form on the site.
+  input, textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--kit-tile-line);
+    border-radius: 2px;
+    background: var(--kit-ground);
+    color: var(--kit-ink);
+  }
+}
+
+.kit-signup {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+
+  &__form { margin-top: 26px; }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 22px;
+    text-align: left;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: var(--kit-ink-soft);
+
+    input {
+      padding: 10px 12px;
+      border: 1px solid var(--kit-tile-line);
+      border-radius: 2px;
+      background: var(--kit-ground);
+      color: var(--kit-ink);
+    }
+  }
+
+  &__req { color: var(--kit-rule); }
+}
+
+// -------------------------------------------------------------- contact
+
+.kit-contact {
+  max-width: 720px;
+
+  &__list {
+    list-style: none;
+    margin: 0 0 22px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    li { display: flex; gap: 14px; align-items: flex-start; }
+    i { font-size: 1.2rem; color: var(--kit-rule); margin-top: 3px; }
+    h6 { margin: 0 0 2px; font-size: 0.95rem; color: var(--kit-ink); }
+    span { color: var(--kit-ink-soft); }
+  }
+
+  &__social {
+    list-style: none;
+    margin: 22px 0 0;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+
+    a {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--kit-tile-line);
+      border-radius: 50%;
+      color: var(--kit-ink);
+      text-decoration: none;
+
+      &:hover, &:focus-visible { border-color: var(--kit-rule); color: var(--kit-ink); }
+    }
+  }
+}
+
 // --------------------------------------------------------- responsive
 
 @media (max-width: 900px) {
@@ -305,10 +628,30 @@
   .kit-hero { padding-top: 92px; padding-bottom: 92px; }
 
   .kit-split,
-  .kit-band--figure {
+  .kit-band--figure,
+  .kit-article,
+  .kit-columns,
+  .kit-formsplit {
     grid-template-columns: 1fr;
     gap: 30px;
   }
+
+  .kit-rows__row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .kit-signup__fields { grid-template-columns: 1fr; }
+
+  // One column: media back under the copy every time, and the centre line
+  // means nothing with nothing either side of it.
+  .kit-article--reverse .kit-article__media,
+  .kit-article--reverse .kit-article__copy,
+  .kit-timeline__row--flip .kit-timeline__copy,
+  .kit-timeline__row--flip .kit-timeline__media { order: 0; }
+
+  .kit-timeline__line::before { display: none; }
+  .kit-timeline__row { grid-template-columns: 1fr; gap: 14px; }
 
   // On one column the media goes back under the copy every time. Alternating
   // sides means nothing in a single column, and honouring `order` there would
