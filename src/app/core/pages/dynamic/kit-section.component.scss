@@ -135,6 +135,17 @@
   font-size: 14px;
 }
 
+// The STATEMENT scale - Give's centred line under the boxes, measured at
+// 40px on a 60px line running the container. On the paragraphs themselves,
+// for the same global-p reason as large.
+.kit-cs--display .kit-copy,
+.kit-cs--display .kit-centred .kit-copy,
+.kit-cs--display .kit-copy ::ng-deep p {
+  font-size: 40px;
+  line-height: 1.5;
+  max-width: none;
+}
+
 // ---------------------------------------------------------- card grounds
 //
 // A box behind a column or a tile, from the SAME fixed palette as the
@@ -232,6 +243,45 @@
     align-self: stretch;
     margin-top: 12px;
     text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--kit-rule);
+    border-color: var(--kit-rule);
+    color: #{variables.$black};
+  }
+}
+
+// Icon tiles, the Give option boxes (measured): dark rounded-10 cards,
+// 30/20 padding, everything CENTRED - the 30/900 title first, the 60px
+// yellow icon under it, then the yellow uppercase button. The order is
+// drawn, not stored: the markup stays icon-title-copy-cta and flex order
+// arranges it, so the editor's list reads the same as every other tile's.
+.kit-gv--icon {
+  .kit-tile {
+    align-items: center;
+    text-align: center;
+    padding: 30px 20px;
+    border-radius: 10px;
+  }
+
+  .kit-tile__title {
+    order: 1;
+    font-size: 30px;
+    font-weight: 900;
+  }
+
+  .kit-tile__icon {
+    order: 2;
+    font-size: 60px;
+  }
+
+  .kit-copy { order: 3; }
+
+  .kit-btn.kit-tile__cta {
+    order: 4;
+    align-self: center;
+    margin-top: 6px;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
