@@ -728,10 +728,18 @@
         <h1 class="kit-hero__title" [innerHTML]="piece.text"></h1>
       } @else if (piece.level === 'minor') {
         <h3 class="kit-columns__title" [innerHTML]="piece.text"></h3>
+      } @else if (piece.level === 'display') {
+        <!-- Still an h2 to a screen reader; a SIZE, not a rank. The photo
+             band's figure treatment - a large number beside a paragraph. -->
+        <h2 class="kit-band__title kit-band__title--display" [innerHTML]="piece.text"></h2>
       } @else {
         <h2 class="kit-heading" [innerHTML]="piece.text"></h2>
       }
-      <hr class="kit-rule">
+      <!-- The rule belongs UNDER a heading, not under a figure - the band's
+           figure variant has never drawn one. -->
+      @if (piece.level !== 'display') {
+        <hr class="kit-rule">
+      }
     }
 
     @case ('eyebrow') {
@@ -835,26 +843,27 @@
     <!-- From Web Config, which already feeds the footer. ONE piece rather
          than six, because none of it is edited on the page. -->
     @case ('siteDetails') {
+      <!-- WRAPPED in .kit-contact, which is where the 720px measure and
+           the list styling live. Without it the details ran the full width
+           of their column and read as a different section. -->
+      <div class="kit-contact">
       <ul class="kit-contact__list">
         @if (addressLine) {
           <li>
             <i class="fal fa-map-marker-alt" aria-hidden="true"></i>
-            <h6>Address</h6>
-            <span>{{ addressLine }}</span>
+            <div><h6>Address</h6><span>{{ addressLine }}</span></div>
           </li>
         }
         @if (webConfig?.email) {
           <li>
             <i class="fal fa-envelope-open-text" aria-hidden="true"></i>
-            <h6>Email</h6>
-            <span>{{ webConfig?.email }}</span>
+            <div><h6>Email</h6><span>{{ webConfig?.email }}</span></div>
           </li>
         }
         @if (webConfig?.phone) {
           <li>
             <i class="fal fa-phone-alt" aria-hidden="true"></i>
-            <h6>Phone</h6>
-            <span>{{ webConfig?.phone }}</span>
+            <div><h6>Phone</h6><span>{{ webConfig?.phone }}</span></div>
           </li>
         }
       </ul>
@@ -875,6 +884,7 @@
           <li><a [href]="webConfig?.linkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a></li>
         }
       </ul>
+      </div>
     }
 
     <!-- NAMED from Web Config, never typed. A figure that cannot be resolved

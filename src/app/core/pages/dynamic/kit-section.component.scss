@@ -932,13 +932,30 @@
   // The form renderer arrives unstyled for this context; its inputs take the
   // section's ink so a form on a dark band stays readable. Scoped under
   // .kit-form - a bare ::ng-deep here would restyle every form on the site.
+  // A LIGHT FIELD ON ANY BAND. These took the section's own ground until
+  // 2026-08-31, which on a photo or dark band meant a near-black box: legible
+  // (white on #201f1f) but reading as disabled rather than as somewhere to
+  // type. Shane's call - a form should look like a form wherever it sits.
   input, textarea, select {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid var(--kit-tile-line);
     border-radius: 2px;
-    background: var(--kit-ground);
+    background: #fff;
+    color: #201f1f;
+  }
+
+  // The labels, on the other hand, DO take the section's ink - they are the
+  // band's own words, not part of the control.
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
     color: var(--kit-ink);
+  }
+
+  ::placeholder {
+    color: #6b7280;
   }
 }
 
@@ -1317,6 +1334,14 @@
    where the site holds it. */
 .kit-col--measure {
   max-width: 840px;
+}
+
+/* The figure treatment, as a heading LEVEL rather than an archetype: the
+   large number the photo band's figure variant puts beside a paragraph.
+   Same clamp the band itself used, so a migrated one is the same size. */
+.kit-band__title--display {
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 1;
 }
 
 /* Centred, which is all that made the centred band an archetype of its own.
