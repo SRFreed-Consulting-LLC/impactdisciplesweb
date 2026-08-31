@@ -26,7 +26,7 @@
                be added and the order changed. -->
           <div class="kit-actions">
             @for (button of liveItems; track $index) {
-              <a class="kit-btn" [href]="button.link">
+              <a class="kit-btn" [href]="href(button)">
                 {{ button.title }}
                 @if (button.icon) {
                   <i [class]="button.icon + ' kit-btn__icon'" aria-hidden="true"></i>
@@ -36,11 +36,11 @@
           </div>
         } @else if (block.ctaTitle || block.ctaTitle2) {
           <div class="kit-actions">
-            @if (block.ctaTitle) {
-              <a class="kit-btn" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+            @if (block.ctaTitle && href(block)) {
+              <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
             }
-            @if (block.ctaTitle2) {
-              <a class="kit-btn kit-btn--ghost" [href]="block.ctaUrl2">{{ block.ctaTitle2 }}</a>
+            @if (block.ctaTitle2 && href2(block)) {
+              <a class="kit-btn kit-btn--ghost" [href]="href2(block)">{{ block.ctaTitle2 }}</a>
             }
           </div>
         }
@@ -73,11 +73,11 @@
 
         @if (block.ctaTitle || block.ctaTitle2) {
           <div class="kit-actions kit-actions--centre">
-            @if (block.ctaTitle) {
-              <a class="kit-btn" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+            @if (block.ctaTitle && href(block)) {
+              <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
             }
-            @if (block.ctaTitle2) {
-              <a class="kit-btn kit-btn--ghost" [href]="block.ctaUrl2">{{ block.ctaTitle2 }}</a>
+            @if (block.ctaTitle2 && href2(block)) {
+              <a class="kit-btn kit-btn--ghost" [href]="href2(block)">{{ block.ctaTitle2 }}</a>
             }
           </div>
         }
@@ -101,9 +101,9 @@
           @if (block.body) {
             <div class="kit-copy" [innerHTML]="block.body"></div>
           }
-          @if (block.ctaTitle) {
+          @if (block.ctaTitle && href(block)) {
             <div class="kit-actions">
-              <a class="kit-btn" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+              <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
             </div>
           }
         </div>
@@ -173,8 +173,8 @@
               @if (tile.body) {
                 <div class="kit-copy" [innerHTML]="tile.body"></div>
               }
-              @if (tile.ctaTitle) {
-                <a class="kit-btn kit-tile__cta" [href]="tile.ctaUrl">{{ tile.ctaTitle }}</a>
+              @if (tile.ctaTitle && href(tile)) {
+                <a class="kit-btn kit-tile__cta" [href]="href(tile)">{{ tile.ctaTitle }}</a>
               }
             </article>
             }
@@ -212,9 +212,9 @@
           @if (block.body) {
             <div class="kit-copy" [innerHTML]="block.body"></div>
           }
-          @if (block.ctaTitle) {
+          @if (block.ctaTitle && href(block)) {
             <div class="kit-actions">
-              <a class="kit-btn" [href]="block.ctaUrl">{{ block.ctaTitle }}</a>
+              <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
             </div>
           }
           @if (block.note) {
@@ -237,7 +237,7 @@
         <div class="kit-rows">
           @for (row of liveItems; track $index) {
             <div class="kit-rows__row">
-              <a class="kit-btn kit-btn--ghost kit-rows__btn" [href]="row.link">{{ row.title }}</a>
+              <a class="kit-btn kit-btn--ghost kit-rows__btn" [href]="href(row)">{{ row.title }}</a>
               <p class="kit-rows__desc">{{ row.description }}</p>
             </div>
           }
@@ -287,8 +287,8 @@
               @if (row.body) {
                 <div class="kit-copy" [innerHTML]="row.body"></div>
               }
-              @if (row.ctaTitle) {
-                <a class="kit-btn" [href]="row.ctaUrl">{{ row.ctaTitle }}</a>
+              @if (row.ctaTitle && href(row)) {
+                <a class="kit-btn" [href]="href(row)">{{ row.ctaTitle }}</a>
               }
             </div>
           </article>
@@ -538,8 +538,8 @@
       }
     </div>
   }
-  @if (item.ctaTitle) {
-    <a [href]="item.ctaUrl" class="kit-btn kit-btn--ghost kit-columns__cta">{{ item.ctaTitle }}</a>
+  @if (item.ctaTitle && href(item)) {
+    <a [href]="href(item)" class="kit-btn kit-btn--ghost kit-columns__cta">{{ item.ctaTitle }}</a>
   }
 </ng-template>
 

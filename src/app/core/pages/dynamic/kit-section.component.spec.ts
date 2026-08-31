@@ -7,6 +7,7 @@ import { SECTION_ARCHETYPE, SECTION_KIT } from '@impact-common/shared/lists/sect
 import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-form.service';
 import { KitSectionComponent } from './kit-section.component';
+import { environment } from 'src/environments/environment';
 
 /**
  * DOES EACH ARCHETYPE ACTUALLY DRAW ANYTHING?
@@ -373,5 +374,43 @@ describe('the behaviours the new archetypes own', () => {
     const item = (url: string) => ({ title: 't', isActive: true, image: { url } }) as never;
     expect(fixture.componentInstance.isVideo(item('https://x/clip.MP4?alt=media'))).toBeTrue();
     expect(fixture.componentInstance.isVideo(item('https://x/pic.jpg'))).toBeFalse();
+  });
+
+  it('resolves a named destination to this build\'s address, never stored data', () => {
+    // THE BUG THIS EXISTS FOR. Give's three buttons and the Library's two
+    // store KEYS ('one', 'reader') - a security decision carried over from
+    // the bespoke pages - but the kit bound raw ctaUrl, so all five shipped
+    // as href="" and looked identical to working buttons through every
+    // visual approval pass (caught 2026-08-30).
+    const c = fixture.componentInstance;
+    expect(c.href({ link: 'one' })).toBe(environment.oneGiftUrl);
+    expect(c.href({ link: 'monthly' })).toBe(environment.monthlyGiftUrl);
+    expect(c.href({ link: 'partners' })).toBe(environment.impactPartnersGiftUrl);
+    expect(c.href({ ctaUrl: 'reader' })).toBe(environment.readerAppOrigin);
+  });
+
+  it('passes an ordinary stored address through untouched', () => {
+    const c = fixture.componentInstance;
+    expect(c.href({ ctaUrl: '/seminar-form' })).toBe('/seminar-form');
+    expect(c.href({ link: 'https://example.com/x' })).toBe('https://example.com/x');
+    expect(c.href2({ ctaUrl2: '/lunch-and-learn-form' })).toBe('/lunch-and-learn-form');
+  });
+
+  it('draws NO button when a destination cannot be resolved', () => {
+    // A dead button looks exactly like a working one - the whole reason the
+    // five dead ones survived. Nothing usable = nothing drawn.
+    expect(fixture.componentInstance.href({})).toBeNull();
+
+    fixture.componentInstance.block = {
+      key: 'grid', type: SECTION_ARCHETYPE.LIST_GRID, variant: 'icon',
+      items: [{ title: 'Broken', ctaTitle: 'GO', isActive: true }]
+    } as never;
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.textContent).toContain('Broken');
+    expect(el.querySelector('.kit-tile__cta'))
+      .withContext('a button with no resolvable destination reached the page')
+      .toBeNull();
   });
 });

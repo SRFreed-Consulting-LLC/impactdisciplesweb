@@ -17,22 +17,24 @@ import {
 } from '@impact-common/shared/lists/section_kit';
 import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 import { SubscribeFormService, SubscriberDetails } from 'src/app/shared/utils/services/subscribe-form.service';
+import { environment } from 'src/environments/environment';
+
+/** The destinations a button may NAME rather than address - see href(). */
+const KIT_LINK_DESTINATIONS: Record<string, string> = {
+  one: environment.oneGiftUrl,
+  monthly: environment.monthlyGiftUrl,
+  partners: environment.impactPartnersGiftUrl,
+  reader: environment.readerAppOrigin
+};
 
 /**
- * ONE section of a staff-created page, whichever archetype it is.
+ * ONE section of ANY page, whichever archetype it is.
  *
- * THE DIFFERENCE FROM THE OTHER NINE SECTION COMPONENTS. `about-section`,
- * `coaching-section` and the rest each draw ONE page's idiom, which is why
- * `banner` is a photo slider on About Us and a tinted call-to-action on
- * Coaching. This one draws a page nobody wrote a component for, so a type has
- * to mean one thing - and the differences that were carried by having nine
- * components are carried by `variant` and `surface` instead.
- *
- * IT DOES NOT REPLACE THEM YET. The twelve original pages still render
- * through their own components and are untouched by this file. Moving them
- * over is a separate piece of work that needs a rendered comparison first -
- * their look lives in 2,006 lines of page SCSS, 47 rules of which reach into
- * [innerHTML] content, and none of that has been carried across here.
+ * Since the 2026-08-30/31 cutover this is the ONLY section renderer: all
+ * twelve original pages flipped their documents to kit vocabulary and their
+ * bespoke page + section components are deleted. A type means one thing
+ * everywhere, and the differences those nine components used to carry are
+ * carried by `variant` and `surface` instead.
  *
  * ALL FOURTEEN ARCHETYPES render (since 2026-08-30). An archetype a FUTURE
  * build cannot draw still renders NOTHING rather than failing, the same rule
@@ -283,6 +285,37 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     }
     const value = (this.webConfig as unknown as Record<string, unknown>)[key];
     return typeof value === 'number' ? value : null;
+  }
+
+  // ------------------------------------------------------- destinations
+
+  /**
+   * WHERE A MONEY OR SIBLING-APP BUTTON GOES IS A KEY, NEVER A STORED URL.
+   *
+   * Give's three buttons store 'one'/'monthly'/'partners' and the Library's
+   * two store 'reader'; this build resolves them. That is a security
+   * decision carried over from the bespoke Give page: a stored payment URL
+   * would let anyone who can edit content redirect donations, and the
+   * reader's address belongs to whoever deploys that app, not to page copy.
+   *
+   * Everything else passes through untouched - an ordinary button's stored
+   * address ('/seminar-form', a full https URL) is not a destination key.
+   *
+   * Null when there is nothing usable, and the templates draw NO button in
+   * that case: a dead button looks exactly like a working one, which is how
+   * all five of these shipped dead through every visual approval pass
+   * (caught 2026-08-30 by reading the hrefs, not the pixels).
+   */
+  href(item: { link?: string; ctaUrl?: string }): string | null {
+    const stored = item.link ?? item.ctaUrl;
+    if (!stored) {
+      return null;
+    }
+    return KIT_LINK_DESTINATIONS[stored] ?? stored;
+  }
+
+  href2(item: { ctaUrl2?: string }): string | null {
+    return item.ctaUrl2 ? (KIT_LINK_DESTINATIONS[item.ctaUrl2] ?? item.ctaUrl2) : null;
   }
 
   // ------------------------------------------------------------- columns
