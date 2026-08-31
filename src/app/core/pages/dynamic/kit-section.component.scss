@@ -354,13 +354,27 @@
 // grounds looks identical. Reported as "I am not sure what the copy section
 // is for, it does not seem to change any of the wording", which was fair:
 // half of it did nothing.
+// EVERY piece of prose in the section, not only `.kit-copy`. The control is
+// "this section's copy colour", and a tile's description, a slide's line and
+// a row card's text are all copy - but they carry their own classes, so
+// until 2026-08-31 the control changed nothing at all on the archetypes
+// built out of entries. Reported twice as "soft grey or dark doesn't work",
+// and on a tiles or slider section it genuinely did not.
 .kit-ct--soft .kit-copy,
+.kit-ct--soft .kit-tile__desc,
+.kit-ct--soft .kit-slide__desc,
+.kit-ct--soft .kit-rows__desc,
+.kit-ct--soft .kit-rowcard__desc,
 .kit-ct--soft .kit-copy ::ng-deep p,
 .kit-ct--soft .kit-copy ::ng-deep li {
   color: var(--kit-ink-soft);
 }
 
 .kit-ct--dark .kit-copy,
+.kit-ct--dark .kit-tile__desc,
+.kit-ct--dark .kit-slide__desc,
+.kit-ct--dark .kit-rows__desc,
+.kit-ct--dark .kit-rowcard__desc,
 .kit-ct--dark .kit-copy ::ng-deep p,
 .kit-ct--dark .kit-copy ::ng-deep li {
   color: var(--kit-ink);
