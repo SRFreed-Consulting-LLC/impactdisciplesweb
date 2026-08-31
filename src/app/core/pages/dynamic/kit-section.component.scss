@@ -1069,3 +1069,113 @@
   // body must never scroll sideways because of one.
   table { display: block; overflow-x: auto; max-width: 100%; }
 }
+
+/* ---------------------------------------------------------------- slider */
+
+.kit-slider__swiper {
+  width: 100%;
+}
+
+.kit-slide {
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+/* The site's own slider darkens its photo so white type holds up over any
+   picture staff upload - the images are not text-free by contract. */
+.kit-slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.kit-slide__copy {
+  position: relative;
+  z-index: 1;
+  max-width: 840px;
+  color: #fff;
+}
+
+.kit-slide__title {
+  font-size: 57.6px;
+  line-height: 1.15;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 18px;
+}
+
+.kit-slide__desc {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #e2e2e2;
+  margin: 0 0 26px;
+  max-width: 62ch;
+}
+
+@media (max-width: 767px) {
+  .kit-slide {
+    min-height: 420px;
+  }
+
+  .kit-slide__title {
+    font-size: 34px;
+  }
+}
+
+/* -------------------------------------------------------------- countdown */
+
+.kit-clock {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  margin: 26px 0 30px;
+}
+
+.kit-clock__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 78px;
+}
+
+.kit-clock__n {
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  /* Digits change every second; proportional figures make the whole row
+     twitch as they do. */
+  font-variant-numeric: tabular-nums;
+}
+
+.kit-clock__l {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  margin-top: 8px;
+  opacity: 0.75;
+}
+
+.kit-clock__sep {
+  font-size: 40px;
+  line-height: 1;
+  opacity: 0.4;
+}
+
+@media (max-width: 767px) {
+  .kit-clock__n {
+    font-size: 34px;
+  }
+
+  .kit-clock__unit {
+    min-width: 56px;
+  }
+
+  .kit-clock__sep {
+    font-size: 24px;
+  }
+}

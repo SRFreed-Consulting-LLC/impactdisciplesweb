@@ -3,8 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, catchError, map, of, startWith, switchMap } from 'rxjs';
 import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { PageContentBlock } from '@impact-common/shared/models/domain/page-content.model';
-import { DEFAULT_PAGE_THEME, PageTheme, toKitBlocks } from '@impact-common/shared/lists/section_kit';
+import { DEFAULT_PAGE_THEME, PageTheme, toKitBlocks, toKitHomeBlocks } from '@impact-common/shared/lists/section_kit';
+import { combineLatest } from 'rxjs';
 import { PageContentService } from 'src/app/common/services/data/page-content.service';
+import { HomeSectionService } from 'src/app/common/services/data/home-sections.service';
+import { HomePageImageService } from 'src/app/common/services/data/home-page-images.service';
+import { EventService } from 'src/app/common/services/data/event.service';
+import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { PageView, buildPageView, pairKitRows } from 'src/app/shared/utils/page-sections';
 
@@ -55,14 +60,30 @@ export class KitPreviewPageComponent implements OnInit {
    */
   framed = false;
 
+  /** What the countdown counts to, read from the summit event - see
+   *  loadHome(). Empty until it lands; the band then draws without a clock. */
+  private summitDate = '';
+
   constructor(
     private route: ActivatedRoute,
     private pageContent: PageContentService,
+    private homeSections: HomeSectionService,
+    private homePageImages: HomePageImageService,
+    private events: EventService,
     private webConfigService: WebConfigService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.framed = this.route.snapshot.queryParamMap.get('framed') === '1';
+
+    // Before the stream below, so the first emission already has it.
+    this.summitDate = await this.events.getAll()
+      .then((all) => {
+        const summit = (all ?? []).find((e) => e.isSummit && e.isActive);
+        const ms = summit ? toMillis(summit.startDate) : 0;
+        return ms ? new Date(ms).toISOString() : '';
+      })
+      .catch(() => '');
     this.state$ = this.route.paramMap.pipe(
       map((params) => params.get('slug') ?? ''),
       switchMap((slug) => this.load(slug))
@@ -76,6 +97,13 @@ export class KitPreviewPageComponent implements OnInit {
   private load(slug: string): Observable<PreviewState> {
     if (!slug) {
       return of<PreviewState>({ status: 'missing' });
+    }
+    // HOME is a different collection with a different model - `home_sections`
+    // keyed by id, its slides in `home_page_images` - so it flips through its
+    // own transform. Same contract as the twelve: what this draws is what a
+    // migration would write.
+    if (slug === 'home') {
+      return this.loadHome();
     }
     return this.pageContent.dao
       .streamByDocId(slug, 'page_content', this.pageContent.fromFirestore)
@@ -98,5 +126,51 @@ export class KitPreviewPageComponent implements OnInit {
         catchError(() => of<PreviewState>({ status: 'missing' })),
         startWith<PreviewState>({ status: 'loading' })
       );
+  }
+
+  /**
+   * The home page, flipped through toKitHomeBlocks().
+   *
+   * THREE SOURCES, because that is what the home page is today: its sections,
+   * its slider's slides (a collection of their own), and the summit's start
+   * date, which is what the current countdown counts to. The migration will
+   * fold the first two together and store the date on the section; handing
+   * them in here is what lets the comparison show the real thing beforehand.
+   */
+  private loadHome(): Observable<PreviewState> {
+    return combineLatest([
+      this.homeSections.streamAll(),
+      this.homePageImages.streamAll()
+    ]).pipe(
+      map(([sections, slides]) => {
+        const live = [...(sections ?? [])]
+          .filter((s) => s.isActive)
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        const orderedSlides = [...(slides ?? [])]
+          .filter((s) => s.isActive)
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+          .map((s) => ({
+            // Slide -> entry. `link` carries the destination, the same field
+            // every other kit entry uses, so href() resolves it identically.
+            title: s.title, description: s.text, image: s.image,
+            ctaTitle: s.ctaTitle, link: s.ctaUrl ?? s.ctaDestination, isActive: true
+          }));
+
+        const flipped = toKitHomeBlocks(
+          live as unknown as Record<string, unknown>[],
+          { slides: orderedSlides as unknown as Record<string, unknown>[], countdownTo: this.summitDate }
+        );
+        const view = buildPageView({ blocks: flipped.blocks as unknown as PageContentBlock[] });
+        return {
+          status: 'ready',
+          view,
+          rows: pairKitRows(view.sections),
+          theme: DEFAULT_PAGE_THEME,
+          problems: flipped.problems
+        } as PreviewState;
+      }),
+      catchError(() => of<PreviewState>({ status: 'missing' })),
+      startWith<PreviewState>({ status: 'loading' })
+    );
   }
 }

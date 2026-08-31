@@ -137,16 +137,99 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     if (this.block?.type === SECTION_ARCHETYPE.CAROUSEL) {
       this.loadTestimonials(this.block.testimonialIds ?? []).catch(() => undefined);
     }
+    if (this.block?.type === SECTION_ARCHETYPE.COUNTDOWN) {
+      this.startCountdown();
+    }
   }
 
   ngAfterViewInit(): void {
     if (this.block?.type === SECTION_ARCHETYPE.CAROUSEL) {
       setTimeout(() => this.initSwiper());
     }
+    if (this.block?.type === SECTION_ARCHETYPE.SLIDER) {
+      setTimeout(() => this.initSlider());
+    }
   }
 
   ngOnDestroy(): void {
     this.swiper?.destroy();
+    this.stopCountdown();
+  }
+
+  // ------------------------------------------------------------- countdown
+
+  /** Days/hours/minutes/seconds remaining, or null when there is nothing to
+   *  count to - see startCountdown(). */
+  remaining: { days: number; hours: number; minutes: number; seconds: number } | null = null;
+
+  private ticker: ReturnType<typeof setInterval> | undefined;
+
+  /**
+   * Counts to the section's own `targetDate`.
+   *
+   * NOTHING IS DRAWN when the date is missing, unparseable, or already past.
+   * A row of zeros reads as "it starts now" and a negative count reads as a
+   * bug; both are worse than the band simply not carrying a clock. The
+   * heading and button still render, so a section whose date has gone by
+   * degrades into an ordinary banner rather than disappearing.
+   */
+  private startCountdown(): void {
+    this.stopCountdown();
+    const target = Date.parse(this.block.targetDate ?? '');
+    if (!Number.isFinite(target)) {
+      this.remaining = null;
+      return;
+    }
+    const tick = () => {
+      const left = target - Date.now();
+      if (left <= 0) {
+        this.remaining = null;
+        this.stopCountdown();
+        return;
+      }
+      const seconds = Math.floor(left / 1000);
+      this.remaining = {
+        days: Math.floor(seconds / 86400),
+        hours: Math.floor((seconds % 86400) / 3600),
+        minutes: Math.floor((seconds % 3600) / 60),
+        seconds: seconds % 60
+      };
+    };
+    tick();
+    this.ticker = setInterval(tick, 1000);
+  }
+
+  private stopCountdown(): void {
+    if (this.ticker) {
+      clearInterval(this.ticker);
+      this.ticker = undefined;
+    }
+  }
+
+  /** Two digits, so the clock does not jitter as numbers change width. */
+  pad(value: number): string {
+    return String(value).padStart(2, '0');
+  }
+
+  // ---------------------------------------------------------------- slider
+
+  private initSlider(): void {
+    if (this.swiper || this.liveItems.length < 1) {
+      return;
+    }
+    const el = this.host.nativeElement.querySelector<HTMLElement>('.kit-slider__swiper');
+    if (!el) {
+      return;
+    }
+    this.swiper = new Swiper(el, {
+      modules: [Autoplay, Pagination],
+      slidesPerView: 1,
+      loop: this.liveItems.length > 1,
+      // Slower than the quote carousel: a slide here carries a picture and a
+      // call to action, and the eye has further to travel than a sentence.
+      autoplay: { delay: 7000, disableOnInteraction: true },
+      pagination: { el: el.querySelector<HTMLElement>('.swiper-pagination') ?? undefined, clickable: true }
+    });
   }
 
   playVideo(): void {

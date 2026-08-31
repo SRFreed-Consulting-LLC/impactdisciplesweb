@@ -101,7 +101,22 @@
           @if (block.body) {
             <div class="kit-copy" [innerHTML]="block.body"></div>
           }
-          @if (block.ctaTitle && href(block)) {
+          <!-- buttonList: buttons as ENTRIES, so a third one is an add
+               rather than a code change. Same shape heroBand uses. -->
+          @if (variant === 'buttonList') {
+            <div class="kit-actions">
+              @for (button of liveItems; track $index) {
+                @if (href(button)) {
+                  <a class="kit-btn" [href]="href(button)">
+                    {{ button.title }}
+                    @if (button.icon) {
+                      <i [class]="button.icon + ' kit-btn__icon'" aria-hidden="true"></i>
+                    }
+                  </a>
+                }
+              }
+            </div>
+          } @else if (block.ctaTitle && href(block)) {
             <div class="kit-actions">
               <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
             </div>
@@ -508,6 +523,80 @@
          section only so it can be moved and switched off. -->
     @case (archetypes.FIXED_BAND) {
       <app-consulation-banner></app-consulation-banner>
+    }
+
+    <!-- Full-width slides that rotate. The rotation is the renderer's; the
+         slides are ordinary entries, so staff add and reorder them like any
+         other list. -->
+    @case (archetypes.SLIDER) {
+      <div class="kit-slider">
+        <div class="kit-slider__swiper swiper">
+          <div class="swiper-wrapper">
+            @for (slide of liveItems; track $index) {
+              <div class="swiper-slide kit-slide"
+                   [style.backgroundImage]="slide.image?.url ? 'url(' + slide.image?.url + ')' : null">
+                <div class="kit-wrap kit-slide__copy">
+                  @if (slide.title) {
+                    <h2 class="kit-slide__title" [innerHTML]="slide.title"></h2>
+                  }
+                  @if (slide.description) {
+                    <p class="kit-slide__desc">{{ slide.description }}</p>
+                  }
+                  @if (slide.ctaTitle && href(slide)) {
+                    <a class="kit-btn" [href]="href(slide)">{{ slide.ctaTitle }}</a>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+    }
+
+    <!-- A clock counting to the section's own date. When there is nothing to
+         count to - no date, an unreadable one, or one already past - the
+         clock is absent and the band still carries its heading and button,
+         rather than showing zeros or a negative. -->
+    @case (archetypes.COUNTDOWN) {
+      <div class="kit-wrap kit-centred kit-countdown">
+        @if (block.heading) {
+          <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
+        }
+        @if (block.body) {
+          <div class="kit-copy" [innerHTML]="block.body"></div>
+        }
+
+        @if (remaining) {
+          <div class="kit-clock" role="timer">
+            <div class="kit-clock__unit">
+              <span class="kit-clock__n">{{ remaining.days }}</span>
+              <span class="kit-clock__l">DAYS</span>
+            </div>
+            <span class="kit-clock__sep">:</span>
+            <div class="kit-clock__unit">
+              <span class="kit-clock__n">{{ pad(remaining.hours) }}</span>
+              <span class="kit-clock__l">HOURS</span>
+            </div>
+            <span class="kit-clock__sep">:</span>
+            <div class="kit-clock__unit">
+              <span class="kit-clock__n">{{ pad(remaining.minutes) }}</span>
+              <span class="kit-clock__l">MINUTES</span>
+            </div>
+            <span class="kit-clock__sep">:</span>
+            <div class="kit-clock__unit">
+              <span class="kit-clock__n">{{ pad(remaining.seconds) }}</span>
+              <span class="kit-clock__l">SECONDS</span>
+            </div>
+          </div>
+        }
+
+        @if (block.ctaTitle && href(block)) {
+          <div class="kit-actions kit-actions--centre">
+            <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
+          </div>
+        }
+      </div>
     }
 
     <!-- An archetype this build cannot draw. Skipped rather than crashing:

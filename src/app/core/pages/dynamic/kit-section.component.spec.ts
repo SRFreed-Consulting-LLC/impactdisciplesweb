@@ -54,7 +54,9 @@ const IMPLEMENTED: readonly SECTION_ARCHETYPE[] = [
   SECTION_ARCHETYPE.FORM,
   SECTION_ARCHETYPE.CONTACT_DETAILS,
   SECTION_ARCHETYPE.FIXED_BAND,
-  SECTION_ARCHETYPE.PHOTO_BAND
+  SECTION_ARCHETYPE.PHOTO_BAND,
+  SECTION_ARCHETYPE.SLIDER,
+  SECTION_ARCHETYPE.COUNTDOWN
 ];
 
 /** A block carrying every field, so no archetype renders empty merely because
@@ -402,6 +404,40 @@ describe('the behaviours the new archetypes own', () => {
       .querySelector('.kit-video__button')?.getAttribute('aria-label') ?? '';
     expect(label).toBe('Play WHAT YOU GET');
     expect(label).not.toContain('<');
+  });
+
+  it('counts toward the date the section carries', () => {
+    const c = fixture.componentInstance;
+    const inThreeDays = new Date(Date.now() + (3 * 86400 + 3600 + 120 + 5) * 1000);
+    c.block = { key: 'c', type: SECTION_ARCHETYPE.COUNTDOWN, targetDate: inThreeDays.toISOString() } as never;
+    c.ngOnChanges();
+
+    expect(c.remaining?.days).toBe(3);
+    expect(c.remaining?.hours).toBe(1);
+    c.ngOnDestroy();
+  });
+
+  it('draws NO clock for a missing, unreadable or past date', () => {
+    // Zeros read as "it starts now" and a negative count reads as a bug.
+    // Both are worse than a band with no clock on it - and the heading and
+    // button still render, so a lapsed countdown degrades into a banner.
+    const c = fixture.componentInstance;
+    for (const targetDate of [undefined, '', 'next Tuesday', '2020-01-01T00:00:00Z']) {
+      c.block = { key: 'c', type: SECTION_ARCHETYPE.COUNTDOWN, heading: 'SUMMIT', targetDate } as never;
+      c.ngOnChanges();
+      expect(c.remaining).withContext(`targetDate: ${targetDate}`).toBeNull();
+    }
+
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('.kit-clock')).toBeNull();
+    expect(el.textContent).withContext('the band itself must still draw').toContain('SUMMIT');
+    c.ngOnDestroy();
+  });
+
+  it('pads the clock so it does not jitter as the digits change', () => {
+    expect(fixture.componentInstance.pad(7)).toBe('07');
+    expect(fixture.componentInstance.pad(42)).toBe('42');
   });
 
   it('resolves a named destination to this build\'s address, never stored data', () => {
