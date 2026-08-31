@@ -1,0 +1,40 @@
+@use '../../../../assets/styles/theme/scss/variables';
+
+/* The comparison page's own chrome. Deliberately loud where it talks ABOUT
+   the preview (the ribbon, the lost-sections alert) and absent everywhere
+   else - the sections below it must look exactly as the kit draws them. */
+
+.kit-preview__ribbon {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 8px 16px;
+  background: variables.$theme-color;
+  color: variables.$black;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.kit-preview__problems {
+  margin: 16px;
+  padding: 14px 18px;
+  border: 2px solid #b3261e;
+  border-radius: 4px;
+  background: #fdeceb;
+  color: #7a1a13;
+
+  ul { margin: 8px 0 0; padding-left: 20px; }
+  li { margin-bottom: 4px; }
+}
+
+.kit-preview__missing {
+  margin: 0;
+  padding: 60px 24px;
+  text-align: center;
+  color: variables.$black;
+}
+
+.kit-preview__loading {
+  min-height: 60vh;
+}

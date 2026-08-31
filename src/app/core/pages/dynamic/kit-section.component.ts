@@ -214,10 +214,16 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return this.listLook?.type ?? this.block?.type ?? '';
   }
 
-  /** One to three. Anything else is data nobody meant, and a section with no
-   *  columns draws an empty band rather than throwing. */
+  /**
+   * How many columns the row is divided into.
+   *
+   * FULL-WIDTH COLUMNS DO NOT COUNT. A heading over two columns is a
+   * two-column section, not a three-column one - counting it would make the
+   * grid a third narrower and nothing would line up with the band above.
+   */
   get columnCount(): number {
-    return Math.min(3, Math.max(1, this.liveColumns.length || 1));
+    const shared = this.liveColumns.filter((column) => !column.full).length;
+    return Math.min(3, Math.max(1, shared || 1));
   }
 
   get liveColumns(): SectionColumn[] {
@@ -235,6 +241,7 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
    *  without knowing it exists. */
   columnClasses(column: SectionColumn): string {
     return [
+      column.full ? 'kit-col--full' : '',
       column.ground && column.ground !== 'none' ? `kit-card--${column.ground}` : '',
       column.ground && column.ground !== 'none'
         ? `kit-cardink--${column.ink ?? (column.ground === 'panel' ? 'dark' : 'light')}`

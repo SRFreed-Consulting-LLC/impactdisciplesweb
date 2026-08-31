@@ -1296,6 +1296,12 @@
   min-width: 0;
 }
 
+/* A heading over the columns rather than beside them. Spans whatever the
+   count happens to be, so adding a third column does not orphan it. */
+.kit-col--full {
+  grid-column: 1 / -1;
+}
+
 /* A painted column carries the padding the old two-column boxes had - the
    measured 20px - so a ground reads as a box rather than a colour change. */
 .kit-col[class*='kit-card--'] {

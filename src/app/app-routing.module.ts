@@ -52,7 +52,14 @@ const SEGMENTS = {
   // /equipping-groups already owns that word in this app's nav and URL space,
   // and the reader/admin apps already say "Impact Groups".
   groups: ['impact-groups'],
-  summit: ['summit', 'summit-preview']
+  summit: ['summit', 'summit-preview'],
+  // THE MIGRATION COMPARISON, BACK for a second migration (2026-08-31).
+  // /kit-preview/<slug> draws a page through the two new members - Section
+  // and List - in memory, without touching its data, so each page is
+  // approved by eye before anything is rewritten. It retired with the last
+  // of the twelve original pages this morning and returns for the same job
+  // one level up; it retires again when the last page migrates.
+  kitPreview: ['kit-preview']
 } as const;
 
 /** Every first segment a hand-written route claims, flat. What a staff-created
@@ -105,6 +112,15 @@ export const routes: Routes = [
   {
     matcher: firstSegmentMatcher(SEGMENTS.summit),
     loadChildren: () => import('./core/summit.module').then(m => m.SummitFeatureModule)
+  },
+  {
+    // The comparison pages - the SAME lazy module as the dynamic pages, so
+    // the section renderer ships once rather than twice. Matched on its own
+    // first segment because the greedy matcher below only claims URLs of
+    // ONE segment, and this address has two.
+    matcher: firstSegmentMatcher(SEGMENTS.kitPreview),
+    loadChildren: () => import('./core/pages/dynamic/dynamic-page.module')
+      .then(m => m.DynamicPageModule)
   },
   {
     // PAGES STAFF CREATED. Any SINGLE segment none of the matchers above
