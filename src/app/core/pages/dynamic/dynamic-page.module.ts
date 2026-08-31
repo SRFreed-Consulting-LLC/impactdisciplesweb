@@ -6,8 +6,7 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { FormRendererModule } from 'src/app/shared/form-renderer/form-renderer.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DynamicPageComponent } from './dynamic-page.component';
-import { KitSectionComponent } from './kit-section.component';
-import { KitPreviewPageComponent } from './kit-preview-page.component';
+import { KitSectionModule } from './kit-section.module';
 
 /**
  * Pages staff created, which have no route of their own.
@@ -25,19 +24,18 @@ const routes: Routes = [
   // greedy :slug - it draws an original page through the kit, in memory,
   // beside the live one in the admin's Compare view. Retires with the last
   // of the twelve.
-  { path: 'kit-preview/:slug', component: KitPreviewPageComponent },
   { path: ':slug', component: DynamicPageComponent }
 ];
 
 @NgModule({
   declarations: [
-    DynamicPageComponent,
-    KitSectionComponent,
-    KitPreviewPageComponent
+    DynamicPageComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    // The section renderer, shared with the home page - see KitSectionModule.
+    KitSectionModule,
     // Gives this module the site frame (app-home-header, app-footer) and the
     // Not Found page a missing slug renders.
     SharedModule,

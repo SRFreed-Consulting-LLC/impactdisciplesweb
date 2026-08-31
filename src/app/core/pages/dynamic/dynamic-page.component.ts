@@ -102,7 +102,12 @@ export class DynamicPageComponent implements OnInit {
       .catch(() => null);
   }
 
+  /** The segment being drawn, so toState() can decline the home page - see
+   *  its comment. */
+  private slug = '';
+
   private load(slug: string): Observable<DynamicPageState> {
+    this.slug = slug;
     if (!slug) {
       return of<DynamicPageState>({ status: 'missing' });
     }
@@ -124,7 +129,18 @@ export class DynamicPageComponent implements OnInit {
       );
   }
 
+  /**
+   * The home page's document is `page_content/home`, and its address is `/`.
+   *
+   * Without this, the dynamic route would ALSO serve it at `/home` - a second
+   * copy of the front page on a second URL, which is a duplicate for search
+   * engines and a confusing thing to link to. The home route owns the page;
+   * this one declines it.
+   */
   private toState(page: PageContentModel | null): DynamicPageState {
+    if (this.slug === 'home') {
+      return { status: 'missing' };
+    }
     // WITHOUT A TITLE IT IS ONE OF THE ORIGINAL TWELVE, which has its own
     // route and its own component. Drawing it here as well would give it a
     // second, differently-styled home at the same URL.

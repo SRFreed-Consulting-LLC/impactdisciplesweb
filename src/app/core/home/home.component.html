@@ -1,5 +1,31 @@
 <app-home-header></app-home-header>
-@for (section of sections$ | async; track section.id) {
-  <app-home-section [section]="section"></app-home-section>
+
+@if (state$ | async; as state) {
+  @if (state.status === 'ready') {
+    <!-- A DIV, not <main>: styles.scss gives main a top padding for pages
+         whose header is fixed, and this header is in flow - the tag would
+         draw a phantom white band above the slider. Same reason as the
+         dynamic page's own wrapper. -->
+    <div role="main" class="home-page">
+      @for (row of state.rows; track row[0].key) {
+        <div [class.kit-pair-row]="row.length > 1">
+          @for (section of row; track section.key) {
+            <app-kit-section
+              [class.kit-preview-off]="previewing && section.isActive === false"
+              [block]="section"
+              [theme]="state.theme"
+              [webConfig]="webConfig"
+              [typeIndex]="state.view.typeIndex[section.key]"></app-kit-section>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <!-- Deliberately not a spinner: the read is usually quicker than a
+         spinner's own fade-in. The height keeps the footer off the fold so
+         the page does not jump when the sections land. -->
+    <div class="home-page__loading" aria-busy="true"></div>
+  }
 }
+
 <app-footer></app-footer>
