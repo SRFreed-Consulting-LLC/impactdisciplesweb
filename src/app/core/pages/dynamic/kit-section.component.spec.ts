@@ -6,7 +6,7 @@ import {
   ContentPiece, ContentPieceKind, PageContentBlock
 } from '@impact-common/shared/models/domain/page-content.model';
 import {
-  CONTENT_PIECES, SECTION_ARCHETYPE, SECTION_KIT, SECTION_PRESETS
+  CONTENT_PIECES, SECTION_ARCHETYPE, SECTION_KIT
 } from '@impact-common/shared/lists/section_kit';
 import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-form.service';
@@ -611,43 +611,11 @@ describe('the pieces a section is built from', () => {
       .toEqual([]);
   });
 
-  it('draws something for every preset the Add menu offers', () => {
-    const silent: string[] = [];
-
-    for (const preset of SECTION_PRESETS) {
-      // Exactly what the Add menu writes, with each piece fattened by the
-      // fixture so a thin seed is not mistaken for a missing case.
-      setBlock({
-        key: 'k1',
-        type: SECTION_ARCHETYPE.SECTION,
-        variant: 'columns',
-        ...preset.seed,
-        columns: preset.seed.columns.map((column, ci) => ({
-          key: 'c' + ci,
-          pieces: column.pieces.map((piece) => ({
-            ...pieceFor(piece.kind as ContentPieceKind),
-            ...piece,
-            key: 'c' + ci + '-' + piece.kind
-          }))
-        })),
-        isActive: true
-      });
-
-      const el = fixture.nativeElement as HTMLElement;
-      const columns = Array.from(el.querySelectorAll('.kit-col'));
-      const empty = columns.length !== preset.seed.columns.length
-        || columns.some((column) => column.children.length === 0);
-
-      if (empty) {
-        silent.push(preset.key);
-      }
-    }
-
-    expect(silent)
-      .withContext('these presets place a section that draws blank columns')
-      .toEqual([]);
-  });
-
+  // A PRESET-COVERAGE TEST LIVED HERE until the presets were removed
+  // (2026-08-31): it placed each of the twelve and asserted the section it
+  // seeded actually drew. What it was really protecting - that a column of
+  // pieces renders - is covered by the piece-coverage test above, which is
+  // the more fundamental of the two and outlived it.
   it('draws something for every LIST look', () => {
     const looks = SECTION_KIT
       .find((def) => def.archetype === SECTION_ARCHETYPE.LIST)
