@@ -241,6 +241,27 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
    * without the track moving with it, the words would get the picture's
    * share. The same rule .kit-split has always followed.
    */
+  /**
+   * Whether one of the columns is a PICTURE column.
+   *
+   * Only then does the uneven split apply. Without this the ratio reached
+   * every two-column section, including the form band - whose two halves are
+   * even on the site, and came out 607/697 in the comparison.
+   */
+  get hasMediaColumn(): boolean {
+    return this.liveColumns
+      .filter((column) => !column.full)
+      .some((column) => this.isMediaColumn(column));
+  }
+
+  private isMediaColumn(column: SectionColumn): boolean {
+    const pieces = this.livePieces(column);
+    // `every` on an empty list is true, which would make an empty column
+    // read as a picture column.
+    return pieces.length > 0
+      && pieces.every((piece) => piece.kind === 'picture' || piece.kind === 'video');
+  }
+
   get mediaColumnFirst(): boolean {
     const shared = this.liveColumns.filter((column) => !column.full);
     const first = shared[0];

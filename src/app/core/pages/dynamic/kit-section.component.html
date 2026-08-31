@@ -609,6 +609,7 @@
          them, because the arrangement is data now rather than markup. -->
     @case (archetypes.SECTION) {
       <div [class]="'kit-wrap kit-cols kit-cols--' + columnCount"
+           [class.kit-cols--media]="hasMediaColumn"
            [class.kit-cols--mediaLeft]="mediaColumnFirst">
         @for (column of liveColumns; track column.key) {
           <div [class]="'kit-col ' + columnClasses(column)">

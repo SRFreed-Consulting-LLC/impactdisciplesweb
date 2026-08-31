@@ -998,10 +998,17 @@
 .kit-contact {
   max-width: 720px;
 
+  // INDENTED off the container edge (Shane, 2026-08-31). The details sat
+  // flush against the page gutter, which reads as the block having been
+  // forgotten rather than placed. On the LIST rather than on .kit-contact,
+  // because the archetype wraps its heading in that block and the migrated
+  // section does not - padding there would move the heading on one side
+  // only, and the comparison would start showing a difference this change
+  // did not intend.
   &__list {
     list-style: none;
     margin: 0 0 22px;
-    padding: 0;
+    padding: 0 0 0 24px;
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -1012,10 +1019,11 @@
     span { color: var(--kit-ink-soft); }
   }
 
+  // The social row follows the details it sits under.
   &__social {
     list-style: none;
     margin: 22px 0 0;
-    padding: 0;
+    padding: 0 0 0 24px;
     display: flex;
     gap: 10px;
 
@@ -1305,9 +1313,12 @@
   align-items: center;
 }
 
-.kit-cols--1 { grid-template-columns: 1fr; }
-.kit-cols--2 { grid-template-columns: 1fr 1fr; }
-.kit-cols--3 { grid-template-columns: 1fr 1fr 1fr; }
+/* Scoped under .kit-cols on purpose: the TILE grid already uses
+   .kit-cols--2/3/4 to say how many tiles sit in a row, which is a
+   different thing on a different element. */
+.kit-cols.kit-cols--1 { grid-template-columns: 1fr; }
+.kit-cols.kit-cols--2 { grid-template-columns: 1fr 1fr; }
+.kit-cols.kit-cols--3 { grid-template-columns: 1fr 1fr 1fr; }
 
 /* THE UNEVEN SPLIT the two-column bands have always had - media taking the
    larger share, ~700px of a 1600 screen. It is a section-level lever, so it
@@ -1315,8 +1326,10 @@
    survive as a value nothing reads, and every picture-beside-text band on
    the site would quietly become an even split. Which column is wider
    follows the picture, the same way .kit-split does. */
-.kit-ms--large .kit-cols--2 { grid-template-columns: 1fr 1.15fr; }
-.kit-ms--large .kit-cols--2.kit-cols--mediaLeft { grid-template-columns: 1.15fr 1fr; }
+.kit-ms--large .kit-cols.kit-cols--2.kit-cols--media { grid-template-columns: 1fr 1.15fr; }
+.kit-ms--large .kit-cols.kit-cols--2.kit-cols--media.kit-cols--mediaLeft {
+  grid-template-columns: 1.15fr 1fr;
+}
 
 .kit-col {
   min-width: 0;
@@ -1385,8 +1398,8 @@
 }
 
 @media (max-width: 991px) {
-  .kit-cols--2,
-  .kit-cols--3 {
+  .kit-cols.kit-cols--2,
+  .kit-cols.kit-cols--3 {
     grid-template-columns: 1fr;
     gap: 32px;
   }
