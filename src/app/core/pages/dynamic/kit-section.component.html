@@ -11,18 +11,50 @@
          heroes on the site today are already one shared component; this is
          that layout, drawn from the kit's own fields. -->
     @case (archetypes.HERO_BAND) {
-      <div class="kit-wrap kit-hero">
-        @if (block.subheading) {
-          <p class="kit-eyebrow">{{ block.subheading }}</p>
-        }
-        <h1 class="kit-hero__title" [innerHTML]="block.heading"></h1>
-        <hr class="kit-rule">
-        @if (block.body) {
-          <div class="kit-copy" [innerHTML]="block.body"></div>
-        }
+      @if (variant === 'besidePicture') {
+        <!-- The same hero, laid out beside a picture instead of over one.
+             Its own archetype until 2026-08-31, which made it look like a
+             duplicate of "text beside media" - it is not: this carries the
+             page's <h1> and there is one per page, which is what makes a
+             hero a hero. -->
+        <div class="kit-wrap kit-split kit-herosplit"
+             [class.kit-split--mediaLeft]="mediaLeft">
+          <div class="kit-split__copy">
+            @if (block.subheading) {
+              <p class="kit-eyebrow">{{ block.subheading }}</p>
+            }
+            <h1 class="kit-herosplit__title" [innerHTML]="block.heading"></h1>
+            <hr class="kit-rule">
+            @if (block.body) {
+              <div class="kit-copy" [innerHTML]="block.body"></div>
+            }
+            <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
+            @if (block.note) {
+              <p class="kit-herosplit__note">{{ block.note }}</p>
+            }
+          </div>
+          <div class="kit-split__media">
+            <!-- eager: this is above the fold on every page that has one. -->
+            <img class="kit-img" [src]="block.image?.url" [alt]="block.image?.name || ''" loading="eager">
+          </div>
+        </div>
+      } @else {
+        <div class="kit-wrap kit-hero">
+          @if (block.subheading) {
+            <p class="kit-eyebrow">{{ block.subheading }}</p>
+          }
+          <h1 class="kit-hero__title" [innerHTML]="block.heading"></h1>
+          <hr class="kit-rule">
+          @if (block.body) {
+            <div class="kit-copy" [innerHTML]="block.body"></div>
+          }
 
-        <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
-      </div>
+          <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
+          @if (block.note) {
+            <p class="kit-herosplit__note">{{ block.note }}</p>
+          }
+        </div>
+      }
     }
 
     <!-- A heading, a rule, a passage, sometimes buttons - centred and full
@@ -173,29 +205,6 @@
       </div>
     }
 
-    <!-- Copy on one side, a product shot on the other. The reader-app hero's
-         layout; the only archetype using the `note` field. -->
-    @case (archetypes.HERO_SPLIT) {
-      <div class="kit-wrap kit-split kit-herosplit">
-        <div class="kit-split__copy">
-          @if (block.subheading) {
-            <p class="kit-eyebrow">{{ block.subheading }}</p>
-          }
-          <h1 class="kit-herosplit__title" [innerHTML]="block.heading"></h1>
-          <hr class="kit-rule">
-          @if (block.body) {
-            <div class="kit-copy" [innerHTML]="block.body"></div>
-          }
-          <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
-          @if (block.note) {
-            <p class="kit-herosplit__note">{{ block.note }}</p>
-          }
-        </div>
-        <div class="kit-split__media">
-          <img class="kit-img" [src]="block.image?.url" [alt]="block.image?.name || ''" loading="eager">
-        </div>
-      </div>
-    }
 
     <!-- One row per item: a button on the left, a line saying what it is. -->
     @case (archetypes.LIST_ROWS) {
