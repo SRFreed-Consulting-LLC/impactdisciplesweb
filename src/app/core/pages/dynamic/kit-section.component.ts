@@ -17,11 +17,6 @@ import {
 } from '@impact-common/shared/lists/section_kit';
 import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 import { SubscribeFormService, SubscriberDetails } from 'src/app/shared/utils/services/subscribe-form.service';
-// The transform is coaching-section's, imported rather than copied: the
-// paragraph-splitting rule ("blank lines are the break") is the shape the
-// migration wrote, and two copies of it is how one page's quotes wrap
-// differently from another's.
-import { CoachTestimonial, toCoachTestimonial } from '../coaching-with-impact/coaching-section/coaching-section.component';
 
 /**
  * ONE section of a staff-created page, whichever archetype it is.
@@ -50,6 +45,36 @@ import { CoachTestimonial, toCoachTestimonial } from '../coaching-with-impact/co
  * sign-up form submits to a mailing list. Everything else arrives through
  * inputs, handed down by the page so twenty sections cost one read.
  */
+/** A stored testimonial as the carousel renders it. */
+export interface CoachTestimonial {
+  quote: string[];
+  name: string;
+  role: string;
+}
+
+/**
+ * PARAGRAPHS ARE THE POINT. TestimonialModel.text is one string, but the
+ * long quotes run to two or three paragraphs, and running them together
+ * turns a considered testimonial into a wall. Blank lines are the break -
+ * the shape the migration wrote and the admin preserves.
+ *
+ * MOVED HOME from coaching-section when that component was deleted with its
+ * page's cutover (2026-08-31) - the kit's carousel is the transform's only
+ * caller now.
+ */
+export function toCoachTestimonial(t: TestimonialModel): CoachTestimonial {
+  const quote = (t.text ?? '')
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+
+  return {
+    quote: quote.length ? quote : [(t.text ?? '').trim()],
+    name: t.author ?? '',
+    role: t.title ?? ''
+  };
+}
+
 @Component({
   selector: 'app-kit-section',
   templateUrl: './kit-section.component.html',

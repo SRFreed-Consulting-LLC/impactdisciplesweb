@@ -43,11 +43,9 @@ const SEGMENTS = {
   store: ['store', 'spanish-resources', 'product-details', 'shopping-cart',
     'checkout', 'checkout-success', 'e-books'],
   content: [
-    'about-us', 'contact', 'newsletter', 'give', 'seminars', 'seminar-form',
-    'coaching-with-impact', 'lunch-and-learn-form',
-    'discipleship-library',
+    'newsletter', 'seminar-form', 'lunch-and-learn-form',
     'private-policy', 'terms', 'customer-reviews', 'consultation-survey',
-    'monthly-newsletter', 'prayer-team'
+    'monthly-newsletter'
   ],
   blog: ['disciple-making-minute', 'podcasts', 'podcasts-v2'],
   // Public Impact Group finder. Named 'impact-groups', not 'groups':
