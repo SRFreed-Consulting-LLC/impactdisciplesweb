@@ -7,7 +7,6 @@ import { switchMap } from 'rxjs';
 import { DMMModel } from '@impact-common/shared/models/domain/dmm.model';
 import { Pager } from 'src/app/common/models/utils/pager.model';
 import { DMMService } from 'src/app/common/services/data/dmm.service';
-import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 
 @Component({
     selector: 'app-dmm',
@@ -22,7 +21,6 @@ export class BlogComponent implements OnInit {
   public paginate: Pager = {};
   public sortBy = 'asc';
   public pageNo = 1;
-  public impactDisciplesInfo = impactDisciplesInfo;
 
   // Server-side cap: newest 60 = deepest realistic page 10 at 6/page,
   // instead of streaming the entire growing collection to every visitor.

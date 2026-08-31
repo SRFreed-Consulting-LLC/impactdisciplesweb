@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { EventService } from 'src/app/common/services/data/event.service';
-import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
 import Swiper from 'swiper';
 import { EffectFade, Pagination } from 'swiper/modules';
 
@@ -17,7 +16,6 @@ export class EventsComponent implements AfterViewInit, OnInit  {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
   public dms: EventModel;
-  public impactDisciplesInfo = impactDisciplesInfo;
 
   eventsList: EventModel[] = [];
 

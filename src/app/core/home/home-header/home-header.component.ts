@@ -1,5 +1,5 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import impactDisciplesInfo from 'src/app/shared/utils/data/impact-disciples.data';
+import { Component, HostListener, OnDestroy, OnInit, inject } from '@angular/core';
+import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { UtilsService } from 'src/app/shared/utils/services/utils.service';
 import {
   CART_CHANGED_EVENT,
@@ -16,8 +16,26 @@ const CART_SUMMARY_STORAGE_KEY = 'cart-summary';
     standalone: false
 })
 export class HomeHeaderComponent implements OnInit, OnDestroy {
+  private readonly webConfigService = inject(WebConfigService);
+
   public sticky = true;
-  public impactDisciplesInfo = impactDisciplesInfo;
+
+  /**
+   * THE LOGO, FROM WEB CONFIG since 2026-08-31.
+   *
+   * It was a hardcoded url in impact-disciples.data.ts - a source file
+   * only a developer could change - which meant the Logo field in Web
+   * Config did nothing at all, and the address and phone number sitting
+   * beside it in that same file silently disagreed with the real ones.
+   * That file is deleted; this is the only copy now.
+   *
+   * Empty until the read lands, and empty forever if it fails: the header
+   * then shows its alt text rather than a broken image, and the nav and
+   * the cart - which are what the header is FOR - are unaffected either
+   * way. WebConfigService caches, so the footer's read and this one are
+   * one request.
+   */
+  public logo = '';
 
   public cart: CartSummary = { quantity: 0, total: 0 };
 
@@ -41,6 +59,9 @@ export class HomeHeaderComponent implements OnInit, OnDestroy {
   constructor(public utilsService: UtilsService) { }
 
   ngOnInit(): void {
+    this.webConfigService.getAll()
+      .then((configs) => (this.logo = configs[0]?.logo ?? ''))
+      .catch(() => undefined);
     this.loadCartSummary();
     window.addEventListener(CART_CHANGED_EVENT, this.onCartChanged);
   }
