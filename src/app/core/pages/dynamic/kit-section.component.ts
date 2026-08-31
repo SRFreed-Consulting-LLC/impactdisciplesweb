@@ -111,7 +111,14 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
 
   readonly archetypes = SECTION_ARCHETYPE;
 
-  isPlaying = false;
+  /**
+   * WHICH video is playing, or null.
+   *
+   * A boolean until 2026-08-31, which was enough while a section could
+   * only hold one video. A column can hold several now, and one flag meant
+   * clicking either play button started every one of them at once.
+   */
+  playing: string | null = null;
 
   // ------------------------------------------------------------- carousel
 
@@ -378,8 +385,8 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     });
   }
 
-  playVideo(): void {
-    this.isPlaying = true;
+  playVideo(key?: string): void {
+    this.playing = key ?? 'block';
   }
 
   /** Switched-off entries are left out, the same rule as everywhere else. */

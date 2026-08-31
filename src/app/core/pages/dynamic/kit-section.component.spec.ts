@@ -830,3 +830,128 @@ describe('the list defects that predate the kit', () => {
     expect(body).toContain('The Heading');
   });
 });
+
+/**
+ * THE VIDEO A PIECE OWNS.
+ *
+ * The shared video template read block.image and block.videoId, which was
+ * true for as long as a video could only ever be a whole section's. A video
+ * is a PIECE now and carries its own, and the block's are gone by then - so
+ * the migrated page drew a poster-less box that played nothing. Shane saw it
+ * in the comparison within minutes of the screen existing.
+ *
+ * It is the exact failure this suite exists for: the section still drew, the
+ * piece-coverage check still passed, and no word was missing.
+ */
+describe('a video that belongs to a piece', () => {
+  let fixture: ComponentFixture<KitSectionComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [KitSectionComponent],
+      imports: [YouTubePlayerModule, FormsModule],
+      providers: [
+        { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
+        { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(KitSectionComponent);
+  });
+
+  afterEach(() => fixture.destroy());
+
+  function renderVideoPiece(extra: Record<string, unknown> = {}): HTMLElement {
+    fixture.componentInstance.block = {
+      key: 'k1',
+      type: SECTION_ARCHETYPE.SECTION,
+      variant: 'columns',
+      // Deliberately EMPTY on the block - which is what the migration
+      // produces, and what made the old template draw nothing.
+      columns: [{
+        key: 'c1',
+        pieces: [{
+          key: 'v1', kind: 'video', isActive: true,
+          videoId: 'PIECE-ID',
+          image: { url: 'https://example.test/still.jpg', name: 'still' },
+          ...extra
+        }]
+      }],
+      isActive: true
+    } as never;
+    fixture.componentInstance.ngOnChanges();
+    fixture.detectChanges();
+    return fixture.nativeElement as HTMLElement;
+  }
+
+  it('shows the piece’s own still, not the section’s', () => {
+    const poster = renderVideoPiece().querySelector('.kit-video__poster') as HTMLElement;
+
+    expect(poster)
+      .withContext('the video piece drew no poster at all')
+      .not.toBeNull();
+    expect(poster.style.backgroundImage)
+      .withContext('the still was blank - the template read the block, which is empty')
+      .toContain('still.jpg');
+  });
+
+  it('plays the piece’s own video', () => {
+    const el = renderVideoPiece();
+    (el.querySelector('.kit-video__button') as HTMLElement).click();
+    fixture.detectChanges();
+
+    const player = el.querySelector('youtube-player');
+    expect(player)
+      .withContext('clicking play produced no player')
+      .not.toBeNull();
+    expect(fixture.componentInstance.playing).toBe('v1');
+  });
+
+  it('starts ONE video when a column holds two', () => {
+    // A single boolean meant clicking either play button started both.
+    fixture.componentInstance.block = {
+      key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{
+        key: 'c1',
+        pieces: [
+          { key: 'first', kind: 'video', isActive: true, videoId: 'AAA' },
+          { key: 'second', kind: 'video', isActive: true, videoId: 'BBB' }
+        ]
+      }],
+      isActive: true
+    } as never;
+    fixture.componentInstance.ngOnChanges();
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    (el.querySelectorAll('.kit-video__button')[1] as HTMLElement).click();
+    fixture.detectChanges();
+
+    expect(el.querySelectorAll('youtube-player').length)
+      .withContext('both videos started from one click')
+      .toBe(1);
+    expect(el.querySelectorAll('.kit-video__poster').length)
+      .withContext('the other video should still be showing its still')
+      .toBe(1);
+  });
+
+  it('still draws the archetype’s video, which lives on the block', () => {
+    // The two old call sites hand the block's own fields to the same
+    // template. Parameterising it must not break the sections that have not
+    // migrated yet - which is every one of them today.
+    fixture.componentInstance.block = {
+      key: 'k1', type: SECTION_ARCHETYPE.COPY_MEDIA, variant: 'video',
+      heading: 'Watch', videoId: 'BLOCK-ID',
+      image: { url: 'https://example.test/block-still.jpg', name: 'still' },
+      isActive: true
+    } as never;
+    fixture.componentInstance.ngOnChanges();
+    fixture.detectChanges();
+
+    const poster = (fixture.nativeElement as HTMLElement)
+      .querySelector('.kit-video__poster') as HTMLElement;
+
+    expect(poster.style.backgroundImage).toContain('block-still.jpg');
+  });
+});

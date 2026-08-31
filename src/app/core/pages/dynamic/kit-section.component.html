@@ -86,7 +86,10 @@
           <!-- The video sits BELOW the copy rather than beside it. A
                structural difference, so a variant and not a surface. -->
           <div class="kit-media kit-media--below">
-            <ng-container *ngTemplateOutlet="video"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="video; context: {
+                id: block.videoId, poster: block.image?.url, label: block.heading
+              }"></ng-container>
           </div>
         }
 
@@ -116,7 +119,10 @@
 
         <div class="kit-split__media">
           @if (variant === 'video') {
-            <ng-container *ngTemplateOutlet="video"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="video; context: {
+                id: block.videoId, poster: block.image?.url, label: block.heading
+              }"></ng-container>
           } @else {
             <img class="kit-img" loading="lazy"
                  [src]="block.image?.url" [alt]="block.image?.name || ''">
@@ -673,13 +679,25 @@
   }
 </ng-template>
 
-<ng-template #video>
-  @if (!isPlaying) {
+<!-- THE VIDEO, told WHICH video to draw rather than reading the block.
+
+     It read block.image and block.videoId until 2026-08-31, which was
+     true while a video could only ever be a whole section's. A video is a
+     PIECE now and carries its own, so the block fields are empty by then -
+     the migrated Seminars page drew a poster-less box that played nothing,
+     and Shane spotted it in the comparison within minutes.
+
+     `key` is which video is playing, not whether ONE is: two videos in a
+     column shared a single boolean, so starting either started both.
+-->
+<ng-template #video let-id="id" let-poster="poster" let-label="label" let-key="key">
+  @if (playing !== (key ?? 'block')) {
     <div class="kit-video__poster"
-         [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
+         [style.backgroundImage]="poster ? 'url(' + poster + ')' : null">
       <a class="kit-video__button" role="button" tabindex="0"
-         [attr.aria-label]="'Play ' + spoken(block.heading, 'the video')"
-         (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()">
+         [attr.aria-label]="'Play ' + spoken(label, 'the video')"
+         (click)="playVideo(key)" (keydown.enter)="playVideo(key)"
+         (keydown.space)="playVideo(key)">
         <i class="fas fa-play" aria-hidden="true"></i>
       </a>
     </div>
@@ -688,7 +706,7 @@
          button before it loads, which after our poster meant two of each in
          a row, at different sizes. -->
     <div class="kit-video__player">
-      <youtube-player [videoId]="block.videoId" [playerVars]="{ autoplay: 1 }"
+      <youtube-player [videoId]="id" [playerVars]="{ autoplay: 1 }"
                       [disablePlaceholder]="true"></youtube-player>
     </div>
   }
@@ -730,7 +748,10 @@
     }
 
     @case ('video') {
-      <ng-container *ngTemplateOutlet="video"></ng-container>
+      <ng-container
+        *ngTemplateOutlet="video; context: {
+          id: piece.videoId, poster: piece.image?.url, label: piece.text, key: piece.key
+        }"></ng-container>
     }
 
     @case ('buttons') {
