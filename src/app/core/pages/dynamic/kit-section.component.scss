@@ -54,8 +54,13 @@
 // Shane's call on the first Lunch and Learns comparison - "as close as we
 // can, but as options in the editor".
 
+// THE HERO TITLE COUNTS AS A HEADING. It carries its own class rather than
+// .kit-heading, so until 2026-08-31 the Heading control changed nothing at
+// all on a hero band - the one archetype where the heading IS the section.
+// Reported as "it does not seem to make any changes", and it did not.
 .kit-hs--bold {
-  .kit-heading {
+  .kit-heading,
+  .kit-hero__title {
     font-size: clamp(2rem, 4.2vw, 3.125rem); // 50px, the measured original
     font-weight: 900;
   }
@@ -69,7 +74,8 @@
 // The site's OTHER big heading: OVERVIEW measures 50px at weight 500 - the
 // prose sections were never 900. Same rule treatment.
 .kit-hs--light {
-  .kit-heading {
+  .kit-heading,
+  .kit-hero__title {
     font-size: clamp(2rem, 4.2vw, 3.125rem);
     font-weight: 500;
   }
@@ -340,10 +346,24 @@
 // On the LIGHT ground the soft tone is the original's exact #848b8a; the
 // other grounds keep their own soft tokens - grey-on-dark is a different
 // grey. Heading stays full ink either way.
+// COPY COLOUR. Soft is the site's own body grey; dark is the same ink the
+// headings use, for copy that has to carry weight.
+//
+// "Dark" had NO RULE AT ALL until 2026-08-31 - picking it merely removed the
+// soft colour and let the ground's default ink through, which on most
+// grounds looks identical. Reported as "I am not sure what the copy section
+// is for, it does not seem to change any of the wording", which was fair:
+// half of it did nothing.
 .kit-ct--soft .kit-copy,
 .kit-ct--soft .kit-copy ::ng-deep p,
 .kit-ct--soft .kit-copy ::ng-deep li {
   color: var(--kit-ink-soft);
+}
+
+.kit-ct--dark .kit-copy,
+.kit-ct--dark .kit-copy ::ng-deep p,
+.kit-ct--dark .kit-copy ::ng-deep li {
+  color: var(--kit-ink);
 }
 
 .kit-bl--dots .kit-copy ::ng-deep {
