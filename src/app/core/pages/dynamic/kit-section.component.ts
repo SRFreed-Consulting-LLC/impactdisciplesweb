@@ -355,6 +355,31 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return item.title || item.heading || '';
   }
 
+  /**
+   * A heading as SPOKEN text, with its markup removed.
+   *
+   * Headings legitimately carry `<strong>` - that is the site's own way of
+   * painting a word brand-yellow - and rendering one through [innerHTML] is
+   * correct. Putting the same string in an aria-label is not: the play
+   * button announced "Play WHAT YOU <strong> GET</strong>" to a screen
+   * reader, tags and all, while looking perfectly fine on screen (found
+   * 2026-08-31 by reading the accessibility tree, which is the only place
+   * this is visible).
+   *
+   * Uses the DOM's own parser rather than a tag regex: a regex over
+   * user-editable HTML gets entities (&amp;, &nbsp;) wrong, and this text is
+   * read aloud, where "&amp;" instead of "and" is exactly the kind of thing
+   * nobody would ever catch.
+   */
+  spoken(html: string | undefined, fallback: string): string {
+    if (!html) {
+      return fallback;
+    }
+    const el = document.createElement('div');
+    el.innerHTML = html;
+    return (el.textContent || '').replace(/\s+/g, ' ').trim() || fallback;
+  }
+
   // ------------------------------------------------------------- carousel
 
   /**

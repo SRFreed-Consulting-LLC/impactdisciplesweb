@@ -552,7 +552,7 @@
     <div class="kit-video__poster"
          [style.backgroundImage]="block.image?.url ? 'url(' + block.image?.url + ')' : null">
       <a class="kit-video__button" role="button" tabindex="0"
-         [attr.aria-label]="'Play ' + (block.heading || 'the video')"
+         [attr.aria-label]="'Play ' + spoken(block.heading, 'the video')"
          (click)="playVideo()" (keydown.enter)="playVideo()" (keydown.space)="playVideo()">
         <i class="fas fa-play" aria-hidden="true"></i>
       </a>

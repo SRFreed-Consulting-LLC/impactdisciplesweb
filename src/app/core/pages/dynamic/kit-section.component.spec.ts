@@ -376,6 +376,34 @@ describe('the behaviours the new archetypes own', () => {
     expect(fixture.componentInstance.isVideo(item('https://x/pic.jpg'))).toBeFalse();
   });
 
+  it('speaks a heading without its markup, on the button a screen reader reads', () => {
+    // THE BUG THIS EXISTS FOR. Headings carry <strong> on purpose - it is how
+    // the site paints a word yellow - and the play button built its
+    // aria-label from that raw string, so screen readers announced
+    // "Play WHAT YOU <strong> GET</strong>". Invisible on screen; only the
+    // accessibility tree shows it (2026-08-31).
+    const c = fixture.componentInstance;
+    expect(c.spoken('WHAT YOU <strong> GET</strong>', 'the video')).toBe('WHAT YOU GET');
+    expect(c.spoken('Ken &amp; the team', 'the video'))
+      .withContext('entities must be spoken as characters, not as source')
+      .toBe('Ken & the team');
+    expect(c.spoken(undefined, 'the video')).toBe('the video');
+    expect(c.spoken('<em></em>', 'the video'))
+      .withContext('markup that leaves no words must fall back, not go silent')
+      .toBe('the video');
+
+    c.block = {
+      key: 'v', type: SECTION_ARCHETYPE.COPY_MEDIA,
+      heading: 'WHAT YOU <strong> GET</strong>', videoId: 'abc123'
+    } as never;
+    fixture.detectChanges();
+
+    const label = (fixture.nativeElement as HTMLElement)
+      .querySelector('.kit-video__button')?.getAttribute('aria-label') ?? '';
+    expect(label).toBe('Play WHAT YOU GET');
+    expect(label).not.toContain('<');
+  });
+
   it('resolves a named destination to this build\'s address, never stored data', () => {
     // THE BUG THIS EXISTS FOR. Give's three buttons and the Library's two
     // store KEYS ('one', 'reader') - a security decision carried over from
