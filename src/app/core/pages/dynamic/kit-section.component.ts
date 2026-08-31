@@ -293,6 +293,7 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
       column.full ? 'kit-col--full' : '',
       column.align === 'centre' ? 'kit-col--centre' : '',
       column.measure ? 'kit-col--measure' : '',
+      column.inset ? 'kit-col--inset' : '',
       column.ground && column.ground !== 'none' ? `kit-card--${column.ground}` : '',
       column.ground && column.ground !== 'none'
         ? `kit-cardink--${column.ink ?? (column.ground === 'panel' ? 'dark' : 'light')}`

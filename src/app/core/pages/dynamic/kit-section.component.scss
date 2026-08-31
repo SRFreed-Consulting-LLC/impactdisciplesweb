@@ -995,20 +995,19 @@
 
 // -------------------------------------------------------------- contact
 
+// INDENTED off the page gutter (Shane, 2026-08-31) - flush against it the
+// block read as forgotten rather than placed. The archetype wraps its
+// heading here, so this moves heading and details together; the migrated
+// section gets the same distance from its column (.kit-col--inset), which
+// is what keeps the two drawings identical.
 .kit-contact {
   max-width: 720px;
+  padding-left: 40px;
 
-  // INDENTED off the container edge (Shane, 2026-08-31). The details sat
-  // flush against the page gutter, which reads as the block having been
-  // forgotten rather than placed. On the LIST rather than on .kit-contact,
-  // because the archetype wraps its heading in that block and the migrated
-  // section does not - padding there would move the heading on one side
-  // only, and the comparison would start showing a difference this change
-  // did not intend.
   &__list {
     list-style: none;
     margin: 0 0 22px;
-    padding: 0 0 0 24px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -1019,11 +1018,10 @@
     span { color: var(--kit-ink-soft); }
   }
 
-  // The social row follows the details it sits under.
   &__social {
     list-style: none;
     margin: 22px 0 0;
-    padding: 0 0 0 24px;
+    padding: 0;
     display: flex;
     gap: 10px;
 
@@ -1355,6 +1353,11 @@
 .kit-band__title--display {
   font-size: clamp(3rem, 8vw, 6rem);
   line-height: 1;
+}
+
+/* A column indented off the page gutter - see SectionColumn.inset. */
+.kit-col--inset {
+  padding-left: 40px;
 }
 
 /* Centred, which is all that made the centred band an archetype of its own.
