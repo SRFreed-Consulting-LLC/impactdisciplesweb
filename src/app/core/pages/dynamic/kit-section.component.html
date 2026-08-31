@@ -21,29 +21,7 @@
           <div class="kit-copy" [innerHTML]="block.body"></div>
         }
 
-        @if (variant === 'buttonList') {
-          <!-- Buttons as ENTRIES rather than two fixed slots, so a third can
-               be added and the order changed. -->
-          <div class="kit-actions">
-            @for (button of liveItems; track $index) {
-              <a class="kit-btn" [href]="href(button)">
-                {{ button.title }}
-                @if (button.icon) {
-                  <i [class]="button.icon + ' kit-btn__icon'" aria-hidden="true"></i>
-                }
-              </a>
-            }
-          </div>
-        } @else if (block.ctaTitle || block.ctaTitle2) {
-          <div class="kit-actions">
-            @if (block.ctaTitle && href(block)) {
-              <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
-            }
-            @if (block.ctaTitle2 && href2(block)) {
-              <a class="kit-btn kit-btn--ghost" [href]="href2(block)">{{ block.ctaTitle2 }}</a>
-            }
-          </div>
-        }
+        <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
       </div>
     }
 
@@ -51,7 +29,10 @@
          width. The workhorse. What separates the site's seven of these today
          is almost entirely ground colour, which is now a setting. -->
     @case (archetypes.COPY_CENTRED) {
-      <div class="kit-wrap kit-centred">
+      <!-- textFirst puts the passage ABOVE the heading. The stacked
+           equivalent of choosing which side the media sits on: a section can
+           read "text, then heading" without needing a variant of its own. -->
+      <div class="kit-wrap kit-centred" [class.kit-centred--textFirst]="block.textFirst">
         @if (block.subheading) {
           <p class="kit-eyebrow">{{ block.subheading }}</p>
         }
@@ -71,16 +52,7 @@
           </div>
         }
 
-        @if (block.ctaTitle || block.ctaTitle2) {
-          <div class="kit-actions kit-actions--centre">
-            @if (block.ctaTitle && href(block)) {
-              <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
-            }
-            @if (block.ctaTitle2 && href2(block)) {
-              <a class="kit-btn kit-btn--ghost" [href]="href2(block)">{{ block.ctaTitle2 }}</a>
-            }
-          </div>
-        }
+        <ng-container *ngTemplateOutlet="buttonBar; context: { centre: true }"></ng-container>
       </div>
     }
 
@@ -101,26 +73,7 @@
           @if (block.body) {
             <div class="kit-copy" [innerHTML]="block.body"></div>
           }
-          <!-- buttonList: buttons as ENTRIES, so a third one is an add
-               rather than a code change. Same shape heroBand uses. -->
-          @if (variant === 'buttonList') {
-            <div class="kit-actions">
-              @for (button of liveItems; track $index) {
-                @if (href(button)) {
-                  <a class="kit-btn" [href]="href(button)">
-                    {{ button.title }}
-                    @if (button.icon) {
-                      <i [class]="button.icon + ' kit-btn__icon'" aria-hidden="true"></i>
-                    }
-                  </a>
-                }
-              }
-            </div>
-          } @else if (block.ctaTitle && href(block)) {
-            <div class="kit-actions">
-              <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
-            </div>
-          }
+          <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
         </div>
 
         <div class="kit-split__media">
@@ -233,11 +186,7 @@
           @if (block.body) {
             <div class="kit-copy" [innerHTML]="block.body"></div>
           }
-          @if (block.ctaTitle && href(block)) {
-            <div class="kit-actions">
-              <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
-            </div>
-          }
+          <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
           @if (block.note) {
             <p class="kit-herosplit__note">{{ block.note }}</p>
           }
@@ -611,11 +560,7 @@
           </div>
         }
 
-        @if (block.ctaTitle && href(block)) {
-          <div class="kit-actions kit-actions--centre">
-            <a class="kit-btn" [href]="href(block)">{{ block.ctaTitle }}</a>
-          </div>
-        }
+        <ng-container *ngTemplateOutlet="buttonBar; context: { centre: true }"></ng-container>
       </div>
     }
 
@@ -656,6 +601,28 @@
      play: the poster is the block's own image, and the real player is only
      created on the click, so a page of these costs one request rather than
      one iframe per section. -->
+<!-- BUTTONS, for every section that has any. One template rather than the
+     five near-identical blocks this replaced: a section's buttons are a LIST
+     now, so however many are added is however many draw, and there is no
+     longer a "one button" and a "two buttons" shape to keep in step. A
+     button whose destination cannot be resolved is not drawn - see href(). -->
+<ng-template #buttonBar let-centre="centre">
+  @if (buttons.length) {
+    <div class="kit-actions" [class.kit-actions--centre]="centre">
+      @for (button of buttons; track $index) {
+        @if (href(button)) {
+          <a class="kit-btn" [href]="href(button)">
+            {{ button.title || button.ctaTitle }}
+            @if (button.icon) {
+              <i [class]="button.icon + ' kit-btn__icon'" aria-hidden="true"></i>
+            }
+          </a>
+        }
+      }
+    </div>
+  }
+</ng-template>
+
 <ng-template #video>
   @if (!isPlaying) {
     <div class="kit-video__poster"

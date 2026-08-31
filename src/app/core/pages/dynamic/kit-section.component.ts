@@ -333,6 +333,13 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
    * that side whatever its position.
    */
   get mediaLeft(): boolean {
+    // THE SECTION'S OWN CHOICE WINS. Set on the block, it is an explicit
+    // decision and beats both the variant's default and the alternation
+    // below (owner, 2026-08-31). Unset, everything behaves exactly as it
+    // did, so no existing section moves.
+    if (this.block.mediaSide) {
+      return this.block.mediaSide === 'left';
+    }
     const side = variantDef(this.block.type ?? '', this.block.variant)?.mediaSide ?? 'auto';
     if (side === 'left') {
       return true;
@@ -341,6 +348,23 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
       return false;
     }
     return this.typeIndex % 2 === 1;
+  }
+
+  /** Buttons, wherever a section has them: entries, so a third is an add.
+   *  `ctaTitle` is still read for blocks written before the change - the
+   *  data outlives the build, and a migrated page must not lose a button. */
+  get buttons(): PageContentItem[] {
+    if (this.liveItems.length) {
+      return this.liveItems;
+    }
+    const legacy: PageContentItem[] = [];
+    if (this.block.ctaTitle) {
+      legacy.push({ title: this.block.ctaTitle, link: this.block.ctaUrl, isActive: true } as PageContentItem);
+    }
+    if (this.block.ctaTitle2) {
+      legacy.push({ title: this.block.ctaTitle2, link: this.block.ctaUrl2, isActive: true } as PageContentItem);
+    }
+    return legacy;
   }
 
   /** Which look within the archetype, defaulting to the first so a block

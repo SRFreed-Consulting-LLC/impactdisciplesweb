@@ -1242,3 +1242,18 @@
   align-self: flex-start;
   margin-top: 12px;
 }
+
+/* textFirst: the passage above the heading. Flex order rather than moving
+   the markup, so the heading stays first in the DOM - a screen reader and
+   the page outline still meet the heading before the text it heads. */
+.kit-centred--textFirst {
+  display: flex;
+  flex-direction: column;
+}
+
+.kit-centred--textFirst .kit-eyebrow { order: 1; }
+.kit-centred--textFirst .kit-copy { order: 2; }
+.kit-centred--textFirst .kit-heading { order: 3; }
+.kit-centred--textFirst .kit-rule { order: 4; }
+.kit-centred--textFirst .kit-media { order: 5; }
+.kit-centred--textFirst .kit-actions { order: 6; }
