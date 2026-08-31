@@ -156,8 +156,14 @@
                 <img class="kit-rowcard__img" loading="lazy"
                      [src]="tile.image?.url" [alt]="tile.title || ''">
                 <div class="kit-rowcard__body">
-                  <h3 class="kit-rowcard__title">{{ tile.title }}</h3>
-                  <p class="kit-rowcard__desc">{{ tile.description }}</p>
+                  <h3 class="kit-rowcard__title" [innerHTML]="tile.title"></h3>
+                  <p class="kit-rowcard__desc" [innerHTML]="tile.description"></p>
+                  <!-- The home page's services cards carry a READ MORE; the
+                       Seminars ones do not, so the button draws only when a
+                       row actually has one (2026-08-31). -->
+                  @if (tile.ctaTitle && href(tile)) {
+                    <a class="kit-btn kit-btn--thin kit-rowcard__cta" [href]="href(tile)">{{ tile.ctaTitle }}</a>
+                  }
                 </div>
               </article>
             } @else {
@@ -417,6 +423,13 @@
            [class.kit-formsplit]="variant === 'withCopy'">
         @if (variant === 'mailingList') {
           <div class="kit-signup">
+            <!-- The heading was missing here until 2026-08-31: the sign-up
+                 sections that used this variant all sat under a hero that
+                 carried the words, so nothing looked wrong until the home
+                 page's "STAY IN THE LOOP" block arrived without its title. -->
+            @if (block.heading) {
+              <h2 class="kit-heading kit-heading--centre" [innerHTML]="block.heading"></h2>
+            }
             @if (block.body) {
               <div class="kit-copy kit-copy--centre" [innerHTML]="block.body"></div>
             }
@@ -535,7 +548,14 @@
             @for (slide of liveItems; track $index) {
               <div class="swiper-slide kit-slide"
                    [style.backgroundImage]="slide.image?.url ? 'url(' + slide.image?.url + ')' : null">
-                <div class="kit-wrap kit-slide__copy">
+                <!-- The copy sits in ONE HALF of the slide, not across the
+                     middle: the site's own slider has always done this, and
+                     centred words over a photo fight whatever the photo has
+                     in the middle of it. Which half is per slide, so a
+                     picture with its subject on the left can put the words
+                     on the right. -->
+                <div class="kit-wrap kit-slide__copy"
+                     [class.kit-slide__copy--right]="slide.column === 'right'">
                   @if (slide.title) {
                     <h2 class="kit-slide__title" [innerHTML]="slide.title"></h2>
                   }

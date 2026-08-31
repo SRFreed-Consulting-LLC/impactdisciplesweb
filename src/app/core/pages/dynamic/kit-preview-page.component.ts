@@ -77,9 +77,14 @@ export class KitPreviewPageComponent implements OnInit {
     this.framed = this.route.snapshot.queryParamMap.get('framed') === '1';
 
     // Before the stream below, so the first emission already has it.
-    this.summitDate = await this.events.getAll()
+    // The SAME rule the live banner uses - the first isSummit event, with no
+    // isActive filter. Filtering on isActive here found nothing (both summit
+    // events are inactive) and the comparison showed a countdown on the left
+    // and none on the right, which reads as the kit losing the feature rather
+    // than the two sides asking different questions.
+    this.summitDate = await this.events.getAllByValue('isSummit', true)
       .then((all) => {
-        const summit = (all ?? []).find((e) => e.isSummit && e.isActive);
+        const summit = (all ?? []).find((e) => e.isSummit);
         const ms = summit ? toMillis(summit.startDate) : 0;
         return ms ? new Date(ms).toISOString() : '';
       })
