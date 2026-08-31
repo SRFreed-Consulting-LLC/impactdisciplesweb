@@ -44,7 +44,10 @@ const SEGMENTS = {
     'checkout', 'checkout-success', 'e-books'],
   content: [
     'newsletter', 'seminar-form', 'lunch-and-learn-form',
-    'private-policy', 'terms', 'customer-reviews', 'consultation-survey',
+    // private-policy and terms left this list on 2026-08-31 - they are
+    // page_content pages now, and a segment claimed here would keep the
+    // dynamic route from ever seeing them.
+    'customer-reviews', 'consultation-survey',
     'monthly-newsletter'
   ],
   blog: ['disciple-making-minute', 'podcasts', 'podcasts-v2'],

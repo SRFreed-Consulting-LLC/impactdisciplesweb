@@ -7,8 +7,6 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { SharedModule } from "../shared/shared.module";
 import { FormRendererModule } from "../shared/form-renderer/form-renderer.module";
 import { NewsletterComponent } from "./pages/newsletter/newsletter.component";
-import { PrivatePolicyComponent } from "./pages/private-policy/private-policy.component";
-import { TermsOfServiceComponent } from "./pages/terms-of-service/terms-of-service.component";
 import { CustomerReviewsComponent } from "./pages/customer-reviews/customer-reviews.component";
 import { MonthlyNewsletterComponent } from "./pages/monthly-newsletter/monthly-newsletter.component";
 import { NewsletterViewComponent } from "./pages/monthly-newsletter/newsletter-view/newsletter-view.component";
@@ -50,10 +48,13 @@ export const routes: Routes = [
       columnClass: 'col-xl-6 col-lg-6'
     } as FormPageData
   },
-  { path: 'private-policy', component: PrivatePolicyComponent,
-    title: 'Private Policy' },
-  { path: 'terms', component: TermsOfServiceComponent,
-    title: 'Terms of Service' },
+  // PRIVACY POLICY AND TERMS OF USE were routed here, each a bespoke
+  // component rendering one rich-text field out of Web Config. They are
+  // ORDINARY PAGES now (2026-08-31, Shane's request): page_content
+  // documents at the same two addresses, reached through the dynamic
+  // route like every other page, and edited on their own admin screens
+  // instead of as two tabs in a settings form. They were the last two
+  // pages whose words could be changed but whose SHAPE could not.
   { path: 'customer-reviews', component: CustomerReviewsComponent,
     title: 'Customer Reviews' },
   {
@@ -77,8 +78,6 @@ export const routes: Routes = [
   declarations: [
     NewsletterComponent,
     FormPageComponent,
-    PrivatePolicyComponent,
-    TermsOfServiceComponent,
     CustomerReviewsComponent,
     MonthlyNewsletterComponent,
     NewsletterViewComponent,
