@@ -1292,6 +1292,15 @@
 .kit-cols--2 { grid-template-columns: 1fr 1fr; }
 .kit-cols--3 { grid-template-columns: 1fr 1fr 1fr; }
 
+/* THE UNEVEN SPLIT the two-column bands have always had - media taking the
+   larger share, ~700px of a 1600 screen. It is a section-level lever, so it
+   survives the migration on the block; without these two rules it would
+   survive as a value nothing reads, and every picture-beside-text band on
+   the site would quietly become an even split. Which column is wider
+   follows the picture, the same way .kit-split does. */
+.kit-ms--large .kit-cols--2 { grid-template-columns: 1fr 1.15fr; }
+.kit-ms--large .kit-cols--2.kit-cols--mediaLeft { grid-template-columns: 1.15fr 1fr; }
+
 .kit-col {
   min-width: 0;
 }

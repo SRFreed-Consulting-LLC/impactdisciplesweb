@@ -602,7 +602,8 @@
          case replaces eight archetypes above and is shorter than any two of
          them, because the arrangement is data now rather than markup. -->
     @case (archetypes.SECTION) {
-      <div [class]="'kit-wrap kit-cols kit-cols--' + columnCount">
+      <div [class]="'kit-wrap kit-cols kit-cols--' + columnCount"
+           [class.kit-cols--mediaLeft]="mediaColumnFirst">
         @for (column of liveColumns; track column.key) {
           <div [class]="'kit-col ' + columnClasses(column)">
             @for (piece of livePieces(column); track piece.key) {
@@ -752,7 +753,10 @@
     @case ('form') {
       @if (piece.formId) {
         <div class="kit-form">
-          <app-dynamic-form [formId]="piece.formId"></app-dynamic-form>
+          <!-- submitLabel, which the archetype kept in `ctaTitle`. Without
+               it every form on the site says "Submit". -->
+          <app-dynamic-form [formId]="piece.formId"
+                            [submitButtonText]="piece.submitLabel"></app-dynamic-form>
         </div>
       }
     }

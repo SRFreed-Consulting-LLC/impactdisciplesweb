@@ -226,6 +226,27 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return Math.min(3, Math.max(1, shared || 1));
   }
 
+  /**
+   * Whether the PICTURE column comes first.
+   *
+   * Only the wider track needs to know: on a large media split the grid
+   * gives one column the bigger share, and if the picture moved to the left
+   * without the track moving with it, the words would get the picture's
+   * share. The same rule .kit-split has always followed.
+   */
+  get mediaColumnFirst(): boolean {
+    const shared = this.liveColumns.filter((column) => !column.full);
+    const first = shared[0];
+    if (!first) {
+      return false;
+    }
+    const pieces = this.livePieces(first);
+    // `every` on an empty list is true, which would make an empty first
+    // column read as a picture column and hand the wider track to nothing.
+    return pieces.length > 0
+      && pieces.every((piece) => piece.kind === 'picture' || piece.kind === 'video');
+  }
+
   get liveColumns(): SectionColumn[] {
     return (this.block.columns ?? []).filter((column) => !!column);
   }
