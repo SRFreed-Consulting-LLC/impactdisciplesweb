@@ -202,6 +202,7 @@
         @if (block.body) {
           <div class="kit-band__copy kit-copy" [innerHTML]="block.body"></div>
         }
+        <ng-container *ngTemplateOutlet="buttonBar; context: { centre: true }"></ng-container>
       </div>
     }
 
@@ -492,9 +493,6 @@
 
     <!-- The shared consultation band. Nothing on it is edited; it is a
          section only so it can be moved and switched off. -->
-    @case (archetypes.FIXED_BAND) {
-      <app-consulation-banner></app-consulation-banner>
-    }
 
     <!-- Full-width slides that rotate. The rotation is the renderer's; the
          slides are ordinary entries, so staff add and reorder them like any
