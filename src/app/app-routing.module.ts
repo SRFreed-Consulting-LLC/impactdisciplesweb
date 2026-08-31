@@ -44,7 +44,6 @@ const SEGMENTS = {
     'checkout', 'checkout-success', 'e-books'],
   content: [
     'about-us', 'contact', 'newsletter', 'give', 'seminars', 'seminar-form',
-    'equipping-groups', 'equipping-groups-pastors', 'equipping-groups-leaders', 'equipping-groups-churches',
     'coaching-with-impact', 'lunch-and-learn-form',
     'discipleship-library',
     'private-policy', 'terms', 'customer-reviews', 'consultation-survey',

@@ -12,10 +12,6 @@ import { ContactComponent } from "./pages/contact/contact.component";
 import { NewsletterComponent } from "./pages/newsletter/newsletter.component";
 import { GiveComponent } from "./pages/give/give.component";
 import { SeminarsComponent } from "./pages/seminars/seminars.component";
-import { EquippingGroupsComponent } from "./pages/equipping-groups/equipping-groups.component";
-import { EquippingGroupsPastorsComponent } from "./pages/equipping-groups/equipping-groups-pastors/equipping-groups-pastors.component";
-import { EquippingGroupsLeadersComponent } from "./pages/equipping-groups/equipping-groups-leaders/equipping-groups-leaders.component";
-import { EquippingGroupsChurchesComponent } from "./pages/equipping-groups/equipping-groups-churches/equipping-groups-churches.component";
 import { CoachingWithImpactComponent } from "./pages/coaching-with-impact/coaching-with-impact.component";
 import { DiscipleshipLibraryComponent } from "./pages/discipleship-library/discipleship-library.component";
 import { PrivatePolicyComponent } from "./pages/private-policy/private-policy.component";
@@ -30,7 +26,6 @@ import { PrayerTeamComponent } from "./pages/prayer-team/prayer-team.component";
 // a type maps onto that page's markup. They are separate per page on purpose -
 // a `mission` is a dark band on About Us and a light two-up on the equipping
 // pages, and one component drawing both would be a switch inside a switch.
-import { EquippingSectionComponent } from "./pages/equipping-groups/equipping-section/equipping-section.component";
 import { SeminarsSectionComponent } from "./pages/seminars/seminars-section/seminars-section.component";
 import { GiveSectionComponent } from "./pages/give/give-section/give-section.component";
 import { ContactSectionComponent } from "./pages/contact/contact-section/contact-section.component";
@@ -65,14 +60,6 @@ export const routes: Routes = [
       columnClass: 'col-xl-8 col-lg-8'
     } as FormPageData
   },
-  { path: 'equipping-groups', component: EquippingGroupsComponent,
-    title: 'Equipping Groups' },
-  { path: 'equipping-groups-pastors', component: EquippingGroupsPastorsComponent,
-    title: 'Equipping Groups for Pastors' },
-  { path: 'equipping-groups-leaders', component: EquippingGroupsLeadersComponent,
-    title: 'Equipping Groups for Leaders' },
-  { path: 'equipping-groups-churches', component: EquippingGroupsChurchesComponent,
-    title: 'Equipping Groups for Churches' },
   { path: 'coaching-with-impact', component: CoachingWithImpactComponent,
     title: 'Coaching with Impact' },
   { path: 'discipleship-library', component: DiscipleshipLibraryComponent,
@@ -123,10 +110,6 @@ export const routes: Routes = [
     GiveComponent,
     SeminarsComponent,
     FormPageComponent,
-    EquippingGroupsComponent,
-    EquippingGroupsPastorsComponent,
-    EquippingGroupsLeadersComponent,
-    EquippingGroupsChurchesComponent,
     CoachingWithImpactComponent,
     DiscipleshipLibraryComponent,
     PrivatePolicyComponent,
@@ -135,7 +118,6 @@ export const routes: Routes = [
     MonthlyNewsletterComponent,
     NewsletterViewComponent,
     PrayerTeamComponent,
-    EquippingSectionComponent,
     SeminarsSectionComponent,
     GiveSectionComponent,
     ContactSectionComponent,
