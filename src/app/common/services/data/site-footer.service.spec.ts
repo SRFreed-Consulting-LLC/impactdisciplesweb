@@ -62,9 +62,14 @@ describe('the public footer, as it stands today', () => {
   it('keeps the newsletter wording and the bottom bar', () => {
     expect(view.newsletterHeading).toBe('newsletter');
     expect(view.newsletterBlurb).toContain('Join over 1,000 people');
-    expect(view.bottomText).toContain('SRFreedConsulting');
+    // The bottom bar credited the DEVELOPER and sent "inquiries" to their
+    // address, while the footer directly above already showed the ministry's
+    // own - two different answers to "how do I contact you" on one page. It
+    // was inherited from the original site and only became visible when the
+    // footer moved into an editable record. Owner's call, 2026-08-31.
+    expect(view.bottomText).toContain('Impact Discipleship Ministries');
     expect(view.bottomLinkLabel).toBe('contact');
-    expect(view.bottomLinkUrl).toBe('mailto:shane.freed@srfreedconsulting.com');
+    expect(view.bottomLinkUrl).toBe('mailto:info@impactdisciples.com');
   });
 
   it('keeps the background image', () => {
