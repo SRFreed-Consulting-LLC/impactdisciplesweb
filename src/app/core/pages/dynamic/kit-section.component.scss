@@ -1311,6 +1311,35 @@
   grid-column: 1 / -1;
 }
 
+/* HELD TO A READABLE WIDTH. The measured 840px the hero copy has always
+   had - a single column spanning the row has nothing else to stop it, and
+   the first comparison showed exactly that: copy running the full screen
+   where the site holds it. */
+.kit-col--measure {
+  max-width: 840px;
+}
+
+/* Centred, which is all that made the centred band an archetype of its own.
+   The measure centres with it, or the text would be centred inside a box
+   sitting against the left edge. */
+.kit-col--centre {
+  text-align: center;
+
+  &.kit-col--measure {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .kit-actions {
+    justify-content: center;
+  }
+
+  .kit-rule {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 /* A painted column carries the padding the old two-column boxes had - the
    measured 20px - so a ground reads as a box rather than a colour change. */
 .kit-col[class*='kit-card--'] {
