@@ -712,6 +712,15 @@
 }
 
 .kit-rows__btn { text-align: center; }
+
+/* A row with no destination. Keeps the column alignment the button gave it
+   and drops every affordance that said "click me". */
+.kit-rows__label {
+  display: block;
+  padding: 12px 22px;
+  font-weight: 600;
+  color: var(--kit-ink);
+}
 .kit-rows__desc { margin: 0; color: var(--kit-ink); }
 
 // ------------------------------------------------------ article rows
@@ -728,11 +737,21 @@
     padding-bottom: 18px;
   }
 
+  /* Now an anchor rather than a span, so it has to say it is not a default
+     blue underlined link - and it has to say what hover and keyboard focus
+     look like, which a span never needed. */
   &__item {
     font-size: 0.85rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--kit-ink-soft);
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--kit-ink);
+      text-decoration: underline;
+    }
   }
 }
 
@@ -1257,3 +1276,49 @@
 .kit-centred--textFirst .kit-rule { order: 4; }
 .kit-centred--textFirst .kit-media { order: 5; }
 .kit-centred--textFirst .kit-actions { order: 6; }
+
+/* ---------------------------------------------------- columns of pieces */
+
+/* THE SECTION ARCHETYPE'S ONLY LAYOUT. One to three columns, and the gap and
+   alignment are the same ones .kit-split has used all along, so a two-column
+   Section and the copy-beside-media band it replaces line up identically. */
+.kit-cols {
+  display: grid;
+  gap: 48px;
+  align-items: center;
+}
+
+.kit-cols--1 { grid-template-columns: 1fr; }
+.kit-cols--2 { grid-template-columns: 1fr 1fr; }
+.kit-cols--3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.kit-col {
+  min-width: 0;
+}
+
+/* A painted column carries the padding the old two-column boxes had - the
+   measured 20px - so a ground reads as a box rather than a colour change. */
+.kit-col[class*='kit-card--'] {
+  background: var(--kit-card-bg);
+  padding: 20px;
+}
+
+/* Pieces stack with the same rhythm the archetypes used between their parts.
+   The first piece never carries top margin: a band's own padding already
+   sets the distance from the edge, and doubling it is what made every
+   hand-built section sit lower than the designed one. */
+.kit-col > * {
+  margin-top: 18px;
+}
+
+.kit-col > *:first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 991px) {
+  .kit-cols--2,
+  .kit-cols--3 {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}

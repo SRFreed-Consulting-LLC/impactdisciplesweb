@@ -2,8 +2,12 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { YouTubePlayerModule } from '@angular/youtube-player';
-import { PageContentBlock } from '@impact-common/shared/models/domain/page-content.model';
-import { SECTION_ARCHETYPE, SECTION_KIT } from '@impact-common/shared/lists/section_kit';
+import {
+  ContentPiece, ContentPieceKind, PageContentBlock
+} from '@impact-common/shared/models/domain/page-content.model';
+import {
+  CONTENT_PIECES, SECTION_ARCHETYPE, SECTION_KIT, SECTION_PRESETS
+} from '@impact-common/shared/lists/section_kit';
 import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-form.service';
 import { KitSectionComponent } from './kit-section.component';
@@ -54,7 +58,13 @@ const IMPLEMENTED: readonly SECTION_ARCHETYPE[] = [
   SECTION_ARCHETYPE.CONTACT_DETAILS,
   SECTION_ARCHETYPE.PHOTO_BAND,
   SECTION_ARCHETYPE.SLIDER,
-  SECTION_ARCHETYPE.COUNTDOWN
+  SECTION_ARCHETYPE.COUNTDOWN,
+  // The two that replace the fourteen above (2026-08-31). They are in this
+  // list from the day they render, not from the day the last page migrates -
+  // the whole value of the list is that it fails the moment a member of the
+  // kit draws nothing.
+  SECTION_ARCHETYPE.SECTION,
+  SECTION_ARCHETYPE.LIST
 ];
 
 /** A block carrying every field, so no archetype renders empty merely because
@@ -64,7 +74,11 @@ function blockFor(archetype: SECTION_ARCHETYPE, variant?: string): PageContentBl
   return {
     key: 'k1',
     type: archetype,
-    variant,
+    // A LIST draws by its LOOK, and a look is the variant. With none named
+    // there is nothing to draw and the coverage check would fail for a reason
+    // that is about the fixture rather than the renderer - so the fixture
+    // names one. The per-variant check below walks all ten.
+    variant: variant ?? (archetype === SECTION_ARCHETYPE.LIST ? 'tiles' : undefined),
     heading: 'A heading',
     subheading: 'An eyebrow',
     body: '<p>A passage of copy.</p>',
@@ -82,7 +96,41 @@ function blockFor(archetype: SECTION_ARCHETYPE, variant?: string): PageContentBl
       { title: 'One', description: 'First', body: '<p>x</p>', icon: 'fas fa-heart', link: '/a', isActive: true },
       { title: 'Two', description: 'Second', body: '<p>y</p>', icon: 'fas fa-church', link: '/b', isActive: true }
     ],
+    // A SECTION arranges COLUMNS OF PIECES rather than fields, so the fixture
+    // has to carry one or the archetype draws an empty band. Same principle
+    // as the fields above: starve nothing, so a silent section means a
+    // missing case rather than a thin fixture.
+    columns: [{ key: 'c1', pieces: [pieceFor('heading'), pieceFor('text')] }],
     isActive: true
+  };
+}
+
+/**
+ * ONE PIECE carrying every field any kind reads.
+ *
+ * The same trick as `blockFor`, one level down, and for the same reason: a
+ * piece that draws nothing must mean the renderer has no case for that kind,
+ * never that the fixture forgot to give it a date or an image.
+ */
+function pieceFor(kind: ContentPieceKind): ContentPiece {
+  return {
+    key: `p-${kind}`,
+    kind,
+    isActive: true,
+    text: 'Some words',
+    level: 'section',
+    html: '<p>A passage of text.</p>',
+    image: { url: 'https://example.test/photo.jpg', name: 'photo' } as never,
+    videoId: 'abc123',
+    buttons: [{ title: 'Primary', link: '/somewhere', isActive: true }],
+    formId: 'a-real-form-id',
+    signupList: 'newsletter',
+    // Far enough ahead that the clock never renders zero, whenever the suite
+    // runs. A past date draws NOTHING by design, which would read here as a
+    // missing case.
+    targetDate: '2099-01-01',
+    amountKey: 'inpersonSeminarCost',
+    amountSuffix: '/seat'
   };
 }
 
@@ -474,5 +522,311 @@ describe('the behaviours the new archetypes own', () => {
     expect(el.querySelector('.kit-tile__cta'))
       .withContext('a button with no resolvable destination reached the page')
       .toBeNull();
+  });
+});
+
+
+/**
+ * DOES EACH PIECE ACTUALLY DRAW ANYTHING?
+ *
+ * The successor to the archetype census above, and for the identical reason.
+ * Where the kit used to say "this band is a hero" it now says "this column
+ * holds a heading, some text and two buttons" - so the unit that can silently
+ * go missing is no longer the archetype, it is the PIECE. The template still
+ * ends in "@default {}", still deliberately, and a piece kind with no case
+ * still vanishes from a live page with every other test green.
+ *
+ * Three checks, because there are three ways a section can now be built:
+ * every PIECE draws, every PRESET the Add menu offers draws, and every LIST
+ * LOOK draws. Each has already failed honestly during this work.
+ */
+describe('the pieces a section is built from', () => {
+  let fixture: ComponentFixture<KitSectionComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [KitSectionComponent],
+      imports: [YouTubePlayerModule, FormsModule],
+      providers: [
+        { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
+        { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(KitSectionComponent);
+    // The one figure a price piece NAMES, so it resolves rather than drawing
+    // nothing - which is what it correctly does when the name is unknown.
+    fixture.componentInstance.webConfig = { inpersonSeminarCost: 249 } as never;
+  });
+
+  // The countdown starts an interval. A fixture nobody destroys leaves it
+  // ticking for the rest of the run.
+  afterEach(() => fixture.destroy());
+
+  /**
+   * Set the block the way ANGULAR would.
+   *
+   * Assigning `.block` on the instance is not the same as binding it: Angular
+   * calls ngOnChanges for a TEMPLATE-bound input, and the section does real
+   * work there - it starts the clock and reads the testimonials. A spec that
+   * only assigns is testing a component that never received its input, and
+   * the first thing this check caught was exactly that.
+   */
+  function setBlock(block: unknown): void {
+    fixture.componentInstance.block = block as never;
+    fixture.componentInstance.ngOnChanges();
+    fixture.detectChanges();
+  }
+
+  /** A one-column Section holding exactly the piece under test. */
+  function renderPiece(piece: ContentPiece): HTMLElement {
+    setBlock({
+      key: 'k1',
+      type: SECTION_ARCHETYPE.SECTION,
+      variant: 'columns',
+      columns: [{ key: 'c1', pieces: [piece] }],
+      isActive: true
+    });
+    return fixture.nativeElement as HTMLElement;
+  }
+
+  /** Did the COLUMN get anything in it? Checked at the column rather than the
+   *  section, because the section's wrapper draws whether or not any piece
+   *  inside it did - which is exactly the false pass to avoid. */
+  function columnFilled(el: HTMLElement): boolean {
+    return (el.querySelector('.kit-col')?.children.length ?? 0) > 0;
+  }
+
+  it('draws something for every piece kind the kit offers', () => {
+    const silent = CONTENT_PIECES
+      .map((def) => def.kind)
+      .filter((kind) => !columnFilled(renderPiece(pieceFor(kind as ContentPieceKind))));
+
+    expect(silent)
+      .withContext(
+        'these piece kinds are offered in the editor but render NOTHING - ' +
+        'staff can add them and see an empty section'
+      )
+      .toEqual([]);
+  });
+
+  it('draws something for every preset the Add menu offers', () => {
+    const silent: string[] = [];
+
+    for (const preset of SECTION_PRESETS) {
+      // Exactly what the Add menu writes, with each piece fattened by the
+      // fixture so a thin seed is not mistaken for a missing case.
+      setBlock({
+        key: 'k1',
+        type: SECTION_ARCHETYPE.SECTION,
+        variant: 'columns',
+        ...preset.seed,
+        columns: preset.seed.columns.map((column, ci) => ({
+          key: 'c' + ci,
+          pieces: column.pieces.map((piece) => ({
+            ...pieceFor(piece.kind as ContentPieceKind),
+            ...piece,
+            key: 'c' + ci + '-' + piece.kind
+          }))
+        })),
+        isActive: true
+      });
+
+      const el = fixture.nativeElement as HTMLElement;
+      const columns = Array.from(el.querySelectorAll('.kit-col'));
+      const empty = columns.length !== preset.seed.columns.length
+        || columns.some((column) => column.children.length === 0);
+
+      if (empty) {
+        silent.push(preset.key);
+      }
+    }
+
+    expect(silent)
+      .withContext('these presets place a section that draws blank columns')
+      .toEqual([]);
+  });
+
+  it('draws something for every LIST look', () => {
+    const looks = SECTION_KIT
+      .find((def) => def.archetype === SECTION_ARCHETYPE.LIST)
+      ?.variants.map((variant) => variant.key) ?? [];
+
+    // Ten of them, and the count is asserted so a look added to the kit
+    // without a rendering cannot slip through by simply not being iterated.
+    expect(looks.length).toBe(10);
+
+    const silent = looks.filter((look) => {
+      setBlock(blockFor(SECTION_ARCHETYPE.LIST, look));
+      const el = fixture.nativeElement as HTMLElement;
+      return (el.querySelector('.kit-section')?.children.length ?? 0) === 0;
+    });
+
+    expect(silent)
+      .withContext('these List looks are offered but render NOTHING')
+      .toEqual([]);
+  });
+
+  it('leaves out a piece that has been switched off', () => {
+    // Absent counts as live, false does not - the same rule as sections and
+    // entries. Getting it backwards would publish work somebody hid.
+    setBlock({
+      key: 'k1',
+      type: SECTION_ARCHETYPE.SECTION,
+      variant: 'columns',
+      columns: [{
+        key: 'c1',
+        pieces: [
+          { ...pieceFor('text'), key: 'shown', html: '<p>VISIBLE</p>' },
+          { ...pieceFor('text'), key: 'hidden', html: '<p>HIDDEN</p>', isActive: false }
+        ]
+      }],
+      isActive: true
+    });
+
+    const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(text).toContain('VISIBLE');
+    expect(text).not.toContain('HIDDEN');
+  });
+
+  it('never draws a piece button whose destination cannot be resolved', () => {
+    // The same rule the five dead donation buttons broke, restated for the
+    // new renderer: a button with nothing usable behind it draws nothing at
+    // all rather than an anchor that goes nowhere.
+    const el = renderPiece({
+      ...pieceFor('buttons'),
+      buttons: [
+        { title: 'Works', link: '/somewhere', isActive: true },
+        { title: 'Broken', isActive: true }
+      ]
+    });
+
+    const labels = Array.from(el.querySelectorAll('.kit-actions a')).map((a) => a.textContent?.trim());
+    expect(labels.join(' ')).toContain('Works');
+    expect(labels.join(' ')).not.toContain('Broken');
+  });
+
+  it('resolves a price piece from Web Config, and draws nothing when it cannot', () => {
+    // A figure exists in ONE place. A piece names it; it never carries it.
+    const good = renderPiece({ ...pieceFor('price'), amountKey: 'inpersonSeminarCost' });
+    expect(good.textContent).toContain('249');
+
+    const bad = renderPiece({ ...pieceFor('price'), amountKey: 'noSuchField' });
+    expect(bad.textContent)
+      .withContext('an unresolvable figure drew a number anyway, which reads as an answer')
+      .not.toContain('$');
+  });
+});
+
+/**
+ * THREE DEFECTS THAT PREDATE THE KIT, found while mapping the list
+ * archetypes onto the new List member and fixed on the way past.
+ *
+ * All three are the same species: markup that LOOKS like it works. A button
+ * that goes nowhere, a navigation strip that does not navigate, and a title
+ * printed twice all render without error and pass any check that only asks
+ * whether the section drew something.
+ */
+describe('the list defects that predate the kit', () => {
+  let fixture: ComponentFixture<KitSectionComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [KitSectionComponent],
+      imports: [YouTubePlayerModule, FormsModule],
+      providers: [
+        { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
+        { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(KitSectionComponent);
+  });
+
+  afterEach(() => fixture.destroy());
+
+  function render(block: unknown): HTMLElement {
+    fixture.componentInstance.block = block as never;
+    fixture.componentInstance.ngOnChanges();
+    fixture.detectChanges();
+    return fixture.nativeElement as HTMLElement;
+  }
+
+  it('gives a row with no destination its title but not a link', () => {
+    const el = render({
+      key: 'rows',
+      type: SECTION_ARCHETYPE.LIST_ROWS,
+      variant: 'buttonAndText',
+      items: [
+        { title: 'Goes somewhere', link: '/a', description: 'first', isActive: true },
+        { title: 'Goes nowhere', description: 'second', isActive: true }
+      ]
+    });
+
+    const links = Array.from(el.querySelectorAll('.kit-rows__row a')).map((a) => a.textContent?.trim());
+    expect(links).toEqual(['Goes somewhere']);
+
+    // The title is the row's CONTENT. Dropping it would lose information the
+    // page is there to carry - it just stops claiming to be clickable.
+    expect(el.textContent).toContain('Goes nowhere');
+  });
+
+  it('makes every jump-strip item jump to the row it names', () => {
+    const el = render({
+      key: 'arts',
+      type: SECTION_ARCHETYPE.LIST_ARTICLES,
+      variant: 'numbered',
+      items: [
+        { title: 'First thing', description: 'a', isActive: true },
+        { title: 'Second thing', description: 'b', isActive: true }
+      ]
+    });
+
+    const targets = Array.from(el.querySelectorAll('.kit-strip__item'))
+      .map((item) => item.getAttribute('href'));
+
+    expect(targets.length)
+      .withContext('the strip is announced as navigation but rendered no links')
+      .toBe(2);
+
+    // Every fragment must actually land on something, which is the half a
+    // spans-into-anchors change is most likely to get wrong.
+    for (const target of targets) {
+      expect(el.querySelector(`article[id="${(target ?? '').slice(1)}"]`))
+        .withContext(`the strip links to ${target}, which is not on the page`)
+        .not.toBeNull();
+    }
+  });
+
+  it('prints a numbered row title once when the row has no heading', () => {
+    const el = render({
+      key: 'arts',
+      type: SECTION_ARCHETYPE.LIST_ARTICLES,
+      variant: 'numbered',
+      items: [{ title: 'Only Title', description: 'a', isActive: true }]
+    });
+
+    const body = el.querySelector('.kit-article__copy')?.textContent ?? '';
+    const times = body.split('Only Title').length - 1;
+    expect(times)
+      .withContext('the chip line and the heading fallback both printed it')
+      .toBe(1);
+  });
+
+  it('still shows both when a numbered row DOES carry a heading', () => {
+    // The fix must not go the other way and swallow the title on the rows
+    // that legitimately show a chip line and a separate heading.
+    const el = render({
+      key: 'arts',
+      type: SECTION_ARCHETYPE.LIST_ARTICLES,
+      variant: 'numbered',
+      items: [{ title: 'The Tag', heading: 'The Heading', description: 'a', isActive: true }]
+    });
+
+    const body = el.querySelector('.kit-article__copy')?.textContent ?? '';
+    expect(body).toContain('The Tag');
+    expect(body).toContain('The Heading');
   });
 });

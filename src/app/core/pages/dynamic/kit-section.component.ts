@@ -3,7 +3,9 @@ import {
 } from '@angular/core';
 import Swiper from 'swiper';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { PageContentBlock, PageContentItem } from '@impact-common/shared/models/domain/page-content.model';
+import {
+  ContentPiece, PageContentBlock, PageContentItem, SectionColumn
+} from '@impact-common/shared/models/domain/page-content.model';
 import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { TestimonialModel } from '@impact-common/shared/models/domain/testimonial.model';
 import { TESTIMONIAL_TYPES } from '@impact-common/shared/lists/testimonial_types.enum';
@@ -137,8 +139,13 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     if (this.block?.type === SECTION_ARCHETYPE.CAROUSEL) {
       this.loadTestimonials(this.block.testimonialIds ?? []).catch(() => undefined);
     }
-    if (this.block?.type === SECTION_ARCHETYPE.COUNTDOWN) {
+    if (this.block?.type === SECTION_ARCHETYPE.COUNTDOWN
+      || this.block?.type === SECTION_ARCHETYPE.SECTION) {
       this.startCountdown();
+    }
+    // A LIST of quotes reads the same collection the old carousel did.
+    if (this.listLook?.type === SECTION_ARCHETYPE.CAROUSEL) {
+      this.loadTestimonials(this.block.testimonialIds ?? []).catch(() => undefined);
     }
   }
 
@@ -146,14 +153,123 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     if (this.block?.type === SECTION_ARCHETYPE.CAROUSEL) {
       setTimeout(() => this.initSwiper());
     }
-    if (this.block?.type === SECTION_ARCHETYPE.SLIDER) {
+    if (this.block?.type === SECTION_ARCHETYPE.SLIDER
+      || this.listLook?.type === SECTION_ARCHETYPE.SLIDER) {
       setTimeout(() => this.initSlider());
+    }
+    if (this.listLook?.type === SECTION_ARCHETYPE.CAROUSEL) {
+      setTimeout(() => this.initSwiper());
     }
   }
 
   ngOnDestroy(): void {
     this.swiper?.destroy();
     this.stopCountdown();
+  }
+
+  /**
+   * The id a numbered row carries and its strip link jumps to.
+   *
+   * Scoped by the block's key, because two numbered lists on one page would
+   * otherwise both claim `#row-1` and every link would land on the first.
+   * Derived from POSITION rather than the title: a title can be edited to
+   * something that is not a valid fragment, and reordering must move the
+   * anchor with the row, which position does for free.
+   */
+  rowAnchor(index: number): string {
+    return `${this.block?.key ?? 'row'}-${index + 1}`;
+  }
+
+  // ------------------------------------------------- columns and pieces
+
+  /**
+   * WHICH RENDERING to use, which is not always the stored type.
+   *
+   * A LIST block names a LOOK, and every look is one of the archetypes this
+   * template already draws. Mapping it here means the switch falls through
+   * to markup that exists rather than a second copy of it - one rendering,
+   * not two drifting apart while the migration runs. Stage 4 inlines the
+   * survivors and deletes the rest.
+   */
+  private static readonly LIST_LOOKS: Record<string, { type: SECTION_ARCHETYPE; variant: string }> = {
+    tiles: { type: SECTION_ARCHETYPE.LIST_GRID, variant: 'picture' },
+    pictureRows: { type: SECTION_ARCHETYPE.LIST_GRID, variant: 'pictureRows' },
+    icon: { type: SECTION_ARCHETYPE.LIST_GRID, variant: 'icon' },
+    price: { type: SECTION_ARCHETYPE.LIST_GRID, variant: 'price' },
+    rows: { type: SECTION_ARCHETYPE.LIST_ROWS, variant: 'buttonAndText' },
+    articles: { type: SECTION_ARCHETYPE.LIST_ARTICLES, variant: 'plain' },
+    numbered: { type: SECTION_ARCHETYPE.LIST_ARTICLES, variant: 'numbered' },
+    timeline: { type: SECTION_ARCHETYPE.TIMELINE, variant: 'centreLine' },
+    quotes: { type: SECTION_ARCHETYPE.CAROUSEL, variant: 'quotes' },
+    slides: { type: SECTION_ARCHETYPE.SLIDER, variant: 'slides' }
+  };
+
+  private get listLook(): { type: SECTION_ARCHETYPE; variant: string } | undefined {
+    return this.block?.type === SECTION_ARCHETYPE.LIST
+      ? KitSectionComponent.LIST_LOOKS[this.block.variant ?? '']
+      : undefined;
+  }
+
+  get renderAs(): string {
+    return this.listLook?.type ?? this.block?.type ?? '';
+  }
+
+  /** One to three. Anything else is data nobody meant, and a section with no
+   *  columns draws an empty band rather than throwing. */
+  get columnCount(): number {
+    return Math.min(3, Math.max(1, this.liveColumns.length || 1));
+  }
+
+  get liveColumns(): SectionColumn[] {
+    return (this.block.columns ?? []).filter((column) => !!column);
+  }
+
+  /** Switched-off pieces are left out, the same rule as sections and
+   *  entries - absent counts as live. */
+  livePieces(column: SectionColumn): ContentPiece[] {
+    return (column.pieces ?? []).filter((piece) => piece.isActive !== false);
+  }
+
+  /** A column's painted box, from the same fixed palette as everywhere else.
+   *  Re-declares the ink tokens, so every piece inside follows the ground
+   *  without knowing it exists. */
+  columnClasses(column: SectionColumn): string {
+    return [
+      column.ground && column.ground !== 'none' ? `kit-card--${column.ground}` : '',
+      column.ground && column.ground !== 'none'
+        ? `kit-cardink--${column.ink ?? (column.ground === 'panel' ? 'dark' : 'light')}`
+        : '',
+      column.titleTone === 'brand' ? 'kit-tt--brand' : ''
+    ].filter(Boolean).join(' ');
+  }
+
+  /** A buttons piece's own list. Same shape and the same href() resolution
+   *  as every other button on the site. */
+  pieceButtons(piece: ContentPiece): PageContentItem[] {
+    return (piece.buttons ?? []).filter((button) => button.isActive !== false);
+  }
+
+  /** A price piece NAMES a Web Config figure. Null rather than 0 when it
+   *  cannot be resolved, and the template draws no line at all. */
+  pieceAmount(piece: ContentPiece): number | null {
+    const key = piece.amountKey;
+    if (!key || !this.webConfig) {
+      return null;
+    }
+    const value = (this.webConfig as unknown as Record<string, unknown>)[key];
+    return typeof value === 'number' ? value : null;
+  }
+
+  /** The first countdown piece's date, for a section built from pieces. The
+   *  flat `targetDate` still wins for a block written the old way. */
+  private get pieceTargetDate(): string | undefined {
+    for (const column of this.liveColumns) {
+      const clock = this.livePieces(column).find((piece) => piece.kind === 'countdown');
+      if (clock?.targetDate) {
+        return clock.targetDate;
+      }
+    }
+    return undefined;
   }
 
   // ------------------------------------------------------------- countdown
@@ -175,7 +291,7 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
    */
   private startCountdown(): void {
     this.stopCountdown();
-    const target = Date.parse(this.block.targetDate ?? '');
+    const target = Date.parse(this.block.targetDate ?? this.pieceTargetDate ?? '');
     if (!Number.isFinite(target)) {
       this.remaining = null;
       return;
@@ -370,6 +486,14 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
   /** Which look within the archetype, defaulting to the first so a block
    *  written before variants existed still draws something. */
   get variant(): string {
+    // For a LIST the stored variant is the LOOK; the markup it delegates to
+    // expects the old archetype's variant key, so translate. Getting this
+    // wrong draws a real section with the wrong branch, which is worse than
+    // drawing nothing.
+    const look = this.listLook;
+    if (look) {
+      return look.variant;
+    }
     return variantDef(this.block.type ?? '', this.block.variant)?.key ?? '';
   }
 
@@ -571,13 +695,15 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
   /** Joins the list the SECTION names - 'prayer' on a migrated Prayer Team,
    *  'newsletter' by default. The service owns the endpoint and the
    *  success/failure messaging, exactly as it does for the prayer page. */
-  async handleSignup(): Promise<void> {
+  /** A signup PIECE names its own list; a block written the old way carries
+   *  it on the block. Whichever is present wins, defaulting to newsletter. */
+  async handleSignup(list?: 'newsletter' | 'prayer'): Promise<void> {
     if (this.signupBusy) {
       return;
     }
     this.signupBusy = true;
     try {
-      await this.subscribeForm.submit(this.block.signupList ?? 'newsletter', this.signup);
+      await this.subscribeForm.submit(list ?? this.block.signupList ?? 'newsletter', this.signup);
       this.signup = { firstName: '', lastName: '', email: '' };
     } finally {
       this.signupBusy = false;

@@ -5,7 +5,13 @@
          [style.backgroundImage]="backgroundImage"
          [style.backgroundPosition]="backgroundPosition">
 
-  @switch (block.type) {
+  <!-- renderAs, not block.type. A LIST block names a LOOK, and every look is
+       an archetype below drawn by markup that already exists - so it maps to
+       that case and falls through. Duplicating the markup under a new case
+       would mean maintaining both copies for the whole migration, which is
+       precisely how two renderings drift apart. Stage 4 inlines the survivors
+       and deletes the rest. -->
+  @switch (renderAs) {
 
     <!-- A photo across the top with the page title over it. Five of the six
          heroes on the site today are already one shared component; this is
@@ -217,7 +223,16 @@
         <div class="kit-rows">
           @for (row of liveItems; track $index) {
             <div class="kit-rows__row">
-              <a class="kit-btn kit-btn--ghost kit-rows__btn" [href]="href(row)">{{ row.title }}</a>
+              <!-- THE ONE PLACE href() WAS USED UNGUARDED, so a row with no
+                   destination rendered a button that went nowhere - the same
+                   defect as the five dead donation buttons. The title still
+                   shows, because it is the row's content rather than its
+                   link; it just stops claiming to be clickable. -->
+              @if (href(row)) {
+                <a class="kit-btn kit-btn--ghost kit-rows__btn" [href]="href(row)">{{ row.title }}</a>
+              } @else {
+                <span class="kit-rows__btn kit-rows__label">{{ row.title }}</span>
+              }
               <p class="kit-rows__desc">{{ row.description }}</p>
             </div>
           }
@@ -233,15 +248,21 @@
       @if (variant === 'numbered') {
         <nav class="kit-strip" aria-label="What is on this page">
           <div class="kit-wrap kit-strip__inner">
+            <!-- LINKS, not labels. The strip is announced as "What is on this
+                 page" and sits at the top of a long page, so spans made a
+                 promise the markup did not keep. Each one jumps to the row
+                 built from the same array position, which is why the two
+                 cannot fall out of step. -->
             @for (row of liveItems; track $index) {
-              <span class="kit-strip__item">{{ row.title }}</span>
+              <a class="kit-strip__item" [href]="'#' + rowAnchor($index)">{{ row.title }}</a>
             }
           </div>
         </nav>
       }
       <div class="kit-wrap">
         @for (row of liveItems; track $index) {
-          <article class="kit-article" [class.kit-article--reverse]="!entryOnLeft($index)">
+          <article class="kit-article" [id]="rowAnchor($index)"
+                   [class.kit-article--reverse]="!entryOnLeft($index)">
             <div class="kit-article__media">
               @if (isVideo(row)) {
                 <!-- [muted] as a PROPERTY, not the bare attribute: Angular
@@ -256,8 +277,14 @@
               }
             </div>
             <div class="kit-article__copy">
+              <!-- The title belongs to the chip line only when the row has a
+                   SEPARATE heading below it. Without that guard a row with no
+                   heading printed its title twice, once here and once as the
+                   h3's fallback. -->
               @if (variant === 'numbered') {
-                <p class="kit-article__tag">{{ chip($index) }} &middot; {{ row.title }}</p>
+                <p class="kit-article__tag">
+                  {{ chip($index) }}@if (row.heading) { &middot; {{ row.title }} }
+                </p>
               }
               <h3 class="kit-article__title">{{ row.heading || row.title }}</h3>
               <hr class="kit-rule">
@@ -571,6 +598,21 @@
       </div>
     }
 
+    <!-- ONE TO THREE COLUMNS, each an ordered list of pieces. This single
+         case replaces eight archetypes above and is shorter than any two of
+         them, because the arrangement is data now rather than markup. -->
+    @case (archetypes.SECTION) {
+      <div [class]="'kit-wrap kit-cols kit-cols--' + columnCount">
+        @for (column of liveColumns; track column.key) {
+          <div [class]="'kit-col ' + columnClasses(column)">
+            @for (piece of livePieces(column); track piece.key) {
+              <ng-container *ngTemplateOutlet="pieceTpl; context: { piece: piece }"></ng-container>
+            }
+          </div>
+        }
+      </div>
+    }
+
     <!-- An archetype this build cannot draw. Skipped rather than crashing:
          the data outlives the build, and a newer admin may have written it.
          The silence is deliberate AND dangerous, which is why the spec
@@ -648,5 +690,180 @@
       <youtube-player [videoId]="block.videoId" [playerVars]="{ autoplay: 1 }"
                       [disablePlaceholder]="true"></youtube-player>
     </div>
+  }
+</ng-template>
+
+<!-- ONE PIECE of a column: the switch every archetype above used to hold,
+     one level down and far smaller, because a piece draws one thing rather
+     than arranging a whole band.
+
+     Every case is the SAME markup and the same classes its old archetype
+     used, so a migrated section renders as the section it replaced. A piece
+     this build does not know draws nothing - the same rule as an unknown
+     archetype, for the same reason: the data outlives the build. -->
+<ng-template #pieceTpl let-piece="piece">
+  @switch (piece.kind) {
+
+    @case ('heading') {
+      @if (piece.level === 'page') {
+        <h1 class="kit-hero__title" [innerHTML]="piece.text"></h1>
+      } @else if (piece.level === 'minor') {
+        <h3 class="kit-columns__title" [innerHTML]="piece.text"></h3>
+      } @else {
+        <h2 class="kit-heading" [innerHTML]="piece.text"></h2>
+      }
+      <hr class="kit-rule">
+    }
+
+    @case ('eyebrow') {
+      <p class="kit-eyebrow">{{ piece.text }}</p>
+    }
+
+    @case ('text') {
+      <div class="kit-copy" [innerHTML]="piece.html"></div>
+    }
+
+    @case ('picture') {
+      <img class="kit-img" loading="lazy"
+           [src]="piece.image?.url" [alt]="piece.image?.name || ''">
+    }
+
+    @case ('video') {
+      <ng-container *ngTemplateOutlet="video"></ng-container>
+    }
+
+    @case ('buttons') {
+      @if (pieceButtons(piece).length) {
+        <div class="kit-actions">
+          @for (button of pieceButtons(piece); track $index) {
+            @if (href(button)) {
+              <a class="kit-btn" [href]="href(button)">
+                {{ button.title }}
+                @if (button.icon) {
+                  <i [class]="button.icon + ' kit-btn__icon'" aria-hidden="true"></i>
+                }
+              </a>
+            }
+          }
+        </div>
+      }
+    }
+
+    @case ('form') {
+      @if (piece.formId) {
+        <div class="kit-form">
+          <app-dynamic-form [formId]="piece.formId"></app-dynamic-form>
+        </div>
+      }
+    }
+
+    @case ('signup') {
+      <div class="kit-signup">
+        <form class="kit-signup__form" (ngSubmit)="handleSignup(piece.signupList)">
+          <div class="kit-signup__fields">
+            <label class="kit-signup__field">
+              <span>First Name <span class="kit-signup__req">*</span></span>
+              <input required type="text" name="firstName" [(ngModel)]="signup.firstName">
+            </label>
+            <label class="kit-signup__field">
+              <span>Last Name <span class="kit-signup__req">*</span></span>
+              <input required type="text" name="lastName" [(ngModel)]="signup.lastName">
+            </label>
+            <label class="kit-signup__field">
+              <span>Email <span class="kit-signup__req">*</span></span>
+              <input required type="email" name="email" [(ngModel)]="signup.email">
+            </label>
+          </div>
+          <button class="kit-btn" type="submit" [disabled]="signupBusy">Sign up</button>
+        </form>
+      </div>
+    }
+
+    <!-- No date, an unreadable one, or one already past draws NO clock:
+         zeros read as "it starts now" and a negative reads as a bug. -->
+    @case ('countdown') {
+      @if (remaining) {
+        <div class="kit-clock" role="timer">
+          <div class="kit-clock__unit">
+            <span class="kit-clock__n">{{ remaining.days }}</span>
+            <span class="kit-clock__l">DAYS</span>
+          </div>
+          <span class="kit-clock__sep">:</span>
+          <div class="kit-clock__unit">
+            <span class="kit-clock__n">{{ pad(remaining.hours) }}</span>
+            <span class="kit-clock__l">HOURS</span>
+          </div>
+          <span class="kit-clock__sep">:</span>
+          <div class="kit-clock__unit">
+            <span class="kit-clock__n">{{ pad(remaining.minutes) }}</span>
+            <span class="kit-clock__l">MINUTES</span>
+          </div>
+          <span class="kit-clock__sep">:</span>
+          <div class="kit-clock__unit">
+            <span class="kit-clock__n">{{ pad(remaining.seconds) }}</span>
+            <span class="kit-clock__l">SECONDS</span>
+          </div>
+        </div>
+      }
+    }
+
+    <!-- From Web Config, which already feeds the footer. ONE piece rather
+         than six, because none of it is edited on the page. -->
+    @case ('siteDetails') {
+      <ul class="kit-contact__list">
+        @if (addressLine) {
+          <li>
+            <i class="fal fa-map-marker-alt" aria-hidden="true"></i>
+            <h6>Address</h6>
+            <span>{{ addressLine }}</span>
+          </li>
+        }
+        @if (webConfig?.email) {
+          <li>
+            <i class="fal fa-envelope-open-text" aria-hidden="true"></i>
+            <h6>Email</h6>
+            <span>{{ webConfig?.email }}</span>
+          </li>
+        }
+        @if (webConfig?.phone) {
+          <li>
+            <i class="fal fa-phone-alt" aria-hidden="true"></i>
+            <h6>Phone</h6>
+            <span>{{ webConfig?.phone }}</span>
+          </li>
+        }
+      </ul>
+      <ul class="kit-contact__social">
+        @if (webConfig?.facebook) {
+          <li><a [href]="webConfig?.facebook" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a></li>
+        }
+        @if (webConfig?.twitter) {
+          <li><a [href]="webConfig?.twitter" aria-label="X"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+        }
+        @if (webConfig?.instagram) {
+          <li><a [href]="webConfig?.instagram" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+        }
+        @if (webConfig?.youtube) {
+          <li><a [href]="webConfig?.youtube" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a></li>
+        }
+        @if (webConfig?.linkedIn) {
+          <li><a [href]="webConfig?.linkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a></li>
+        }
+      </ul>
+    }
+
+    <!-- NAMED from Web Config, never typed. A figure that cannot be resolved
+         draws nothing rather than "$0", which looks like an answer. -->
+    @case ('price') {
+      @if (pieceAmount(piece) !== null) {
+        <p class="kit-tile__price">${{ pieceAmount(piece) }}{{ piece.amountSuffix }}</p>
+      }
+    }
+
+    @case ('note') {
+      <p class="kit-herosplit__note">{{ piece.text }}</p>
+    }
+
+    @default {}
   }
 </ng-template>
