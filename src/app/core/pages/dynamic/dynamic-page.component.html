@@ -24,7 +24,12 @@
                exactly as before. -->
           <div [class.kit-pair-row]="row.length > 1">
             @for (section of row; track section.key) {
+              <!-- In the previewer a switched-off section draws anyway -
+                   the page being BUILT - dimmed and tagged (styles.scss)
+                   so it cannot be mistaken for what a visitor sees. On a
+                   real visit it was already filtered out upstream. -->
               <app-kit-section
+                [class.kit-preview-off]="previewing && section.isActive === false"
                 [block]="section"
                 [theme]="state.theme"
                 [webConfig]="webConfig"

@@ -25,9 +25,18 @@ export interface PageView {
  * picture sits on, which side a feature row's screenshot sits on - so
  * counting a hidden section would leave two pictures stacked together the
  * moment staff switched one off.
+ *
+ * `includeHidden` is Page Manager's previewer and ONLY that: the preview
+ * shows the page being BUILT, so switched-off sections draw too (marked by
+ * the template) and are counted for alternation - the builder is looking at
+ * the page as it will be, not at today's visitor view. A visitor's page
+ * never passes true.
  */
-export function buildPageView(doc: { blocks?: PageContentBlock[] } | null): PageView {
-  const sections = (doc?.blocks ?? []).filter((b) => b.isActive !== false);
+export function buildPageView(
+  doc: { blocks?: PageContentBlock[] } | null,
+  includeHidden = false
+): PageView {
+  const sections = (doc?.blocks ?? []).filter((b) => includeHidden || b.isActive !== false);
 
   const seen = new Map<string, number>();
   const typeIndex: Record<string, number> = {};

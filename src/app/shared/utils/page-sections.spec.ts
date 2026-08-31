@@ -36,6 +36,24 @@ describe('buildPageView', () => {
     expect(view.sections.map((s) => s.key)).toEqual(['a', 'c']);
   });
 
+  it('keeps switched-off sections FOR THE PREVIEWER, and counts them', () => {
+    // The preview shows the page being BUILT (owner decision 2026-08-31):
+    // a new page's sections all start switched off, and a previewer that
+    // dropped them would show someone the absence of their work. They are
+    // counted for alternation too - the builder is looking at the page as
+    // it will be, not at today's visitor view.
+    const view = buildPageView({
+      blocks: [
+        block('a', PAGE_SECTION_TYPES.STORY, true),
+        block('b', PAGE_SECTION_TYPES.STORY, false),
+        block('c', PAGE_SECTION_TYPES.STORY)
+      ]
+    }, true);
+
+    expect(view.sections.map((s) => s.key)).toEqual(['a', 'b', 'c']);
+    expect(view.typeIndex['c']).toBe(2);
+  });
+
   it('indexes each section among sections OF ITS OWN TYPE', () => {
     // Not position in the stack. The story columns alternate which side their
     // picture sits on, and they have to keep alternating with each other
