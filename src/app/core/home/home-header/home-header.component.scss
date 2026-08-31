@@ -63,7 +63,21 @@
               }
             }
           }
-          &:hover {
+          // :focus-within beside :hover is what makes this menu usable from a
+          // keyboard (2026-08-31). The dropdown labels are not destinations,
+          // so nothing here was a tab stop, and the submenu only ever opened
+          // under a mouse pointer - its links were in the DOM the whole time
+          // and could not be revealed without one. Focus anywhere inside the
+          // item now opens it, and it stays open while tabbing through the
+          // children, because focus is still within.
+          //
+          // THIS is the live rule. The theme's own copy of this menu
+          // (_header.scss, under `.main-menu`) styles markup no template
+          // renders - nothing in the app carries that class - so a fix put
+          // there changes nothing at all. Verified in the browser before
+          // moving it here.
+          &:hover,
+          &:focus-within {
             & a {
                 color: variables.$theme-color;
             }
@@ -71,6 +85,18 @@
               visibility: visible;
               opacity: 1;
               transform: scaleY(1);
+            }
+          }
+
+          // Escape closes the list while focus stays on its label - and focus
+          // on the label is what :focus-within is reacting to, so this has to
+          // out-specify the rule above (it does: one extra class). A pointer
+          // arriving clears the flag in the component, so hover is unaffected.
+          &.is-dismissed:focus-within {
+            & ul.submenu {
+              visibility: hidden;
+              opacity: 0;
+              transform: scaleY(0);
             }
           }
           & ul.submenu {

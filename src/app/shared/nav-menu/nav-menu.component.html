@@ -1,9 +1,25 @@
 <nav>
   <ul>
     @for (item of menuItems; track item; let index = $index) {
-      <li [ngClass]="getMenuClasses(item)">
+      <li #row [ngClass]="getMenuClasses(item)"
+          [class.is-dismissed]="dismissedIndex === index"
+          (focusin)="openIndex = index" (focusout)="onLeave($event, index)"
+          (mouseenter)="dismissedIndex = null"
+          (keydown.escape)="closeMenu($event, row, index)">
         @if (item.visible && !item.external) {
-          @if (!hasQuery(item.link)) {
+          @if (isMenuLabel(item)) {
+            <!-- A dropdown LABEL, not a destination: "Training" goes nowhere,
+                 it reveals the six links under it. Rendered as a real control
+                 rather than a linkless <a>, which is what left the whole menu
+                 keyboard-unreachable - no href means no tab stop, and the
+                 submenu only opened on :hover, so its items could never be
+                 revealed without a mouse. Still an <a> so the header's own
+                 styling (which targets `li > a`) is untouched. -->
+            <a class="cursor-pointer" tabindex="0" role="button"
+               aria-haspopup="true" [attr.aria-expanded]="isOpen(index)"
+               (keydown.enter)="enterMenu($event, row)"
+               (keydown.space)="enterMenu($event, row)">{{ item.title }}</a>
+          } @else if (!hasQuery(item.link)) {
             <a [routerLink]="item.link">{{ item.title }}</a>
           }
           @if (hasQuery(item.link)) {
