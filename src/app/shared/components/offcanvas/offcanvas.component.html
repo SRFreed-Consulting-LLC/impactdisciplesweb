@@ -16,12 +16,12 @@
         used [routerLink], which is why an off-site child could not be put
         in a mobile dropdown at all - it would have tried to route to
         asbshops.com inside the app. -->
-        @for (menu of menuItems; track menu; let i = $index) {
+        @for (menu of menuItems; track menu.title; let i = $index) {
           @if (menu.hasDropdown) {
             <li [ngClass]="'menu-item-has-children has-droupdown ' + (activeMenu === menu.title ? 'active' : '')">
               <a (click)="handleOpenMenu(menu.title)" (keydown.enter)="handleOpenMenu(menu.title)" (keydown.space)="handleOpenMenu(menu.title)" tabindex="0" role="button">{{ menu.title }}</a>
               <ul [ngClass]="'sub-menu ' + (activeMenu === menu.title ? 'active' : '')">
-                @for (sub_m of menu.dropdownItems; track sub_m; let index = $index) {
+                @for (sub_m of menu.dropdownItems; track sub_m.title; let index = $index) {
                   <li>
                     @if (sub_m.external) {
                       <a [href]="sub_m.link" target="_blank" rel="noopener">{{ sub_m.title }}</a>

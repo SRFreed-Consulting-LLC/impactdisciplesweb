@@ -1,6 +1,6 @@
 <nav>
   <ul>
-    @for (item of menuItems; track item; let index = $index) {
+    @for (item of menuItems; track item.title; let index = $index) {
       <li #row [ngClass]="getMenuClasses(item)"
           [class.is-dismissed]="dismissedIndex === index"
           (focusin)="openIndex = index" (focusout)="onLeave($event, index)"
@@ -42,7 +42,7 @@
         }
         @if (item.hasDropdown && !item.megamenu) {
           <ul class="submenu transition-3">
-            @for (menu of item.dropdownItems; track menu; let index = $index) {
+            @for (menu of item.dropdownItems; track menu.title; let index = $index) {
               <li>
                 @if (menu.visible && !menu.external) {
                   @if (!hasQuery(menu.link)) {
