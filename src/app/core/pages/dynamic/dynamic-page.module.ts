@@ -7,7 +7,6 @@ import { FormRendererModule } from 'src/app/shared/form-renderer/form-renderer.m
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DynamicPageComponent } from './dynamic-page.component';
 import { KitSectionModule } from './kit-section.module';
-import { KitPreviewPageComponent } from './kit-preview-page.component';
 
 /**
  * Pages staff created, which have no route of their own.
@@ -21,18 +20,15 @@ import { KitPreviewPageComponent } from './kit-preview-page.component';
  * no `title`, which is exactly the set of them.
  */
 const routes: Routes = [
-  // The migration comparison, matched BEFORE the greedy :slug or it would
-  // be read as a page whose slug is "kit-preview". It draws a page through
-  // Section and List, in memory, beside the live one in the admin's
-  // Compare view. Retires when the last page migrates.
-  { path: 'kit-preview/:slug', component: KitPreviewPageComponent },
+  // The migration comparison route retired 2026-09-01 with the archetypes
+  // it existed to compare against - twice over: once for the twelve
+  // original pages, once for the fourteen archetypes.
   { path: ':slug', component: DynamicPageComponent }
 ];
 
 @NgModule({
   declarations: [
-    DynamicPageComponent,
-    KitPreviewPageComponent
+    DynamicPageComponent
   ],
   imports: [
     CommonModule,

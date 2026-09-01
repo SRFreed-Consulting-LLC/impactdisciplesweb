@@ -15,125 +15,17 @@
 
     <!-- A photo across the top with the page title over it. Five of the six
          heroes on the site today are already one shared component; this is
-         that layout, drawn from the kit's own fields. -->
-    @case (archetypes.HERO_BAND) {
-      @if (variant === 'besidePicture') {
-        <!-- The same hero, laid out beside a picture instead of over one.
-             Its own archetype until 2026-08-31, which made it look like a
-             duplicate of "text beside media" - it is not: this carries the
-             page's <h1> and there is one per page, which is what makes a
-             hero a hero. -->
-        <div class="kit-wrap kit-split kit-herosplit"
-             [class.kit-split--mediaLeft]="mediaLeft">
-          <div class="kit-split__copy">
-            @if (block.subheading) {
-              <p class="kit-eyebrow">{{ block.subheading }}</p>
-            }
-            <h1 class="kit-herosplit__title" [innerHTML]="block.heading"></h1>
-            <hr class="kit-rule">
-            @if (block.body) {
-              <div class="kit-copy" [innerHTML]="block.body"></div>
-            }
-            <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
-            @if (block.note) {
-              <p class="kit-herosplit__note">{{ block.note }}</p>
-            }
-          </div>
-          <div class="kit-split__media">
-            <!-- eager: this is above the fold on every page that has one. -->
-            <img class="kit-img" [src]="block.image?.url" [alt]="block.image?.name || ''" loading="eager">
-          </div>
-        </div>
-      } @else {
-        <div class="kit-wrap kit-hero">
-          @if (block.subheading) {
-            <p class="kit-eyebrow">{{ block.subheading }}</p>
-          }
-          <h1 class="kit-hero__title" [innerHTML]="block.heading"></h1>
-          <hr class="kit-rule">
-          @if (block.body) {
-            <div class="kit-copy" [innerHTML]="block.body"></div>
-          }
-
-          <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
-          @if (block.note) {
-            <p class="kit-herosplit__note">{{ block.note }}</p>
-          }
-        </div>
-      }
-    }
 
     <!-- A heading, a rule, a passage, sometimes buttons - centred and full
          width. The workhorse. What separates the site's seven of these today
-         is almost entirely ground colour, which is now a setting. -->
-    @case (archetypes.COPY_CENTRED) {
-      <!-- textFirst puts the passage ABOVE the heading. The stacked
-           equivalent of choosing which side the media sits on: a section can
-           read "text, then heading" without needing a variant of its own. -->
-      <div class="kit-wrap kit-centred" [class.kit-centred--textFirst]="block.textFirst">
-        @if (block.subheading) {
-          <p class="kit-eyebrow">{{ block.subheading }}</p>
-        }
-        @if (block.heading) {
-          <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
-        }
-        <hr class="kit-rule kit-rule--centre">
-        @if (block.body) {
-          <div class="kit-copy" [innerHTML]="block.body"></div>
-        }
-
-        @if (variant === 'mediaBelow') {
-          <!-- The video sits BELOW the copy rather than beside it. A
-               structural difference, so a variant and not a surface. -->
-          <div class="kit-media kit-media--below">
-            <ng-container
-              *ngTemplateOutlet="video; context: {
-                id: block.videoId, poster: block.image?.url, label: block.heading
-              }"></ng-container>
-          </div>
-        }
-
-        <ng-container *ngTemplateOutlet="buttonBar; context: { centre: true }"></ng-container>
-      </div>
-    }
 
     <!-- A heading and a passage beside a picture or a click-to-play video.
          The largest family on the site. Which side the media sits on comes
          from the variant, or alternates by position - never from stored
-         data, so reordering cannot stack two the same way. -->
-    @case (archetypes.COPY_MEDIA) {
-      <div class="kit-wrap kit-split" [class.kit-split--mediaLeft]="mediaLeft">
-        <div class="kit-split__copy">
-          @if (block.subheading) {
-            <p class="kit-eyebrow">{{ block.subheading }}</p>
-          }
-          @if (block.heading) {
-            <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
-          }
-          <hr class="kit-rule">
-          @if (block.body) {
-            <div class="kit-copy" [innerHTML]="block.body"></div>
-          }
-          <ng-container *ngTemplateOutlet="buttonBar"></ng-container>
-        </div>
-
-        <div class="kit-split__media">
-          @if (variant === 'video') {
-            <ng-container
-              *ngTemplateOutlet="video; context: {
-                id: block.videoId, poster: block.image?.url, label: block.heading
-              }"></ng-container>
-          } @else {
-            <img class="kit-img" loading="lazy"
-                 [src]="block.image?.url" [alt]="block.image?.name || ''">
-          }
-        </div>
-      </div>
-    }
 
     <!-- Repeated tiles. Three variants, and what differs between them is
          only what a tile carries: a picture, an icon, or a price. -->
-    @case (archetypes.LIST_GRID) {
+    @case ('grid') {
       <div class="kit-wrap">
         @if (block.heading) {
           <h2 class="kit-heading kit-heading--centre" [innerHTML]="block.heading"></h2>
@@ -201,26 +93,10 @@
       </div>
     }
 
-    <!-- A full-width photo with words over it and nothing beside it. Always
-         drawn on the 'photo' surface, which is what paints the image. -->
-    @case (archetypes.PHOTO_BAND) {
-      <div class="kit-wrap kit-band" [class.kit-band--figure]="variant === 'figure'">
-        <div class="kit-band__lead">
-          <h2 class="kit-band__title" [innerHTML]="block.heading"></h2>
-          @if (block.subheading) {
-            <p class="kit-band__sub" [innerHTML]="block.subheading"></p>
-          }
-        </div>
-        @if (block.body) {
-          <div class="kit-band__copy kit-copy" [innerHTML]="block.body"></div>
-        }
-        <ng-container *ngTemplateOutlet="buttonBar; context: { centre: true }"></ng-container>
-      </div>
-    }
 
 
     <!-- One row per item: a button on the left, a line saying what it is. -->
-    @case (archetypes.LIST_ROWS) {
+    @case ('rows') {
       <div class="kit-wrap">
         @if (block.heading) {
           <h2 class="kit-heading kit-heading--centre" [innerHTML]="block.heading"></h2>
@@ -250,7 +126,7 @@
          by position, never stored. The numbered variant adds the jump strip
          (built from the SAME list, so it cannot fall out of step) and a
          counted chip per row. -->
-    @case (archetypes.LIST_ARTICLES) {
+    @case ('articles') {
       @if (variant === 'numbered') {
         <nav class="kit-strip" aria-label="What is on this page">
           <div class="kit-wrap kit-strip__inner">
@@ -311,26 +187,11 @@
 
     <!-- Headed passages in two columns YOU assign - the one stored position
          an entry may carry, because these columns say different kinds of
-         thing rather than alternating. -->
-    @case (archetypes.LIST_COLUMNS) {
-      <div class="kit-wrap kit-columns">
-        <div class="kit-columns__col" [class]="'kit-columns__col ' + leftColClasses">
-          @for (item of leftItems; track $index) {
-            <ng-container *ngTemplateOutlet="passage; context: { $implicit: item }"></ng-container>
-          }
-        </div>
-        <div class="kit-columns__col" [class]="'kit-columns__col ' + rightColClasses">
-          @for (item of rightItems; track $index) {
-            <ng-container *ngTemplateOutlet="passage; context: { $implicit: item }"></ng-container>
-          }
-        </div>
-      </div>
-    }
 
     <!-- Dated entries down a centre line, alternating by position. An entry
          that names a year draws it as a marker above itself; the block's own
          heading opens the run and its subheading closes it. -->
-    @case (archetypes.TIMELINE) {
+    @case ('timeline') {
       <div class="kit-wrap kit-timeline">
         @if (block.heading) {
           <p class="kit-timeline__year">{{ block.heading }}</p>
@@ -360,7 +221,7 @@
 
     <!-- Quotes on a slider. The section stores only the ORDER - whether a
          quote appears is its own Live switch on the Testimonials screen. -->
-    @case (archetypes.CAROUSEL) {
+    @case ('quotes') {
       <div class="kit-wrap kit-carousel">
         <div class="kit-carousel__head">
           @if (block.subheading) {
@@ -409,120 +270,9 @@
 
     <!-- Words around a form. plain/withCopy show a Form Builder form the
          section PICKED (stored id, chosen by name, never typed); mailingList
-         is the three-field sign-up joining the list the section names. -->
-    @case (archetypes.FORM) {
-      <div class="kit-wrap"
-           [class.kit-formsplit]="variant === 'withCopy'">
-        @if (variant === 'mailingList') {
-          <div class="kit-signup">
-            <!-- The heading was missing here until 2026-08-31: the sign-up
-                 sections that used this variant all sat under a hero that
-                 carried the words, so nothing looked wrong until the home
-                 page's "STAY IN THE LOOP" block arrived without its title. -->
-            @if (block.heading) {
-              <h2 class="kit-heading kit-heading--centre" [innerHTML]="block.heading"></h2>
-            }
-            @if (block.body) {
-              <div class="kit-copy kit-copy--centre" [innerHTML]="block.body"></div>
-            }
-            <form class="kit-signup__form" (ngSubmit)="handleSignup()">
-              <div class="kit-signup__fields">
-                <label class="kit-signup__field">
-                  <span>First Name <span class="kit-signup__req">*</span></span>
-                  <input required type="text" name="firstName" [(ngModel)]="signup.firstName">
-                </label>
-                <label class="kit-signup__field">
-                  <span>Last Name <span class="kit-signup__req">*</span></span>
-                  <input required type="text" name="lastName" [(ngModel)]="signup.lastName">
-                </label>
-                <label class="kit-signup__field">
-                  <span>Email <span class="kit-signup__req">*</span></span>
-                  <input required type="email" name="email" [(ngModel)]="signup.email">
-                </label>
-              </div>
-              <button class="kit-btn" type="submit" [disabled]="signupBusy">
-                {{ block.ctaTitle || 'Sign up' }}
-              </button>
-            </form>
-          </div>
-        } @else {
-          @if (variant === 'withCopy') {
-            <div class="kit-formsplit__copy">
-              @if (block.heading) {
-                <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
-                <hr class="kit-rule">
-              }
-              @if (block.body) {
-                <div class="kit-copy" [innerHTML]="block.body"></div>
-              }
-            </div>
-          } @else if (block.heading) {
-            <h2 class="kit-heading kit-heading--centre" [innerHTML]="block.heading"></h2>
-            <hr class="kit-rule kit-rule--centre">
-          }
-          <!-- No form picked yet renders the words alone - a half-configured
-               section must not draw a broken widget. -->
-          @if (block.formId) {
-            <div class="kit-form">
-              <app-dynamic-form [formId]="block.formId"
-                                [submitButtonText]="block.ctaTitle"></app-dynamic-form>
-            </div>
-          }
-        }
-      </div>
-    }
 
     <!-- The address, email, phone and social links - all from Web Config,
          which already feeds the footer. Only the heading and the passage are
-         the section's own. -->
-    @case (archetypes.CONTACT_DETAILS) {
-      <div class="kit-wrap kit-contact">
-        @if (block.heading) {
-          <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
-          <hr class="kit-rule">
-        }
-        <ul class="kit-contact__list">
-          @if (addressLine) {
-            <li>
-              <i class="fal fa-map-marker-alt" aria-hidden="true"></i>
-              <div><h6>Address</h6><span>{{ addressLine }}</span></div>
-            </li>
-          }
-          @if (webConfig?.email) {
-            <li>
-              <i class="fal fa-envelope-open-text" aria-hidden="true"></i>
-              <div><h6>Email</h6><span>{{ webConfig?.email }}</span></div>
-            </li>
-          }
-          @if (webConfig?.phone) {
-            <li>
-              <i class="fal fa-phone-alt" aria-hidden="true"></i>
-              <div><h6>Phone</h6><span>{{ webConfig?.phone }}</span></div>
-            </li>
-          }
-        </ul>
-        @if (block.body) {
-          <div class="kit-copy" [innerHTML]="block.body"></div>
-        }
-        <ul class="kit-contact__social">
-          @if (webConfig?.facebook) {
-            <li><a [href]="webConfig?.facebook" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a></li>
-          }
-          @if (webConfig?.twitter) {
-            <li><a [href]="webConfig?.twitter" aria-label="X"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-          }
-          @if (webConfig?.instagram) {
-            <li><a [href]="webConfig?.instagram" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
-          }
-          @if (webConfig?.youtube) {
-            <li><a [href]="webConfig?.youtube" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a></li>
-          }
-          @if (webConfig?.linkedIn) {
-            <li><a [href]="webConfig?.linkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a></li>
-          }
-        </ul>
-      </div>
-    }
 
     <!-- The shared consultation band. Nothing on it is edited; it is a
          section only so it can be moved and switched off. -->
@@ -530,7 +280,7 @@
     <!-- Full-width slides that rotate. The rotation is the renderer's; the
          slides are ordinary entries, so staff add and reorder them like any
          other list. -->
-    @case (archetypes.SLIDER) {
+    @case ('slides') {
       <div class="kit-slider">
         <div class="kit-slider__swiper swiper">
           <div class="swiper-wrapper">
@@ -566,43 +316,6 @@
     <!-- A clock counting to the section's own date. When there is nothing to
          count to - no date, an unreadable one, or one already past - the
          clock is absent and the band still carries its heading and button,
-         rather than showing zeros or a negative. -->
-    @case (archetypes.COUNTDOWN) {
-      <div class="kit-wrap kit-centred kit-countdown">
-        @if (block.heading) {
-          <h2 class="kit-heading" [innerHTML]="block.heading"></h2>
-        }
-        @if (block.body) {
-          <div class="kit-copy" [innerHTML]="block.body"></div>
-        }
-
-        @if (remaining) {
-          <div class="kit-clock" role="timer">
-            <div class="kit-clock__unit">
-              <span class="kit-clock__n">{{ remaining.days }}</span>
-              <span class="kit-clock__l">DAYS</span>
-            </div>
-            <span class="kit-clock__sep">:</span>
-            <div class="kit-clock__unit">
-              <span class="kit-clock__n">{{ pad(remaining.hours) }}</span>
-              <span class="kit-clock__l">HOURS</span>
-            </div>
-            <span class="kit-clock__sep">:</span>
-            <div class="kit-clock__unit">
-              <span class="kit-clock__n">{{ pad(remaining.minutes) }}</span>
-              <span class="kit-clock__l">MINUTES</span>
-            </div>
-            <span class="kit-clock__sep">:</span>
-            <div class="kit-clock__unit">
-              <span class="kit-clock__n">{{ pad(remaining.seconds) }}</span>
-              <span class="kit-clock__l">SECONDS</span>
-            </div>
-          </div>
-        }
-
-        <ng-container *ngTemplateOutlet="buttonBar; context: { centre: true }"></ng-container>
-      </div>
-    }
 
     <!-- ONE TO THREE COLUMNS, each an ordered list of pieces. This single
          case replaces eight archetypes above and is shorter than any two of
@@ -771,7 +484,8 @@
     @case ('video') {
       <ng-container
         *ngTemplateOutlet="video; context: {
-          id: piece.videoId, poster: piece.image?.url, label: piece.text, key: piece.key
+          id: piece.videoId, poster: piece.image?.url, key: piece.key,
+          label: piece.text || sectionHeading
         }"></ng-container>
     }
 

@@ -34,35 +34,18 @@ import { environment } from 'src/environments/environment';
  */
 
 /**
- * Archetypes the renderer can draw TODAY - all fourteen since 2026-08-30.
+ * The kit the renderer can draw TODAY - both members of it.
  *
- * Kept as an explicit list rather than derived, so it fails in BOTH
- * directions: an archetype here that draws nothing is a missing `@case`, and
- * one absent from here that DOES draw is a renderer somebody added without
- * saying so. Either way the list stays honest, which a derived one could not.
- * Its unimplemented-stays-silent counterpart below currently iterates an
- * empty set, and STAYS - it is what catches archetype fifteen arriving in the
- * kit without a renderer.
+ * FOURTEEN ARCHETYPES were named here until 2026-09-01. The list existed
+ * because the template ends in `@default {}`, so a missing case renders
+ * nothing and says nothing - and it earned that place, going red honestly
+ * four times in the week it covered.
+ *
+ * It is two lines now, and it still fails in BOTH directions: a member here
+ * that draws nothing is a missing case, and one absent from here that DOES
+ * draw is a renderer somebody added without saying so.
  */
 const IMPLEMENTED: readonly SECTION_ARCHETYPE[] = [
-  SECTION_ARCHETYPE.HERO_BAND,
-  SECTION_ARCHETYPE.COPY_CENTRED,
-  SECTION_ARCHETYPE.COPY_MEDIA,
-  SECTION_ARCHETYPE.LIST_GRID,
-  SECTION_ARCHETYPE.LIST_ROWS,
-  SECTION_ARCHETYPE.LIST_ARTICLES,
-  SECTION_ARCHETYPE.LIST_COLUMNS,
-  SECTION_ARCHETYPE.TIMELINE,
-  SECTION_ARCHETYPE.CAROUSEL,
-  SECTION_ARCHETYPE.FORM,
-  SECTION_ARCHETYPE.CONTACT_DETAILS,
-  SECTION_ARCHETYPE.PHOTO_BAND,
-  SECTION_ARCHETYPE.SLIDER,
-  SECTION_ARCHETYPE.COUNTDOWN,
-  // The two that replace the fourteen above (2026-08-31). They are in this
-  // list from the day they render, not from the day the last page migrates -
-  // the whole value of the list is that it fails the moment a member of the
-  // kit draws nothing.
   SECTION_ARCHETYPE.SECTION,
   SECTION_ARCHETYPE.LIST
 ];
@@ -112,6 +95,24 @@ function blockFor(archetype: SECTION_ARCHETYPE, variant?: string): PageContentBl
  * piece that draws nothing must mean the renderer has no case for that kind,
  * never that the fixture forgot to give it a date or an image.
  */
+/**
+ * Submit the sign-up form the way a visitor does.
+ *
+ * Through the DOM on purpose: which mailing list is joined is a field on the
+ * PIECE, and the template is the only thing that reads it across. Calling
+ * `handleSignup()` on the class passes no list and quietly subscribes
+ * everybody to the newsletter - so a spec that calls it directly cannot see
+ * a broken binding, and for one afternoon it did not.
+ */
+async function submitSignup(fixture: ComponentFixture<KitSectionComponent>): Promise<void> {
+  fixture.detectChanges();
+  const form = (fixture.nativeElement as HTMLElement)
+    .querySelector('.kit-signup__form') as HTMLFormElement;
+  expect(form).withContext('the sign-up form did not render at all').not.toBeNull();
+  form.dispatchEvent(new Event('submit'));
+  await fixture.whenStable();
+}
+
 function pieceFor(kind: ContentPieceKind): ContentPiece {
   return {
     key: `p-${kind}`,
@@ -253,14 +254,14 @@ describe('the two axes a section is drawn on', () => {
     // Every colour in the stylesheet hangs off this one class. If it stopped
     // being applied, the section would render on the default ground on every
     // page and nothing else would notice.
-    const el = renderWith(blockFor(SECTION_ARCHETYPE.COPY_CENTRED), { surface: 'dark' });
+    const el = renderWith(blockFor(SECTION_ARCHETYPE.SECTION), { surface: 'dark' });
     expect(el.classList).toContain('kit--dark');
   });
 
   it('lets a section override its page', () => {
     // About Us runs a dark band between light columns - the reason a surface
     // lives on the section at all.
-    const block = { ...blockFor(SECTION_ARCHETYPE.COPY_CENTRED), surface: 'tinted' as const };
+    const block = { ...blockFor(SECTION_ARCHETYPE.SECTION), surface: 'tinted' as const };
     expect(renderWith(block, { surface: 'light' }).classList).toContain('kit--tinted');
   });
 
@@ -268,10 +269,10 @@ describe('the two axes a section is drawn on', () => {
     // On every other surface the image is CONTENT - a picture beside the
     // copy, a tile's photograph. Painting it behind the words as well would
     // show it twice.
-    const photo = { ...blockFor(SECTION_ARCHETYPE.PHOTO_BAND), surface: 'photo' as const };
+    const photo = { ...blockFor(SECTION_ARCHETYPE.SECTION), surface: 'photo' as const };
     expect(renderWith(photo).style.backgroundImage).toContain('example.test');
 
-    const light = { ...blockFor(SECTION_ARCHETYPE.COPY_MEDIA), surface: 'light' as const };
+    const light = { ...blockFor(SECTION_ARCHETYPE.SECTION), surface: 'light' as const };
     expect(renderWith(light).style.backgroundImage).toBe('');
   });
 
@@ -281,7 +282,7 @@ describe('the two axes a section is drawn on', () => {
     // comment claiming the page resolved it. Every spec was green; it was
     // caught by looking at the rendered page.
     const block = {
-      ...blockFor(SECTION_ARCHETYPE.LIST_GRID, 'price'),
+      ...blockFor(SECTION_ARCHETYPE.LIST, 'price'),
       items: [{ title: 'In person', amountKey: 'inpersonSeminarCost', amountSuffix: '/seat', isActive: true }]
     };
     fixture.componentInstance.block = block;
@@ -298,7 +299,7 @@ describe('the two axes a section is drawn on', () => {
   it('draws no price line at all when the figure cannot be resolved', () => {
     // "$0" looks like an answer. A missing price line looks like what it is.
     const block = {
-      ...blockFor(SECTION_ARCHETYPE.LIST_GRID, 'price'),
+      ...blockFor(SECTION_ARCHETYPE.LIST, 'price'),
       items: [{ title: 'In person', amountKey: 'noSuchField', isActive: true }]
     };
     fixture.componentInstance.block = block;
@@ -309,28 +310,30 @@ describe('the two axes a section is drawn on', () => {
     expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('$0');
   });
 
-  it('alternates the media side by position, without storing it', () => {
-    // A stored side is a second source of truth that reordering breaks. The
-    // rule is the same one About Us's story columns already follow.
-    fixture.componentInstance.block = blockFor(SECTION_ARCHETYPE.COPY_MEDIA, 'image');
+  it('gives the wider track to the words, on whichever side the picture sits', () => {
+    // COPY_MEDIA alternated its media side by POSITION on the page, because
+    // there was nowhere to say which side it wanted. A Section says it by
+    // column order, which is what the editor drags - so the rule is now
+    // "read the columns", and it must read them rather than count anything.
+    const columns = (first: 'picture' | 'text') => [
+      { key: 'a', pieces: [{ key: 'a1', kind: first, isActive: true, text: 'Words' }] },
+      { key: 'b', pieces: [{ key: 'b1', kind: first === 'picture' ? 'text' : 'picture',
+        isActive: true, text: 'Words' }] }
+    ];
+    const draw = (first: 'picture' | 'text') => {
+      fixture.componentInstance.block = {
+        key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+        columns: columns(first), isActive: true
+      } as never;
+      // typeIndex is deliberately held still. If it ever moves the answer,
+      // the stored order has stopped being the truth.
+      fixture.componentInstance.typeIndex = 1;
+      fixture.detectChanges();
+      return fixture.nativeElement.querySelector('.kit-cols--mediaLeft');
+    };
 
-    fixture.componentInstance.typeIndex = 0;
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.kit-split--mediaLeft')).toBeNull();
-
-    fixture.componentInstance.typeIndex = 1;
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.kit-split--mediaLeft')).not.toBeNull();
-  });
-
-  it('honours a variant that fixes the media side, whatever the position', () => {
-    // The split hero always puts its screenshot on the right; alternating it
-    // would flip the page's opening layout depending on nothing visible.
-    fixture.componentInstance.block = blockFor(SECTION_ARCHETYPE.COPY_MEDIA, 'video');
-    fixture.componentInstance.typeIndex = 1;
-    fixture.detectChanges();
-
-    expect(fixture.nativeElement.querySelector('.kit-split--mediaLeft')).toBeNull();
+    expect(draw('text')).withContext('picture second, so the split is not mediaLeft').toBeNull();
+    expect(draw('picture')).withContext('picture first, so it is').not.toBeNull();
   });
 });
 
@@ -363,22 +366,39 @@ describe('the behaviours the new archetypes own', () => {
   it('shows a Form Builder form ONLY when one has been picked', () => {
     // A half-configured section must not draw a broken widget - the words
     // render alone until a form is chosen in the admin.
-    fixture.componentInstance.block = blockFor(SECTION_ARCHETYPE.FORM, 'plain');
+    fixture.componentInstance.block = {
+      key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [{ key: 'f', kind: 'form', formId: 'a-real-form-id', isActive: true }] }],
+      isActive: true
+    } as never;
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('app-dynamic-form'))
       .withContext('a picked form did not render').not.toBeNull();
 
-    fixture.componentInstance.block = { ...blockFor(SECTION_ARCHETYPE.FORM, 'plain'), formId: undefined };
+    fixture.componentInstance.block = {
+      key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [{ key: 'f', kind: 'form', isActive: true }] }],
+      isActive: true
+    } as never;
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('app-dynamic-form'))
       .withContext('an UNpicked form rendered a widget anyway').toBeNull();
   });
 
   it('signs up to the list the SECTION names', async () => {
-    fixture.componentInstance.block = { ...blockFor(SECTION_ARCHETYPE.FORM, 'mailingList'), signupList: 'prayer' };
+    fixture.componentInstance.block = {
+      key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [{ key: 's', kind: 'signup', signupList: 'prayer', isActive: true }] }],
+      isActive: true
+    } as never;
     fixture.componentInstance.signup = { firstName: 'A', lastName: 'B', email: 'a@b.c' };
 
-    await fixture.componentInstance.handleSignup();
+    // Submitted through the FORM, not by calling the handler. The list is a
+    // field on the PIECE now, and the only thing that reads it is the
+    // template's `handleSignup(piece.signupList)` - a direct call passes no
+    // list at all and so defaults to the newsletter, which is what this test
+    // wrongly asserted was correct on 2026-09-01.
+    await submitSignup(fixture);
 
     expect(submitted.length).toBe(1);
     expect(submitted[0].list).toBe('prayer');
@@ -391,27 +411,24 @@ describe('the behaviours the new archetypes own', () => {
   it('defaults an unset list to the newsletter, never to prayer', async () => {
     // The generic case. Joining the PRAYER team is a commitment someone must
     // choose; the newsletter is the list "sign up" plainly means.
-    fixture.componentInstance.block = { ...blockFor(SECTION_ARCHETYPE.FORM, 'mailingList'), signupList: undefined };
+    fixture.componentInstance.block = {
+      key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [{ key: 's', kind: 'signup', isActive: true }] }],
+      isActive: true
+    } as never;
     fixture.componentInstance.signup = { firstName: 'A', lastName: 'B', email: 'a@b.c' };
 
-    await fixture.componentInstance.handleSignup();
+    await submitSignup(fixture);
 
     expect(submitted[0].list).toBe('newsletter');
   });
 
-  it('splits a two-column section by the STORED column, defaulting left', () => {
-    fixture.componentInstance.block = {
-      ...blockFor(SECTION_ARCHETYPE.LIST_COLUMNS, 'twoColumn'),
-      items: [
-        { title: 'Facts', isActive: true, column: 'left' },
-        { title: 'Pitch', isActive: true, column: 'right' },
-        { title: 'Unassigned', isActive: true }
-      ] as never
-    };
-
-    expect(fixture.componentInstance.leftItems.map((i) => i.title)).toEqual(['Facts', 'Unassigned']);
-    expect(fixture.componentInstance.rightItems.map((i) => i.title)).toEqual(['Pitch']);
-  });
+  // "splits a two-column section by the STORED column" was here until
+  // 2026-09-01. It covered LIST_COLUMNS, whose entries each carried a
+  // `column` saying which half they belonged to. A Section has real columns
+  // now, each holding its own pieces, so there is nothing left to split -
+  // the test above ("gives the wider track to the words") covers what
+  // replaced it.
 
   it('counts the numbered rows chip from position, zero-padded', () => {
     expect(fixture.componentInstance.chip(0)).toBe('01');
@@ -440,9 +457,18 @@ describe('the behaviours the new archetypes own', () => {
       .withContext('markup that leaves no words must fall back, not go silent')
       .toBe('the video');
 
+    // AND THE SAME BUG'S SECOND HALF (2026-09-01). A video was a FIELD on a
+    // block that also held the heading, so the button could always find
+    // words. As a piece it has only its own caption, which almost no video
+    // has - so it must reach the heading piece BESIDE it, or every migrated
+    // page announces a bare "Play the video".
     c.block = {
-      key: 'v', type: SECTION_ARCHETYPE.COPY_MEDIA,
-      heading: 'WHAT YOU <strong> GET</strong>', videoId: 'abc123'
+      key: 'v', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [
+        { key: 'h', kind: 'heading', text: 'WHAT YOU <strong> GET</strong>', isActive: true },
+        { key: 'vid', kind: 'video', videoId: 'abc123', isActive: true }
+      ] }],
+      isActive: true
     } as never;
     fixture.detectChanges();
 
@@ -455,7 +481,10 @@ describe('the behaviours the new archetypes own', () => {
   it('counts toward the date the section carries', () => {
     const c = fixture.componentInstance;
     const inThreeDays = new Date(Date.now() + (3 * 86400 + 3600 + 120 + 5) * 1000);
-    c.block = { key: 'c', type: SECTION_ARCHETYPE.COUNTDOWN, targetDate: inThreeDays.toISOString() } as never;
+    c.block = { key: 'c', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [
+        { key: 'clock', kind: 'countdown', targetDate: inThreeDays.toISOString(), isActive: true }
+      ] }] } as never;
     c.ngOnChanges();
 
     expect(c.remaining?.days).toBe(3);
@@ -469,7 +498,11 @@ describe('the behaviours the new archetypes own', () => {
     // button still render, so a lapsed countdown degrades into a banner.
     const c = fixture.componentInstance;
     for (const targetDate of [undefined, '', 'next Tuesday', '2020-01-01T00:00:00Z']) {
-      c.block = { key: 'c', type: SECTION_ARCHETYPE.COUNTDOWN, heading: 'SUMMIT', targetDate } as never;
+      c.block = { key: 'c', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+        columns: [{ key: 'c1', pieces: [
+          { key: 'h', kind: 'heading', text: 'SUMMIT', isActive: true },
+          { key: 'clock', kind: 'countdown', targetDate, isActive: true }
+        ] }] } as never;
       c.ngOnChanges();
       expect(c.remaining).withContext(`targetDate: ${targetDate}`).toBeNull();
     }
@@ -512,7 +545,7 @@ describe('the behaviours the new archetypes own', () => {
     expect(fixture.componentInstance.href({})).toBeNull();
 
     fixture.componentInstance.block = {
-      key: 'grid', type: SECTION_ARCHETYPE.LIST_GRID, variant: 'icon',
+      key: 'grid', type: SECTION_ARCHETYPE.LIST, variant: 'icon',
       items: [{ title: 'Broken', ctaTitle: 'GO', isActive: true }]
     } as never;
     fixture.detectChanges();
@@ -725,8 +758,8 @@ describe('the list defects that predate the kit', () => {
   it('gives a row with no destination its title but not a link', () => {
     const el = render({
       key: 'rows',
-      type: SECTION_ARCHETYPE.LIST_ROWS,
-      variant: 'buttonAndText',
+      type: SECTION_ARCHETYPE.LIST,
+      variant: 'rows',
       items: [
         { title: 'Goes somewhere', link: '/a', description: 'first', isActive: true },
         { title: 'Goes nowhere', description: 'second', isActive: true }
@@ -744,7 +777,7 @@ describe('the list defects that predate the kit', () => {
   it('makes every jump-strip item jump to the row it names', () => {
     const el = render({
       key: 'arts',
-      type: SECTION_ARCHETYPE.LIST_ARTICLES,
+      type: SECTION_ARCHETYPE.LIST,
       variant: 'numbered',
       items: [
         { title: 'First thing', description: 'a', isActive: true },
@@ -771,7 +804,7 @@ describe('the list defects that predate the kit', () => {
   it('prints a numbered row title once when the row has no heading', () => {
     const el = render({
       key: 'arts',
-      type: SECTION_ARCHETYPE.LIST_ARTICLES,
+      type: SECTION_ARCHETYPE.LIST,
       variant: 'numbered',
       items: [{ title: 'Only Title', description: 'a', isActive: true }]
     });
@@ -788,7 +821,7 @@ describe('the list defects that predate the kit', () => {
     // that legitimately show a chip line and a separate heading.
     const el = render({
       key: 'arts',
-      type: SECTION_ARCHETYPE.LIST_ARTICLES,
+      type: SECTION_ARCHETYPE.LIST,
       variant: 'numbered',
       items: [{ title: 'The Tag', heading: 'The Heading', description: 'a', isActive: true }]
     });
@@ -904,14 +937,20 @@ describe('a video that belongs to a piece', () => {
       .toBe(1);
   });
 
-  it('still draws the archetype’s video, which lives on the block', () => {
-    // The two old call sites hand the block's own fields to the same
-    // template. Parameterising it must not break the sections that have not
-    // migrated yet - which is every one of them today.
+  it('draws the poster the PIECE carries, not a bare player', () => {
+    // This test read "still draws the archetype's video, which lives on the
+    // block" until 2026-09-01, and guarded the parameterised #video template
+    // against breaking the sections that had not migrated yet. All of them
+    // have. What it really covers is worth keeping: a video piece whose
+    // image is its poster, and the migrated Seminars page drew a poster-less
+    // box that played nothing when that binding was wrong.
     fixture.componentInstance.block = {
-      key: 'k1', type: SECTION_ARCHETYPE.COPY_MEDIA, variant: 'video',
-      heading: 'Watch', videoId: 'BLOCK-ID',
-      image: { url: 'https://example.test/block-still.jpg', name: 'still' },
+      key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [{
+        key: 'vid', kind: 'video', videoId: 'BLOCK-ID',
+        image: { url: 'https://example.test/block-still.jpg', name: 'still' },
+        isActive: true
+      }] }],
       isActive: true
     } as never;
     fixture.componentInstance.ngOnChanges();

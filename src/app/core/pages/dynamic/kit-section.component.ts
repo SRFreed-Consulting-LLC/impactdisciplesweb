@@ -14,8 +14,7 @@ import {
   PageTheme,
   SECTION_ARCHETYPE,
   SectionSurface,
-  resolveSurface,
-  variantDef
+  resolveSurface
 } from '@impact-common/shared/lists/section_kit';
 import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 import { SubscribeFormService, SubscriberDetails } from 'src/app/shared/utils/services/subscribe-form.service';
@@ -30,25 +29,28 @@ const KIT_LINK_DESTINATIONS: Record<string, string> = {
 };
 
 /**
- * ONE section of ANY page, whichever archetype it is.
+ * ONE section of ANY page - and there are only two kinds left.
  *
- * Since the 2026-08-30/31 cutover this is the ONLY section renderer: all
- * twelve original pages flipped their documents to kit vocabulary and their
- * bespoke page + section components are deleted. A type means one thing
- * everywhere, and the differences those nine components used to carry are
- * carried by `variant` and `surface` instead.
+ * A SECTION is one to three columns of content pieces. A LIST is one item
+ * shape repeated, in one of ten looks. Between them they draw every page
+ * on the site.
  *
- * ALL FOURTEEN ARCHETYPES render (since 2026-08-30). An archetype a FUTURE
- * build cannot draw still renders NOTHING rather than failing, the same rule
- * the other nine components follow: the data outlives the build. That silence
- * is exactly why `kit-section.component.spec.ts` renders every archetype in
- * the kit and fails if one produces no output.
+ * THE FOURTEEN ARCHETYPES WERE DELETED ON 2026-09-01, once every page had
+ * migrated and nothing stored one. They were the step between nine bespoke
+ * page components and these two: useful while it ran, and two vocabularies
+ * for the same thing the moment it stopped.
  *
- * THE TWO SERVICES INJECTED HERE are the two behaviours a section owns rather
- * than reads: the quote carousel resolves its stored testimonial ids, and the
- * sign-up form submits to a mailing list. Everything else arrives through
- * inputs, handed down by the page so twenty sections cost one read.
- */
+ * A TYPE THIS BUILD CANNOT DRAW STILL RENDERS NOTHING rather than failing.
+ * The data outlives the build - a document written by a later version has
+ * to survive being read by this one - and that silence is exactly why the
+ * spec renders every member of the kit and every piece kind and fails if
+ * one produces no output.
+ *
+ * THE TWO SERVICES INJECTED HERE are the two behaviours a section owns
+ * rather than reads: a List of quotes resolves its stored testimonial ids,
+ * and the sign-up piece submits to a mailing list. Everything else arrives
+ * through inputs, handed down by the page so twenty sections cost one read.
+  */
 /** A stored testimonial as the carousel renders it. */
 export interface CoachTestimonial {
   quote: string[];
@@ -143,29 +145,26 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
   ) {}
 
   ngOnChanges(): void {
-    if (this.block?.type === SECTION_ARCHETYPE.CAROUSEL) {
+    // A List of QUOTES is the one look whose items are not its own: the
+    // quotes belong to the Testimonials screen, because the same quote
+    // can appear on more than one page, and the section stores the order.
+    if (this.listLook === 'quotes') {
       this.loadTestimonials(this.block.testimonialIds ?? []).catch(() => undefined);
     }
-    if (this.block?.type === SECTION_ARCHETYPE.COUNTDOWN
-      || this.block?.type === SECTION_ARCHETYPE.SECTION) {
+    // A Section may hold a countdown piece; nothing else has a clock.
+    if (this.block?.type === SECTION_ARCHETYPE.SECTION) {
       this.startCountdown();
-    }
-    // A LIST of quotes reads the same collection the old carousel did.
-    if (this.listLook?.type === SECTION_ARCHETYPE.CAROUSEL) {
-      this.loadTestimonials(this.block.testimonialIds ?? []).catch(() => undefined);
     }
   }
 
   ngAfterViewInit(): void {
-    if (this.block?.type === SECTION_ARCHETYPE.CAROUSEL) {
+    // The two looks that rotate. setTimeout because both libraries
+    // measure the DOM, which does not exist until after this hook.
+    if (this.listLook === 'quotes') {
       setTimeout(() => this.initSwiper());
     }
-    if (this.block?.type === SECTION_ARCHETYPE.SLIDER
-      || this.listLook?.type === SECTION_ARCHETYPE.SLIDER) {
+    if (this.listLook === 'slides') {
       setTimeout(() => this.initSlider());
-    }
-    if (this.listLook?.type === SECTION_ARCHETYPE.CAROUSEL) {
-      setTimeout(() => this.initSwiper());
     }
   }
 
@@ -198,27 +197,42 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
    * not two drifting apart while the migration runs. Stage 4 inlines the
    * survivors and deletes the rest.
    */
-  private static readonly LIST_LOOKS: Record<string, { type: SECTION_ARCHETYPE; variant: string }> = {
-    tiles: { type: SECTION_ARCHETYPE.LIST_GRID, variant: 'picture' },
-    pictureRows: { type: SECTION_ARCHETYPE.LIST_GRID, variant: 'pictureRows' },
-    icon: { type: SECTION_ARCHETYPE.LIST_GRID, variant: 'icon' },
-    price: { type: SECTION_ARCHETYPE.LIST_GRID, variant: 'price' },
-    rows: { type: SECTION_ARCHETYPE.LIST_ROWS, variant: 'buttonAndText' },
-    articles: { type: SECTION_ARCHETYPE.LIST_ARTICLES, variant: 'plain' },
-    numbered: { type: SECTION_ARCHETYPE.LIST_ARTICLES, variant: 'numbered' },
-    timeline: { type: SECTION_ARCHETYPE.TIMELINE, variant: 'centreLine' },
-    quotes: { type: SECTION_ARCHETYPE.CAROUSEL, variant: 'quotes' },
-    slides: { type: SECTION_ARCHETYPE.SLIDER, variant: 'slides' }
+  /**
+   * WHICH RENDERING each List look uses.
+   *
+   * Four of the ten share one - tiles, picture rows, icon tiles and price
+   * tiles are the same grid carrying different things, and articles and
+   * numbered articles are one row treatment counted or not. The rest have
+   * a rendering to themselves.
+   *
+   * UNTIL 2026-09-01 this mapped each look onto one of the FOURTEEN
+   * archetypes and the markup was borrowed from them, so the two
+   * vocabularies had to stay in step for the length of the migration. The
+   * archetypes are gone; these are the renderings themselves now, named
+   * after what they draw rather than after what they used to be.
+   */
+  private static readonly LIST_LOOKS: Record<string, string> = {
+    tiles: 'grid',
+    pictureRows: 'grid',
+    icon: 'grid',
+    price: 'grid',
+    rows: 'rows',
+    articles: 'articles',
+    numbered: 'articles',
+    timeline: 'timeline',
+    quotes: 'quotes',
+    slides: 'slides'
   };
 
-  private get listLook(): { type: SECTION_ARCHETYPE; variant: string } | undefined {
+  /** The rendering this block wants, or undefined when it is not a List. */
+  private get listLook(): string | undefined {
     return this.block?.type === SECTION_ARCHETYPE.LIST
       ? KitSectionComponent.LIST_LOOKS[this.block.variant ?? '']
       : undefined;
   }
 
   get renderAs(): string {
-    return this.listLook?.type ?? this.block?.type ?? '';
+    return this.listLook ?? this.block?.type ?? '';
   }
 
   /**
@@ -482,15 +496,11 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return `kit-card--${ground} kit-cardink--${ink ?? defaultInk}`;
   }
 
-  get leftColClasses(): string {
-    return this.groundClasses(this.block.leftGround, this.block.leftInk)
-      + (this.block.leftTitleTone === 'brand' ? ' kit-tt--brand' : '');
-  }
-
-  get rightColClasses(): string {
-    return this.groundClasses(this.block.rightGround, this.block.rightInk)
-      + (this.block.rightTitleTone === 'brand' ? ' kit-tt--brand' : '');
-  }
+  // `leftColClasses` / `rightColClasses` were here until 2026-09-01. They
+  // read the six fields - leftGround, leftInk, leftTitleTone and their
+  // right-hand twins - that encoded "two columns with their own colours"
+  // before a section could have columns. Each column carries its own ground
+  // now, so two hard-coded halves cannot say anything a real column cannot.
 
   get gridGroundClasses(): string {
     // The variant class rides along so a grid can be styled per LOOK - the
@@ -500,30 +510,13 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return `kit-gv--${this.variant}${perRow} ${this.groundClasses(this.block.cardGround, this.block.cardInk)}`;
   }
 
-  /**
-   * Whether the media sits on the LEFT.
-   *
-   * `auto` alternates by position, which is what About Us's story columns and
-   * the Library's feature rows already do. A variant naming a fixed side gets
-   * that side whatever its position.
-   */
-  get mediaLeft(): boolean {
-    // THE SECTION'S OWN CHOICE WINS. Set on the block, it is an explicit
-    // decision and beats both the variant's default and the alternation
-    // below (owner, 2026-08-31). Unset, everything behaves exactly as it
-    // did, so no existing section moves.
-    if (this.block.mediaSide) {
-      return this.block.mediaSide === 'left';
-    }
-    const side = variantDef(this.block.type ?? '', this.block.variant)?.mediaSide ?? 'auto';
-    if (side === 'left') {
-      return true;
-    }
-    if (side === 'right') {
-      return false;
-    }
-    return this.typeIndex % 2 === 1;
-  }
+  // `mediaLeft` was here until 2026-09-01, and with it the last reader of
+  // `block.mediaSide`. It answered "which side is the picture on" for a
+  // composed archetype that had a picture half and a words half. A Section
+  // answers it by which COLUMN holds the picture - see mediaColumnFirst -
+  // which is the same thing said once, in the place staff actually drag.
+  // The per-ENTRY alternation the article and timeline looks still want is
+  // `entryOnLeft(i)`, which never went through here.
 
   /** Buttons, wherever a section has them: entries, so a third is an add.
    *  `ctaTitle` is still read for blocks written before the change - the
@@ -544,16 +537,16 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
 
   /** Which look within the archetype, defaulting to the first so a block
    *  written before variants existed still draws something. */
+  /**
+   * The stored look, which the shared renderings branch on - a grid draws
+   * a picture tile, an icon tile or a price tile from this, and the
+   * article rows are counted or not.
+   *
+   * It used to TRANSLATE a look into the old archetype variant the
+   * borrowed markup expected. There is nothing to translate to any more.
+   */
   get variant(): string {
-    // For a LIST the stored variant is the LOOK; the markup it delegates to
-    // expects the old archetype's variant key, so translate. Getting this
-    // wrong draws a real section with the wrong branch, which is worse than
-    // drawing nothing.
-    const look = this.listLook;
-    if (look) {
-      return look.variant;
-    }
-    return variantDef(this.block.type ?? '', this.block.variant)?.key ?? '';
+    return this.block?.variant ?? '';
   }
 
   /**
@@ -608,18 +601,10 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return item.ctaUrl2 ? (KIT_LINK_DESTINATIONS[item.ctaUrl2] ?? item.ctaUrl2) : null;
   }
 
-  // ------------------------------------------------------------- columns
-
-  /** The passages of a LIST_COLUMNS section, split by the ONE stored
-   *  position an entry may carry - see PageContentItem.column for why these
-   *  two columns are assigned rather than derived. */
-  get leftItems(): PageContentItem[] {
-    return this.liveItems.filter((item) => item.column !== 'right');
-  }
-
-  get rightItems(): PageContentItem[] {
-    return this.liveItems.filter((item) => item.column === 'right');
-  }
+  // `leftItems` / `rightItems` lived here until 2026-09-01. They split ONE
+  // archetype's entries by a stored `column`, which is what a Section's two
+  // columns of pieces do properly now - the entries were never the columns,
+  // they were a list pretending to be one.
 
   // ------------------------------------------ alternation, per entry
 
@@ -674,6 +659,30 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
    */
   hasWords(value: string | undefined): boolean {
     return !!value && value.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim() !== '';
+  }
+
+  /**
+   * The words a video in this section is announced by when the video piece
+   * carries none of its own.
+   *
+   * A video used to be a FIELD on a block that also held the heading, so the
+   * play button could always find something to speak. As a piece it has only
+   * its own caption, and almost no video on the site has one - the heading
+   * sits beside it as a separate piece. Without this, every migrated page
+   * announced "Play the video" and nothing more (2026-09-01).
+   *
+   * First heading anywhere in the section, in column then piece order, which
+   * is reading order: the one a sighted visitor sees above the player.
+   */
+  get sectionHeading(): string | undefined {
+    for (const column of this.liveColumns) {
+      const heading = this.livePieces(column)
+        .find((piece) => piece.kind === 'heading' && this.hasWords(piece.text));
+      if (heading) {
+        return heading.text;
+      }
+    }
+    return undefined;
   }
 
   spoken(html: string | undefined, fallback: string): string {
