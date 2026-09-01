@@ -661,6 +661,21 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
    * read aloud, where "&amp;" instead of "and" is exactly the kind of thing
    * nobody would ever catch.
    */
+  /**
+   * Whether a piece actually has words in it.
+   *
+   * Plain-string, deliberately - `spoken()` below builds a DOM node to read
+   * text out of markup, which is right for one aria-label and wrong for a
+   * template guard that runs on every change-detection pass for every piece
+   * on the page.
+   *
+   * `<p></p>` is as empty as `''`: rich text arrives as HTML and a
+   * rich-text box that has been typed in and cleared leaves its tags behind.
+   */
+  hasWords(value: string | undefined): boolean {
+    return !!value && value.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim() !== '';
+  }
+
   spoken(html: string | undefined, fallback: string): string {
     if (!html) {
       return fallback;

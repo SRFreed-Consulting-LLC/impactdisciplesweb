@@ -724,7 +724,14 @@
 <ng-template #pieceTpl let-piece="piece">
   @switch (piece.kind) {
 
+    <!-- AN EMPTY HEADING DRAWS NOTHING, not an empty h2 and a rule under
+         it. The migration put one into a full-width column on every
+         two-column band, and what showed on the page was a horizontal rule
+         with nothing above it - the data is being fixed, but a renderer
+         that draws furniture for content it has not got will do this again
+         the next time something arrives blank. -->
     @case ('heading') {
+      @if (hasWords(piece.text)) {
       @if (piece.level === 'page') {
         <h1 class="kit-hero__title" [innerHTML]="piece.text"></h1>
       } @else if (piece.level === 'minor') {
@@ -741,14 +748,19 @@
       @if (piece.level !== 'display') {
         <hr class="kit-rule">
       }
+      }
     }
 
     @case ('eyebrow') {
-      <p class="kit-eyebrow">{{ piece.text }}</p>
+      @if (hasWords(piece.text)) {
+        <p class="kit-eyebrow">{{ piece.text }}</p>
+      }
     }
 
     @case ('text') {
-      <div class="kit-copy" [innerHTML]="piece.html"></div>
+      @if (hasWords(piece.html)) {
+        <div class="kit-copy" [innerHTML]="piece.html"></div>
+      }
     }
 
     @case ('picture') {
@@ -897,7 +909,9 @@
     }
 
     @case ('note') {
-      <p class="kit-herosplit__note">{{ piece.text }}</p>
+      @if (hasWords(piece.text)) {
+        <p class="kit-herosplit__note">{{ piece.text }}</p>
+      }
     }
 
     @default {}
