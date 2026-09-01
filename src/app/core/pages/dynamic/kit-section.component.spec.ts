@@ -473,6 +473,15 @@ describe('the behaviours the new archetypes own', () => {
     expect((fixture.nativeElement as HTMLElement).querySelector('.kit-rule'))
       .withContext('drew a rule under an invisible heading')
       .toBeNull();
+
+    // AND THE SECTION TAKES NO ROOM. Its wrap carries 80px of vertical
+    // padding for the section rhythm; on a section with nothing visible in
+    // it that is 160px of empty band - which is the band the hidden heading
+    // exists to avoid, reintroduced by its own padding. Home shipped with
+    // exactly that gap above its slider for one deploy.
+    expect(fixture.componentInstance.onlyHiddenContent).toBeTrue();
+    const section = (fixture.nativeElement as HTMLElement).querySelector('section.kit-section');
+    expect(section!.classList.contains('kit-section--unseen')).toBeTrue();
   });
 
   it('draws an ordinary heading normally, rule and all', () => {
@@ -490,6 +499,27 @@ describe('the behaviours the new archetypes own', () => {
     const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1');
     expect(h1!.classList.contains('kit-sr-only')).toBeFalse();
     expect((fixture.nativeElement as HTMLElement).querySelector('.kit-rule')).not.toBeNull();
+    // And it keeps its band, so the collapse above cannot be collapsing
+    // every section.
+    expect(fixture.componentInstance.onlyHiddenContent).toBeFalse();
+  });
+
+  it('keeps a section that mixes a hidden heading with visible words', () => {
+    // The collapse is for a section with NOTHING to show. One that also
+    // carries a passage is an ordinary section and keeps its spacing.
+    fixture.componentInstance.block = {
+      key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [
+        { key: 'h', kind: 'heading', level: 'page', text: 'Hidden', hidden: true, isActive: true },
+        { key: 't', kind: 'text', html: '<p>But this shows.</p>', isActive: true }
+      ] }],
+      isActive: true
+    } as never;
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.onlyHiddenContent)
+      .withContext('collapsed a section that has visible words in it')
+      .toBeFalse();
   });
 
   it('speaks a heading without its markup, on the button a screen reader reads', () => {

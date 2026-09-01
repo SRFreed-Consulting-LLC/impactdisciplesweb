@@ -289,6 +289,23 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
       && pieces.every((piece) => piece.kind === 'picture' || piece.kind === 'video');
   }
 
+  /**
+   * Whether this section draws nothing a sighted visitor can see - every
+   * live piece in it is a heading marked "read, but not shown".
+   *
+   * The section still has to EXIST: its heading is in the markup, which is
+   * the whole point of it. It must not take a band of empty page, though,
+   * and it did on the home page's first deploy of this - 160px of nothing
+   * above the slider, which is exactly the band the hidden heading was
+   * meant to avoid.
+   *
+   * False for a LIST, which has no columns, so its items are unaffected.
+   */
+  get onlyHiddenContent(): boolean {
+    const pieces = this.liveColumns.flatMap((column) => this.livePieces(column));
+    return pieces.length > 0 && pieces.every((piece) => !!piece.hidden);
+  }
+
   get liveColumns(): SectionColumn[] {
     return (this.block.columns ?? []).filter((column) => !!column);
   }

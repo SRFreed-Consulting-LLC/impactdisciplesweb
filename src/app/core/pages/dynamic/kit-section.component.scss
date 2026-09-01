@@ -91,6 +91,21 @@
   border: 0;
 }
 
+/**
+ * A section whose ONLY content is a hidden heading takes no room.
+ *
+ * It still renders - the heading is in the markup for a screen reader and a
+ * search engine, which is the entire point. But `.kit-wrap` carries 80px of
+ * vertical padding for the section rhythm, and on a section with nothing
+ * visible in it that is 160px of empty band. The home page's first deploy of
+ * the hidden title had exactly that gap above its slider: the band the
+ * hidden heading existed to avoid, reintroduced by its own padding.
+ */
+.kit-section--unseen .kit-wrap {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 // --------------------------------------------------- text-style options
 //
 // Three per-section choices (headingStyle / copyTone / bullets), each
