@@ -616,7 +616,7 @@
 	width: 100%;
     font-size: 14px;
     &::placeholder{
-        color: #848b8a;
+        color: #727877;
     }
     &:focus{
         border-color: variables.$theme-color;
@@ -632,7 +632,7 @@
     font-size: 14px;
     resize: none;
     &::placeholder{
-        color: #848b8a;
+        color: #727877;
     }
     &:focus{
         border-color: variables.$theme-color;

@@ -8,9 +8,15 @@ $black: #1c1c1c;
 
 //Impact Colors
 $theme-color: #ffcc00;
-$theme-color-2: #588AC7;
-$light-theme-color-2: #588ac79f;
-$blue: #588AC7;
+// THE BLUE WAS #588AC7 UNTIL 2026-09-01.
+//
+// It is the primary button's background, and white on it measured 3.57:1 -
+// under the 4.5:1 minimum for readable text, on every call to action on the
+// site. #4D79AE is the smallest darkening that clears it (4.50:1) and is
+// the same hue; nothing else about the button changes.
+$theme-color-2: #4D79AE;
+$light-theme-color-2: #4d79ae9f;
+$blue: #4D79AE;
 $yellow: #ffcc00;
 
 // Responsive Variables
@@ -48,7 +54,10 @@ $grey-4: #6666;
 
 $theme-color: $theme-color;
 $theme-2-color: #8a8f6a;
-$body-text-color: #848b8a;
+// WAS #848b8a until 2026-09-01: 3.48:1 on white, under the 4.5:1 minimum,
+// and this is most of the words on the site. #727877 is the smallest
+// darkening that clears it (4.53:1), same hue.
+$body-text-color: #727877;
 $event: #4b92fe;
 
 //border colors

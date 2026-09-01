@@ -27,10 +27,15 @@
 .kit-section {
   --kit-ground: #{variables.$white};
   --kit-ink: #{variables.$black};
-  // The original pages' copy grey, measured (#848b8a on Lunch and Learns).
-  // 2.9:1 on white - the purchased theme's own choice, kept because the kit
-  // must match the site before it can improve it.
-  --kit-ink-soft: #848b8a;
+  // The copy grey. It was #848b8a - the purchased theme's own choice,
+  // measured off Lunch and Learns and kept unchanged because the kit had to
+  // match the site before it could improve it.
+  //
+  // It improved it on 2026-09-01: #848b8a is 3.48:1 on white, under the
+  // 4.5:1 minimum, and this is most of the words on the site. #727877 is
+  // the smallest darkening that clears it (4.53:1), same hue. Changed here
+  // AND in the theme's own $body-text-color, so the two cannot drift.
+  --kit-ink-soft: #727877;
   --kit-rule: #{variables.$theme-color};
   // The brand yellow by default - which is right on every dark ground, and
   // is what the site has always drawn. `.kit-cardink--dark` below overrides
@@ -171,7 +176,7 @@
 
 .kit-cardink--dark {
   --kit-ink: #{variables.$black};
-  --kit-ink-soft: #848b8a;
+  --kit-ink-soft: #727877;
   // A PRICE TILE'S TITLE FOLLOWS ITS GROUND (2026-09-01).
   //
   // It was always the brand yellow. On the dark tiles Seminars ships that
