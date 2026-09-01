@@ -445,20 +445,30 @@
          the next time something arrives blank. -->
     @case ('heading') {
       @if (hasWords(piece.text)) {
+      <!-- `kit-sr-only` is a HEADING NOBODY SEES: the real tag, read by
+           screen readers and search engines, positioned off-screen. The home
+           page opens on a full-width slider with nowhere to put a visible
+           <h1>, and had none at all until 2026-09-01. -->
       @if (piece.level === 'page') {
-        <h1 class="kit-hero__title" [innerHTML]="piece.text"></h1>
+        <h1 class="kit-hero__title" [class.kit-sr-only]="piece.hidden"
+            [innerHTML]="piece.text"></h1>
       } @else if (piece.level === 'minor') {
-        <h3 class="kit-columns__title" [innerHTML]="piece.text"></h3>
+        <h3 class="kit-columns__title" [class.kit-sr-only]="piece.hidden"
+            [innerHTML]="piece.text"></h3>
       } @else if (piece.level === 'display') {
         <!-- Still an h2 to a screen reader; a SIZE, not a rank. The photo
              band's figure treatment - a large number beside a paragraph. -->
-        <h2 class="kit-band__title kit-band__title--display" [innerHTML]="piece.text"></h2>
+        <h2 class="kit-band__title kit-band__title--display"
+            [class.kit-sr-only]="piece.hidden" [innerHTML]="piece.text"></h2>
       } @else {
-        <h2 class="kit-heading" [innerHTML]="piece.text"></h2>
+        <h2 class="kit-heading" [class.kit-sr-only]="piece.hidden"
+            [innerHTML]="piece.text"></h2>
       }
       <!-- The rule belongs UNDER a heading, not under a figure - the band's
-           figure variant has never drawn one. -->
-      @if (piece.level !== 'display') {
+           figure variant has never drawn one. And not under a heading that
+           is not on the screen: the words would be invisible and the yellow
+           line under them would not, which looks like a mistake. -->
+      @if (piece.level !== 'display' && !piece.hidden) {
         <hr class="kit-rule">
       }
       }

@@ -61,6 +61,36 @@
   color: var(--kit-ink);
 }
 
+/**
+ * A HEADING THAT IS READ BUT NOT SEEN.
+ *
+ * The standard clip-rect pattern, and every part of it is load-bearing:
+ *
+ *   - NOT `display: none` or `visibility: hidden`. Both remove the element
+ *     from the accessibility tree as well as the screen, so a screen reader
+ *     would skip it - which defeats the entire purpose.
+ *   - 1px rather than 0, with `clip-path` doing the hiding. A zero-sized box
+ *     is dropped by some assistive tech.
+ *   - `white-space: nowrap` so long text cannot wrap into a tall invisible
+ *     column and push the page around.
+ *   - `position: absolute` so it takes no space in the flow at all.
+ *
+ * This is not cloaking: the words say what the page is, and the same words
+ * are what a sighted visitor understands the page to be. Hiding text that
+ * DISAGREES with the page is the thing search engines punish.
+ */
+.kit-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 // --------------------------------------------------- text-style options
 //
 // Three per-section choices (headingStyle / copyTone / bullets), each
@@ -433,6 +463,9 @@
   --kit-ground: #{variables.$black};
   --kit-ink: #{variables.$white};
   --kit-ink-soft: #c9c9c9;
+  // Dark ground: the brand yellow reads here (Seminars measures 9.47:1),
+  // so a price tile keeps its accent. See --kit-tile-title at the top.
+  --kit-tile-title: var(--kit-rule);
   --kit-tile-bg: #2b2a2a;
   --kit-tile-line: #3a3939;
 }
@@ -441,6 +474,9 @@
   --kit-ground: #{variables.$blue};
   --kit-ink: #{variables.$white};
   --kit-ink-soft: #e7eef7;
+  // Dark ground: the brand yellow reads here (Seminars measures 9.47:1),
+  // so a price tile keeps its accent. See --kit-tile-title at the top.
+  --kit-tile-title: var(--kit-rule);
   --kit-btn-bg: #{variables.$white};
   --kit-btn-ink: #{variables.$blue};
   --kit-tile-bg: rgba(255, 255, 255, 0.12);
@@ -451,6 +487,9 @@
   --kit-ground: #{variables.$black};
   --kit-ink: #{variables.$white};
   --kit-ink-soft: #e2e2e2;
+  // Dark ground: the brand yellow reads here (Seminars measures 9.47:1),
+  // so a price tile keeps its accent. See --kit-tile-title at the top.
+  --kit-tile-title: var(--kit-rule);
   --kit-tile-bg: rgba(0, 0, 0, 0.35);
   --kit-tile-line: rgba(255, 255, 255, 0.25);
 

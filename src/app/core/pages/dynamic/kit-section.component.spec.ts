@@ -441,6 +441,57 @@ describe('the behaviours the new archetypes own', () => {
     expect(fixture.componentInstance.isVideo(item('https://x/pic.jpg'))).toBeFalse();
   });
 
+  it('keeps a HIDDEN heading in the markup, and off the screen', () => {
+    // WHY THIS EXISTS (2026-09-01). The home page opens on a full-width
+    // slider with nowhere to put a visible <h1>, so it had none at all - and
+    // that is the heading a search engine reads the page by. "Read, but not
+    // shown" is how it has both.
+    //
+    // The trap this guards is using `display: none` or `visibility: hidden`,
+    // either of which would ALSO take the heading out of the accessibility
+    // tree - hiding it from the screen reader that is the point of it.
+    fixture.componentInstance.block = {
+      key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [
+        { key: 'h', kind: 'heading', level: 'page', text: 'Impact Discipleship Ministries',
+          hidden: true, isActive: true }
+      ] }],
+      isActive: true
+    } as never;
+    fixture.detectChanges();
+
+    const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1');
+    expect(h1).withContext('the heading left the markup entirely').not.toBeNull();
+    expect(h1!.textContent).toContain('Impact Discipleship Ministries');
+    expect(h1!.classList.contains('kit-sr-only')).toBeTrue();
+
+    const style = getComputedStyle(h1!);
+    expect(style.display).withContext('display:none hides it from screen readers too').not.toBe('none');
+    expect(style.visibility).withContext('visibility:hidden hides it from screen readers too').not.toBe('hidden');
+
+    // And the yellow rule does not draw under words nobody can see.
+    expect((fixture.nativeElement as HTMLElement).querySelector('.kit-rule'))
+      .withContext('drew a rule under an invisible heading')
+      .toBeNull();
+  });
+
+  it('draws an ordinary heading normally, rule and all', () => {
+    // The other direction, so the test above cannot pass by hiding every
+    // heading.
+    fixture.componentInstance.block = {
+      key: 'k1', type: SECTION_ARCHETYPE.SECTION, variant: 'columns',
+      columns: [{ key: 'c1', pieces: [
+        { key: 'h', kind: 'heading', level: 'page', text: 'Seminars', isActive: true }
+      ] }],
+      isActive: true
+    } as never;
+    fixture.detectChanges();
+
+    const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1');
+    expect(h1!.classList.contains('kit-sr-only')).toBeFalse();
+    expect((fixture.nativeElement as HTMLElement).querySelector('.kit-rule')).not.toBeNull();
+  });
+
   it('speaks a heading without its markup, on the button a screen reader reads', () => {
     // THE BUG THIS EXISTS FOR. Headings carry <strong> on purpose - it is how
     // the site paints a word yellow - and the play button built its
