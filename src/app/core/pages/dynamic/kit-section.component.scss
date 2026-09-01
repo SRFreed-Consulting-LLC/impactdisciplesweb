@@ -37,10 +37,17 @@
   // AND in the theme's own $body-text-color, so the two cannot drift.
   --kit-ink-soft: #727877;
   --kit-rule: #{variables.$theme-color};
-  // The brand yellow by default - which is right on every dark ground, and
-  // is what the site has always drawn. `.kit-cardink--dark` below overrides
-  // it for the light grounds, where the yellow disappears.
-  --kit-tile-title: var(--kit-rule);
+  // A PRICE TILE'S TITLE, and it defaults to the INK rather than the brand
+  // yellow (2026-09-01).
+  //
+  // Round one of this fix had it the other way about - yellow by default,
+  // overridden on light grounds - and it did not work, because a tile with
+  // no explicit card ground carries no `kit-cardink--*` class at all. That
+  // tile is the light grey one, and it kept the yellow: 1.39:1, invisible.
+  // Defaulting to the ink is safe on every ground including the ones nobody
+  // has thought about; `.kit-cardink--light` (which means a DARK ground)
+  // asks for the yellow back, and that is where it reads at 9.47:1.
+  --kit-tile-title: var(--kit-ink);
   --kit-btn-bg: #{variables.$blue};
   --kit-btn-ink: #{variables.$white};
   --kit-tile-bg: #{variables.$grey};
@@ -177,19 +184,16 @@
 .kit-cardink--dark {
   --kit-ink: #{variables.$black};
   --kit-ink-soft: #727877;
-  // A PRICE TILE'S TITLE FOLLOWS ITS GROUND (2026-09-01).
-  //
-  // It was always the brand yellow. On the dark tiles Seminars ships that
-  // measures 9.47:1 and reads as a deliberate accent, which is why nobody
-  // noticed - but the ground is a choice staff make per section, and the
-  // same yellow on the light tile grey measures 1.39:1. Not "low contrast":
-  // invisible. Dark ink means a LIGHT ground, so the title takes the ink.
-  --kit-tile-title: var(--kit-ink);
 }
 
 .kit-cardink--light {
   --kit-ink: #{variables.$white};
   --kit-ink-soft: #e7eef7;
+  // LIGHT INK MEANS A DARK GROUND, and that is the one place the brand
+  // yellow belongs on a price tile - Seminars measures 9.47:1 there and it
+  // reads as the deliberate accent it is. Everywhere else the title takes
+  // the ink; see --kit-tile-title at the top of this file.
+  --kit-tile-title: var(--kit-rule);
 }
 
 .kit-columns__col[class*='kit-card--'] {
