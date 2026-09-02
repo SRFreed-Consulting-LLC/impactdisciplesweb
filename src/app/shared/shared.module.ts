@@ -9,7 +9,6 @@ import { CampaignPopupComponent } from "./components/campaign-popup/campaign-pop
 import { SubscribeAreaComponent } from "./components/subscribe-area/subscribe-area.component";
 import { FooterComponent } from "./footer/footer.component";
 import { VenuePipe } from "./utils/pipes/venue.pipe";
-import { CourseNamePipe } from "./utils/pipes/course-name.pipe";
 import { BookBannerComponent } from "./components/book-banner/book-banner.component";
 import { BreadcrumbComponent } from "./components/breadcrumb/breadcrumb.component";
 import { PaginationComponent } from "./components/pagination/pagination.component";
@@ -42,7 +41,6 @@ import { NotFoundComponent } from "../core/pages/not-found/not-found.component";
     BreadcrumbComponent,
     PaginationComponent,
     VenuePipe,
-    CourseNamePipe,
     TimeFormatPipe,
     DiscipleMakingSummitBannerComponent,
     AnimateDirective,
@@ -71,7 +69,6 @@ import { NotFoundComponent } from "../core/pages/not-found/not-found.component";
     BreadcrumbComponent,
     PaginationComponent,
     VenuePipe,
-    CourseNamePipe,
     TimeFormatPipe,
     DiscipleMakingSummitBannerComponent,
     AnimateDirective,
