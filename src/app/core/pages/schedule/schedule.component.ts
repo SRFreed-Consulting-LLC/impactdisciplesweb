@@ -6,11 +6,9 @@ import { EventRegistrationService } from 'src/app/common/services/data/event-reg
 import { EventRegistrationModel } from '@impact-common/shared/models/domain/event-registration.model';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { CoachModel } from '@impact-common/shared/models/domain/coach.model';
-import { CourseModel } from '@impact-common/shared/models/domain/course.model';
 import { TrainingRoomModel } from '@impact-common/shared/models/domain/training-room.model';
 import { LocationService } from 'src/app/common/services/data/location.service';
 import { CoachService } from 'src/app/common/services/data/coach.service';
-import { CourseService } from 'src/app/common/services/data/course.service';
 import { DaysModel, ScheduleModel, TimeGroupsModel } from 'src/app/common/models/utils/schedule.model';
 import { ScheduleService } from 'src/app/common/services/utils/schedule.service';
 import { ActivatedRoute } from '@angular/router';
@@ -34,14 +32,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   myCourses: ScheduleModel[];
   sessionIds: string[]
 
-  coursesList: CourseModel[] = [];
   coachesList: CoachModel[] = [];
   roomsList: TrainingRoomModel[] = [];
 
   // Looked up by id from the *ngFor template on every change-detection
   // cycle (getCourse/getRoomName/getCoachName) -- Maps give O(1) lookups
   // instead of re-scanning the full list with .find() each time.
-  private coursesMap = new Map<string, CourseModel>();
   private coachesMap = new Map<string, CoachModel>();
   private roomsMap = new Map<string, TrainingRoomModel>();
 
@@ -54,7 +50,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     private scheduleService: ScheduleService,
     private scheduleEventBus: ScheduleEventBusService,
     private locationService: LocationService,
-    private courseService: CourseService,
     private coachService: CoachService,
     private toastService: ToastService,
     private destroyRef: DestroyRef
@@ -76,10 +71,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
             // Fetch once, not on every event-doc emission (P12). These full
             // collections don't change within an attendee's session; the maps
             // below are cheap to rebuild from the already-loaded lists.
-            if (!this.coursesList.length) {
-              this.coursesList = await this.courseService.getAll();
-            }
-
             if (!this.coachesList.length) {
               this.coachesList = await this.coachService.getAll();
             }
@@ -88,7 +79,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
               return location.trainingrooms;
             })
 
-            this.coursesMap = new Map(this.coursesList.map(course => [course.id, course]));
             this.coachesMap = new Map(this.coachesList.map(coach => [coach.id, coach]));
             this.roomsMap = new Map(this.roomsList.map(room => [room.id, room]));
 
@@ -156,7 +146,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       myCourses: this.myCourses,
       currentUser: this.currentUser,
       event: this.event,
-      coursesList: this.coursesList,
       coachesList: this.coachesList,
       roomsList: this.roomsList,
       timeGroup: timeGroup
@@ -167,14 +156,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     return timeGroup.items.some(item => item.isAssignedToUser);
   }
 
-  // Item-first with legacy course fallback - see breakout.util.ts (2026-08
-  // Courses retirement).
+  // The item carries its own title - see breakout.util.ts. It used to fall
+  // back to a courses/{id} lookup, and getCourse() plus a coursesMap existed
+  // only for that; the collection is gone (2026-09-01).
   getTitle(item: AgendaItem){
-    return breakoutTitle(item, item?.course ? this.getCourse(item.course) : null);
-  }
-
-  getCourse(id: string){
-    return this.coursesMap.get(id) || null;
+    return breakoutTitle(item);
   }
 
   getRoomName(id: string){

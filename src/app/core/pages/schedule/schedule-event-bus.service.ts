@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CoachModel } from '@impact-common/shared/models/domain/coach.model';
-import { CourseModel } from '@impact-common/shared/models/domain/course.model';
 import { EventRegistrationModel } from '@impact-common/shared/models/domain/event-registration.model';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { TrainingRoomModel } from '@impact-common/shared/models/domain/training-room.model';
@@ -13,7 +12,6 @@ export interface BreakoutSessionModalPayload {
   myCourses: ScheduleModel[];
   currentUser: CustomerModel | EventRegistrationModel;
   event: EventModel;
-  coursesList: CourseModel[];
   coachesList: CoachModel[];
   roomsList: TrainingRoomModel[];
   timeGroup: TimeGroupsModel;

@@ -1,59 +1,38 @@
 import { breakoutTitle, breakoutDescription, sameBreakoutSession } from './breakout.util';
 import { AgendaItem } from '@impact-common/shared/models/domain/utils/agenda-item.model';
-import { CourseModel } from '@impact-common/shared/models/domain/course.model';
 
-// Post-Courses-retirement items are self-contained; pre-flatten items lean
-// on their legacy courses/{id} doc. These helpers arbitrate between the two,
-// so the specs construct bare object literals for both shapes.
+// A breakout item is SELF-CONTAINED. It used to be able to lean on a
+// legacy courses/{id} document for its title and description, and half the
+// tests here arbitrated between the two shapes - those went with the
+// fallbacks and the collection on 2026-09-01, verified first against the
+// real data: 84 agenda items, 84 carrying their own text, none needing the
+// lookup.
+//
+// sameBreakoutSession KEPT its course-id branch, and so did its tests: 28
+// stored items still carry `course`, and reading that field costs no query.
 const item = (fields: Partial<AgendaItem>): AgendaItem => fields as AgendaItem;
-const course = (fields: Partial<CourseModel>): CourseModel => fields as CourseModel;
 
 describe('breakoutTitle', () => {
-  it('prefers the item\'s own text over the legacy course title', () => {
-    expect(breakoutTitle(item({ text: 'Discipleship 101' }), course({ title: 'Breakout: Old Name' })))
-      .toBe('Discipleship 101');
+  it('returns the item\'s own text', () => {
+    expect(breakoutTitle(item({ text: 'Discipleship 101' }))).toBe('Discipleship 101');
   });
 
-  it('falls back to the course title when the item has no text', () => {
-    expect(breakoutTitle(item({}), course({ title: 'Evangelism Workshop' }))).toBe('Evangelism Workshop');
-  });
-
-  it('strips the legacy "Breakout: " prefix from a course-title fallback', () => {
-    expect(breakoutTitle(null, course({ title: 'Breakout: Prayer Basics' }))).toBe('Prayer Basics');
-  });
-
-  it('treats an empty-string text as absent (falls through to the course)', () => {
-    expect(breakoutTitle(item({ text: '' }), course({ title: 'Breakout: Prayer Basics' }))).toBe('Prayer Basics');
-  });
-
-  it('returns empty string with neither item text nor a course', () => {
+  it('returns empty string for an item with no text, and for no item at all', () => {
+    expect(breakoutTitle(item({}))).toBe('');
+    expect(breakoutTitle(item({ text: '' }))).toBe('');
     expect(breakoutTitle(null)).toBe('');
-    expect(breakoutTitle(undefined, null)).toBe('');
-    expect(breakoutTitle(item({}), course({}))).toBe('');
+    expect(breakoutTitle(undefined)).toBe('');
   });
 });
 
 describe('breakoutDescription', () => {
-  it('prefers the item\'s own description over any course text', () => {
-    const result = breakoutDescription(
-      item({ description: 'From the item' }),
-      course({ longDescription: 'Long', shortDescription: 'Short' })
-    );
-    expect(result).toBe('From the item');
+  it('returns the item\'s own description', () => {
+    expect(breakoutDescription(item({ description: 'From the item' }))).toBe('From the item');
   });
 
-  it('falls back to the course longDescription before shortDescription', () => {
-    expect(breakoutDescription(item({}), course({ longDescription: 'Long', shortDescription: 'Short' })))
-      .toBe('Long');
-  });
-
-  it('falls back to shortDescription when there is no longDescription', () => {
-    expect(breakoutDescription(item({}), course({ shortDescription: 'Short' }))).toBe('Short');
-  });
-
-  it('returns empty string when nothing is populated anywhere', () => {
+  it('returns empty string when there is none', () => {
+    expect(breakoutDescription(item({}))).toBe('');
     expect(breakoutDescription(null)).toBe('');
-    expect(breakoutDescription(item({}), course({}))).toBe('');
   });
 });
 

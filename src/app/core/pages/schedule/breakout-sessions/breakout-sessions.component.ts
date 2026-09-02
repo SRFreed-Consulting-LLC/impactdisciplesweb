@@ -1,7 +1,6 @@
 import { Component, OnInit, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toMillis } from '@impact-common/shared/utils/date-from-timestamp';
-import { CourseModel } from '@impact-common/shared/models/domain/course.model';
 import { TrainingRoomModel } from '@impact-common/shared/models/domain/training-room.model';
 import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
@@ -28,7 +27,6 @@ export class BreakoutSessionsComponent implements OnInit{
   myCourses: ScheduleModel[];
   currentUser: CustomerModel | EventRegistrationModel;
   event: EventModel;
-  coursesList: CourseModel[] = [];
   coachesList: CoachModel[] = [];
   roomsList: TrainingRoomModel[] = [];
   selectedTimegroup: TimeGroupsModel;
@@ -36,7 +34,6 @@ export class BreakoutSessionsComponent implements OnInit{
   // Looked up by id from the *ngFor templates on every change-detection
   // cycle (getCourse/getRoomName/getCoach*) -- Maps give O(1) lookups
   // instead of re-scanning the full list with .find() each time.
-  private coursesMap = new Map<string, CourseModel>();
   private coachesMap = new Map<string, CoachModel>();
   private roomsMap = new Map<string, TrainingRoomModel>();
 
@@ -54,17 +51,15 @@ export class BreakoutSessionsComponent implements OnInit{
 
       this.scheduleEventBus.showBreakoutSessionsModal.pipe(
         takeUntilDestroyed(this.destroyRef)
-      ).subscribe(({ allCourses, myCourses, currentUser, event, coursesList, coachesList, roomsList, timeGroup }) => {
+      ).subscribe(({ allCourses, myCourses, currentUser, event, coachesList, roomsList, timeGroup }) => {
         this.allCourses = allCourses;
         this.myCourses = myCourses;
         this.currentUser = currentUser;
         this.event = event;
-        this.coursesList = coursesList;
         this.coachesList = coachesList;
         this.roomsList = roomsList
         this.selectedTimegroup = timeGroup;
 
-        this.coursesMap = new Map(this.coursesList.map(course => [course.id, course]));
         this.coachesMap = new Map(this.coachesList.map(coach => [coach.id, coach]));
         this.roomsMap = new Map(this.roomsList.map(room => [room.id, room]));
 
@@ -72,22 +67,19 @@ export class BreakoutSessionsComponent implements OnInit{
       })
     }
 
-  getCourse(id: string){
-    return this.coursesMap.get(id) || null;
-  }
-
   getRoomName(id: string){
     return this.roomsMap.get(id)?.name || '';
   }
 
-  // Item-first with legacy course fallback - see breakout.util.ts (2026-08
-  // Courses retirement).
+  // The item carries its own title and description - see breakout.util.ts.
+  // Both used to fall back to a courses/{id} lookup, which is what getCourse
+  // and the coursesMap existed for; the collection is gone (2026-09-01).
   getTitle(item: AgendaItem){
-    return breakoutTitle(item, item?.course ? this.getCourse(item.course) : null);
+    return breakoutTitle(item);
   }
 
   getDescription(item: AgendaItem){
-    return breakoutDescription(item, item?.course ? this.getCourse(item.course) : null);
+    return breakoutDescription(item);
   }
   getCoachImg(id: string){
     return this.coachesMap.get(id)?.photoUrl.url || '';
