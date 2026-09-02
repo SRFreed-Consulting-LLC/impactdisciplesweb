@@ -155,6 +155,15 @@ describe('the kit section renderer', () => {
     fixture = TestBed.createComponent(KitSectionComponent);
   });
 
+  // THE COUNTDOWN STARTS AN INTERVAL, and a fixture nobody destroys leaves
+  // it ticking inside the Angular zone for the whole rest of the run. Three
+  // of the six describes in this file destroyed their fixture and three did
+  // not, which is what made the web suite unreliable: Jasmine randomises
+  // spec order, so whichever spec happened to run once the zone was busy
+  // enough was the one blamed - a different one every time, each passing on
+  // its own. See the note on the same hook further down.
+  afterEach(() => fixture.destroy());
+
   function render(block: PageContentBlock): HTMLElement {
     fixture.componentInstance.block = block;
     fixture.detectChanges();
@@ -240,6 +249,10 @@ describe('the two axes a section is drawn on', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(KitSectionComponent);
   });
+
+  // See the top of this file: an undestroyed fixture leaves the countdown's
+  // interval running for the rest of the suite.
+  afterEach(() => fixture.destroy());
 
   function renderWith(block: PageContentBlock, theme?: { surface: 'light' | 'dark' | 'tinted' | 'photo' }): HTMLElement {
     fixture.componentInstance.block = block;
@@ -362,6 +375,11 @@ describe('the behaviours the new archetypes own', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(KitSectionComponent);
   });
+
+  // THE WORST OFFENDER of the three that were missing this: the countdown
+  // specs live in here, so every run left at least two live intervals
+  // behind. See the top of this file.
+  afterEach(() => fixture.destroy());
 
   it('shows a Form Builder form ONLY when one has been picked', () => {
     // A half-configured section must not draw a broken widget - the words
