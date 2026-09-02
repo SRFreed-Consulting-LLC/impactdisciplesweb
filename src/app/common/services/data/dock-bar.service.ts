@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { DockBarModel } from '@impact-common/shared/models/domain/dock-bar.model';
-import { tenantPath } from '@impact-common/shared/lists/site_tenancy';
+import { tenantPath } from '@impact-common/shared/lists/tenancy';
 
 /** The one document the docking bar lives in. Keep in step with the admin
  *  repo's own DockBarService, which is the only thing that writes it.

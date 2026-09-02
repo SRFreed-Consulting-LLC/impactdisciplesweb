@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { DocumentData, QueryConstraint, QuerySnapshot } from 'firebase/firestore';
 import { BaseModel } from '@impact-common/shared/models/base.model';
-import { tenantPath } from '@impact-common/shared/lists/site_tenancy';
+import { tenantPath } from '@impact-common/shared/lists/tenancy';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +18,8 @@ export class FirebaseDAO<T extends BaseModel> {
    * Where a collection actually lives.
    *
    * EVERY path in this class goes through here. A site's own content is
-   * nested under `sites/{siteId}`; everything else is returned unchanged.
-   * See the shared site_tenancy for why, and for the list - the list is the
+   * nested under `tenants/{tenantId}`; everything else is returned unchanged.
+   * See the shared tenancy module for why, and for the list - the list is the
    * whole of the decision, so nothing in this file needs to know which is
    * which. The admin repo's own DAO carries the identical helper.
    */
