@@ -1,7 +1,6 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { YouTubePlayerModule } from '@angular/youtube-player';
 import {
   ContentPiece, ContentPieceKind, PageContentBlock
 } from '@impact-common/shared/models/domain/page-content.model';
@@ -53,6 +52,38 @@ const IMPLEMENTED: readonly SECTION_ARCHETYPE[] = [
 /** A block carrying every field, so no archetype renders empty merely because
  *  the fixture starved it. The point is to isolate "the case is missing" from
  *  "the data was thin". */
+/**
+ * A STAND-IN FOR <youtube-player>, and the reason is not tidiness.
+ *
+ * The real one fetches https://www.youtube.com/iframe_api the moment it
+ * renders - and the kit passes [disablePlaceholder]="true", which removes
+ * the click-to-load placeholder that would otherwise defer it. So every run
+ * of this spec made a live cross-origin request to youtube.com, and that
+ * made the WHOLE WEB UNIT SUITE intermittently unstable in three ways:
+ *
+ *   "Script error." with no detail - a browser masks a cross-origin
+ *     script's real message, so the failure named nothing;
+ *   "An error was thrown in afterAll" - the player kept initialising after
+ *     the spec had finished, so the error landed after teardown;
+ *   "Disconnected, because no message in 30000 ms" - a slow fetch stalled
+ *     the browser past Karma's heartbeat.
+ *
+ * Reproduced on 2026-09-03 by running this file ALONE three times: two clean
+ * passes and one run carrying both the afterAll error and the disconnect.
+ * Machine load made it likelier by slowing the fetch, but the network call
+ * was the cause, not the load.
+ *
+ * A real component rather than leaning on CUSTOM_ELEMENTS_SCHEMA, so the
+ * bindings stay checked: rename an input in the template and this goes red,
+ * which a tolerated unknown element would not.
+ */
+@Component({ selector: 'youtube-player', standalone: true, template: '' })
+class YouTubePlayerStub {
+  @Input() videoId?: string;
+  @Input() playerVars?: unknown;
+  @Input() disablePlaceholder?: boolean;
+}
+
 function blockFor(archetype: SECTION_ARCHETYPE, variant?: string): PageContentBlock {
   return {
     key: 'k1',
@@ -141,7 +172,7 @@ describe('the kit section renderer', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [KitSectionComponent],
-      imports: [YouTubePlayerModule, FormsModule],
+      imports: [YouTubePlayerStub, FormsModule],
       providers: [
         { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
         { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
@@ -237,7 +268,7 @@ describe('the two axes a section is drawn on', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [KitSectionComponent],
-      imports: [YouTubePlayerModule, FormsModule],
+      imports: [YouTubePlayerStub, FormsModule],
       providers: [
         { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
         { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
@@ -358,7 +389,7 @@ describe('the behaviours the new archetypes own', () => {
     submitted = [];
     await TestBed.configureTestingModule({
       declarations: [KitSectionComponent],
-      imports: [YouTubePlayerModule, FormsModule],
+      imports: [YouTubePlayerStub, FormsModule],
       providers: [
         { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
         {
@@ -678,7 +709,7 @@ describe('the pieces a section is built from', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [KitSectionComponent],
-      imports: [YouTubePlayerModule, FormsModule],
+      imports: [YouTubePlayerStub, FormsModule],
       providers: [
         { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
         { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
@@ -834,7 +865,7 @@ describe('the list defects that predate the kit', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [KitSectionComponent],
-      imports: [YouTubePlayerModule, FormsModule],
+      imports: [YouTubePlayerStub, FormsModule],
       providers: [
         { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
         { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
@@ -949,7 +980,7 @@ describe('a video that belongs to a piece', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [KitSectionComponent],
-      imports: [YouTubePlayerModule, FormsModule],
+      imports: [YouTubePlayerStub, FormsModule],
       providers: [
         { provide: TestimonialService, useValue: { getAllByValue: () => Promise.resolve([]) } },
         { provide: SubscribeFormService, useValue: { submit: () => Promise.resolve() } }
