@@ -13,7 +13,7 @@ the page can ever show.
 | `dictation.jpg`     | An answer mid-dictation, mic in its recording state (2026-09-03) |
 | `group-chat.jpg`    | An Impact Group chat |
 | `messages.jpg`      | The in-app inbox |
-| `store-v2.jpg`      | The store, post-redesign (2026-09-03) |
+| `store-v3.jpg`      | The store, post-redesign (2026-09-03; v2 had the products' "andd" typo, fixed in the data the same day) |
 | `settings.jpg`      | Settings |
 | `help.jpg`          | Contextual help |
 
@@ -22,7 +22,7 @@ the page can ever show.
 firebase.json serves every `.jpg`/`.mp4` under `assets/` as
 `public, max-age=31536000, immutable`. Overwrite `store.jpg` in place and a
 returning visitor keeps the old picture for a year. That is why the store
-recapture is `store-v2.jpg` and the old `store.jpg` is gone, and why the
+recapture is `store-v3.jpg` and the old `store.jpg` is gone, and why the
 page_content doc has to be repointed (Firestore, dev AND prod) in the same
 change - the file and the reference move together.
 
