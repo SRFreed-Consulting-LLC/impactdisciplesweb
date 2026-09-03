@@ -77,6 +77,11 @@ const IMPLEMENTED: readonly SECTION_ARCHETYPE[] = [
  * bindings stay checked: rename an input in the template and this goes red,
  * which a tolerated unknown element would not.
  */
+// The selector has to be exactly 'youtube-player' - it is standing in for a
+// third-party element the kit's own template names, so the house "app-"
+// prefix rule cannot apply to it. Renaming it would simply mean the stub
+// never matches and the real player loads again.
+// eslint-disable-next-line @angular-eslint/component-selector
 @Component({ selector: 'youtube-player', standalone: true, template: '' })
 class YouTubePlayerStub {
   @Input() videoId?: string;
