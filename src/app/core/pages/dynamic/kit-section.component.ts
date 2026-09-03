@@ -618,6 +618,25 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return item.ctaUrl2 ? (KIT_LINK_DESTINATIONS[item.ctaUrl2] ?? item.ctaUrl2) : null;
   }
 
+  /**
+   * Where a button opens: a new tab when staff asked for that on the button,
+   * otherwise null so the attribute is ABSENT rather than `target="null"`.
+   *
+   * The Give page's donation buttons are why this exists (2026-09-03): they
+   * leave for a payment provider, and were taking the visitor off the site
+   * with them. Every place an entry's link is drawn goes through this, so a
+   * button behaves the same whichever look its section wears.
+   */
+  target(item: { newTab?: boolean }): '_blank' | null {
+    return item.newTab ? '_blank' : null;
+  }
+
+  /** `noopener` travels with `_blank`: without it the page that opens gets
+   *  a handle on this one. Null otherwise, for the same reason as target(). */
+  rel(item: { newTab?: boolean }): 'noopener' | null {
+    return item.newTab ? 'noopener' : null;
+  }
+
   // `leftItems` / `rightItems` lived here until 2026-09-01. They split ONE
   // archetype's entries by a stored `column`, which is what a Section's two
   // columns of pieces do properly now - the entries were never the columns,

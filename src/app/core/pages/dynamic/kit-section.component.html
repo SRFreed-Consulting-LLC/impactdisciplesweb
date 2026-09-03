@@ -53,7 +53,8 @@
                        Seminars ones do not, so the button draws only when a
                        row actually has one (2026-08-31). -->
                   @if (tile.ctaTitle && href(tile)) {
-                    <a class="kit-btn kit-btn--thin kit-rowcard__cta" [href]="href(tile)">{{ tile.ctaTitle }}</a>
+                    <a class="kit-btn kit-btn--thin kit-rowcard__cta" [href]="href(tile)"
+                       [attr.target]="target(tile)" [attr.rel]="rel(tile)">{{ tile.ctaTitle }}</a>
                   }
                 </div>
               </article>
@@ -86,7 +87,8 @@
                 <div class="kit-copy" [innerHTML]="tile.body"></div>
               }
               @if (tile.ctaTitle && href(tile)) {
-                <a class="kit-btn kit-tile__cta" [href]="href(tile)">{{ tile.ctaTitle }}</a>
+                <a class="kit-btn kit-tile__cta" [href]="href(tile)"
+                   [attr.target]="target(tile)" [attr.rel]="rel(tile)">{{ tile.ctaTitle }}</a>
               }
             </article>
             }
@@ -113,7 +115,8 @@
                    shows, because it is the row's content rather than its
                    link; it just stops claiming to be clickable. -->
               @if (href(row)) {
-                <a class="kit-btn kit-btn--ghost kit-rows__btn" [href]="href(row)">{{ row.title }}</a>
+                <a class="kit-btn kit-btn--ghost kit-rows__btn" [href]="href(row)"
+                   [attr.target]="target(row)" [attr.rel]="rel(row)">{{ row.title }}</a>
               } @else {
                 <span class="kit-rows__btn kit-rows__label">{{ row.title }}</span>
               }
@@ -179,7 +182,8 @@
                 <div class="kit-copy" [innerHTML]="row.body"></div>
               }
               @if (row.ctaTitle && href(row)) {
-                <a class="kit-btn" [href]="href(row)">{{ row.ctaTitle }}</a>
+                <a class="kit-btn" [href]="href(row)"
+                   [attr.target]="target(row)" [attr.rel]="rel(row)">{{ row.ctaTitle }}</a>
               }
             </div>
           </article>
@@ -304,7 +308,8 @@
                     <p class="kit-slide__desc">{{ slide.description }}</p>
                   }
                   @if (slide.ctaTitle && href(slide)) {
-                    <a class="kit-btn" [href]="href(slide)">{{ slide.ctaTitle }}</a>
+                    <a class="kit-btn" [href]="href(slide)"
+                       [attr.target]="target(slide)" [attr.rel]="rel(slide)">{{ slide.ctaTitle }}</a>
                   }
                 </div>
               </div>
@@ -365,7 +370,8 @@
     </div>
   }
   @if (item.ctaTitle && href(item)) {
-    <a [href]="href(item)" class="kit-btn kit-btn--ghost kit-columns__cta">{{ item.ctaTitle }}</a>
+    <a [href]="href(item)" class="kit-btn kit-btn--ghost kit-columns__cta"
+       [attr.target]="target(item)" [attr.rel]="rel(item)">{{ item.ctaTitle }}</a>
   }
 </ng-template>
 
@@ -383,7 +389,8 @@
     <div class="kit-actions" [class.kit-actions--centre]="centre">
       @for (button of buttons; track $index) {
         @if (href(button)) {
-          <a class="kit-btn" [href]="href(button)">
+          <a class="kit-btn" [href]="href(button)"
+             [attr.target]="target(button)" [attr.rel]="rel(button)">
             {{ button.title || button.ctaTitle }}
             @if (button.icon) {
               <i [class]="button.icon + ' kit-btn__icon'" aria-hidden="true"></i>
@@ -506,7 +513,8 @@
         <div class="kit-actions">
           @for (button of pieceButtons(piece); track $index) {
             @if (href(button)) {
-              <a class="kit-btn" [href]="href(button)">
+              <a class="kit-btn" [href]="href(button)"
+                 [attr.target]="target(button)" [attr.rel]="rel(button)">
                 {{ button.title }}
                 @if (button.icon) {
                   <i [class]="button.icon + ' kit-btn__icon'" aria-hidden="true"></i>
