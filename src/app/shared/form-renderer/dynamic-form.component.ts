@@ -6,7 +6,10 @@ import { controlStyleVars, flattenDataFields, FormFieldDef } from '@impact-commo
 import { FormSubmissionModel } from '@impact-common/shared/models/domain/form-submission.model';
 import { FormDefinitionService } from 'src/app/common/services/data/form-definition.service';
 import { FormSubmissionService } from 'src/app/common/services/data/form-submission.service';
-import { buildFormGroup } from './build-form-group';
+// ONE implementation, shared with the admin app. This was a hand-synced
+// copy of admin's file until 2026-09-03, with no tests of its own - on the
+// side real visitors submit through. See the shared file's note.
+import { buildFormGroup } from '@impact-common/forms/build-form-group';
 
 // Reusable "load a form built in the admin app's Form Builder and render
 // it" component - drop `<app-dynamic-form [formId]="...">` onto any page.
