@@ -1,6 +1,14 @@
 <nav>
   <ul>
     @for (item of menuItems; track item.title; let index = $index) {
+      <!-- This <li> DELEGATES; it is not itself interactive. Every visible
+           branch below renders a focusable <a>, and focusin/focusout/
+           keydown.escape reach this element by bubbling from those children -
+           which is the whole point of handling them here rather than on each
+           link. Giving the <li> a tabindex to satisfy the rule would put a
+           keyboard and screen-reader stop on a list item that does nothing,
+           which is worse for the users the rule exists to protect. -->
+      <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
       <li #row [ngClass]="getMenuClasses(item)"
           [class.is-dismissed]="dismissedIndex === index"
           (focusin)="openIndex = index" (focusout)="onLeave($event, index)"

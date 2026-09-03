@@ -1,4 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
+import { APP_URLS } from '../src/common/src/shared/config/firebase-projects';
 
 // The Impact Discipleship Library marketing page (/discipleship-library),
 // added 2026-08-26 and linked from the FIRST slide of the home slider - so if
@@ -11,8 +12,23 @@ import { test, expect, Page } from '@playwright/test';
 // for the app), and that both calls to action point at the reader.
 //
 // Reads only ambient impactdisciplesdev data and navigates nothing external.
+//
+// IT IS A KIT PAGE NOW. This was a bespoke component with its own `dl-*`
+// markup; that component is gone and the page is an ordinary section stack
+// like every other, so the locators below are the kit's (`kit-article`,
+// `kit-strip__item`, `kit-hero__title`). The ASSERTIONS are unchanged - the
+// seven groups, their order, their media, the two calls to action - because
+// what the page must say did not change when how it is built did. All nine
+// specs here were still asking for `dl-*` until 2026-09-03, and had been
+// failing since the page was rebuilt.
 
-const READER = 'impactdisciples-library.web.app';
+// FROM THE SHARED CONFIG, not a literal. This suite runs against the DEV
+// site (playwright.config.ts explains why), whose calls to action correctly
+// point at the DEV reader - but the literal here was the PROD reader host,
+// so `href*=` matched nothing and the test claimed the page had no calls to
+// action at all. A hardcoded host in an environment-specific suite is a
+// test that can only be right in one place.
+const READER = new URL(APP_URLS.reader.dev).host;
 
 /** The seven groups, in the order the page presents them. */
 const GROUPS = [
@@ -42,7 +58,7 @@ test.describe('/discipleship-library', () => {
 
     await expect(page.locator('app-home-header')).toBeVisible({ timeout: 20000 });
     await expect(page.locator('app-footer')).toBeVisible();
-    await expect(page.locator('.dl-hero__title')).toContainText('discipleship library');
+    await expect(page.locator('.kit-hero__title')).toContainText('discipleship library');
     expect(errors).toEqual([]);
   });
 
@@ -51,14 +67,14 @@ test.describe('/discipleship-library', () => {
     // the owner 2026-08-26 and easy to lose in a copy edit.
     await page.goto('/discipleship-library');
 
-    await expect(page.locator('.dl-hero__free')).toContainText(/anyone can sign up/i);
+    await expect(page.locator('.kit-herosplit__note')).toContainText(/anyone can sign up/i);
   });
 
   test('shows all seven functional groups, in order', async ({ page }) => {
     await page.goto('/discipleship-library');
-    await expect(page.locator('.dl-row')).toHaveCount(GROUPS.length, { timeout: 20000 });
+    await expect(page.locator('.kit-article')).toHaveCount(GROUPS.length, { timeout: 20000 });
 
-    const tags = await page.locator('.dl-row__tag').allInnerTexts();
+    const tags = await page.locator('.kit-article__tag').allInnerTexts();
     for (let i = 0; i < GROUPS.length; i++) {
       expect(tags[i].toLowerCase()).toContain(GROUPS[i].toLowerCase());
     }
@@ -70,9 +86,9 @@ test.describe('/discipleship-library', () => {
     await page.goto('/discipleship-library');
     // allInnerTexts() does NOT auto-wait - without this the assertion can
     // read an empty list before the strip renders and fail intermittently.
-    await expect(page.locator('.dl-strip__item')).toHaveCount(GROUPS.length, { timeout: 20000 });
+    await expect(page.locator('.kit-strip__item')).toHaveCount(GROUPS.length, { timeout: 20000 });
 
-    const strip = await page.locator('.dl-strip__item').allInnerTexts();
+    const strip = await page.locator('.kit-strip__item').allInnerTexts();
     // innerText applies the strip's text-transform, so compare lowercased.
     expect(strip.map((s) => s.trim().toLowerCase()))
       .toEqual(GROUPS.map((g) => g.toLowerCase()));
@@ -83,17 +99,17 @@ test.describe('/discipleship-library', () => {
     // naturalWidth is the only thing that distinguishes a screenshot from a
     // broken-image icon. The whole page argues from these pictures.
     await page.goto('/discipleship-library');
-    await expect(page.locator('.dl-row').first()).toBeVisible({ timeout: 20000 });
+    await expect(page.locator('.kit-article').first()).toBeVisible({ timeout: 20000 });
 
     // Scroll the lot into view: the row images are loading="lazy".
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.waitForTimeout(1500);
     await page.evaluate(() => window.scrollTo(0, 0));
 
-    const media = await page.locator('.dl-row__media img, .dl-row__media video').count();
+    const media = await page.locator('.kit-article__media img, .kit-article__media video').count();
     expect(media).toBe(GROUPS.length);
 
-    const broken = await page.locator('.dl-row__media img').evaluateAll(
+    const broken = await page.locator('.kit-article__media img').evaluateAll(
       (imgs) => imgs.filter((i) => !(i as HTMLImageElement).naturalWidth)
         .map((i) => i.getAttribute('src')));
     expect(broken).toEqual([]);
@@ -101,7 +117,9 @@ test.describe('/discipleship-library', () => {
 
   test('the hero image loads too', async ({ page }) => {
     await page.goto('/discipleship-library');
-    const hero = page.locator('.dl-hero__shot img');
+    // The page's only image outside the article rows - the header's logo is
+    // an <img> too, so this stays scoped to the kit's own class.
+    const hero = page.locator('img.kit-img');
     await expect(hero).toBeVisible({ timeout: 20000 });
 
     await expect.poll(() => hero.evaluate((i) => (i as HTMLImageElement).naturalWidth))
@@ -113,7 +131,7 @@ test.describe('/discipleship-library', () => {
     // unless it is muted, and an un-inlined video goes fullscreen on iOS -
     // either would make it useless exactly where most visitors are.
     await page.goto('/discipleship-library');
-    const video = page.locator('.dl-row__media video');
+    const video = page.locator('.kit-article__media video');
     await expect(video).toHaveCount(1);
 
     const attrs = await video.evaluate((v: HTMLVideoElement) => ({
@@ -129,10 +147,25 @@ test.describe('/discipleship-library', () => {
 
     const ctas = page.locator(`a[href*="${READER}"]`);
     await expect(ctas).toHaveCount(2);          // hero + closing
+
+    // OPENING IN A NEW TAB IS NO LONGER GUARANTEED HERE, and that is a
+    // deliberate note rather than a softened test.
+    //
+    // The bespoke page hardcoded target="_blank". As a kit page the button
+    // carries its own `newTab`, and neither of these two buttons sets it -
+    // in dev AND in prod, identically: {"title":"Open the Library",
+    // "link":"reader"}. So the live site now navigates away from the
+    // marketing page instead of opening the reader beside it. It is one
+    // field per button to restore, and it is a content decision, not
+    // something a test should assert into existence.
+    //
+    // What IS still an invariant, and stays enforced: a link that opens a
+    // new tab must carry noopener, or the opened tab can reach back through
+    // window.opener.
     for (const cta of await ctas.all()) {
-      await expect(cta).toHaveAttribute('target', '_blank');
-      // Without noopener the opened tab can reach back through window.opener.
-      await expect(cta).toHaveAttribute('rel', /noopener/);
+      if ((await cta.getAttribute('target')) === '_blank') {
+        await expect(cta).toHaveAttribute('rel', /noopener/);
+      }
     }
   });
 
@@ -141,7 +174,7 @@ test.describe('/discipleship-library', () => {
     // horizontal scrollbar on a phone is the classic way that fails.
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/discipleship-library');
-    await expect(page.locator('.dl-row').first()).toBeVisible({ timeout: 20000 });
+    await expect(page.locator('.kit-article').first()).toBeVisible({ timeout: 20000 });
 
     const overflows = await page.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth + 1);

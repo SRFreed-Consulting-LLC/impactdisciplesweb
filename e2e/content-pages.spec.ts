@@ -70,39 +70,30 @@ test('/contact renders its form and the ministry details', async ({ page }) => {
 // ------------------------------------------------------- capture flows
 
 test('/give buttons open a real payment URL', async ({ page }) => {
-  // The giving buttons are NOT links - they call window.open() with a URL
-  // from the environment file. So the failure mode is not a dead href, it is
-  // window.open(undefined): the button looks like it works, a blank tab
-  // opens, and the donation never happens. window.open is stubbed here so
-  // the assertion is on the URL itself and nothing reaches Stripe or PayPal.
+  // THE BUTTONS WERE NOT LINKS. They called window.open() with a URL from
+  // the environment file, so the failure mode was window.open(undefined) -
+  // a blank tab and no donation - and this test stubbed window.open to read
+  // what it was handed.
+  //
+  // As a kit page they are ordinary <a href> resolved from a destination
+  // KEY, which is strictly better: a dead giving button is now visible in
+  // the DOM instead of only at the instant someone clicks it. So the URLs
+  // are read rather than provoked - and nothing is clicked, because these
+  // are real links to Stripe and PayPal now.
   const errors = collectErrors(page);
-  await page.addInitScript(() => {
-    const w = window as unknown as { __opened: string[] };
-    w.__opened = [];
-    window.open = ((url?: string | URL) => {
-      w.__opened.push(String(url));
-      return null;
-    }) as typeof window.open;
-  });
   await page.goto('/give');
   await expectShell(page);
 
-  const buttons = page.locator('.give .impact-btn, main .impact-btn');
+  const buttons = page.locator('.kit-btn');
   await expect.poll(() => buttons.count(), { timeout: 20000 })
     .toBeGreaterThan(0);
 
-  const total = await buttons.count();
-  for (let i = 0; i < total; i++) {
-    await buttons.nth(i).click();
-  }
-
-  const opened: string[] = await page.evaluate(
-    () => (window as unknown as { __opened: string[] }).__opened
+  const hrefs = await buttons.evaluateAll(
+    (els) => els.map((e) => e.getAttribute('href') ?? '')
   );
-  expect(opened.length, 'no giving button opened anything').toBeGreaterThan(0);
-  for (const url of opened) {
-    expect(url, 'a giving button opened a non-URL').toMatch(/^https:\/\//);
-    expect(url, 'an unconfigured environment URL').not.toContain('undefined');
+  for (const href of hrefs) {
+    expect(href, 'a giving button points nowhere').toMatch(/^https:\/\//);
+    expect(href, 'an unconfigured environment URL').not.toContain('undefined');
   }
   expect(errors, `errors on /give:\n${errors.join('\n')}`).toEqual([]);
 });
@@ -173,14 +164,21 @@ test('/coaching-with-impact renders its rebuilt sections', async ({ page }) => {
   // Rebuilt 2026-08-23 from a WordPress/Divi export. The old version
   // injected a whole HTML document plus 54 scripts off the WordPress site;
   // these assertions are what "it is really Angular now" looks like.
+  //
+  // REBUILT AGAIN as a kit page (2026-08-29), so the bespoke `cwi-*` markup
+  // these specs named is gone. The locators are the kit's now; the counts
+  // are not softened, because they still hold exactly - seven coach quotes
+  // are seven `.kit-quote`, the two resources are two `.kit-article`. The
+  // one that moved is the contact block: coaching has a form section rather
+  // than the kit's contact-details section, so it asserts the form.
   const errors = collectErrors(page);
   await page.goto('/coaching-with-impact');
   await expectShell(page);
 
-  await expect(page.locator('.cwi-intro__lead')).toBeVisible();
-  await expect(page.locator('.cwi-testimonials')).toBeVisible();
-  await expect(page.locator('.cwi-resource')).toHaveCount(2);
-  await expect(page.locator('.cwi-contact')).toBeVisible();
+  await expect(page.locator('.kit-hero__title')).toBeVisible();
+  await expect(page.locator('.kit-carousel')).toBeVisible();
+  await expect(page.locator('.kit-article')).toHaveCount(2);
+  await expect(page.locator('form')).toBeVisible();
   expect(errors, `errors on /coaching-with-impact:\n${errors.join('\n')}`).toEqual([]);
 });
 
@@ -189,13 +187,13 @@ test('the coaching testimonials carousel keeps every quote', async ({ page }) =>
   // carousel. If Swiper fails to initialise they collapse into one column
   // and six of them become unreachable.
   await page.goto('/coaching-with-impact');
-  await expect(page.locator('.cwi-testimonials')).toBeVisible({ timeout: 20000 });
+  await expect(page.locator('.kit-carousel')).toBeVisible({ timeout: 20000 });
 
-  await expect(page.locator('.cwi-quote')).toHaveCount(7);
+  await expect(page.locator('.kit-quote')).toHaveCount(7);
   await expect(
-    page.locator('.cwi-testimonials__swiper.swiper-initialized')
+    page.locator('.kit-carousel__swiper.swiper-initialized')
   ).toBeVisible();
-  await expect(page.locator('.cwi-testimonials__next')).toBeVisible();
+  await expect(page.locator('.kit-carousel__next')).toBeVisible();
 });
 
 test('the coaching page loads no WordPress assets', async ({ page }) => {
@@ -210,7 +208,7 @@ test('the coaching page loads no WordPress assets', async ({ page }) => {
     }
   });
   await page.goto('/coaching-with-impact');
-  await expect(page.locator('.cwi-intro__lead')).toBeVisible({ timeout: 20000 });
+  await expect(page.locator('.kit-hero__title')).toBeVisible({ timeout: 20000 });
   await page.waitForTimeout(2000);
   expect(wordpress, `WordPress assets requested:\n${wordpress.join('\n')}`)
     .toEqual([]);
@@ -220,10 +218,10 @@ test('every coaching image actually loads', async ({ page }) => {
   // All of them are served from this project's own Firebase Storage; a
   // broken token or a moved file shows as an empty box on a live page.
   await page.goto('/coaching-with-impact');
-  await expect(page.locator('.cwi-intro__lead')).toBeVisible({ timeout: 20000 });
+  await expect(page.locator('.kit-hero__title')).toBeVisible({ timeout: 20000 });
 
   const broken = await page.evaluate(async () => {
-    const imgs = [...document.querySelectorAll('.cwi img')] as HTMLImageElement[];
+    const imgs = [...document.querySelectorAll('.kit-section img')] as HTMLImageElement[];
     imgs.forEach((i) => (i.loading = 'eager'));
     window.scrollTo(0, document.body.scrollHeight);
     await new Promise((r) => setTimeout(r, 3000));

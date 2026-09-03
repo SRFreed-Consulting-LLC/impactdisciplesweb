@@ -26,7 +26,7 @@ import SEED from '@impact-common/shared/data/site-navigation-seed.json';
 
 /** Flattens a menu to `Parent > Child` paths, which is the shape a reader can
  *  actually check against the live site. */
-function outline(items: Array<{ title: string; dropdownItems?: Array<{ title: string }>; dropdownMenu?: Array<{ title: string }> }>): string[] {
+function outline(items: { title: string; dropdownItems?: { title: string }[]; dropdownMenu?: { title: string }[] }[]): string[] {
   const out: string[] = [];
   for (const item of items) {
     const children = item.dropdownItems ?? item.dropdownMenu;
