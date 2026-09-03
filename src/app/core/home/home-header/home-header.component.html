@@ -4,7 +4,7 @@
       <div class="header__content-logo">
         <a routerLink="/">
           <img
-            [src]="logo"
+            [src]="logo || fallbackLogo"
             alt="logo"
             height="60px"
             width="65px"

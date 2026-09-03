@@ -29,13 +29,27 @@ export class HomeHeaderComponent implements OnInit, OnDestroy {
    * beside it in that same file silently disagreed with the real ones.
    * That file is deleted; this is the only copy now.
    *
-   * Empty until the read lands, and empty forever if it fails: the header
-   * then shows its alt text rather than a broken image, and the nav and
-   * the cart - which are what the header is FOR - are unaffected either
-   * way. WebConfigService caches, so the footer's read and this one are
-   * one request.
+   * Empty until the read lands, and empty forever if it fails - so the
+   * template falls back to the bundled copy below. It used to bind `logo`
+   * directly, on the assumption that an empty src degrades to alt text. It
+   * does not: browsers draw a BROKEN IMAGE ICON, which is what production
+   * showed on 2026-09-02 after the tenancy cutover, because prod's Web
+   * Config document had never been given a `logo` field at all. The nav and
+   * the cart - which are what the header is FOR - were unaffected, but the
+   * ministry's own logo was a broken picture on every page.
+   *
+   * WebConfigService caches, so the footer's read and this one are one
+   * request.
    */
   public logo = '';
+
+  /**
+   * The same image, bundled. Byte-identical (42,084 bytes) to the object the
+   * Web Config url points at - it is the original that the 2026-08-31 change
+   * orphaned, kept precisely so a missing or unreachable config value
+   * degrades to the real logo instead of to nothing.
+   */
+  public readonly fallbackLogo = 'assets/Impact-Logo_Black.png';
 
   public cart: CartSummary = { quantity: 0, total: 0 };
 
