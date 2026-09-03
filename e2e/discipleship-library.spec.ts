@@ -126,46 +126,40 @@ test.describe('/discipleship-library', () => {
       .toBeGreaterThan(0);
   });
 
-  test('the dictation row is a muted, looping, inline video', async ({ page }) => {
-    // This row exists because the motion IS the point. Autoplay is blocked
-    // unless it is muted, and an un-inlined video goes fullscreen on iOS -
-    // either would make it useless exactly where most visitors are.
+  test('every row is a still - the dictation clip is gone', async ({ page }) => {
+    // Until 2026-09-03 the Reading & Lessons row was a muted looping .mp4.
+    // The page draws every row's media in one phone-shaped box, and the
+    // clip's aspect ratio letterboxed into it with a grey block under the
+    // phone (owner, looking at the live page). It is a still now, like the
+    // other six - so a video reappearing here is a regression, not a feature.
     await page.goto('/discipleship-library');
-    const video = page.locator('.kit-article__media video');
-    await expect(video).toHaveCount(1);
+    await expect(page.locator('.kit-article').first()).toBeVisible({ timeout: 20000 });
+    await expect(page.locator('.kit-article__media video')).toHaveCount(0);
 
-    const attrs = await video.evaluate((v: HTMLVideoElement) => ({
-      muted: v.muted, loop: v.loop, autoplay: v.autoplay,
-      inline: v.hasAttribute('playsinline'), src: v.getAttribute('src'),
-    }));
-    expect(attrs).toMatchObject({ muted: true, loop: true, autoplay: true, inline: true });
-    expect(attrs.src).toContain('.mp4');
+    // And the still is the dictation shot specifically, not a leftover.
+    const srcs = await page.locator('.kit-article__media img')
+      .evaluateAll((imgs) => imgs.map((i) => i.getAttribute('src') ?? ''));
+    expect(srcs.some((s) => /dictation\.jpg/.test(s))).toBe(true);
   });
 
-  test('both calls to action point at the reader app', async ({ page }) => {
+  test('both calls to action open the reader in a NEW tab, safely', async ({ page }) => {
     await page.goto('/discipleship-library');
 
     const ctas = page.locator(`a[href*="${READER}"]`);
     await expect(ctas).toHaveCount(2);          // hero + closing
 
-    // OPENING IN A NEW TAB IS NO LONGER GUARANTEED HERE, and that is a
-    // deliberate note rather than a softened test.
+    // Owner decision 2026-09-03: the reader opens BESIDE the marketing page,
+    // not instead of it. The bespoke page hardcoded target="_blank"; the kit
+    // page lost it when it was rebuilt (neither button carried `newTab`),
+    // and the live site navigated away for four days. Both buttons carry
+    // newTab: true now, in dev AND prod - this is the check that would have
+    // gone red.
     //
-    // The bespoke page hardcoded target="_blank". As a kit page the button
-    // carries its own `newTab`, and neither of these two buttons sets it -
-    // in dev AND in prod, identically: {"title":"Open the Library",
-    // "link":"reader"}. So the live site now navigates away from the
-    // marketing page instead of opening the reader beside it. It is one
-    // field per button to restore, and it is a content decision, not
-    // something a test should assert into existence.
-    //
-    // What IS still an invariant, and stays enforced: a link that opens a
-    // new tab must carry noopener, or the opened tab can reach back through
+    // noopener travels with _blank or the opened tab can reach back through
     // window.opener.
     for (const cta of await ctas.all()) {
-      if ((await cta.getAttribute('target')) === '_blank') {
-        await expect(cta).toHaveAttribute('rel', /noopener/);
-      }
+      await expect(cta).toHaveAttribute('target', '_blank');
+      await expect(cta).toHaveAttribute('rel', /noopener/);
     }
   });
 

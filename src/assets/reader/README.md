@@ -10,36 +10,62 @@ the page can ever show.
 |---|---|
 | `hero-lesson.jpg`   | A lesson open - the hero shot |
 | `library-shelf.jpg` | Your Library, grouped by series |
-| `dictation.mp4`     | 10s muted loop: an answer being spoken into a lesson |
+| `dictation.jpg`     | An answer mid-dictation, mic in its recording state (2026-09-03) |
 | `group-chat.jpg`    | An Impact Group chat |
 | `messages.jpg`      | The in-app inbox |
-| `store.jpg`         | The store |
+| `store-v2.jpg`      | The store, post-redesign (2026-09-03) |
 | `settings.jpg`      | Settings |
 | `help.jpg`          | Contextual help |
 
-## The dictation clip
+## Replacing a file means a NEW filename
 
-10s, H.264 baseline, muted, faststart, ~101KB, recorded from the real app on
-the lesson "Being Rightly Related to You".
+firebase.json serves every `.jpg`/`.mp4` under `assets/` as
+`public, max-age=31536000, immutable`. Overwrite `store.jpg` in place and a
+returning visitor keeps the old picture for a year. That is why the store
+recapture is `store-v2.jpg` and the old `store.jpg` is gone, and why the
+page_content doc has to be repointed (Firestore, dev AND prod) in the same
+change - the file and the reference move together.
 
-ONE THING IS SIMULATED. Headless Chrome has no microphone and no route to
-the speech backend, so `window.SpeechRecognition` was replaced with a stub
-emitting a scripted phrase the way the real engine emits interim-then-final
-results. Everything else is genuine: the real SpeechDictationService, the
-real mic button, the real composeDictation() insertion into the real answer
-field, on a real lesson question. Only the audio-to-text engine is synthetic.
-A phone recording of someone actually speaking would be better, and is the
-right long-term replacement.
+## The dictation still (was a clip until 2026-09-03)
 
-Two things that cost time when recording it, if it is ever redone:
+The 10s `dictation.mp4` loop was retired: the page draws every row's media
+in the same phone-shaped box, and the clip's aspect ratio letterboxed into
+it with a grey block beneath the phone. A still fits the box exactly.
+
+ONE THING IS SIMULATED, then as now. Headless Chrome has no microphone and
+no route to the speech backend, so `window.SpeechRecognition` is replaced
+with a stub emitting a scripted phrase the way the real engine emits
+interim-then-final results. Everything else is genuine: the real
+SpeechDictationService, the real mic button, the real composeDictation()
+insertion into the real answer field, on a real lesson question ("Salvation
+and Assurance", Romans 3:23 - the phrase answers it). Only the audio-to-text
+engine is synthetic.
+
+Things that cost time, if it is ever redone (the capture script lives in a
+session scratchpad, not the repo - rebuild from these notes):
 
 - SpeechDictationService subscribes with `addEventListener('result')`, NOT
   the `on*` properties. A stub has to be an EventTarget and dispatch real
-  events, or the app never hears it - the first attempt recorded a clip
-  where the mic was tapped and nothing arrived.
-- Wait for `.mic-button` rather than a fixed delay. On a cold start the
-  lesson's tabs render well after domcontentloaded, and a fixed wait
-  silently recorded a clip with no mic button in it at all.
+  events, or the app never hears it.
+- Wait for `.mic-button` with `state: 'attached'`, not visible, and not a
+  fixed delay: the renderer keeps every tab pane in the DOM behind
+  `[hidden]`, and on a cold start the tabs render well after
+  domcontentloaded.
+- The FIRST lesson of a book is an intro with no questions. Walk the lesson
+  links until one has a textarea.
+- The patron's saved theme is dark; `colorScheme: 'light'` does nothing
+  because ThemeService applies the profile after sign-in. Strip
+  `.dark-theme` off `<html>` with a MutationObserver - and observe
+  `document` with `subtree`, because an init script runs before
+  `documentElement` exists.
+- The fields hold the patron's REAL saved answers. Empty every textarea
+  through an `input` event before dictating. This is safe only because the
+  lesson saves on Save or in-app prev/next and nothing else - never click
+  either, and use `page.goto` (a hard navigation) to leave.
+- Emit the JPEG at its final size: `devices['iPhone 14']` with
+  `deviceScaleFactor: 560 / 390` and `type: 'jpeg', quality: 82` produces
+  560x953 directly. There is no ffmpeg or Python on this machine to resize
+  with afterwards.
 
 ## How the stills were captured
 
