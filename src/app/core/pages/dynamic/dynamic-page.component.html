@@ -28,8 +28,12 @@
                    the page being BUILT - dimmed and tagged (styles.scss)
                    so it cannot be mistaken for what a visitor sees. On a
                    real visit it was already filtered out upstream. -->
+              <!-- data-section-key is how Page Manager's previewer asks
+                   where a section is, to outline the row being hovered.
+                   See PagePreviewService.answerHighlight. -->
               <app-kit-section
                 [class.kit-preview-off]="previewing && section.isActive === false"
+                [attr.data-section-key]="section.key"
                 [block]="section"
                 [theme]="state.theme"
                 [webConfig]="webConfig"

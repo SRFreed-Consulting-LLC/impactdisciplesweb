@@ -167,7 +167,19 @@ export class PagePreviewService {
     if (!ADMIN_ORIGINS.includes(event.origin)) {
       return;
     }
-    const block = (event.data as { impactPreviewSection?: unknown })?.impactPreviewSection;
+    const data = event.data as {
+      impactPreviewSection?: unknown;
+      impactPreviewHighlight?: unknown;
+    } | null;
+
+    // "Where is section X?" - the admin outlines the row being hovered over
+    // the framed page, and the frame is the only thing that can measure it.
+    if (data && 'impactPreviewHighlight' in data) {
+      this.answerHighlight(data.impactPreviewHighlight, event);
+      return;
+    }
+
+    const block = data?.impactPreviewSection;
     if (!isBlock(block)) {
       return;
     }
@@ -176,6 +188,62 @@ export class PagePreviewService {
     // event would look broken rather than late.
     this.zone.run(() => this.override$.next(block));
   }
+
+  /**
+   * Replies with the hovered section's rectangle, in this page's own pixels.
+   *
+   * NOTHING IS DRAWN HERE. The admin draws the outline over its scaled frame
+   * in its own CSS, because an outline drawn on a page shown at 29% is a
+   * hairline, and because a highlight only the admin ever wants does not
+   * belong in the public stylesheet. This side's whole job is to measure.
+   *
+   * The rectangle is document-relative. Inside the previewer the frame is
+   * sized to the page's full height, so the viewport IS the document and
+   * scrollY is 0 - but added anyway, so the answer stays right if that ever
+   * changes. A key that names no section on the page answers null, and so
+   * does a cleared hover, so the admin can take its outline down.
+   */
+  private answerHighlight(key: unknown, event: MessageEvent): void {
+    const source = event.source as Window | null;
+    if (!source || typeof source.postMessage !== 'function') {
+      return;
+    }
+    const rect = typeof key === 'string' && key ? findSectionRect(key) : null;
+    source.postMessage({ impactPreviewHighlightRect: rect }, event.origin);
+  }
+}
+
+/** Where one section sits on this page, or null when it is not on it. */
+export interface SectionRect {
+  key: string;
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * Finds the rendered section carrying `data-section-key`, by comparing the
+ * attribute rather than building a selector out of the key - a key is a
+ * document field, and a selector built from one is a selector somebody else
+ * wrote.
+ */
+export function findSectionRect(key: string, root: ParentNode = document): SectionRect | null {
+  const sections = Array.from(root.querySelectorAll<HTMLElement>('[data-section-key]'));
+  const el = sections.find((s) => s.dataset['sectionKey'] === key);
+  if (!el) {
+    return null;
+  }
+  const r = el.getBoundingClientRect();
+  const scrollX = typeof window === 'undefined' ? 0 : window.scrollX;
+  const scrollY = typeof window === 'undefined' ? 0 : window.scrollY;
+  return {
+    key,
+    top: Math.round(r.top + scrollY),
+    left: Math.round(r.left + scrollX),
+    width: Math.round(r.width),
+    height: Math.round(r.height)
+  };
 }
 
 /**

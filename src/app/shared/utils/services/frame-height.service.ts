@@ -41,12 +41,24 @@ const SETTLE_MS = 30_000;
  * silently breaks the preview when it is wrong. The parent is the side that
  * must be careful, and it is: it checks the message's shape and range and
  * ignores anything else.
+ *
+ * A SHRINK HAS TO BE SEEN TWICE. Recorded at frame rate on 2026-09-02: the
+ * page reported 1753px, then 647px, then 1597px, one tick apart - a
+ * carousel re-initialising after the second Firestore emission collapsed
+ * `app-root` for a few hundred milliseconds. The parent believed all three,
+ * and the preview folded to a third of its height and sprang back while it
+ * was already on screen. Growth is posted at once, because a page getting
+ * taller as images land is the normal case and delaying it shows a clipped
+ * footer; a DECREASE is held one tick and only posted if the next measure
+ * agrees. A real shrink arrives 400ms late. A blink never arrives at all.
  */
 @Injectable({ providedIn: 'root' })
 export class FrameHeightService {
   private timer?: ReturnType<typeof setInterval>;
   private stopAt = 0;
   private last = 0;
+  /** A smaller height seen once, waiting to be seen again. 0 when none. */
+  private pendingDrop = 0;
 
   constructor(private zone: NgZone) {}
 
@@ -82,14 +94,42 @@ export class FrameHeightService {
 
   private measure(): void {
     const height = Math.ceil(contentHeight());
+    const next = settleHeight(this.last, this.pendingDrop, height);
+    this.pendingDrop = next.pendingDrop;
     // Only on a real change: the parent sets a CSS height from this, and
     // posting an unchanged number every tick would be noise.
-    if (height === this.last || height < 1) {
+    if (next.post === null) {
       return;
     }
-    this.last = height;
-    window.parent.postMessage({ impactPageHeight: height }, '*');
+    this.last = next.post;
+    window.parent.postMessage({ impactPageHeight: next.post }, '*');
   }
+}
+
+/**
+ * What one measurement does to the reported height. Pure, so the two-tick
+ * rule for a shrink can be pinned without a DOM or a clock.
+ *
+ * @param last        The height last posted (0 before the first).
+ * @param pendingDrop A smaller height seen on the previous tick, or 0.
+ * @param measured    What the page measures now.
+ * @return `post`, the height to send, or null to send nothing; and the
+ *         `pendingDrop` to carry into the next tick.
+ */
+export function settleHeight(
+  last: number, pendingDrop: number, measured: number
+): { post: number | null; pendingDrop: number } {
+  if (measured < 1 || measured === last) {
+    return { post: null, pendingDrop: 0 };
+  }
+  if (measured > last) {
+    return { post: measured, pendingDrop: 0 };
+  }
+  // Smaller. Believed only when two consecutive ticks agree.
+  if (pendingDrop !== measured) {
+    return { post: null, pendingDrop: measured };
+  }
+  return { post: measured, pendingDrop: 0 };
 }
 
 /**

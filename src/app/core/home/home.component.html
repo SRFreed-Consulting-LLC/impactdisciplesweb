@@ -12,6 +12,7 @@
           @for (section of row; track section.key) {
             <app-kit-section
               [class.kit-preview-off]="previewing && section.isActive === false"
+              [attr.data-section-key]="section.key"
               [block]="section"
               [theme]="state.theme"
               [webConfig]="webConfig"
