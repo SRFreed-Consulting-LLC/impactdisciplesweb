@@ -120,6 +120,59 @@ function buildRequest(component: CheckoutComponent): CheckoutOrderRequest {
   return component['buildOrderRequest']();
 }
 
+// The payment step's entry point, with the shipping quote failing. Until
+// 2026-09-03 a rejected quote threw past the lines that clear the spinners
+// and the shopper sat on "Setting up payment..." with no error and no
+// Retry - three hours of it on production the day ShipEngine refused every
+// quote. Duck-typed deps: only the three the failure path touches are real
+// objects; the order service is a spy that must NOT be reached.
+describe('CheckoutComponent.quoteAndStartOrder', () => {
+  function buildFailingQuoteComponent() {
+    const createOrder = jasmine.createSpy('createOrder');
+    const notify = jasmine.createSpy('notify');
+    const logMessage = jasmine.createSpy('logMessage').and.returnValue({ subscribe: () => undefined });
+    const component = new CheckoutComponent(
+      {} as unknown as CartService,
+      {} as unknown as PricingService,
+      { createOrder } as unknown as CheckoutOrderService,
+      { calculateShipping: () => Promise.reject(new Error('502 Unable to retrieve shipping rates')) } as unknown as ShippingService,
+      {} as unknown as ProductCatalogService,
+      {} as unknown as WebConfigService,
+      {} as unknown as PayPalScriptService,
+      {} as unknown as Router,
+      { notify } as unknown as ToastService,
+      { logMessage } as unknown as LoggerService,
+      { get: () => null } as unknown as AttributionService,
+      new FormBuilder()
+    );
+    component.checkoutForm = { email: 'alex@example.com', cartItems: [] } as unknown as CheckoutForm;
+    return { component, createOrder, notify, logMessage };
+  }
+
+  it('a failed shipping quote clears the spinners, shows the error state, and never starts the order', async () => {
+    const { component, createOrder, notify, logMessage } = buildFailingQuoteComponent();
+
+    await component['quoteAndStartOrder']();
+
+    expect(component.showShippingSpinner).toBeFalse();
+    expect(component.showEstimatedTaxesSpinner).toBeFalse();
+    expect(component.submitting).toBeFalse();
+    expect(component.orderError).toBeTrue();
+    expect(notify).toHaveBeenCalledWith(jasmine.objectContaining({ type: 'error' }));
+    expect(logMessage).toHaveBeenCalled();
+    expect(createOrder).not.toHaveBeenCalled();
+  });
+
+  it('Retry goes back through the quote rather than reusing a rate that never arrived', async () => {
+    const { component, createOrder } = buildFailingQuoteComponent();
+
+    await component.retryOrder();
+
+    expect(component.orderError).toBeTrue();
+    expect(createOrder).not.toHaveBeenCalled();
+  });
+});
+
 describe('CheckoutComponent.buildOrderRequest', () => {
   it('contains NO price-bearing field anywhere, even when the cart is loaded with them', () => {
     const component = buildComponent({ campaignId: 'camp-1' });

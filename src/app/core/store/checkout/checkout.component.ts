@@ -210,37 +210,55 @@ export class CheckoutComponent implements OnInit {
 
     this.applyFormValuesToCheckoutForm();
     this.currentStep = 'payment';
-    this.orderError = false;
     this.serverBreakdown = null;
-    this.submitting = true;
-    this.showEstimatedTaxesSpinner = true;
-    this.showShippingSpinner = true;
-
-    // Shipping rate is still fetched (and its discount optimistically
-    // guessed) client-side here, same as before -- it's just a real-time
-    // rate lookup, not a price the customer could tamper with in a way
-    // that matters. It's sent to the server below as part of the order
-    // request; the server trusts the rate itself but always recomputes the
-    // discount on it. See checkout-pricing.functions.ts's own comment.
-    await this.calculateShippingCost();
-    await this.startOrder();
-
-    this.showEstimatedTaxesSpinner = false;
-    this.showShippingSpinner = false;
-    this.submitting = false;
+    await this.quoteAndStartOrder();
   }
 
   async retryOrder(): Promise<void> {
+    await this.quoteAndStartOrder();
+  }
+
+  // The payment step's one entry point, shared by Continue to Payment and
+  // Retry: quote shipping, then ask the server to price and start the
+  // order. The spinners are cleared in `finally` - until 2026-09-03 the
+  // shipping quote was awaited with no catch, so a failed rate lookup
+  // (ShipEngine refused every quote for three hours that day) threw past
+  // the lines that clear them and the shopper sat on "Setting up
+  // payment..." indefinitely, with no error and no Retry. A failed quote
+  // now lands on the same error state a failed order does, and Retry
+  // re-quotes rather than reusing a rate that never arrived.
+  private async quoteAndStartOrder(): Promise<void> {
     this.orderError = false;
     this.submitting = true;
     this.showEstimatedTaxesSpinner = true;
     this.showShippingSpinner = true;
 
-    await this.startOrder();
-
-    this.showEstimatedTaxesSpinner = false;
-    this.showShippingSpinner = false;
-    this.submitting = false;
+    try {
+      // Shipping rate is still fetched (and its discount optimistically
+      // guessed) client-side here -- it's just a real-time rate lookup, not
+      // a price the customer could tamper with in a way that matters. It's
+      // sent to the server as part of the order request; the server trusts
+      // the rate itself but always recomputes the discount on it. See
+      // checkout-pricing.functions.ts's own comment.
+      let quoted = false;
+      try {
+        await this.calculateShippingCost();
+        quoted = true;
+      } catch (err) {
+        this.orderError = true;
+        this.toastService.notify({ message: 'We could not get a shipping rate. Please try again.', type: 'error' });
+        this.loggerService.logMessage(
+          'CHECKOUT', this.checkoutForm.email, 'Failed to quote shipping.', { err: String(err) }
+        ).subscribe();
+      }
+      if (quoted) {
+        await this.startOrder();
+      }
+    } finally {
+      this.showEstimatedTaxesSpinner = false;
+      this.showShippingSpinner = false;
+      this.submitting = false;
+    }
   }
 
   backToShipping(): void {
