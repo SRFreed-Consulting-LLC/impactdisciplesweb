@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { CouponModel } from '@impact-common/shared/models/utils/coupon.model';
+import { couponOverridesSale, couponTagsCover } from '@impact-common/shared/lists/coupon-scope';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { environment } from 'src/environments/environment';
 
@@ -71,8 +72,10 @@ export class CouponApplicationService {
     let anyEligible = false;
 
     items.forEach(item => {
-      const eligible = (coupon.tags?.length > 0 && coupon.tags.some(tag => tag.id === item.id))
-        || !coupon.tags || coupon.tags.length === 0;
+      // Scope - specific ids, or the all-events sentinel - is the shared
+      // rule the server prices with (couponTagsCover), so what the cart
+      // shows and what the card is charged cannot disagree.
+      const eligible = couponTagsCover(coupon.tags, { id: item.id, isEvent: item.isEvent === true });
 
       if (!eligible) {
         return;
@@ -84,16 +87,24 @@ export class CouponApplicationService {
       // same line -- avoids silently compounding two discounts. This
       // preserves the original store's actual behavior; what changes here
       // is that it's now reported, not hidden behind a false "success".
-      if (item.salePrice && item.salePrice > 0) {
+      // The one exception is a 100% coupon: a giveaway beats the sale
+      // (couponOverridesSale), so the holder gets in free mid-early-bird.
+      const onSale = NumberUtil.isNumber(item.salePrice) && item.salePrice > 0;
+      if (onSale && !couponOverridesSale(percentOff)) {
         item.discount = 0;
         item.discountPrice = null;
         lineResults.push({ itemId: item.id, applied: false, skippedReason: 'Sale price already applied — coupon not additionally applied here.' });
         return;
       }
 
-      const discount = parseFloat(((item.price * percentOff) / 100).toFixed(2));
+      // Off the price the shopper is actually charged - the sale price when
+      // one is in force (only reachable for a 100% coupon), else the list
+      // price. The same base PricingService.effectiveUnitPrice charges, so
+      // the line total lands on exactly $0.
+      const unitPrice = onSale ? item.salePrice : item.price;
+      const discount = parseFloat(((unitPrice * percentOff) / 100).toFixed(2));
       item.discount = discount;
-      item.discountPrice = item.price - discount;
+      item.discountPrice = unitPrice - discount;
       netDiscount += discount * (item.orderQuantity ?? 1);
       lineResults.push({ itemId: item.id, applied: true });
     });

@@ -2,6 +2,7 @@ import { CouponApplicationService } from './coupon-application.service';
 import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { CouponModel } from '@impact-common/shared/models/utils/coupon.model';
+import { ALL_EVENTS_TAG } from '@impact-common/shared/lists/coupon-scope';
 
 // The coupon percent math the cart/checkout UX shows. The only outside
 // contact is the single `lookup_coupon` fetch, stubbed at window.fetch --
@@ -96,6 +97,50 @@ describe('CouponApplicationService', () => {
     expect(result.applied).toBeFalse();
     expect(result.netDiscount).toBe(0);
     expect(result.message).toBe('Coupon not valid for these items.');
+  });
+
+  it('the all-events sentinel tag covers an event line and no product line', async () => {
+    // EVENTSFREE: tagged with __all_events__ only - no event id at all - so
+    // an event created after the coupon is covered too, and the cart agrees
+    // with the server's couponTagsCover on both halves.
+    stubCouponLookup({ isActive: true, percentOff: 100, tags: [ALL_EVENTS_TAG] } as Partial<CouponModel>);
+    const event = item({ id: 'event-1', isEvent: true, price: 40, orderQuantity: 1 });
+    const product = item({ id: 'p1', price: 10, orderQuantity: 1 });
+
+    const result = await service.validateAndApply([event, product], 'EVENTSFREE');
+
+    expect(result.applied).toBeTrue();
+    expect(event.discount).toBe(40);
+    expect(event.discountPrice).toBe(0);
+    expect(product.discount).toBeUndefined();
+    expect(result.netDiscount).toBe(40);
+    expect(result.lineResults).toEqual([{ itemId: 'event-1', applied: true }]);
+  });
+
+  it('the all-events sentinel alone is "not valid" for a product-only cart', async () => {
+    stubCouponLookup({ isActive: true, percentOff: 100, tags: [ALL_EVENTS_TAG] } as Partial<CouponModel>);
+    const items = [item({ id: 'p1', price: 10, orderQuantity: 1 })];
+
+    const result = await service.validateAndApply(items, 'EVENTSFREE');
+
+    expect(result.applied).toBeFalse();
+    expect(result.message).toBe('Coupon not valid for these items.');
+  });
+
+  it('a 100% coupon OVERRIDES an active sale price, taking the line to $0 off the sale price', async () => {
+    // Owner's rule (2026-09-03): a giveaway gets the holder in free even
+    // mid-early-bird. The discount is the SALE price, which is what
+    // PricingService.effectiveUnitPrice charges - so the line total is 0.
+    stubCouponLookup({ isActive: true, percentOff: 100 });
+    const items = [item({ id: 'event-1', isEvent: true, price: 40, salePrice: 30, orderQuantity: 1 })];
+
+    const result = await service.validateAndApply(items, 'FREE100');
+
+    expect(result.applied).toBeTrue();
+    expect(items[0].discount).toBe(30);
+    expect(items[0].discountPrice).toBe(0);
+    expect(result.netDiscount).toBe(30);
+    expect(result.lineResults).toEqual([{ itemId: 'event-1', applied: true }]);
   });
 
   it('rejects an inactive coupon', async () => {
