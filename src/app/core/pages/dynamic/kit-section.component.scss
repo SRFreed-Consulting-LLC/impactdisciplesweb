@@ -417,7 +417,11 @@
 // the words first and the source second.
 .kit-quotecard {
   display: flex;
-  align-items: center;
+  // STRETCH, not centre: the picture is as tall as the card. Centring it left
+  // a 175px square floating beside a taller card and cropped the head out of a
+  // portrait photo - worse since the cards started running two-up, because a
+  // narrower column makes a taller card.
+  align-items: stretch;
   gap: 20px;
   margin: 0;
   background: #{variables.$black};
@@ -427,11 +431,21 @@
   &__img {
     flex: 0 0 175px;
     width: 175px;
-    height: 175px;
+    // A floor rather than a fixed height: a short quote still gets a
+    // reasonable picture, and a long one gets a taller one.
+    min-height: 210px;
+    height: 100%;
     object-fit: cover;
+    // Faces sit in the top half of a portrait, so a crop should keep the top.
+    object-position: center 30%;
+    align-self: stretch;
   }
 
   &__body {
+    // Centred within whatever height the picture and the words settle on.
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding: 18px 20px 18px 0;
     min-width: 0;
   }
@@ -465,12 +479,6 @@
     color: var(--kit-rule);
   }
 
-  &__role {
-    font-size: 12px;
-    line-height: 1.4;
-    color: #{variables.$white};
-    opacity: 0.75;
-  }
 }
 
 // On the LIGHT ground the soft tone is the original's exact #848b8a; the
@@ -1278,7 +1286,7 @@
   .kit-rowcard { flex-direction: column; align-items: stretch; }
   .kit-rowcard__img { width: 100%; flex-basis: auto; }
   .kit-quotecard { flex-direction: column; align-items: stretch; }
-  .kit-quotecard__img { width: 100%; flex-basis: auto; }
+  .kit-quotecard__img { width: 100%; flex-basis: auto; height: auto; min-height: 200px; }
   .kit-quotecard__body { padding: 0 18px 18px; }
   .kit-rowcard__body { padding: 16px 20px; }
 

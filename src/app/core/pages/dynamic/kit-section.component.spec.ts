@@ -850,23 +850,23 @@ describe('the pieces a section is built from', () => {
       expect(el.querySelector('figcaption.kit-quotecard__by')).not.toBeNull();
     });
 
-    it('shows the quote, the name and the role', () => {
+    it('shows the quote and who said it', () => {
       setBlock(quoteBlock());
       const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
       expect(text).toContain('Discipleship changed how I lead my whole church.');
       expect(text).toContain('Jane Smith');
-      expect(text).toContain('Pastor, First Baptist');
     });
 
-    it('leaves the role line out when there is none', () => {
-      // It is optional, and an empty line under a name would read as a gap
-      // somebody forgot to fill.
-      const block = quoteBlock();
-      delete (block.items[0] as { body?: string }).body;
-      setBlock(block);
+    it('never draws a role line, even where the data still carries one', () => {
+      // The role/church field was dropped (2026-09-04): a name under a quote
+      // is the whole attribution. The FIELD is gone from the editor, but
+      // `body` survives on any entry saved while it existed - and a value
+      // nobody can see or remove must not keep rendering.
+      setBlock(quoteBlock()); // its fixture entry still has a body
       const el = fixture.nativeElement as HTMLElement;
       expect(el.querySelector('.kit-quotecard__name')).not.toBeNull();
       expect(el.querySelector('.kit-quotecard__role')).toBeNull();
+      expect((el.textContent ?? '')).not.toContain('Pastor, First Baptist');
     });
 
     it('draws no photo frame when an entry has no photo', () => {
