@@ -1,4 +1,5 @@
 import { findSectionRect } from './page-preview.service';
+import { ADMIN_APP_ORIGINS } from '@impact-common/shared/config/firebase-projects';
 
 // The measuring half of the previewer's hover outline: the admin asks where
 // a section is and this answers in the page's own pixels. Pure DOM, so a
@@ -49,5 +50,43 @@ describe('findSectionRect', () => {
 
     expect(findSectionRect('faq"]', root)!.height).toBe(50);
     expect(findSectionRect('faq', root)!.height).toBe(80);
+  });
+});
+
+// The origin gate, which is where this feature actually failed. Everything
+// above worked perfectly the whole time; messages from the domain staff use
+// were being dropped before any of it ran, and the symptom - a preview that
+// highlighted nothing and never showed an unsaved edit - pointed nowhere near
+// the check that caused it.
+describe('ADMIN_APP_ORIGINS as the previewer trusts them', () => {
+  const origins = ADMIN_APP_ORIGINS.map((url) => new URL(url).origin);
+
+  it('trusts the custom domain staff actually work from', () => {
+    // The bug, pinned. APP_URLS.admin names only the Firebase-assigned hosts,
+    // and building the allow-list from it excluded every real staff session.
+    expect(origins).toContain('https://admin.impactdisciples.com');
+  });
+
+  it('still trusts both Firebase-assigned admin hosts', () => {
+    expect(origins).toContain('https://impactdisciples-admin.web.app');
+    expect(origins).toContain('https://impactdisciplesdev-admin.web.app');
+  });
+
+  it('trusts a local admin, so the previewer works while developing', () => {
+    expect(origins).toContain('http://localhost:5200');
+    expect(origins).toContain('http://localhost:5201');
+  });
+
+  it('trusts no origin outside the admin', () => {
+    // An allow-list that admitted the public site would let any page on it
+    // post a section into a staff previewer.
+    expect(origins).not.toContain('https://impactdisciples.com');
+    expect(origins.every((o) => /admin|localhost/.test(o))).toBeTrue();
+  });
+
+  it('holds bare origins, since event.origin never carries a path', () => {
+    for (const url of ADMIN_APP_ORIGINS) {
+      expect(url.endsWith('/')).toBeFalse();
+    }
   });
 });

@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { PageContentBlock, PageContentModel } from '@impact-common/shared/models/domain/page-content.model';
 import { HomeSectionModel } from '@impact-common/shared/models/domain/home-section.model';
-import { APP_URLS, LOCAL_APP_URLS } from '@impact-common/shared/config/firebase-projects';
+import { ADMIN_APP_ORIGINS } from '@impact-common/shared/config/firebase-projects';
 import { isAdminPreview, previewSectionKey } from 'src/app/shared/utils/admin-preview';
 
 /**
@@ -12,12 +12,14 @@ import { isAdminPreview, previewSectionKey } from 'src/app/shared/utils/admin-pr
  * Built from the shared config rather than typed out, so the port rule and
  * the hosting targets have one home - see APP_URLS.
  */
-const ADMIN_ORIGINS: readonly string[] = [
-  APP_URLS.admin.dev,
-  APP_URLS.admin.prod,
-  APP_URLS.admin.emulator,
-  LOCAL_APP_URLS.admin
-].map((url) => {
+// ADMIN_APP_ORIGINS, not APP_URLS.admin.* - and the difference is the whole
+// bug this replaced. APP_URLS names where the admin IS, which is the two
+// Firebase-assigned hosts; staff work from admin.impactdisciples.com, a
+// connected domain that appears in neither. Every message from it was dropped
+// here, so hovering a section outlined nothing and an unsaved edit never
+// arrived - which read as the previewer being half-finished rather than as an
+// origin check quietly refusing everything. See the shared config.
+const ADMIN_ORIGINS: readonly string[] = [...ADMIN_APP_ORIGINS].map((url) => {
   try {
     return new URL(url).origin;
   } catch {
