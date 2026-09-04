@@ -39,7 +39,29 @@
 
         <div class="kit-grid" [class]="'kit-grid ' + gridGroundClasses">
           @for (tile of liveItems; track $index) {
-            @if (variant === 'pictureRows') {
+            @if (variant === 'quoteCards') {
+              <!-- Picture rows with its two boxes swapped: the QUOTE reads
+                   first and the name is an attribution under it, the way a
+                   footnote sits under what it credits. A <blockquote> and a
+                   <figcaption>, not a styled h3 and p - the markup should say
+                   what the card is, and a screen reader should hear a quote
+                   and its source rather than a heading and a paragraph. -->
+              <figure class="kit-quotecard">
+                @if (tile.image?.url) {
+                  <img class="kit-quotecard__img" loading="lazy"
+                       [src]="tile.image?.url" [alt]="tile.title || ''">
+                }
+                <div class="kit-quotecard__body">
+                  <blockquote class="kit-quotecard__quote" [innerHTML]="tile.description"></blockquote>
+                  <figcaption class="kit-quotecard__by">
+                    <span class="kit-quotecard__name" [innerHTML]="tile.title"></span>
+                    @if (tile.body) {
+                      <span class="kit-quotecard__role" [innerHTML]="tile.body"></span>
+                    }
+                  </figcaption>
+                </div>
+              </figure>
+            } @else if (variant === 'pictureRows') {
               <!-- The Seminars arrangement, measured: a dark rounded card
                    with a 175px square picture on the left. A variant, not
                    styling - no CSS turns a vertical tile into this. -->

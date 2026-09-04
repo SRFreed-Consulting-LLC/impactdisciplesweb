@@ -789,9 +789,12 @@ describe('the pieces a section is built from', () => {
       .find((def) => def.archetype === SECTION_ARCHETYPE.LIST)
       ?.variants.map((variant) => variant.key) ?? [];
 
-    // Ten of them, and the count is asserted so a look added to the kit
+    // Eleven of them, and the count is asserted so a look added to the kit
     // without a rendering cannot slip through by simply not being iterated.
-    expect(looks.length).toBe(10);
+    // It earned that on 2026-09-04: 'quoteCards' was added to the kit and this
+    // line failed before the rendering existed, which is the whole point of
+    // pinning a number nobody would otherwise think to update.
+    expect(looks.length).toBe(11);
 
     const silent = looks.filter((look) => {
       setBlock(blockFor(SECTION_ARCHETYPE.LIST, look));
@@ -804,6 +807,77 @@ describe('the pieces a section is built from', () => {
       .toEqual([]);
   });
 
+  // QUOTE CARDS. The variant exists for one reason - the order - so that is
+  // what these pin. Everything else about it is the picture card it was
+  // derived from, and is covered by the coverage test above.
+  describe('quote cards', () => {
+    const quoteBlock = () => ({
+      key: 'k1',
+      type: SECTION_ARCHETYPE.LIST,
+      variant: 'quoteCards',
+      heading: 'Disciple Making Coaches',
+      isActive: true,
+      items: [{
+        key: 'e1',
+        isActive: true,
+        image: { url: 'https://example.test/coach.jpg', name: 'coach' },
+        title: 'Jane Smith',
+        description: 'Discipleship changed how I lead my whole church.',
+        body: 'Pastor, First Baptist'
+      }]
+    });
+
+    it('puts the quote ABOVE the name, which is the whole point of it', () => {
+      setBlock(quoteBlock());
+      const el = fixture.nativeElement as HTMLElement;
+      const card = el.querySelector('.kit-quotecard') as HTMLElement;
+
+      expect(card).withContext('no quote card rendered').not.toBeNull();
+      const quote = card.querySelector('.kit-quotecard__quote') as HTMLElement;
+      const name = card.querySelector('.kit-quotecard__name') as HTMLElement;
+      // DOCUMENT_POSITION_FOLLOWING: the name comes after the quote. Asserted
+      // on position rather than on CSS, because a card that merely LOOKS
+      // right while reading name-first to a screen reader is not this card.
+      const order = quote.compareDocumentPosition(name);
+      expect(order & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
+    it('reads as a quote and its source, not a heading and a paragraph', () => {
+      setBlock(quoteBlock());
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('figure.kit-quotecard')).not.toBeNull();
+      expect(el.querySelector('blockquote.kit-quotecard__quote')).not.toBeNull();
+      expect(el.querySelector('figcaption.kit-quotecard__by')).not.toBeNull();
+    });
+
+    it('shows the quote, the name and the role', () => {
+      setBlock(quoteBlock());
+      const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
+      expect(text).toContain('Discipleship changed how I lead my whole church.');
+      expect(text).toContain('Jane Smith');
+      expect(text).toContain('Pastor, First Baptist');
+    });
+
+    it('leaves the role line out when there is none', () => {
+      // It is optional, and an empty line under a name would read as a gap
+      // somebody forgot to fill.
+      const block = quoteBlock();
+      delete (block.items[0] as { body?: string }).body;
+      setBlock(block);
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('.kit-quotecard__name')).not.toBeNull();
+      expect(el.querySelector('.kit-quotecard__role')).toBeNull();
+    });
+
+    it('draws no photo frame when an entry has no photo', () => {
+      const block = quoteBlock();
+      delete (block.items[0] as { image?: unknown }).image;
+      setBlock(block);
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('.kit-quotecard')).not.toBeNull();
+      expect(el.querySelector('.kit-quotecard__img')).toBeNull();
+    });
+  });
   it('leaves out a piece that has been switched off', () => {
     // Absent counts as live, false does not - the same rule as sections and
     // entries. Getting it backwards would publish work somebody hid.

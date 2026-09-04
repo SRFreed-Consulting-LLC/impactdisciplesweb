@@ -214,6 +214,7 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
   private static readonly LIST_LOOKS: Record<string, string> = {
     tiles: 'grid',
     pictureRows: 'grid',
+    quoteCards: 'grid',
     icon: 'grid',
     price: 'grid',
     rows: 'rows',
