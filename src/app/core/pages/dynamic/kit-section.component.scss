@@ -914,6 +914,32 @@
     border-radius: 3px;
   }
 
+  // A TALL PICTURE DOES NOT GET TO OWN THE ROW (2026-09-04).
+  //
+  // These rows size their media to the full width of its column, which is
+  // right for the landscape photographs every one of them held until the
+  // Coaching page put two BOOK COVERS in one. A 2:3 cover in a 652px column
+  // is 978px tall - taller than the viewport - beside a heading, two short
+  // paragraphs and a button. The row did not read as a design; it read as a
+  // mistake.
+  //
+  // Capping the HEIGHT rather than the width, because the problem is the
+  // aspect ratio and not the size: `width: auto` then lets a portrait image
+  // find its own, narrower width and `margin-inline: auto` keeps it centred
+  // in the space it no longer fills.
+  //
+  // 520px is measured, not guessed. The widest this column gets is ~700px
+  // (kit-wrap caps at 1400), where a 3:2 landscape photo - what every other
+  // row on the site holds - renders 467px tall and is left completely
+  // untouched. Every article row in `page_content` was checked: these two
+  // covers are the only portrait images in any of them.
+  &__media img {
+    max-height: 520px;
+    width: auto;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
   &__tag {
     margin: 0 0 6px;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
