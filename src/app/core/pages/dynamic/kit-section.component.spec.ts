@@ -5,7 +5,7 @@ import {
   ContentPiece, ContentPieceKind, PageContentBlock
 } from '@impact-common/shared/models/domain/page-content.model';
 import {
-  CONTENT_PIECES, SECTION_ARCHETYPE, SECTION_KIT
+  CONTENT_PIECES, GRID_LIST_LOOKS, SECTION_ARCHETYPE, SECTION_KIT
 } from '@impact-common/shared/lists/section_kit';
 import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 import { SubscribeFormService } from 'src/app/shared/utils/services/subscribe-form.service';
@@ -876,6 +876,62 @@ describe('the pieces a section is built from', () => {
       const el = fixture.nativeElement as HTMLElement;
       expect(el.querySelector('.kit-quotecard')).not.toBeNull();
       expect(el.querySelector('.kit-quotecard__img')).toBeNull();
+    });
+  });
+  // CARDS PER ROW. The admin offers this setting only for looks drawn as a
+  // grid, reading GRID_LIST_LOOKS from the shared kit; this renderer decides
+  // the same thing from its own LIST_LOOKS map. Two codebases, one question -
+  // so they are asserted against each other rather than trusted to agree.
+  describe('cards per row', () => {
+    const gridLooks = () => SECTION_KIT
+      .find((def) => def.archetype === SECTION_ARCHETYPE.LIST)!
+      .variants.map((v) => v.key)
+      .filter((key) => GRID_LIST_LOOKS.includes(key));
+
+    it('every look the admin offers it for really does draw as a grid', () => {
+      // Otherwise the control appears and silently does nothing - the exact
+      // failure that retired the old copy-colour toggle.
+      for (const look of GRID_LIST_LOOKS) {
+        setBlock({...blockFor(SECTION_ARCHETYPE.LIST, look), cardsPerRow: 2});
+        const el = fixture.nativeElement as HTMLElement;
+        expect(el.querySelector('.kit-grid.kit-cols--2'))
+          .withContext(`"${look}" is offered a cards-per-row setting it ignores`)
+          .not.toBeNull();
+      }
+    });
+
+    it('and no grid look is left out of the offer', () => {
+      // The other direction: a look that DOES honour the count but is missing
+      // from the shared list is a setting staff can never reach.
+      const looks = SECTION_KIT
+        .find((def) => def.archetype === SECTION_ARCHETYPE.LIST)!
+        .variants.map((v) => v.key);
+      for (const look of looks) {
+        setBlock({...blockFor(SECTION_ARCHETYPE.LIST, look), cardsPerRow: 3});
+        const el = fixture.nativeElement as HTMLElement;
+        const honoursIt = !!el.querySelector('.kit-cols--3');
+        expect(honoursIt)
+          .withContext(`"${look}" honours cardsPerRow but is not in GRID_LIST_LOOKS`)
+          .toBe(GRID_LIST_LOOKS.includes(look));
+      }
+    });
+
+    it('draws no count class when the section names none', () => {
+      // Absent means "as many as fit", which is the auto-fit the variant
+      // already declares - not a count of zero.
+      setBlock(blockFor(SECTION_ARCHETYPE.LIST, 'quoteCards'));
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('[class*="kit-cols--"]')).toBeNull();
+    });
+
+    it('puts quote cards two to a row when asked', () => {
+      setBlock({...blockFor(SECTION_ARCHETYPE.LIST, 'quoteCards'), cardsPerRow: 2});
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('.kit-grid.kit-cols--2')).not.toBeNull();
+    });
+
+    it('gridLooks is not accidentally empty', () => {
+      expect(gridLooks().length).toBeGreaterThan(0);
     });
   });
   it('leaves out a piece that has been switched off', () => {
