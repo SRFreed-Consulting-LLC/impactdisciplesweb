@@ -738,11 +738,26 @@
     &:hover, &:focus-visible { transform: scale(1.08); color: variables.$black; }
   }
 
+  // The player box is the poster's exact shape, and the iframe is PINNED to
+  // it rather than sized to it. <youtube-player> renders a plain auto-height
+  // <div> between its host and the iframe, so `height: 100%` on the iframe
+  // resolves against an indefinite box and collapses to the HTML default of
+  // 150px: measured on Coaching with Impact 2026-09-04 as an 840x150 iframe
+  // inside an 840x473 player - a wide, thin strip where the poster had been.
+  // (Width was never the problem; a percentage width has a definite box.)
+  // Pinning to the positioned player skips whatever the library renders
+  // in between.
   &__player {
+    position: relative;
     aspect-ratio: 16 / 9;
 
     ::ng-deep youtube-player,
-    ::ng-deep iframe { width: 100%; height: 100%; }
+    ::ng-deep iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
   }
 
   &--below { max-width: 860px; margin: 34px auto 0; }
