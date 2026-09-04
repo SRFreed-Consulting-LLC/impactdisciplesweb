@@ -4,7 +4,7 @@ import { FirebaseDAO } from '../../dao/firebase.dao';
 import { Timestamp } from "firebase/firestore";
 import { dateFromTimestamp } from "@impact-common/shared/utils/date-from-timestamp";
 import { BaseService } from "./base.service";
-import { Observable, from, map, of } from "rxjs";
+import { Observable, catchError, from, map, of } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -28,9 +28,14 @@ export class LoggerService extends BaseService<LogMessage> {
       const logMessage: LogMessage = { ...new LogMessage(type, created_by, message, ec, LoggerService.sanitizeData(data)) };
       logMessage.id = this.generateErrorCode();
 
+      // A log line is best-effort and must never break its caller: resolve
+      // with the code even if the write is refused (the admin's copy of this
+      // service left a login screen spinning that way on 2026-09-04).
       return from(this.add(logMessage)).pipe(
-        map(() => {
-          return ec;
+        map(() => ec),
+        catchError((err) => {
+          console.error('Could not write a log message', err);
+          return of(ec);
         })
       );
     } catch (err) {
