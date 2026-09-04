@@ -449,7 +449,12 @@
 .kit-bl--dots .kit-copy ::ng-deep {
   ul { list-style: none; padding-left: 0; }
 
-  li {
+  // THE DOT IS FOR UNORDERED LISTS ONLY (2026-09-04). It used to be drawn on
+  // every `li`, which meant a numbered list a staff member built in the
+  // editor came out as six identical grey dots - the authored ol/ul choice
+  // was stored correctly, round-tripped through Quill correctly, and then
+  // thrown away here. `ul >` is the whole fix.
+  ul > li {
     position: relative;
     padding-left: 20px; // the measured original indent
 
@@ -465,6 +470,23 @@
       border-radius: 50%;
       background: currentColor;
     }
+  }
+
+  // AN ORDERED LIST KEEPS ITS NUMBERS, and the restore has to be on the LI.
+  // The theme's reset is `li { list-style: none }` (theme/scss/_common.scss),
+  // so putting `list-style: decimal` on the `ol` does nothing at all - the
+  // property is inherited, and the li's own declaration wins over anything
+  // it would inherit from its parent. That is the trap this comment exists
+  // for; it looks like it should work on the ol and it silently does not.
+  ol {
+    // Matches the dotted list's 20px, so a numbered list and a bulleted one
+    // indent to the same place and both line up with the copy above them.
+    padding-left: 20px;
+    margin: 0;
+  }
+
+  ol > li {
+    list-style: decimal outside;
   }
 }
 
@@ -1493,6 +1515,35 @@
   .kit-rule {
     margin-left: auto;
     margin-right: auto;
+  }
+
+  // A LIST IS NEVER CENTRED, whatever the column says (2026-09-04).
+  //
+  // Centring a column centres its prose, which is the point of the toggle.
+  // Applied to a LIST it produces something nobody asked for: the marker is
+  // placed at the list's left edge and each line centres independently, so
+  // six markers sit in a column while the text they belong to wanders about
+  // above them. On Coaching with Impact's Progress Report that read as a
+  // fault in the page rather than as a style.
+  //
+  // The list still SITS in the middle - it is centred as a block, with its
+  // own text ranged left - so a centred section still reads as one. That is
+  // what `width: fit-content` plus auto margins buys, and it is why this is
+  // not simply `text-align: left`.
+  //
+  // The author cannot override this from the editor, which is the other
+  // reason it is decided here: Quill drops `text-align` on list items when
+  // it serialises (getSemanticHTML), so aligning a list in the toolbar
+  // stores nothing at all. A paragraph's own alignment DOES survive, and
+  // still wins over the column, because an inline style beats an inherited
+  // one.
+  .kit-copy ::ng-deep {
+    ul,
+    ol {
+      text-align: left;
+      width: fit-content;
+      margin-inline: auto;
+    }
   }
 }
 
