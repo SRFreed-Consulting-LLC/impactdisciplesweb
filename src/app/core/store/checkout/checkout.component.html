@@ -78,8 +78,8 @@
                       <label for="checkout-state">State<span class="checkout-form__required">*</span></label>
                       <select id="checkout-state" formControlName="state" [class.is-invalid]="shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched">
                         <option value="" disabled>Select...</option>
-                        @for (state of states; track state) {
-                          <option [value]="state">{{ state }}</option>
+                        @for (state of states; track state.code) {
+                          <option [value]="state.code">{{ state.name }}</option>
                         }
                       </select>
                       @if (shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched) {
@@ -96,8 +96,8 @@
                     <div class="col-md-6 checkout-form__field">
                       <label for="checkout-country">Country<span class="checkout-form__required">*</span></label>
                       <select id="checkout-country" formControlName="country">
-                        @for (country of countries; track country) {
-                          <option [value]="country">{{ country }}</option>
+                        @for (country of countries; track country.code) {
+                          <option [value]="country.code">{{ country.name }}</option>
                         }
                       </select>
                     </div>

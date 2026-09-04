@@ -104,7 +104,7 @@ function tamperedCheckoutForm(): CheckoutForm {
     phone: { number: '555-0100' },
     isNewsletter: true,
     isShippingSameAsBilling: true,
-    shippingAddress: { address1: '1 Main St', city: 'Atlanta', state: 'GA', zip: '30301', country: 'United States' },
+    shippingAddress: { address1: '1 Main St', city: 'Atlanta', state: 'GA', zip: '30301', country: 'US' },
     shippingRate: 8.55,
     shippingRateId: { object_id: 'rate-1' },
     // Client-side aggregate fields a tampered form could carry -- must

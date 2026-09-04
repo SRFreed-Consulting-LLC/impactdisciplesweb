@@ -72,13 +72,32 @@ export class CheckoutComponent implements OnInit {
     city: ['', Validators.required],
     state: ['', Validators.required],
     zip: ['', Validators.required],
-    country: ['United States', Validators.required]
+    country: ['US', Validators.required]
   });
 
   checkoutForm: CheckoutForm = { ...new CheckoutForm() };
   currentStep: CheckoutStep = 'shipping';
-  states: string[] = EnumHelper.getStateTypesAsArray();
-  countries: string[] = EnumHelper.getCountryTypesAsArray();
+  // STORES THE CODE, SHOWS THE NAME (2026-09-04). This picker used to do
+  // both with the full name, which is why 1,715 purchases hold "Georgia"
+  // while the customers collection overwhelmingly holds "GA" - the same
+  // state, spelled two ways, in two collections that get joined. It also
+  // took production down twice on 2026-09-03: once ShipEngine started
+  // receiving country_code "US" it enforced "state_province must be two
+  // characters", and every rate quote 502'd on a shopper stuck at "Setting
+  // up payment...". functions/src/utils/shipping-request.ts still
+  // translates on the way out and should stay - but it is a boundary
+  // guard, not the place the right value should first appear.
+  states: { code: string; name: string }[] = EnumHelper
+    .getState2LetterTypesAsArray()
+    .map(([code, name]: [string, string]) => ({ code, name }));
+  // Stores the ISO alpha-2 code, shows the name - same reasoning as the
+  // states list above, and the OTHER half of the 2026-09-03 incident: this
+  // stored "United States", shipping-request.ts forwarded it verbatim as
+  // country_code, ShipEngine classified every parcel as international and
+  // refused every label with "Customs items are required".
+  countries: { code: string; name: string }[] = EnumHelper
+    .getCountry2LetterTypesAsArray()
+    .map(([code, name]: [string, string]) => ({ code, name }));
 
   webConfig: WebConfigModel;
 
@@ -127,7 +146,7 @@ export class CheckoutComponent implements OnInit {
       shippingDiscount: 0,
       isShippingSameAsBilling: true,
       isNewsletter: true,
-      shippingAddress: { state: '', country: 'United States' }
+      shippingAddress: { state: '', country: 'US' }
     };
 
     // Perceived-latency fix, part 1: open the connection to PayPal's CDN
