@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { CloudFunctionsClient } from 'src/app/common/services/data/cloud-functions.client';
 import { CartItem } from '@impact-common/shared/models/utils/cart.model';
 import { CouponModel } from '@impact-common/shared/models/utils/coupon.model';
-import { couponOverridesSale, couponTagsCover } from '@impact-common/shared/lists/coupon-scope';
+import { couponBeatsSale, couponTagsCover } from '@impact-common/shared/lists/coupon-scope';
+import { round2 } from '@impact-common/shared/lists/money';
 import { NumberUtil } from 'src/app/common/utils/number-util';
 import { environment } from 'src/environments/environment';
 
@@ -79,13 +80,15 @@ export class CouponApplicationService {
       anyEligible = true;
 
       const onSale = NumberUtil.isNumber(item.salePrice) && item.salePrice > 0;
-      if (onSale && !couponOverridesSale(percentOff)) {
+      if (!couponBeatsSale(percentOff, onSale)) {
         lineResults.push({ itemId: item.id!, applied: false, skippedReason: 'Sale price already applied — coupon not additionally applied here.' });
         return item;
       }
 
       const unitPrice = (onSale ? item.salePrice : item.price) ?? 0;
-      const discount = parseFloat(((unitPrice * percentOff) / 100).toFixed(2));
+      // The shared cent rounding - this was parseFloat(toFixed(2)), which
+      // can differ by a cent from what the server charges.
+      const discount = round2((unitPrice * percentOff) / 100);
       netDiscount += discount * (item.orderQuantity ?? 1);
       lineResults.push({ itemId: item.id!, applied: true });
       return { ...item, discount, discountPrice: unitPrice - discount };
