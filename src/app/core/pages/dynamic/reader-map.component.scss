@@ -1,106 +1,132 @@
 @use '../../../../assets/styles/theme/scss/variables';
 
 /* WHERE THE LIBRARY IS READ.
-   Colours come from the section's own surface via --kit-ink / --kit-rule, so
-   the map sits on a dark band or a light one without a second set of rules -
-   the same way every other piece in the kit follows its ground. */
+
+   FULL WIDTH OF THE PAGE. The kit puts every section's content inside a
+   measure, which is right for words and wrong for a world - inside it the map
+   is a postage stamp with two hundred pixels of band either side. This breaks
+   out of whatever column it is in and spans the viewport.
+
+   The 100vw + margin trick rather than `position: fixed` or a wrapper class:
+   it needs no cooperation from the section around it, so the piece can be
+   dropped into any column on any page and still span. calc(50% - 50vw) is the
+   distance from the column's edge back to the viewport's. */
 .rmap {
-  margin: 0;
+  margin: 0 0 0 calc(50% - 50vw);
+  width: 100vw;
+  max-width: 100vw;
+  position: relative;
+  /* No horizontal scrollbar from the breakout on a page whose body has one. */
+  overflow: hidden;
+}
+
+.rmap__canvas {
   width: 100%;
-  /* Fades in once both the world and the first snapshot are in. Without it
-     the dots pop in a frame after the coastlines, which reads as a glitch. */
-  opacity: 0;
-  transition: opacity 400ms ease;
+  /* Tall enough to be a map and short enough that the heading above it and
+     the page below it are both still in view on a laptop. */
+  height: clamp(340px, 52vh, 620px);
+  background: #0d1117;
 }
 
-.rmap--ready {
-  opacity: 1;
+/* Leaflet paints its own controls and attribution in its default light
+   theme, which sits badly on a dark basemap. */
+::ng-deep .rmap__canvas {
+  .leaflet-control-attribution {
+    background: rgba(0, 0, 0, 0.55);
+    color: #b9c1c9;
+
+    a { color: #d7dee5; }
+  }
+
+  .leaflet-bar a {
+    background: #1b2129;
+    color: #e8edf2;
+    border-bottom-color: #2b333d;
+
+    &:hover { background: #262e38; }
+  }
 }
 
-.rmap__svg {
-  display: block;
-  width: 100%;
-  height: auto;
+/* A READER. A dot with a halo pulsing out behind it - ported from the Library
+   tab's own marker so the two maps mean the same thing. */
+::ng-deep .rmap__marker {
+  position: relative;
+  width: 16px;
+  height: 16px;
 }
 
-/* The land, drawn as a quiet silhouette. It is context for the dots, not the
-   subject - a high-contrast map would compete with the thing it is there to
-   carry. */
-.rmap__land path {
-  fill: currentColor;
-  fill-opacity: 0.10;
-  stroke: currentColor;
-  stroke-opacity: 0.22;
-  stroke-width: 0.5;
-  vector-effect: non-scaling-stroke;
+::ng-deep .rmap__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: #{variables.$theme-color};
+  border: 2px solid rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  transition: background 600ms ease;
 }
 
-/* A READER. The pin scales in on arrival; the halo inside it pulses forever.
-   Two elements because they animate on different clocks - one entrance, one
-   heartbeat - and a single element cannot hold both transforms. */
-.rmap__pin {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: rmap-arrive 500ms ease-out backwards;
-}
-
-.rmap__dot {
-  fill: var(--kit-rule, #{variables.$theme-color});
-  transition: fill 600ms ease;
-}
-
-.rmap__halo {
-  fill: var(--kit-rule, #{variables.$theme-color});
-  transform-box: fill-box;
-  transform-origin: center;
-  /* Ported from the Library tab's map-marker-pulse: out to 3x and gone. */
+::ng-deep .rmap__halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: #{variables.$theme-color};
   animation: rmap-pulse 2.8s ease-out infinite;
-  transition: fill 600ms ease;
 }
 
-/* JUST ARRIVED, or just moved. Amber for a few seconds, then back - the same
-   signal the Library tab gives a fresh sign-in, so the two maps mean the same
-   thing by the same colour. Never on first paint: see hasLoadedOnce. */
-.rmap__pin--fresh .rmap__dot {
-  fill: #ffb300;
-}
+/* JUST ARRIVED, or just moved. Amber for five seconds, then back - the same
+   signal and the same duration as the Library tab gives a fresh sign-in. */
+::ng-deep .rmap__marker--fresh {
+  .rmap__dot,
+  .rmap__halo { background: #ffb300; }
 
-.rmap__pin--fresh .rmap__halo {
-  fill: #ffb300;
-  animation-duration: 1.1s;
-}
-
-@keyframes rmap-arrive {
-  from { opacity: 0; transform: scale(0.2); }
-  to   { opacity: 1; transform: scale(1); }
+  .rmap__halo { animation-duration: 1.1s; }
 }
 
 @keyframes rmap-pulse {
-  0%   { transform: scale(1);   opacity: 0.55; }
+  0%   { transform: scale(1);   opacity: 0.6; }
   100% { transform: scale(3.2); opacity: 0; }
 }
 
-/* A reader who prefers less movement gets a map that simply is, rather than
-   one that breathes. The dots are still all there; the halo just stops. */
-@media (prefers-reduced-motion: reduce) {
-  .rmap {
-    opacity: 1;
-    transition: none;
-  }
-  .rmap__pin,
-  .rmap__halo {
-    animation: none;
-  }
-  .rmap__halo {
-    opacity: 0;
-  }
+/* WHERE, NEVER WHO. The popup has one line in it because the published data
+   has one thing to say. */
+::ng-deep .rmap__popup .leaflet-popup-content-wrapper {
+  background: #1b2129;
+  color: #e8edf2;
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+
+::ng-deep .rmap__popup .leaflet-popup-content {
+  margin: 8px 14px;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+::ng-deep .rmap__popup .leaflet-popup-tip {
+  background: #1b2129;
 }
 
 .rmap__caption {
-  margin-top: 10px;
+  margin: 10px 0 0;
   text-align: center;
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--kit-ink-soft);
+}
+
+/* A reader who prefers less movement keeps every marker; the halo stops. */
+@media (prefers-reduced-motion: reduce) {
+  ::ng-deep .rmap__halo {
+    animation: none;
+    opacity: 0;
+  }
 }

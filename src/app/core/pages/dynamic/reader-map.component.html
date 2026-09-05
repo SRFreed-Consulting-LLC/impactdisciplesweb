@@ -1,44 +1,13 @@
-<!-- Nothing is drawn until both halves are in: a world with no dots reads as
-     "nobody is reading this", which is a worse lie than a moment of nothing.
-     A failure draws nothing at all - see the component. -->
-@if (!failed) {
-  <figure class="rmap" [class.rmap--ready]="!loading">
-    @if (world) {
-      <svg class="rmap__svg"
-           [attr.viewBox]="'0 0 ' + world.width + ' ' + world.height"
-           preserveAspectRatio="xMidYMid meet"
-           role="img"
-           [attr.aria-label]="total
-             ? 'A world map with a dot for each of the ' + total + ' people reading the Discipleship Library'
-             : 'A world map showing where the Discipleship Library is read'">
-        <g class="rmap__land">
-          @for (d of world.paths; track trackPath($index)) {
-            <path [attr.d]="d"></path>
-          }
-        </g>
-        <!-- Two circles per reader: a halo that expands and fades, and the
-             dot itself. Same treatment as the Library tab's own map, which is
-             where the pulse comes from. -->
-        <g class="rmap__dots">
-          @for (dot of dots; track trackDot($index, dot)) {
-            <g class="rmap__pin" [class.rmap__pin--fresh]="dot.fresh"
-               [style.animation-delay.s]="dot.delay">
-              <circle class="rmap__halo" [attr.cx]="dot.x" [attr.cy]="dot.y" r="3"></circle>
-              <circle class="rmap__dot" [attr.cx]="dot.x" [attr.cy]="dot.y" r="3"></circle>
-            </g>
-          }
-        </g>
-      </svg>
-    }
+<!-- FULL WIDTH OF THE PAGE, not of the column: a world map inside the kit's
+     usual measure is a postage stamp. The breakout is in the stylesheet. -->
+<figure class="rmap">
+  <div #mapContainer class="rmap__canvas"></div>
 
-    <!-- No key and no tooltip. There is nothing to explain about one dot and
-         nothing to click - the published data has nothing to say about any
-         single reader - so the count is all the map can honestly add to its
-         own shape. -->
-    @if (total) {
-      <figcaption class="rmap__caption">
-        {{ total }} {{ total === 1 ? 'reader' : 'readers' }}
-      </figcaption>
-    }
-  </figure>
-}
+  <!-- The only thing the map can honestly add to its own shape. There is no
+       name to show in a popup and no list to link to. -->
+  @if (total) {
+    <figcaption class="rmap__caption">
+      {{ total }} {{ total === 1 ? 'reader' : 'readers' }}
+    </figcaption>
+  }
+</figure>
