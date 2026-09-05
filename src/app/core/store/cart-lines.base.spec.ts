@@ -7,13 +7,15 @@ import { ShoppingCartComponent } from './pages/shopping-cart/shopping-cart.compo
 // byte-identical recompute / applyCoupon / increment / decrement / remove
 // and the same eight state fields; they are about to share a base class.
 //
-// Neither had a spec, and applyCoupon is the interesting one: it clears
-// prior discounts, applies the coupon, collects per-line "why this line
-// didn't change" notes, decides success vs error styling, persists the
-// code only when it actually applied, and then re-persists the cart
-// because validateAndApply MUTATES the cart items in place. That ordering
-// is the behaviour worth pinning - it is what keeps the drawer, the /cart
-// page and the header count agreeing after a coupon.
+// Neither had a spec, and applyCoupon is the interesting one: it applies
+// the coupon (which clears prior discounts first), collects per-line "why
+// this line didn't change" notes, decides success vs error styling,
+// persists the code only when it actually applied, and then hands the
+// re-priced lines back to the cart through replaceItems() - since
+// 2026-09-05 validateAndApply returns COPIES rather than editing the cart's
+// own objects. That ordering is the behaviour worth pinning - it is what
+// keeps the drawer, the /cart page and the header count agreeing after a
+// coupon.
 //
 // Hand-constructed with duck-typed deps, never TestBed - house style.
 describe('cart lines shared behaviour', () => {
@@ -31,7 +33,7 @@ describe('cart lines shared behaviour', () => {
     cartChanged$,
     getCartProducts: () => items,
     setCouponCode: (c: string) => calls.push(`setCouponCode:${c}`),
-    touch: () => calls.push('touch'),
+    replaceItems: () => calls.push('replaceItems'),
     addCartProduct: (_i: CartItem, q: number) => calls.push(`add:${q}`),
     quantityDecrement: () => calls.push('decrement'),
     removeCartProduct: () => calls.push('remove')
@@ -52,8 +54,7 @@ describe('cart lines shared behaviour', () => {
         cartTotal: () => 75
       } as never,
       {
-        clear: () => calls.push('clear'),
-        validateAndApply: () => { calls.push('validateAndApply'); return Promise.resolve(applyResult); }
+        validateAndApply: () => { calls.push('validateAndApply'); return Promise.resolve({ ...applyResult, items }); }
       } as never,
       { navigateByUrl: (u: string) => calls.push(`navigate:${u}`) } as never,
       {} as never
@@ -80,7 +81,7 @@ describe('cart lines shared behaviour', () => {
     await component.applyCoupon();
 
     expect(calls).toEqual([
-      'clear', 'validateAndApply', 'setCouponCode:SAVE10', 'touch'
+      'validateAndApply', 'setCouponCode:SAVE10', 'replaceItems'
     ]);
     expect(component.couponMessage).toBe('Coupon applied');
     expect(component.couponMessageType).toBe('success');

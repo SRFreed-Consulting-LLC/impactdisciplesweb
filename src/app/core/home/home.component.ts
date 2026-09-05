@@ -65,9 +65,7 @@ export class HomeComponent implements OnInit {
         startWith<HomeState>({ status: 'loading' })
       );
 
-    this.webConfig = await this.webConfigService.getAll()
-      .then((configs) => configs[0] ?? null)
-      .catch(() => null);
+    this.webConfig = (await this.webConfigService.getConfig().catch(() => undefined)) ?? null;
   }
 
   private toState(page: PageContentModel | null): HomeState {

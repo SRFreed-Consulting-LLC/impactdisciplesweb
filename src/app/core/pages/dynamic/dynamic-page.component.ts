@@ -97,9 +97,7 @@ export class DynamicPageComponent implements OnInit {
     // getAll()[0] idiom appears at 14 sites and consolidating it is its own
     // item. Failing to read it must not take the page down - the only thing
     // that depends on it is whether a price line appears.
-    this.webConfig = await this.webConfigService.getAll()
-      .then((configs) => configs[0] ?? null)
-      .catch(() => null);
+    this.webConfig = (await this.webConfigService.getConfig().catch(() => undefined)) ?? null;
   }
 
   /** The segment being drawn, so toState() can decline the home page - see

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { randomHexId } from '../../utils/random-hex-id';
 import { LogMessage } from "@impact-common/shared/models/utils/log-message.model";
 import { FirebaseDAO } from '../../dao/firebase.dao';
 import { Timestamp } from "firebase/firestore";
@@ -22,16 +23,19 @@ export class LoggerService extends BaseService<LogMessage> {
     return data;
   };
 
+  // A log line is best-effort and must NEVER break its caller: it resolves
+  // with the error code either way. create() writes without wanting the
+  // document back (a visitor may write log-messages but not read them), and
+  // catchError keeps the promise the signature makes - the admin's copy of
+  // this service left a login screen spinning on 2026-09-04 by doing
+  // neither. Identical to the admin's LoggerService since 2026-09-05.
   logMessage(type: string, created_by: string, message: string, data?: unknown): Observable<string | boolean> {
     try {
-      const ec = this.generateErrorCode();
+      const ec = randomHexId(8);
       const logMessage: LogMessage = { ...new LogMessage(type, created_by, message, ec, LoggerService.sanitizeData(data)) };
-      logMessage.id = this.generateErrorCode();
+      logMessage.id = randomHexId(8);
 
-      // A log line is best-effort and must never break its caller: resolve
-      // with the code even if the write is refused (the admin's copy of this
-      // service left a login screen spinning that way on 2026-09-04).
-      return from(this.add(logMessage)).pipe(
+      return from(this.create(logMessage)).pipe(
         map(() => ec),
         catchError((err) => {
           console.error('Could not write a log message', err);
@@ -63,13 +67,5 @@ export class LoggerService extends BaseService<LogMessage> {
     } catch {
       return { unserializable: String(data) };
     }
-  }
-
-  private generateErrorCode() {
-    return 'xxxxxxxx'.replace(/[xy]/g, function (c) {
-      const r = (Math.random() * 16) | 0,
-        v = c == 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
   }
 }

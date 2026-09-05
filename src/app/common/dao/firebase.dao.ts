@@ -103,6 +103,18 @@ export class FirebaseDAO<T extends BaseModel> {
     });
   }
 
+  /**
+   * Creates a document and returns only its id. add() above echoes the
+   * input back as the document; this is for callers that have no business
+   * with the document at all - a log line, written by a visitor who may not
+   * read log-messages. Same name and contract as the admin repo's
+   * FirebaseDAO.create() (2026-09-04), so the two DAOs stay one step
+   * closer to being merged.
+   */
+  public create(value: T, table: string): Promise<string> {
+    return addDoc(collection(this.fs, this.path(table)), value).then((ref) => ref.id);
+  }
+
   public async update(id: string, value: T, table: string, fromFirestore?: FromFirestore<T>): Promise<T>{
     await setDoc(doc(this.fs, this.path(table) + '/' + id), value);
 

@@ -56,11 +56,15 @@ export abstract class CartLinesBase {
   }
 
   async applyCoupon(): Promise<void> {
-    const items = this.cartService.getCartProducts();
-    this.couponApplicationService.clear(items);
     this.lineNotes.clear();
 
-    const result = await this.couponApplicationService.validateAndApply(items, this.couponCode);
+    // Pure: the service hands back re-priced COPIES of the lines (any
+    // earlier coupon cleared, this one applied where it reaches) and the
+    // cart takes them through replaceItems() below.
+    const result = await this.couponApplicationService.validateAndApply(
+      this.cartService.getCartProducts(),
+      this.couponCode
+    );
 
     result.lineResults.forEach(line => {
       if (line.skippedReason) {
@@ -81,13 +85,11 @@ export abstract class CartLinesBase {
       result.applied ? (result.coupon?.code ?? this.couponCode) : ''
     );
 
-    // validateAndApply() mutates item.discount/discountPrice IN PLACE on
-    // the same cart-item objects CartService holds -- touch() re-persists
-    // and re-emits so the drawer, the /cart page and the header count all
-    // agree immediately. Removing it makes the two surfaces disagree until
-    // the next cart change.
-    this.cartService.touch();
-    this.recompute(items);
+    // replaceItems() persists and re-emits, so the drawer, the /cart page
+    // and the header count all agree immediately. Removing it makes the two
+    // surfaces disagree until the next cart change.
+    this.cartService.replaceItems(result.items);
+    this.recompute(result.items);
   }
 
   increment(item: CartItem): void {

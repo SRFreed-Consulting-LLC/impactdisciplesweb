@@ -49,8 +49,8 @@ export class FooterComponent implements OnInit, OnDestroy {
     this.subs.add(this.siteFooter.footer$.subscribe((footer) => this.footer = footer));
     // getAll() is cached on the service for the session - every page mounts
     // this component, and the config is effectively static.
-    this.webConfig.getAll()
-      .then((configs) => this.config = configs?.[0])
+    this.webConfig.getConfig()
+      .then((config) => this.config = config)
       .catch((err) => console.error('FooterComponent: could not read web config:', err));
   }
 

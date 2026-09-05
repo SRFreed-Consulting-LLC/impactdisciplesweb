@@ -84,12 +84,11 @@ export class ShippingService {
     const request: ShippingRequest = {... new ShippingRequest()};
 
     try {
-      const configs = await this.webConfigService.getAll();
+      const from = await this.webConfigService.getConfig();
 
       const toName: string = checkoutForm.firstName + ' ' + checkoutForm.lastName;
       const toAddress: Address | undefined = checkoutForm.shippingAddress;
       const toPhone: Phone | undefined = checkoutForm.phone;
-      const from = configs[0];
       // Same outcome these had before strict null checks - a TypeError on a
       // missing address, phone or config landed in the catch below - but
       // named, so the log says what was missing.

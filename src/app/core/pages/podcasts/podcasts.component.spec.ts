@@ -33,7 +33,7 @@ const build = (getPodcasts: jasmine.Spy) => {
     providers: [
       PodcastsComponent,
       { provide: YoutubePodcastService, useValue: { getPodcasts } },
-      { provide: WebConfigService, useValue: { getAll: () => Promise.resolve([{ youtube: 'https://youtube.test' }]) } },
+      { provide: WebConfigService, useValue: { getConfig: () => Promise.resolve({ youtube: 'https://youtube.test' }) } },
       { provide: ActivatedRoute, useValue: { queryParams: of({}) } },
       { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
       { provide: ViewportScroller, useValue: { setOffset: () => undefined } }

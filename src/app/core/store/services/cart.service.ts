@@ -10,11 +10,36 @@ const STORAGE_KEY = 'cart';
 const COUPON_STORAGE_KEY = 'cart-coupon';
 const SUMMARY_STORAGE_KEY = 'cart-summary';
 
+/**
+ * Whether two cart entries are the SAME line: the same product in the same
+ * size, colour and language. Until 2026-09-05 the answer was the product id
+ * alone, which folded a Large and a Medium of one shirt into a single line
+ * carrying whichever size was chosen first. Events carry none of the three,
+ * so for them this is the id - and an event line is replaced rather than
+ * merged, see addCartProduct.
+ */
+export function sameLine(a: CartItem, b: CartItem): boolean {
+  return (
+    a.id === b.id &&
+    (a.size ?? '') === (b.size ?? '') &&
+    (a.color ?? '') === (b.color ?? '') &&
+    (a.language ?? '') === (b.language ?? '')
+  );
+}
+
 // The store's cart service -- replaces the original app's CartService
 // (formerly src/app/shared/utils/services/cart.service.ts, now deleted).
 // Also used by event-details.component.ts for paid event registration,
 // which shares this same cart/checkout (see event-details.component.ts's
 // own comment on that).
+//
+// THE CART IS A VALUE. Every change builds a new array of new line objects;
+// getCartProducts() hands out copies; nothing outside this class can reach
+// the state it holds. Until 2026-09-05 the coupon service edited the very
+// objects this service held and then asked it to touch() itself - which
+// worked, and which also meant any caller anywhere could change a price
+// without the cart knowing. replaceItems() is the one door for a re-priced
+// cart now.
 //
 // Behavior fixes vs. the original CartService this replaced:
 //  - Class-field state instead of a module-level closure object.
@@ -33,7 +58,7 @@ const SUMMARY_STORAGE_KEY = 'cart-summary';
 @Injectable({ providedIn: 'root' })
 export class CartService {
   private cart: CartItem[] = this.load();
-  private cartChanged = new BehaviorSubject<CartItem[]>(this.cart);
+  private cartChanged = new BehaviorSubject<CartItem[]>(this.getCartProducts());
   readonly cartChanged$: Observable<CartItem[]> = this.cartChanged.asObservable();
 
   constructor(
@@ -42,8 +67,9 @@ export class CartService {
     private pricingService: PricingService
   ) {}
 
+  /** A copy of the lines. Edit it all you like; the cart will not notice. */
   getCartProducts(): CartItem[] {
-    return this.cart;
+    return this.cart.map((line) => ({ ...line }));
   }
 
   // notify defaults to true for a genuine "Add to Cart" click (product
@@ -51,17 +77,29 @@ export class CartService {
   // pass false -- a toast on every single +/- click is noisy, unlike a
   // one-time confirmation that an item was added.
   addCartProduct(payload: CartItem, quantity = 1, notify = true): void {
-    const existing = this.cart.find(i => i.id === payload.id);
+    const index = this.cart.findIndex((line) => sameLine(line, payload));
 
-    if (!existing) {
-      this.cart.push({ ...payload, orderQuantity: quantity });
+    if (index === -1) {
+      this.cart = [...this.cart, { ...payload, orderQuantity: quantity }];
       if (notify) {
         this.toastService.notify({ message: `${payload.itemName} added to cart`, type: 'success' });
       }
-    } else if (typeof existing.orderQuantity !== 'undefined') {
-      existing.orderQuantity += quantity;
+    } else if (payload.isEvent) {
+      // An event line's quantity IS its attendee count, and a second
+      // registration for the same event arrives carrying the full, current
+      // attendee list - so the line is replaced, not merged. Merging used to
+      // add the quantities while keeping the FIRST list: five seats charged,
+      // two people registered.
+      this.cart = this.cart.map((line, i) => (i === index ? { ...payload, orderQuantity: quantity } : line));
       if (notify) {
-        this.toastService.notify({ message: `${quantity} ${existing.itemName} added to cart`, type: 'success' });
+        this.toastService.notify({ message: `${payload.itemName} updated in cart`, type: 'success' });
+      }
+    } else {
+      this.cart = this.cart.map((line, i) =>
+        i === index ? { ...line, orderQuantity: (line.orderQuantity ?? 0) + quantity } : line
+      );
+      if (notify) {
+        this.toastService.notify({ message: `${quantity} ${payload.itemName} added to cart`, type: 'success' });
       }
     }
 
@@ -69,17 +107,17 @@ export class CartService {
   }
 
   quantityDecrement(payload: CartItem): void {
-    const existing = this.cart.find(i => i.id === payload.id);
-
-    if (existing && typeof existing.orderQuantity !== 'undefined' && existing.orderQuantity > 1) {
-      existing.orderQuantity -= 1;
-    }
+    this.cart = this.cart.map((line) =>
+      sameLine(line, payload) && (line.orderQuantity ?? 0) > 1
+        ? { ...line, orderQuantity: (line.orderQuantity ?? 0) - 1 }
+        : line
+    );
 
     this.persist();
   }
 
   removeCartProduct(payload: CartItem): void {
-    this.cart = this.cart.filter(p => p.id !== payload.id);
+    this.cart = this.cart.filter((line) => !sameLine(line, payload));
     this.toastService.notify({ message: `${payload.itemName} removed from cart`, type: 'error' });
     this.persist();
   }
@@ -99,11 +137,12 @@ export class CartService {
     this.persist();
   }
 
-  /** Re-persists + re-emits the current cart without changing its contents
-   *  -- for callers (e.g. CouponApplicationService) that mutate cart-item
-   *  objects returned by getCartProducts() in place and need subscribers
-   *  (drawer, /shopping-cart page) to pick up the change. */
-  touch(): void {
+  /** Swaps in a re-priced cart - the coupon path (CartLinesBase.applyCoupon
+   *  hands back what CouponApplicationService returned) - and persists +
+   *  re-emits so the drawer, the /cart page and the header count agree. The
+   *  lines are copied on the way in; the caller's objects stay theirs. */
+  replaceItems(items: CartItem[]): void {
+    this.cart = items.map((line) => ({ ...line }));
     this.persist();
   }
 
@@ -161,7 +200,7 @@ export class CartService {
     // lets them land in their own, later change-detection cycle.
     queueMicrotask(() => {
       window.dispatchEvent(new CustomEvent<CartSummary>(CART_CHANGED_EVENT, { detail: summary }));
-      this.cartChanged.next(this.cart);
+      this.cartChanged.next(this.getCartProducts());
     });
   }
 }

@@ -73,8 +73,8 @@ export class HomeHeaderComponent implements OnInit, OnDestroy {
   constructor(public utilsService: UtilsService) { }
 
   ngOnInit(): void {
-    this.webConfigService.getAll()
-      .then((configs) => (this.logo = configs[0]?.logo ?? ''))
+    this.webConfigService.getConfig()
+      .then((config) => (this.logo = config?.logo ?? ''))
       .catch(() => undefined);
     this.loadCartSummary();
     window.addEventListener(CART_CHANGED_EVENT, this.onCartChanged);

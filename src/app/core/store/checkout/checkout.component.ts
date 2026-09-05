@@ -100,7 +100,9 @@ export class CheckoutComponent implements OnInit {
     .getCountry2LetterTypesAsArray()
     .map(([code, name]: [string, string]) => ({ code, name }));
 
-  webConfig: WebConfigModel;
+  // Undefined until the ngOnInit read resolves - and stays undefined if it
+  // fails (see webConfigReady). Every read below must cope with that.
+  webConfig?: WebConfigModel;
 
   submitting = false;
   showEstimatedTaxesSpinner = false;
@@ -120,9 +122,13 @@ export class CheckoutComponent implements OnInit {
   private serverBreakdown: CreateOrderBreakdown | null = null;
 
   // Resolves once webConfig (and with it the PayPal client id) has loaded.
-  // startOrder() awaits this before building the PayPal config -- the old
-  // fire-and-forget getWebConfig() left a latent TypeError if the Firestore
-  // read was slower than the user reaching the payment step.
+  // calculateShippingCost() and startOrder() await this before reading the
+  // config -- the old fire-and-forget getWebConfig() left a latent TypeError
+  // if the Firestore read was slower than the user reaching the payment
+  // step. Never rejects: a failed config read is logged and the config stays
+  // undefined, so the quote proceeds (no free-shipping threshold) and the
+  // PayPal step is what fails, with its own message, rather than the
+  // shipping quote reporting a rate problem it did not have.
   private webConfigReady: Promise<void> = Promise.resolve();
 
   constructor(
@@ -158,7 +164,11 @@ export class CheckoutComponent implements OnInit {
     this.addPreconnect('https://www.paypalobjects.com');
 
     this.getActiveOffers();
-    this.webConfigReady = this.getWebConfig().then(() => this.preloadPayPalSdk());
+    this.webConfigReady = this.getWebConfig()
+      .then(() => this.preloadPayPalSdk())
+      .catch((err) => {
+        this.loggerService.logMessage('CHECKOUT', '', 'Could not read the site config.', { err: String(err) }).subscribe();
+      });
   }
 
   // Perceived-latency fix, part 2 (the big one): start downloading the
@@ -306,13 +316,21 @@ export class CheckoutComponent implements OnInit {
   private calculateShippingCost = async (): Promise<void> => {
     this.checkoutForm = await this.shippingService.calculateShipping(this.checkoutForm);
 
+    // The threshold below is read off the site config. Until 2026-09-05 only
+    // startOrder() waited for that read, so a shopper who reached Continue
+    // to Payment before Firestore answered hit a TypeError HERE - inside the
+    // quote - and was told the shipping rate could not be fetched, for a
+    // rate that had arrived fine.
+    await this.webConfigReady;
+
     // Three things can discount shipping now - the spend threshold, a
     // campaign offer, and the legacy shipping sale - and the decision between
     // them lives in bestShippingDiscount() where it can be tested.
     const best = bestShippingDiscount({
       rate: this.checkoutForm.shippingRate ?? 0,
       subtotal: this.subtotal(),
-      freeShippingThreshold: this.webConfig.freeShippingAmount,
+      // No config, no threshold: nobody ships free by accident.
+      freeShippingThreshold: this.webConfig?.freeShippingAmount ?? Number.POSITIVE_INFINITY,
       campaignFreeShipping: this.campaignFreeShipping(),
       // The legacy sales collection is retired; campaign offers own this now.
       shippingSalePercent: null
@@ -415,7 +433,7 @@ export class CheckoutComponent implements OnInit {
   private createPaypalConfig(orderId: string): void {
     this.payPalConfig = {
       currency: this.currency,
-      clientId: this.webConfig.paypalClientId ?? '',
+      clientId: this.webConfig?.paypalClientId ?? '',
       createOrderOnServer: () => Promise.resolve(orderId),
       advanced: { commit: 'true' },
       style: { label: 'paypal', layout: 'vertical', color: 'blue', shape: 'rect' },
@@ -460,8 +478,8 @@ export class CheckoutComponent implements OnInit {
   }
 
   private getWebConfig(): Promise<void> {
-    return this.webConfigService.getAll().then(config => {
-      this.webConfig = config[0];
+    return this.webConfigService.getConfig().then(config => {
+      this.webConfig = config;
     });
   }
 

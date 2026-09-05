@@ -3,7 +3,7 @@ import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PodCastModel } from '@impact-common/shared/models/domain/pod-cast.model';
-import { Pager } from 'src/app/common/models/utils/pager.model';
+import { Pager, buildPager } from 'src/app/common/models/utils/pager.model';
 import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
 import { YoutubePodcastService } from './youtube-podcast.service';
@@ -73,8 +73,10 @@ export class PodcastsComponent implements OnInit {
         this.loading = false;
       });
 
-    this.webConfigService.getAll().then(configs => {
-      this.webConfig = configs[0];
+    this.webConfigService.getConfig().then(config => {
+      if (config) {
+        this.webConfig = config;
+      }
     });
   }
 
@@ -83,7 +85,7 @@ export class PodcastsComponent implements OnInit {
   }
 
   private applyPage(): void {
-    this.paginate = this.getPager(this.podcasts.length, Number(+this.pageNo), this.pageSize);
+    this.paginate = buildPager(this.podcasts.length, Number(+this.pageNo), this.pageSize);
     this.filteredPodcasts = this.podcasts.slice(this.paginate.startIndex ?? 0, (this.paginate.endIndex ?? -1) + 1);
   }
 
@@ -108,7 +110,7 @@ export class PodcastsComponent implements OnInit {
         podcast.tags?.some((tag) => tag.tag?.toLowerCase().includes(termLower)) ||
         podcast.date.toString().includes(termLower)
     );
-    this.paginate = this.getPager(this.filteredPodcasts.length, Number(+this.pageNo), this.pageSize);
+    this.paginate = buildPager(this.filteredPodcasts.length, Number(+this.pageNo), this.pageSize);
     this.isListView = true;
   }
 
@@ -129,52 +131,5 @@ export class PodcastsComponent implements OnInit {
       .finally(() => {
         this.viewScroller.setOffset([120, 120]);
       });
-  }
-
-  getPager(totalItems: number, currentPage = 1, pageSize = 9) {
-    // calculate total pages
-    const totalPages = Math.ceil(totalItems / pageSize);
-
-    // Paginate Range
-    const paginateRange = 3;
-
-    // ensure current page isn't out of range
-    if (currentPage < 1) {
-      currentPage = 1;
-    } else if (currentPage > totalPages) {
-      currentPage = totalPages;
-    }
-
-    let startPage: number, endPage: number;
-    if (totalPages <= 5) {
-      startPage = 1;
-      endPage = totalPages;
-    } else if(currentPage < paginateRange - 1){
-      startPage = 1;
-      endPage = startPage + paginateRange - 1;
-    } else {
-      startPage = currentPage - 1;
-      endPage =  currentPage + 1;
-    }
-
-    // calculate start and end item indexes
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
-
-    // create an array of pages to ng-repeat in the pager control
-    const pages = Array.from(Array((endPage + 1) - startPage).keys()).map(i => startPage + i);
-
-    // return object with all pager properties required by the view
-    return {
-      totalItems: totalItems,
-      currentPage: currentPage,
-      pageSize: pageSize,
-      totalPages: totalPages,
-      startPage: startPage,
-      endPage: endPage,
-      startIndex: startIndex,
-      endIndex: endIndex,
-      pages: pages
-    };
   }
 }

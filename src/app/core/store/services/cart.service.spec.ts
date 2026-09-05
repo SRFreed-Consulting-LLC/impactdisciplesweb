@@ -217,4 +217,105 @@ describe('CartService', () => {
       expect(emissions[1]).toEqual([jasmine.objectContaining({ id: 'p1' })]);
     });
   });
+
+  // What makes a cart line the SAME line. Until 2026-09-05 the answer was
+  // "the product id", which collapsed a Large and a Medium of one shirt
+  // into a single line carrying whichever size was chosen first, and merged
+  // a second registration for the same event into the first one's quantity
+  // while keeping the first one's attendee list - so checkout charged for
+  // five seats and registered two people.
+  describe('what counts as the same line', () => {
+    it('keeps different sizes / colours / languages of one product as separate lines', () => {
+      const { service } = buildService();
+
+      service.addCartProduct(item({ id: 'shirt', itemName: 'Shirt', price: 20, size: 'L' }));
+      service.addCartProduct(item({ id: 'shirt', itemName: 'Shirt', price: 20, size: 'M' }));
+      service.addCartProduct(item({ id: 'shirt', itemName: 'Shirt', price: 20, size: 'L' }), 2);
+
+      const lines = service.getCartProducts();
+      expect(lines.length).toBe(2);
+      expect(lines.find((l) => l.size === 'L')?.orderQuantity).toBe(3);
+      expect(lines.find((l) => l.size === 'M')?.orderQuantity).toBe(1);
+    });
+
+    it('decrements and removes the matching variant only', () => {
+      const { service } = buildService();
+      service.addCartProduct(item({ id: 'shirt', itemName: 'Shirt', price: 20, size: 'L' }), 2);
+      service.addCartProduct(item({ id: 'shirt', itemName: 'Shirt', price: 20, size: 'M' }), 2);
+
+      service.quantityDecrement(item({ id: 'shirt', size: 'L' }));
+      service.removeCartProduct(item({ id: 'shirt', itemName: 'Shirt', size: 'M' }));
+
+      expect(service.getCartProducts()).toEqual([jasmine.objectContaining({ size: 'L', orderQuantity: 1 })]);
+    });
+
+    it('replaces an event registration rather than merging into it - the attendee list IS the line', () => {
+      const { service } = buildService();
+      const two = [{ firstName: 'A', lastName: 'A', email: 'a@x.test' }, { firstName: 'B', lastName: 'B', email: 'b@x.test' }];
+      const three = [...two, { firstName: 'C', lastName: 'C', email: 'c@x.test' }];
+      service.addCartProduct(item({ id: 'summit', itemName: 'Summit', price: 100, isEvent: true, attendees: two }), 2);
+
+      service.addCartProduct(item({ id: 'summit', itemName: 'Summit', price: 100, isEvent: true, attendees: three }), 3);
+
+      const [line] = service.getCartProducts();
+      expect(service.getCartProducts().length).toBe(1);
+      expect(line.orderQuantity).toBe(3);
+      expect(line.attendees?.length).toBe(3);
+    });
+  });
+
+  // The cart is a value, not a shared mutable object. Coupon application
+  // used to edit the very objects the service held and then ask it to
+  // "touch" itself; nothing outside the service can reach its state now.
+  describe('immutability', () => {
+    it('never mutates the item object a caller passed in', () => {
+      const { service } = buildService();
+      const payload = item({ id: 'p1', itemName: 'Book', price: 10 });
+
+      service.addCartProduct(payload, 2);
+      service.addCartProduct(payload, 1);
+
+      expect(payload.orderQuantity).toBeUndefined();
+    });
+
+    it('hands out a copy - editing what getCartProducts() returned changes nothing', () => {
+      const { service } = buildService();
+      service.addCartProduct(item({ id: 'p1', itemName: 'Book', price: 10 }), 1);
+
+      const leaked = service.getCartProducts();
+      leaked[0].orderQuantity = 99;
+      leaked.push(item({ id: 'p2' }));
+
+      expect(service.getCartProducts()).toEqual([jasmine.objectContaining({ id: 'p1', orderQuantity: 1 })]);
+      expect(storedCart()[0].orderQuantity).toBe(1);
+    });
+
+    it('emits a new array reference on every change', async () => {
+      const { service } = buildService();
+      const emissions: CartItem[][] = [];
+      service.cartChanged$.subscribe((cart) => emissions.push(cart));
+
+      service.addCartProduct(item({ id: 'p1', itemName: 'Book', price: 10 }), 1);
+      await Promise.resolve();
+      service.addCartProduct(item({ id: 'p1', itemName: 'Book', price: 10 }), 1);
+      await Promise.resolve();
+
+      expect(emissions.length).toBe(3);
+      expect(emissions[1]).not.toBe(emissions[2]);
+      expect(emissions[1][0]).not.toBe(emissions[2][0]);
+    });
+
+    it('replaceItems() swaps in a re-priced cart (the coupon path) and persists it', async () => {
+      const { service } = buildService();
+      service.addCartProduct(item({ id: 'p1', itemName: 'Book', price: 10 }), 1);
+      const repriced = service.getCartProducts().map((l) => ({ ...l, discount: 2.5, discountPrice: 7.5 }));
+
+      service.replaceItems(repriced);
+      await Promise.resolve();
+
+      expect(service.getCartProducts()[0].discount).toBe(2.5);
+      expect(storedCart()[0].discountPrice).toBe(7.5);
+      expect(JSON.parse(localStorage.getItem(SUMMARY_STORAGE_KEY) ?? '{}').total).toBe(7.5);
+    });
+  });
 });

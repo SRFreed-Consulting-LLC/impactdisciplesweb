@@ -27,7 +27,7 @@ import { HomeHeaderComponent } from './home-header.component';
  * class-only spec cannot see an empty src attribute at all.
  */
 describe('HomeHeaderComponent logo', () => {
-  let getAll: jasmine.Spy;
+  let getConfig: jasmine.Spy;
 
   const render = async (): Promise<ComponentFixture<HomeHeaderComponent>> => {
     const fixture = TestBed.createComponent(HomeHeaderComponent);
@@ -43,12 +43,12 @@ describe('HomeHeaderComponent logo', () => {
       .getAttribute('src');
 
   beforeEach(() => {
-    getAll = jasmine.createSpy('getAll').and.returnValue(Promise.resolve([]));
+    getConfig = jasmine.createSpy('getConfig').and.returnValue(Promise.resolve(undefined));
     TestBed.configureTestingModule({
       imports: [CommonModule],
       declarations: [HomeHeaderComponent],
       providers: [
-        { provide: WebConfigService, useValue: { getAll } },
+        { provide: WebConfigService, useValue: { getConfig } },
         { provide: UtilsService, useValue: { handleOpenMobileMenu: () => undefined } },
       ],
       schemas: [NO_ERRORS_SCHEMA],
@@ -56,19 +56,19 @@ describe('HomeHeaderComponent logo', () => {
   });
 
   it('renders the configured logo when Web Config has one', async () => {
-    getAll.and.returnValue(Promise.resolve([{ logo: 'https://example.test/logo.png' }]));
+    getConfig.and.returnValue(Promise.resolve({ logo: 'https://example.test/logo.png' }));
     expect(logoSrc(await render())).toBe('https://example.test/logo.png');
   });
 
   it('never renders an empty src when the logo field is ABSENT', async () => {
     // Exactly production's shape on 2026-09-02: a config document with every
     // other field present and no `logo` at all.
-    getAll.and.returnValue(Promise.resolve([{ phone: '6788549322' }]));
+    getConfig.and.returnValue(Promise.resolve({ phone: '6788549322' }));
     expect(logoSrc(await render())).toBe('assets/Impact-Logo_Black.png');
   });
 
   it('never renders an empty src when the config read FAILS', async () => {
-    getAll.and.returnValue(Promise.reject(new Error('offline')));
+    getConfig.and.returnValue(Promise.reject(new Error('offline')));
     expect(logoSrc(await render())).toBe('assets/Impact-Logo_Black.png');
   });
 });

@@ -35,8 +35,8 @@ describe('CouponApplicationService', () => {
     const result = await service.validateAndApply(items, 'SAVE25');
 
     expect(result.applied).toBeTrue();
-    expect(items[0].discount).toBe(2.5);
-    expect(items[0].discountPrice).toBe(7.5);
+    expect(result.items[0].discount).toBe(2.5);
+    expect(result.items[0].discountPrice).toBe(7.5);
     expect(result.netDiscount).toBe(5);
     expect(result.lineResults).toEqual([{ itemId: 'p1', applied: true }]);
     expect(result.message).toBe('Coupon applied successfully.');
@@ -46,9 +46,9 @@ describe('CouponApplicationService', () => {
     stubCouponLookup({ isActive: true, percentOff: 33 });
     const items = [item({ id: 'p1', price: 9.99, orderQuantity: 1 })];
 
-    await service.validateAndApply(items, 'SAVE33');
+    const result = await service.validateAndApply(items, 'SAVE33');
 
-    expect(items[0].discount).toBe(3.3); // 3.2967 -> 3.30
+    expect(result.items[0].discount).toBe(3.3); // 3.2967 -> 3.30
   });
 
   it('assumes quantity 1 when a line has no orderQuantity', async () => {
@@ -66,10 +66,10 @@ describe('CouponApplicationService', () => {
 
     const result = await service.validateAndApply(items, 'SAVE25');
 
-    expect(items[0].discount).toBe(0);
+    expect(result.items[0].discount).toBe(0);
     // Cleared to undefined, not null, since strict null checks (2026-09-05):
     // the model says number | undefined and nothing reads the value back.
-    expect(items[0].discountPrice).toBeUndefined();
+    expect(result.items[0].discountPrice).toBeUndefined();
     expect(result.applied).toBeFalse();
     expect(result.lineResults[0].applied).toBeFalse();
     expect(result.lineResults[0].skippedReason).toBeTruthy();
@@ -84,8 +84,10 @@ describe('CouponApplicationService', () => {
     const result = await service.validateAndApply([eligible, ineligible], 'HALFOFF');
 
     expect(result.applied).toBeTrue();
-    expect(eligible.discount).toBe(5);
-    expect(ineligible.discount).toBeUndefined();
+    const [p1, p2] = result.items;
+    expect(p1.discount).toBe(5);
+    // An ineligible line is left with no discount (cleared, not skipped).
+    expect(p2.discount).toBe(0);
     expect(result.netDiscount).toBe(5);
     expect(result.lineResults).toEqual([{ itemId: 'p1', applied: true }]);
   });
@@ -112,9 +114,10 @@ describe('CouponApplicationService', () => {
     const result = await service.validateAndApply([event, product], 'EVENTSFREE');
 
     expect(result.applied).toBeTrue();
-    expect(event.discount).toBe(40);
-    expect(event.discountPrice).toBe(0);
-    expect(product.discount).toBeUndefined();
+    const [eventLine, productLine] = result.items;
+    expect(eventLine.discount).toBe(40);
+    expect(eventLine.discountPrice).toBe(0);
+    expect(productLine.discount).toBe(0);
     expect(result.netDiscount).toBe(40);
     expect(result.lineResults).toEqual([{ itemId: 'event-1', applied: true }]);
   });
@@ -139,8 +142,8 @@ describe('CouponApplicationService', () => {
     const result = await service.validateAndApply(items, 'FREE100');
 
     expect(result.applied).toBeTrue();
-    expect(items[0].discount).toBe(30);
-    expect(items[0].discountPrice).toBe(0);
+    expect(result.items[0].discount).toBe(30);
+    expect(result.items[0].discountPrice).toBe(0);
     expect(result.netDiscount).toBe(30);
     expect(result.lineResults).toEqual([{ itemId: 'event-1', applied: true }]);
   });
@@ -179,21 +182,31 @@ describe('CouponApplicationService', () => {
 
     const result = await service.validateAndApply(items, 'BADDATA');
 
-    expect(items[0].discount).toBe(10);
-    expect(items[0].discountPrice).toBe(0);
+    expect(result.items[0].discount).toBe(10);
+    expect(result.items[0].discountPrice).toBe(0);
     expect(result.netDiscount).toBe(10);
+  });
+
+  it('never edits the lines it was given - the cart is told through replaceItems()', async () => {
+    stubCouponLookup({ isActive: true, percentOff: 25 });
+    const items = [item({ id: 'p1', price: 10, orderQuantity: 2 })];
+
+    const result = await service.validateAndApply(items, 'SAVE25');
+
+    expect(items[0].discount).toBeUndefined();
+    expect(result.items[0]).not.toBe(items[0]);
   });
 
   it('clear() removes discounts a previous apply left on the items', async () => {
     stubCouponLookup({ isActive: true, percentOff: 25 });
     const items = [item({ id: 'p1', price: 10, orderQuantity: 1 })];
-    await service.validateAndApply(items, 'SAVE25');
+    const applied = await service.validateAndApply(items, 'SAVE25');
 
-    service.clear(items);
+    const cleared = service.clear(applied.items);
 
-    expect(items[0].discount).toBe(0);
+    expect(cleared[0].discount).toBe(0);
     // Cleared to undefined, not null, since strict null checks (2026-09-05):
     // the model says number | undefined and nothing reads the value back.
-    expect(items[0].discountPrice).toBeUndefined();
+    expect(cleared[0].discountPrice).toBeUndefined();
   });
 });

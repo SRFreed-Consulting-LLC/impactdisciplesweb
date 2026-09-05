@@ -173,6 +173,47 @@ describe('CheckoutComponent.quoteAndStartOrder', () => {
   });
 });
 
+// The shipping discount reads freeShippingAmount off the site config. The
+// config is fetched in ngOnInit and only startOrder() waited for it, so a
+// shopper who reached Continue to Payment before the Firestore read came
+// back hit a TypeError inside the quote and sat on the error state with a
+// "could not get a shipping rate" toast for a rate that had arrived fine.
+describe('CheckoutComponent shipping quote and the site config', () => {
+  it('waits for the config before pricing the shipping discount', async () => {
+    let resolveConfig!: (config: { freeShippingAmount: number }) => void;
+    const config = new Promise<{ freeShippingAmount: number }>((resolve) => (resolveConfig = resolve));
+    const webConfigService = {
+      getAll: () => config.then((c) => [c]),
+      getConfig: () => config
+    } as unknown as WebConfigService;
+
+    const component = new CheckoutComponent(
+      { getCartProducts: () => [{ id: 'p1', price: 60, orderQuantity: 1 }], getCouponCode: () => '' } as unknown as CartService,
+      new PricingService(),
+      {} as unknown as CheckoutOrderService,
+      { calculateShipping: (form: CheckoutForm) => Promise.resolve({ ...form, shippingRate: 10 }) } as unknown as ShippingService,
+      { getActiveOffers: () => Promise.resolve([]) } as unknown as ProductCatalogService,
+      webConfigService,
+      { registerPayPalScript: () => undefined } as unknown as PayPalScriptService,
+      {} as unknown as Router,
+      {} as unknown as ToastService,
+      {} as unknown as LoggerService,
+      { get: () => null } as unknown as AttributionService,
+      new FormBuilder()
+    );
+    component.ngOnInit();
+
+    // The quote starts while the config is still in flight...
+    const quoted = component['calculateShippingCost']();
+    resolveConfig({ freeShippingAmount: 50 });
+    await quoted;
+
+    // ...and still prices the $60 order's shipping as free against the $50 threshold.
+    expect(component.checkoutForm.shippingRate).toBe(10);
+    expect(component.checkoutForm.shippingDiscount).toBe(10);
+  });
+});
+
 describe('CheckoutComponent.buildOrderRequest', () => {
   it('contains NO price-bearing field anywhere, even when the cart is loaded with them', () => {
     const component = buildComponent({ campaignId: 'camp-1' });
