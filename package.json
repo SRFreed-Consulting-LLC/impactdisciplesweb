@@ -71,6 +71,7 @@
     },
     "image-size": "^1.2.1",
     "webpack-dev-server": "^6.0.0",
-    "fast-uri": "^3.1.6"
+    "fast-uri": "^3.1.6",
+    "qs": "^6.16.0"
   }
 }
