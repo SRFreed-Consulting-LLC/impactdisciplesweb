@@ -1,9 +1,2 @@
-import { Timestamp } from "firebase/firestore";
-import { BaseModel } from "@impact-common/shared/models/base.model";
-
-export class CustomerNoteModel extends BaseModel{
-  date: Timestamp;
-  addedBy: string;
-  note: string;
-  private: boolean;
-}
+// Shared since 2026-09-05 - see customer.model.ts in this folder.
+export { ContactNoteModel as CustomerNoteModel } from '@impact-common/shared/models/domain/contact-note.model';
