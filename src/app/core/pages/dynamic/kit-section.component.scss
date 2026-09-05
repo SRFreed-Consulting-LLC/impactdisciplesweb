@@ -1286,9 +1286,19 @@
   .kit-grid[class*='kit-cols--'] { grid-template-columns: 1fr; }
   .kit-rowcard { flex-direction: column; align-items: stretch; }
   .kit-rowcard__img { width: 100%; flex-basis: auto; }
-  .kit-quotecard { flex-direction: column; align-items: stretch; }
-  .kit-quotecard__img { width: 100%; flex-basis: auto; height: auto; min-height: 200px; }
-  .kit-quotecard__body { padding: 0 18px 18px; }
+  // A QUOTE CARD STAYS SIDE BY SIDE, unlike the picture row above it, and the
+  // difference is what each card is for. A picture row's photograph is content
+  // - a seminar, a place - and deserves the width on a phone. A quote card's is
+  // a face beside words: stacked, it became a full-width portrait with a 200px
+  // floor, so the picture dominated the screen and the quote it belongs to was
+  // pushed below the fold. The card just gets narrower instead.
+  .kit-quotecard__img {
+    flex: 0 0 132px;
+    width: 132px;
+    min-height: 150px;
+  }
+  .kit-quotecard__body { padding: 14px 16px 14px 0; }
+  .kit-quotecard__quote { font-size: 15px; }
   .kit-rowcard__body { padding: 16px 20px; }
 
   .kit-wrap { padding: 56px 20px; }
@@ -1329,6 +1339,27 @@
   }
 
   .kit-band--figure { text-align: center; }
+}
+
+// Phones proper. The card keeps its shape - photo beside quote - on the
+// smallest screen the site supports; only the proportions change.
+@media (max-width: 520px) {
+  .kit-quotecard {
+    gap: 12px;
+  }
+  .kit-quotecard__img {
+    flex: 0 0 96px;
+    width: 96px;
+    min-height: 118px;
+  }
+  .kit-quotecard__body { padding: 12px 13px 12px 0; }
+  .kit-quotecard__quote {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 9px;
+  }
+  .kit-quotecard__by { padding-top: 8px; }
+  .kit-quotecard__name { font-size: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
