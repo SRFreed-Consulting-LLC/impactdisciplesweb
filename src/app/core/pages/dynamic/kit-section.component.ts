@@ -19,6 +19,7 @@ import {
 import { TestimonialService } from 'src/app/common/services/data/testimonial.service';
 import { SubscribeFormService, SubscriberDetails } from 'src/app/shared/utils/services/subscribe-form.service';
 import { environment } from 'src/environments/environment';
+import { pad2, remainingUntil } from './countdown.util';
 
 /** The destinations a button may NAME rather than address - see href(). */
 const KIT_LINK_DESTINATIONS: Record<string, string> = {
@@ -372,35 +373,22 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
   private ticker: ReturnType<typeof setInterval> | undefined;
 
   /**
-   * Counts to the section's own `targetDate`.
-   *
-   * NOTHING IS DRAWN when the date is missing, unparseable, or already past.
-   * A row of zeros reads as "it starts now" and a negative count reads as a
-   * bug; both are worse than the band simply not carrying a clock. The
-   * heading and button still render, so a section whose date has gone by
-   * degrades into an ordinary banner rather than disappearing.
+   * Counts to the section's own `targetDate`. The rule for what is shown
+   * (nothing for a missing, unparseable or past date) is remainingUntil()
+   * in countdown.util - this only owns the timer.
    */
   private startCountdown(): void {
     this.stopCountdown();
-    const target = Date.parse(this.block.targetDate ?? this.pieceTargetDate ?? '');
-    if (!Number.isFinite(target)) {
+    const targetDate = this.block.targetDate ?? this.pieceTargetDate;
+    if (!Number.isFinite(Date.parse(targetDate ?? ''))) {
       this.remaining = null;
       return;
     }
     const tick = () => {
-      const left = target - Date.now();
-      if (left <= 0) {
-        this.remaining = null;
+      this.remaining = remainingUntil(targetDate);
+      if (!this.remaining) {
         this.stopCountdown();
-        return;
       }
-      const seconds = Math.floor(left / 1000);
-      this.remaining = {
-        days: Math.floor(seconds / 86400),
-        hours: Math.floor((seconds % 86400) / 3600),
-        minutes: Math.floor((seconds % 3600) / 60),
-        seconds: seconds % 60
-      };
     };
     tick();
     this.ticker = setInterval(tick, 1000);
@@ -415,7 +403,7 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
 
   /** Two digits, so the clock does not jitter as numbers change width. */
   pad(value: number): string {
-    return String(value).padStart(2, '0');
+    return pad2(value);
   }
 
   // ---------------------------------------------------------------- slider

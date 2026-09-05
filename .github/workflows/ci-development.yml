@@ -57,7 +57,10 @@ jobs:
       # launcher uses; add browser-actions/setup-chrome if a future runner
       # image lacks it.
       - name: Unit tests
-        run: npm test
+        # The coverage ratchet (scripts/check-coverage.js) runs here too since
+        # 2026-09-05 - the reader had it in CI for a month while this app and
+        # the admin only ran it by hand.
+        run: npm run test:coverage && npm run coverage:check
 
       - name: Build (development configuration)
         run: npm run build-dev
