@@ -934,6 +934,65 @@ describe('the pieces a section is built from', () => {
       expect(gridLooks().length).toBeGreaterThan(0);
     });
   });
+  // BACKGROUND PHOTO POSITION. Two stored shapes are live at once: the exact
+  // point the editor now writes, and the old top/centre/bottom still sitting
+  // on pages nobody has re-edited. Getting the fallback wrong would move
+  // photos on pages nobody touched, which is the whole reason nothing
+  // rewrites the old field.
+  describe('background photo position', () => {
+    const photoBlock = (extra: Record<string, unknown>) => ({
+      key: 'k1',
+      type: SECTION_ARCHETYPE.SECTION,
+      variant: 'columns',
+      surface: 'photo',
+      image: { url: 'https://example.test/band.jpg', name: 'band' },
+      columns: [{ key: 'c1', pieces: [pieceFor('heading')] }],
+      isActive: true,
+      ...extra
+    });
+
+    const positionOf = (): string => {
+      const el = (fixture.nativeElement as HTMLElement)
+        .querySelector('[style*="background-position"]') as HTMLElement | null;
+      return el?.style.backgroundPosition ?? '';
+    };
+
+    it('uses the exact point when one is stored', () => {
+      setBlock(photoBlock({ photoFocusPoint: { x: 42, y: 31 } }));
+      expect(positionOf()).toBe('42% 31%');
+    });
+
+    it('still honours the old top/centre/bottom', () => {
+      // Live pages carry these and nothing rewrites them.
+      setBlock(photoBlock({ photoFocus: 'top' }));
+      expect(positionOf()).toBe('center top');
+    });
+
+    it('prefers the point where a section carries both', () => {
+      setBlock(photoBlock({ photoFocus: 'bottom', photoFocusPoint: { x: 10, y: 90 } }));
+      expect(positionOf()).toBe('10% 90%');
+    });
+
+    it('centres a section that names neither', () => {
+      // The browser normalises the shorthand `center` to `center center` when
+      // it reads the style back, so this asserts the resolved value rather
+      // than the string the getter returned.
+      setBlock(photoBlock({}));
+      expect(positionOf()).toBe('center center');
+    });
+
+    it('clamps a stored point that is out of range', () => {
+      // Stored data, not a computed value - a number past 100 would push the
+      // photo off its own band.
+      setBlock(photoBlock({ photoFocusPoint: { x: -30, y: 400 } }));
+      expect(positionOf()).toBe('0% 100%');
+    });
+
+    it('ignores a malformed point rather than drawing NaN', () => {
+      setBlock(photoBlock({ photoFocus: 'top', photoFocusPoint: { x: null, y: 20 } }));
+      expect(positionOf()).toBe('center top');
+    });
+  });
   it('leaves out a piece that has been switched off', () => {
     // Absent counts as live, false does not - the same rule as sections and
     // entries. Getting it backwards would publish work somebody hid.

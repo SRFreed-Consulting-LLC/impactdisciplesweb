@@ -487,9 +487,25 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
     return this.surface === 'photo' && url ? `url(${url})` : null;
   }
 
-  /** Which part of the photo the band keeps when it crops - 'top' holds
-   *  faces, 'bottom' foregrounds. A string, so safe as a getter. */
+  /**
+   * Which part of the photo the band keeps when it crops.
+   *
+   * TWO SHAPES, and both are live. `photoFocusPoint` is an exact point the
+   * editor's drag control writes; `photoFocus` is the older top/centre/bottom,
+   * still stored on pages nobody has re-edited. The point wins where both
+   * exist, and nothing rewrites the old one - a section keeps the position it
+   * has until somebody actually moves the picture.
+   *
+   * A string, so safe as a getter.
+   */
   get backgroundPosition(): string {
+    const point = this.block.photoFocusPoint;
+    if (point && Number.isFinite(point.x) && Number.isFinite(point.y)) {
+      // Clamped rather than trusted: this is stored data, and a value outside
+      // 0-100 would push the photo off its own band.
+      const clamp = (n: number) => Math.min(100, Math.max(0, n));
+      return `${clamp(point.x)}% ${clamp(point.y)}%`;
+    }
     const focus = this.block.photoFocus ?? 'center';
     return focus === 'center' ? 'center' : `center ${focus}`;
   }
