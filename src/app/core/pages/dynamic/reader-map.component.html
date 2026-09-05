@@ -16,19 +16,25 @@
             <path [attr.d]="d"></path>
           }
         </g>
+        <!-- Two circles per reader: a halo that expands and fades, and the
+             dot itself. Same treatment as the Library tab's own map, which is
+             where the pulse comes from. -->
         <g class="rmap__dots">
-          @for (dot of dots; track trackDot($index)) {
-            <circle class="rmap__dot"
-                    [attr.cx]="dot.x" [attr.cy]="dot.y" r="3"
-                    [style.animation-delay.s]="dot.delay"></circle>
+          @for (dot of dots; track trackDot($index, dot)) {
+            <g class="rmap__pin" [class.rmap__pin--fresh]="dot.fresh"
+               [style.animation-delay.s]="dot.delay">
+              <circle class="rmap__halo" [attr.cx]="dot.x" [attr.cy]="dot.y" r="3"></circle>
+              <circle class="rmap__dot" [attr.cx]="dot.x" [attr.cy]="dot.y" r="3"></circle>
+            </g>
           }
         </g>
       </svg>
     }
 
-    <!-- A figure, not a tooltip. There is nothing to click on a dot - the
-         published data has nothing to say about any one reader - so the count
-         is the only thing the map can honestly tell you beyond its shape. -->
+    <!-- No key and no tooltip. There is nothing to explain about one dot and
+         nothing to click - the published data has nothing to say about any
+         single reader - so the count is all the map can honestly add to its
+         own shape. -->
     @if (total) {
       <figcaption class="rmap__caption">
         {{ total }} {{ total === 1 ? 'reader' : 'readers' }}

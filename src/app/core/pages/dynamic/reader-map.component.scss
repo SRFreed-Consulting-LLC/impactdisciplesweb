@@ -35,12 +35,39 @@
   vector-effect: non-scaling-stroke;
 }
 
+/* A READER. The pin scales in on arrival; the halo inside it pulses forever.
+   Two elements because they animate on different clocks - one entrance, one
+   heartbeat - and a single element cannot hold both transforms. */
+.rmap__pin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rmap-arrive 500ms ease-out backwards;
+}
+
 .rmap__dot {
+  fill: var(--kit-rule, #{variables.$theme-color});
+  transition: fill 600ms ease;
+}
+
+.rmap__halo {
   fill: var(--kit-rule, #{variables.$theme-color});
   transform-box: fill-box;
   transform-origin: center;
-  animation: rmap-arrive 500ms ease-out backwards,
-             rmap-pulse 3.2s ease-in-out infinite;
+  /* Ported from the Library tab's map-marker-pulse: out to 3x and gone. */
+  animation: rmap-pulse 2.8s ease-out infinite;
+  transition: fill 600ms ease;
+}
+
+/* JUST ARRIVED, or just moved. Amber for a few seconds, then back - the same
+   signal the Library tab gives a fresh sign-in, so the two maps mean the same
+   thing by the same colour. Never on first paint: see hasLoadedOnce. */
+.rmap__pin--fresh .rmap__dot {
+  fill: #ffb300;
+}
+
+.rmap__pin--fresh .rmap__halo {
+  fill: #ffb300;
+  animation-duration: 1.1s;
 }
 
 @keyframes rmap-arrive {
@@ -49,20 +76,23 @@
 }
 
 @keyframes rmap-pulse {
-  0%, 100% { opacity: 0.75; }
-  50%      { opacity: 1; }
+  0%   { transform: scale(1);   opacity: 0.55; }
+  100% { transform: scale(3.2); opacity: 0; }
 }
 
 /* A reader who prefers less movement gets a map that simply is, rather than
-   one that breathes. The dots still arrive; they just do not pulse. */
+   one that breathes. The dots are still all there; the halo just stops. */
 @media (prefers-reduced-motion: reduce) {
-  .rmap,
-  .rmap__dot {
-    animation: none;
-    transition: none;
-  }
   .rmap {
     opacity: 1;
+    transition: none;
+  }
+  .rmap__pin,
+  .rmap__halo {
+    animation: none;
+  }
+  .rmap__halo {
+    opacity: 0;
   }
 }
 

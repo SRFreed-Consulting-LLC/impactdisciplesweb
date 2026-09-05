@@ -1,5 +1,5 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, inject
 } from '@angular/core';
 import { Firestore, collection, doc, onSnapshot } from '@angular/fire/firestore';
 import { tenantPath } from '@impact-common/shared/lists/tenancy';
@@ -19,17 +19,27 @@ interface WorldPaths {
 interface Dot {
   x: number;
   y: number;
-  /** Staggers the entrance so the dots arrive as a scatter rather than all
-   *  at once, which looks like a rendering glitch. Seconds. */
+  /** Its coordinate as a string - how a dot is recognised between snapshots.
+   *  There is no id in the published data, and deliberately so. */
+  key: string;
+  /** Staggers the entrance so dots arrive as a scatter rather than all at
+   *  once, which looks like a rendering glitch. Seconds. */
   delay: number;
+  /** Just arrived or just moved: drawn amber for a few seconds, the same
+   *  treatment the Library tab's own map gives a fresh sign-in. */
+  fresh: boolean;
 }
+
+/** How long a dot stays amber after appearing or moving. Matches the admin
+ *  map's GLOW_DURATION_MS so the two read as the same thing. */
+const GLOW_DURATION_MS = 5000;
 
 /**
  * WHERE THE DISCIPLESHIP LIBRARY IS BEING READ.
  *
  * A dot per reader on a world map, live: the document it draws is rebuilt by
  * onLibraryUserWritten whenever a reader is written, so somebody signing in
- * for the first time appears here within a second or two.
+ * appears here about four seconds later, with no refresh.
  *
  * IT CANNOT SHOW YOU WHO THEY ARE, and that is the design rather than a
  * limitation. `libraryUsers` is readable only by its owner or an admin and
@@ -39,6 +49,11 @@ interface Dot {
  * `library_map/points`, which holds coordinates and a total and nothing else
  * - no name, no city, not even a count per place. There is nothing to click,
  * because there is nothing to say.
+ *
+ * A DOT IS RECOGNISED BY ITS COORDINATE, since the published data has no id
+ * to offer. Two readers cannot collide on one coordinate: the function
+ * offsets each by a small amount seeded from their own id, which exists so
+ * that a city's readers draw as separate dots rather than one.
  *
  * NO MAPPING LIBRARY AND NO TILE SERVICE. The world is 176 SVG paths in an
  * equirectangular viewBox, pre-projected at build time; a dot is two
@@ -57,6 +72,7 @@ interface Dot {
 export class ReaderMapComponent implements OnInit, OnDestroy {
   private readonly firestore = inject(Firestore);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly zone = inject(NgZone);
 
   world: WorldPaths | null = null;
   dots: Dot[] = [];
@@ -69,6 +85,13 @@ export class ReaderMapComponent implements OnInit, OnDestroy {
   failed = false;
 
   private stop: (() => void) | undefined;
+  private seen = new Set<string>();
+  /** False only for the very first snapshot. A page load is not "people just
+   *  showing up", so nothing glows until a dot genuinely appears or moves
+   *  AFTER that - otherwise every visitor sees the whole map light up as
+   *  though everyone signed in at once. */
+  private hasLoadedOnce = false;
+  private glowTimers: ReturnType<typeof setTimeout>[] = [];
 
   async ngOnInit(): Promise<void> {
     try {
@@ -85,7 +108,7 @@ export class ReaderMapComponent implements OnInit, OnDestroy {
     }
 
     // A live listener rather than a one-off read: "runs live" is the whole
-    // point of the piece, and the document is a few kilobytes at most.
+    // point of the piece, and the document is under a kilobyte.
     const points = collection(this.firestore, tenantPath('library_map'));
     this.stop = onSnapshot(
       doc(points, 'points'),
@@ -94,6 +117,8 @@ export class ReaderMapComponent implements OnInit, OnDestroy {
         this.dots = this.project(data?.points ?? []);
         this.total = data?.total ?? this.dots.length;
         this.loading = false;
+        this.hasLoadedOnce = true;
+        this.scheduleGlowEnd();
         this.cdr.markForCheck();
       },
       () => {
@@ -107,6 +132,7 @@ export class ReaderMapComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stop?.();
+    this.glowTimers.forEach((t) => clearTimeout(t));
   }
 
   /**
@@ -132,18 +158,42 @@ export class ReaderMapComponent implements OnInit, OnDestroy {
       if (p.lat > w.latTop || p.lat < w.latBottom) {
         return;
       }
+      const key = `${p.lat},${p.lng}`;
       dots.push({
         x: ((p.lng + 180) / 360) * w.width,
         y: ((w.latTop - p.lat) / (w.latTop - w.latBottom)) * w.height,
-        delay: (i % 12) * 0.12
+        key,
+        delay: (i % 12) * 0.12,
+        fresh: this.hasLoadedOnce && !this.seen.has(key)
       });
     });
+    this.seen = new Set(dots.map((d) => d.key));
     return dots;
   }
 
-  /** @param index The dot's position. @returns A stable key. */
-  trackDot(index: number): number {
-    return index;
+  /**
+   * Fades the amber back to the steady colour once the glow has had its time.
+   *
+   * Outside Angular's zone, because a timer inside it wakes change detection
+   * for the whole application every few seconds on a page that is otherwise
+   * idle - on a marketing page that is pure waste.
+   */
+  private scheduleGlowEnd(): void {
+    if (!this.dots.some((d) => d.fresh)) {
+      return;
+    }
+    this.zone.runOutsideAngular(() => {
+      const timer = setTimeout(() => {
+        this.dots = this.dots.map((d) => (d.fresh ? { ...d, fresh: false } : d));
+        this.zone.run(() => this.cdr.markForCheck());
+      }, GLOW_DURATION_MS);
+      this.glowTimers.push(timer);
+    });
+  }
+
+  /** @param index The dot's position. @param dot The dot. @returns Its key. */
+  trackDot(index: number, dot: Dot): string {
+    return dot.key;
   }
 
   /** @param index The path's position. @returns A stable key. */
