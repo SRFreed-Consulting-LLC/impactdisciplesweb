@@ -1,5 +1,5 @@
 export class NumberUtil{
-  public static isNumber(value): boolean {
+  public static isNumber(value: unknown): value is number {
     return typeof value === 'number' && !Number.isNaN(value);
    }
 
@@ -10,7 +10,7 @@ export class NumberUtil{
   // price calculation reading percentOff should clamp through this rather
   // than trust the stored value directly, so a bad record degrades to "no
   // discount" instead of a negative price/charge.
-  public static clampPercent(value): number {
+  public static clampPercent(value: unknown): number {
     if (!NumberUtil.isNumber(value)) {
       return 0;
     }

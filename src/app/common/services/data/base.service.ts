@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FirebaseDAO, QueryParam } from 'src/app/common/dao/firebase.dao';
+import { FirebaseDAO, FromFirestore, QueryParam } from 'src/app/common/dao/firebase.dao';
 import { BaseModel } from '@impact-common/shared/models/base.model';
 import { Observable } from 'rxjs';
 
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class BaseService<T extends BaseModel> {
   public table = '';
-  public fromFirestore;
+  public fromFirestore?: FromFirestore<T>;
 
   constructor(public dao: FirebaseDAO<T>) {}
 
@@ -33,7 +33,8 @@ export class BaseService<T extends BaseModel> {
     return this.dao.queryAllByMultiValue(this.table, queries, this.fromFirestore, limitCount)
   }
 
-  getById(id: string): Promise<T>{
+  // Undefined when there is no such document - see FirebaseDAO.getById().
+  getById(id: string): Promise<T | undefined>{
     return this.dao.getById(id, this.table, this.fromFirestore);
   }
 

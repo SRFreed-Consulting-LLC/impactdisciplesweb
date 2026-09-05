@@ -65,7 +65,7 @@ describe('PodcastsComponent loading state', () => {
     component.ngOnInit();
     await flush();
 
-    expect(component.selectedPodcast.title).toBe('Newest');
+    expect(component.selectedPodcast!.title).toBe('Newest');
     expect(component.isListView).toBe(false);
   });
 

@@ -1,5 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { CartItem, CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
+import { EventModel } from '@impact-common/shared/models/domain/event.model';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { EventService } from 'src/app/common/services/data/event.service';
 import { LoggerService } from 'src/app/common/services/data/logger.service';
@@ -45,7 +46,7 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     // localStorage.removeItem below just sweeps up any copy left behind by
     // builds that stored it there.
     localStorage.removeItem(CHECKOUT_STORAGE_KEY);
-    const checkoutForm: CheckoutForm = JSON.parse(sessionStorage.getItem(CHECKOUT_STORAGE_KEY));
+    const checkoutForm: CheckoutForm | null = JSON.parse(sessionStorage.getItem(CHECKOUT_STORAGE_KEY) ?? 'null');
 
     if (!checkoutForm) {
       return;
@@ -55,7 +56,7 @@ export class CheckoutSuccessComponent implements AfterViewInit {
       this.runSideEffect(
         'NEWSLETTER_SUBSCRIBE',
         checkoutForm,
-        () => this.newsletterSubscriptionService.createSubscription('newsletter', checkoutForm.firstName, checkoutForm.lastName, checkoutForm.email),
+        () => this.newsletterSubscriptionService.createSubscription('newsletter', checkoutForm.firstName ?? '', checkoutForm.lastName ?? '', checkoutForm.email ?? ''),
         'signing you up for the newsletter'
       );
     }
@@ -65,7 +66,7 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     // affilliate_sales (that write required an anonymous-create rule that
     // let anyone forge attribution).
 
-    const events: CartItem[] = checkoutForm.cartItems.filter(item => item.isEvent);
+    const events: CartItem[] = (checkoutForm.cartItems ?? []).filter(item => item.isEvent);
     // DIGITAL_LIBRARY_REGISTER side effect removed (pre-prod checklist #3):
     // the legacy impact-users license store is retired - digital-book access
     // is granted into libraryUsers by the onPurchaseGrantLibraryLicenses
@@ -76,7 +77,7 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     // the live one.
 
     if (events.length > 0) {
-      await this.registerEventUsers(checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : checkoutForm.couponCode, events, checkoutForm.email);
+      await this.registerEventUsers(checkoutForm.payPalReceipt?.id ? checkoutForm.payPalReceipt.id : (checkoutForm.couponCode ?? ''), events, checkoutForm.email ?? '');
     }
     // TAX_SUMMARY side effect removed (pre-prod checklist #4): collected
     // sales tax now rolls into tax_rate_summaries SERVER-side via the
@@ -98,7 +99,7 @@ export class CheckoutSuccessComponent implements AfterViewInit {
     Promise.resolve(action()).catch(err => {
       this.loggerService.logMessage(
         code,
-        checkoutForm.email,
+        checkoutForm.email ?? '',
         `Order was placed, but a follow-up step failed: ${humanDescription}.`,
         { err, receipt: checkoutForm.receipt }
       ).subscribe(errorCode => {
@@ -118,9 +119,14 @@ export class CheckoutSuccessComponent implements AfterViewInit {
       // once per attendee (a group registration of N people did N
       // redundant reads instead of 1) purely to read eventName/startDate
       // for the success toast.
-      let eventModel;
+      // A cart line is a product document and always carries its id.
+      let eventModel: EventModel;
       try {
-        eventModel = await this.eventService.getById(event.id);
+        const found = await this.eventService.getById(event.id!);
+        if (!found) {
+          throw new Error(`event ${event.id} not found`);
+        }
+        eventModel = found;
       } catch (err) {
         this.loggerService.logMessage(
           'EVENT_REGISTRATION_NEW',
@@ -139,7 +145,7 @@ export class CheckoutSuccessComponent implements AfterViewInit {
           // including the confirmation email with the breakout link -
           // whose domain is pinned server-side, not client-supplied).
           await this.eventRegistrationService.registerForEvent({
-            eventId: event.id,
+            eventId: event.id!,
             firstName: attendee.firstName,
             lastName: attendee.lastName,
             email: attendee.email,

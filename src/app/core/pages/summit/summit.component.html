@@ -25,7 +25,7 @@
           <div class="row summit__info-container">
             <div class="col-xl-4 col-md-4 summit__info-text">
               <i class="fa-solid fa-calendar-days"></i>
-              {{ summit?.startDate?.toString() | date: 'MMMM d'}} - {{ summit?.endDate.toString() | date: 'MMMM d'}}, {{ summit?.startDate.toString() | date: 'yyyy'}}
+              {{ summit?.startDate?.toString() | date: 'MMMM d'}} - {{ summit?.endDate?.toString() | date: 'MMMM d'}}, {{ summit?.startDate?.toString() | date: 'yyyy'}}
             </div>
             <div class="col-xl-4 col-md-4 summit__info-text">
               <i class="fa-solid fa-location-dot"></i>
@@ -35,7 +35,7 @@
             </div>
             <div class="col-xl-4 col-md-4 summit__info-text">
               <i class="fa-solid fa-clock"></i>
-              Check-In: {{ summit?.checkIn?.toString() | timeFormat }} | Start Time: {{ summit?.startDate.toString() | date: 'h:mm a' }}
+              Check-In: {{ (summit?.checkIn?.toString() ?? '') | timeFormat }} | Start Time: {{ summit?.startDate?.toString() | date: 'h:mm a' }}
             </div>
           </div>
         </section>

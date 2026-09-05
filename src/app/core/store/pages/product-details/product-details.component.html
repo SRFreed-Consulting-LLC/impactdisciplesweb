@@ -1,7 +1,7 @@
 <app-home-header></app-home-header>
 
 <main>
-  <app-breadcrumb [currentPageName]="product?.title" [bgColor]="'#1F1F1F'" [previousLink]="'/store'" [previousLinkName]="'Store'" [isDark]="true"></app-breadcrumb>
+  <app-breadcrumb [currentPageName]="product?.title ?? ''" [bgColor]="'#1F1F1F'" [previousLink]="'/store'" [previousLinkName]="'Store'" [isDark]="true"></app-breadcrumb>
 
   <section class="shop__area pb-65">
     <div class="shop__top grey-bg-6 pt-100 pb-90">
@@ -21,11 +21,11 @@
             <div class="product__modal-content product__modal-content-2">
               <h4>{{ product?.title }}</h4>
               <div class="product__price-2 mb-25">
-                @if (product?.salePrice && product?.salePrice > 0) {
-                  <h5><s>$ {{ product.cost? product.cost.toFixed(2) : '0.00' }}</s></h5>
-                  <h5><strong>ON SALE! ${{ product.salePrice? product?.salePrice.toFixed(2) : '0.00' }}</strong></h5>
+                @if ((product?.salePrice ?? 0) > 0) {
+                  <h5><s>$ {{ product?.cost ? product.cost.toFixed(2) : '0.00' }}</s></h5>
+                  <h5><strong>ON SALE! ${{ product?.salePrice ? product.salePrice.toFixed(2) : '0.00' }}</strong></h5>
                 } @else {
-                  <h5><span>${{product?.cost? product?.cost.toFixed(2) : 0}}</span></h5>
+                  <h5><span>${{ product?.cost ? product.cost.toFixed(2) : 0 }}</span></h5>
                 }
               </div>
 
@@ -55,7 +55,7 @@
               </div>
               <div>
                 <div class="row mb-25">
-                  @if (product?.sizes && product?.sizes.length > 0) {
+                  @if ((product?.sizes?.length ?? 0) > 0) {
                     <div class="col-6">
                       <label for="product-size">Size</label>
                       <select id="product-size" [class.is-invalid]="sizeError" (change)="setSize($any($event.target).value)">
@@ -69,7 +69,7 @@
                       }
                     </div>
                   }
-                  @if (product?.colors && product?.colors.length > 0) {
+                  @if ((product?.colors?.length ?? 0) > 0) {
                     <div class="col-6">
                       <label for="product-color">Color</label>
                       <select id="product-color" [class.is-invalid]="colorError" (change)="setColor($any($event.target).value)">
@@ -83,7 +83,7 @@
                       }
                     </div>
                   }
-                  @if (product?.languages && product?.languages.length > 0) {
+                  @if ((product?.languages?.length ?? 0) > 0) {
                     <div class="col-6">
                       <label for="product-language">Language</label>
                       <select id="product-language" [class.is-invalid]="languageError" (change)="setLanguage($any($event.target).value)">
@@ -105,7 +105,7 @@
                   @for (tag of product?.tags; track tag; let i = $index) {
                     <span>
                       <a class="cursor-pointer">{{ tag?.tag }}</a>
-                      @if (i < product.tags.length - 1) {
+                      @if (i < (product.tags?.length ?? 0) - 1) {
                         <span>, </span>
                       }
                     </span>

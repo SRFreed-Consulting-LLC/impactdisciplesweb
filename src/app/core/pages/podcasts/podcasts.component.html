@@ -8,13 +8,13 @@
     [showHr]="true"
     [buttonText]="'YOUTUBE'"
     [buttonIcon]="'fab fa-youtube'"
-    [buttonLink]="webConfig?.youtube"
+    [buttonLink]="webConfig?.youtube ?? ''"
     [buttonText2]="'APPLE PODCASTS'"
     [buttonIcon2]="'fab fa-apple'"
-    [buttonLink2]="webConfig?.applePodCast"
+    [buttonLink2]="webConfig?.applePodCast ?? ''"
     [buttonText3]="'FACEBOOK LIVE'"
     [buttonIcon3]="'fab fa-facebook-f'"
-    [buttonLink3]="webConfig?.facebookLive"
+    [buttonLink3]="webConfig?.facebookLive ?? ''"
   ></app-header>
 
   @if (loading) {

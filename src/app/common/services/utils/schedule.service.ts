@@ -37,7 +37,7 @@ export class ScheduleService {
         date: day.date,
         timeGroups: day.timeGroups.map((timeGroup) => ({
           date: timeGroup.date,
-          items: timeGroup.items.filter((agendaItem) => this.sessionIds?.includes(agendaItem.item.id)),
+          items: timeGroup.items.filter((agendaItem) => this.sessionIds?.includes(agendaItem.item.id ?? '')),
         })).filter((timeGroup) => timeGroup.items.length > 0), // Remove empty timeGroups
       })).filter((day) => day.timeGroups.length > 0), // Remove empty days
     })).filter((group) => group.days.length > 0);
@@ -73,7 +73,7 @@ export class ScheduleService {
   }
 
   private groupByDateAndTime(items: AgendaItem[]): { monthYear: string; days: { date: Date; items: AgendaItem[] }[] }[] {
-    const groupedByMonthYear = items.reduce((acc, item) => {
+    const groupedByMonthYear = items.reduce<Record<string, Record<string, AgendaItem[]>>>((acc, item) => {
       const monthYear = new Date(item.startDate).toLocaleString('default', { month: 'long', year: 'numeric' });
       const date = new Date(item.startDate).toDateString();
       acc[monthYear] = acc[monthYear] || {};
@@ -144,6 +144,9 @@ export class ScheduleService {
   }
 
   async refreshBreakoutCapacity(event: EventModel): Promise<void> {
+    if (!event.id) {
+      return;
+    }
     try {
       const counts = await this.eventRegistrationService.getSessionCounts(event.id);
       this.traininlist = new Map(Object.entries(counts));

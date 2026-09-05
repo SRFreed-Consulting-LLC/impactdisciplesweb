@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IOnApproveCallbackData, IPayPalConfig, PayPalScriptService } from 'ngx-paypal';
 import { CartItem, CheckoutForm } from '@impact-common/shared/models/utils/cart.model';
+import { Phone } from '@impact-common/shared/models/domain/utils/phone.model';
 import { WebConfigModel } from '@impact-common/shared/models/utils/web-config.model';
 import { ShippingService } from 'src/app/common/services/data/shipping.service';
 import { WebConfigService } from 'src/app/common/services/data/web-config.service';
@@ -174,7 +175,7 @@ export class CheckoutComponent implements OnInit {
       return;
     }
     this.payPalScriptService.registerPayPalScript({
-      clientId: this.webConfig.paypalClientId,
+      clientId: this.webConfig.paypalClientId ?? '',
       currency: this.currency,
       commit: 'true',
       funding: false,
@@ -194,7 +195,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   isShippingAddressNeeded(): boolean {
-    const shippingNotRequired = this.checkoutForm.cartItems
+    const shippingNotRequired = (this.checkoutForm.cartItems ?? [])
       .map(item => item.isEBook || item.isEvent || item.isDigitalBook)
       .every(Boolean);
 
@@ -202,11 +203,11 @@ export class CheckoutComponent implements OnInit {
   }
 
   subtotal(): number {
-    return this.serverBreakdown ? this.serverBreakdown.subtotal : this.pricingService.cartSubtotal(this.checkoutForm.cartItems);
+    return this.serverBreakdown ? this.serverBreakdown.subtotal : this.pricingService.cartSubtotal(this.checkoutForm.cartItems ?? []);
   }
 
   totalDiscount(): number {
-    return this.serverBreakdown ? this.serverBreakdown.totalDiscount : this.pricingService.cartDiscount(this.checkoutForm.cartItems);
+    return this.serverBreakdown ? this.serverBreakdown.totalDiscount : this.pricingService.cartDiscount(this.checkoutForm.cartItems ?? []);
   }
 
   orderTotal(): number {
@@ -267,7 +268,7 @@ export class CheckoutComponent implements OnInit {
         this.orderError = true;
         this.toastService.notify({ message: 'We could not get a shipping rate. Please try again.', type: 'error' });
         this.loggerService.logMessage(
-          'CHECKOUT', this.checkoutForm.email, 'Failed to quote shipping.', { err: String(err) }
+          'CHECKOUT', this.checkoutForm.email ?? '', 'Failed to quote shipping.', { err: String(err) }
         ).subscribe();
       }
       if (quoted) {
@@ -294,7 +295,7 @@ export class CheckoutComponent implements OnInit {
     this.checkoutForm.firstName = customer.firstName;
     this.checkoutForm.lastName = customer.lastName;
     this.checkoutForm.email = customer.email;
-    this.checkoutForm.phone = { ...this.checkoutForm.phone, number: customer.phone.number };
+    this.checkoutForm.phone = { ...(this.checkoutForm.phone ?? new Phone()), number: customer.phone.number };
     this.checkoutForm.isNewsletter = customer.isNewsletter;
 
     if (this.isShippingAddressNeeded()) {
@@ -339,25 +340,36 @@ export class CheckoutComponent implements OnInit {
       // undefined webConfig.
       await this.webConfigReady;
 
+      // The contract types every field on the answer optional because one
+      // shape serves both outcomes; each branch checks for the fields its
+      // outcome promises, and a malformed answer lands in the catch below
+      // as a checkout error rather than a TypeError.
       if (result.free) {
         // Free (fully covered by a coupon, or genuinely $0) -- the server
         // already wrote the purchase record, since there's no payment to
         // capture first.
+        if (!result.checkoutForm) {
+          throw new Error('free order answer carried no checkout form');
+        }
         await this.finishCheckout(result.checkoutForm);
       } else {
-        this.serverBreakdown = result.breakdown;
-        this.checkoutForm.estimatedTaxes = result.breakdown.estimatedTaxes;
-        this.checkoutForm.taxRate = result.breakdown.taxRate;
-        this.checkoutForm.taxSource = result.breakdown.taxSource;
-        this.checkoutForm.shippingDiscount = result.breakdown.shippingDiscount;
-        this.checkoutForm.shippingDiscountReason = result.breakdown.shippingDiscountReason;
+        const breakdown = result.breakdown;
+        if (!breakdown || !result.orderId) {
+          throw new Error('paid order answer carried no breakdown or order id');
+        }
+        this.serverBreakdown = breakdown;
+        this.checkoutForm.estimatedTaxes = breakdown.estimatedTaxes;
+        this.checkoutForm.taxRate = breakdown.taxRate;
+        this.checkoutForm.taxSource = breakdown.taxSource;
+        this.checkoutForm.shippingDiscount = breakdown.shippingDiscount;
+        this.checkoutForm.shippingDiscountReason = breakdown.shippingDiscountReason;
         this.createPaypalConfig(result.orderId);
       }
     } catch (err) {
       this.orderError = true;
       this.toastService.notify({ message: 'We could not start checkout. Please try again.', type: 'error' });
       this.loggerService.logMessage(
-        'CHECKOUT', this.checkoutForm.email, 'Failed to create order.', { err: String(err) }
+        'CHECKOUT', this.checkoutForm.email ?? '', 'Failed to create order.', { err: String(err) }
       ).subscribe();
     }
   }
@@ -365,13 +377,18 @@ export class CheckoutComponent implements OnInit {
   // Only ids/quantities/selections -- see checkout-order.service.ts's own
   // comment on why a price is never included here.
   private buildOrderRequest(): CheckoutOrderRequest {
+    const attribution = this.attributionService.get();
     return {
-      cartItems: this.checkoutForm.cartItems.map(item => ({
-        id: item.id,
+      // A cart line is always a product document, so it always has an id;
+      // the model's id is optional only for the moment before a write.
+      cartItems: (this.checkoutForm.cartItems ?? []).map(item => ({
+        id: item.id!,
         isEvent: item.isEvent,
         isEBook: item.isEBook,
         isDigitalBook: item.isDigitalBook,
-        orderQuantity: item.orderQuantity,
+        // A line with no quantity is sent as 0, which the server refuses
+        // exactly as it refused the missing key - never invented as 1.
+        orderQuantity: item.orderQuantity ?? 0,
         size: item.size,
         color: item.color,
         language: item.language,
@@ -391,14 +408,14 @@ export class CheckoutComponent implements OnInit {
       shippingRateId: this.checkoutForm.shippingRateId,
       // Campaign attribution captured on landing (Campaign Manager v2,
       // Phase 4) - the server validates before crediting any campaign.
-      ...(this.attributionService.get() ? { attribution: this.attributionService.get() } : {})
+      ...(attribution ? { attribution } : {})
     };
   }
 
   private createPaypalConfig(orderId: string): void {
     this.payPalConfig = {
       currency: this.currency,
-      clientId: this.webConfig.paypalClientId,
+      clientId: this.webConfig.paypalClientId ?? '',
       createOrderOnServer: () => Promise.resolve(orderId),
       advanced: { commit: 'true' },
       style: { label: 'paypal', layout: 'vertical', color: 'blue', shape: 'rect' },
@@ -421,11 +438,14 @@ export class CheckoutComponent implements OnInit {
             return Promise.resolve();
           }
 
+          if (!result.checkoutForm) {
+            throw new Error('capture answer carried no checkout form');
+          }
           return this.finishCheckout(result.checkoutForm);
         }).catch(err => {
           this.toastService.notify({ message: 'There was an error processing your payment. Please try again.', type: 'error' });
           this.loggerService.logMessage(
-            'CHECKOUT', this.checkoutForm.email, 'Failed to capture PayPal payment.', { err: String(err), orderId }
+            'CHECKOUT', this.checkoutForm.email ?? '', 'Failed to capture PayPal payment.', { err: String(err), orderId }
           ).subscribe();
         }).finally(() => {
           this.submitting = false;

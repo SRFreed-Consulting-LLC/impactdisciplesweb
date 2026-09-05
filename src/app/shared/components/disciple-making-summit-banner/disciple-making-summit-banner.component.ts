@@ -29,7 +29,7 @@ export class DiscipleMakingSummitBannerComponent implements OnInit, OnDestroy {
 
   @Input() ctaTitle = HOME_SUMMIT_DEFAULT.ctaTitle;
 
-  public dms: EventModel;
+  public dms?: EventModel;
   public days = 0;
   public hours = 0;
   public minutes = 0;

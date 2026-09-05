@@ -21,29 +21,29 @@
                   <div class="col-12"><h4>Customer Information</h4></div>
                   <div class="col-md-6 checkout-form__field">
                     <label for="checkout-firstName">First Name<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-firstName" type="text" formControlName="firstName" [class.is-invalid]="customerForm.get('firstName').invalid && customerForm.get('firstName').touched">
-                    @if (customerForm.get('firstName').invalid && customerForm.get('firstName').touched) {
+                    <input id="checkout-firstName" type="text" formControlName="firstName" [class.is-invalid]="customerForm.get('firstName')?.invalid && customerForm.get('firstName')?.touched">
+                    @if (customerForm.get('firstName')?.invalid && customerForm.get('firstName')?.touched) {
                       <div class="checkout-form__error">First Name is required</div>
                     }
                   </div>
                   <div class="col-md-6 checkout-form__field">
                     <label for="checkout-lastName">Last Name<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-lastName" type="text" formControlName="lastName" [class.is-invalid]="customerForm.get('lastName').invalid && customerForm.get('lastName').touched">
-                    @if (customerForm.get('lastName').invalid && customerForm.get('lastName').touched) {
+                    <input id="checkout-lastName" type="text" formControlName="lastName" [class.is-invalid]="customerForm.get('lastName')?.invalid && customerForm.get('lastName')?.touched">
+                    @if (customerForm.get('lastName')?.invalid && customerForm.get('lastName')?.touched) {
                       <div class="checkout-form__error">Last Name is required</div>
                     }
                   </div>
                   <div class="col-md-6 checkout-form__field">
                     <label for="checkout-email">Email Address<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-email" type="email" formControlName="email" [class.is-invalid]="customerForm.get('email').invalid && customerForm.get('email').touched">
-                    @if (customerForm.get('email').invalid && customerForm.get('email').touched) {
+                    <input id="checkout-email" type="email" formControlName="email" [class.is-invalid]="customerForm.get('email')?.invalid && customerForm.get('email')?.touched">
+                    @if (customerForm.get('email')?.invalid && customerForm.get('email')?.touched) {
                       <div class="checkout-form__error">Email Address is required</div>
                     }
                   </div>
                   <div class="col-md-6 checkout-form__field" formGroupName="phone">
                     <label for="checkout-phone">Phone Number<span class="checkout-form__required">*</span></label>
-                    <input id="checkout-phone" type="tel" formControlName="number" [class.is-invalid]="customerForm.get('phone.number').invalid && customerForm.get('phone.number').touched">
-                    @if (customerForm.get('phone.number').invalid && customerForm.get('phone.number').touched) {
+                    <input id="checkout-phone" type="tel" formControlName="number" [class.is-invalid]="customerForm.get('phone.number')?.invalid && customerForm.get('phone.number')?.touched">
+                    @if (customerForm.get('phone.number')?.invalid && customerForm.get('phone.number')?.touched) {
                       <div class="checkout-form__error">Phone Number is required</div>
                     }
                   </div>
@@ -59,8 +59,8 @@
                     <div class="col-12"><h4>Shipping Address</h4></div>
                     <div class="col-12 checkout-form__field">
                       <label for="checkout-address1">Address<span class="checkout-form__required">*</span></label>
-                      <input id="checkout-address1" type="text" formControlName="address1" placeholder="Street Address" [class.is-invalid]="shippingAddressForm.get('address1').invalid && shippingAddressForm.get('address1').touched">
-                      @if (shippingAddressForm.get('address1').invalid && shippingAddressForm.get('address1').touched) {
+                      <input id="checkout-address1" type="text" formControlName="address1" placeholder="Street Address" [class.is-invalid]="shippingAddressForm.get('address1')?.invalid && shippingAddressForm.get('address1')?.touched">
+                      @if (shippingAddressForm.get('address1')?.invalid && shippingAddressForm.get('address1')?.touched) {
                         <div class="checkout-form__error">Address is required</div>
                       }
                     </div>
@@ -69,27 +69,27 @@
                     </div>
                     <div class="col-md-6 checkout-form__field">
                       <label for="checkout-city">City<span class="checkout-form__required">*</span></label>
-                      <input id="checkout-city" type="text" formControlName="city" placeholder="City" [class.is-invalid]="shippingAddressForm.get('city').invalid && shippingAddressForm.get('city').touched">
-                      @if (shippingAddressForm.get('city').invalid && shippingAddressForm.get('city').touched) {
+                      <input id="checkout-city" type="text" formControlName="city" placeholder="City" [class.is-invalid]="shippingAddressForm.get('city')?.invalid && shippingAddressForm.get('city')?.touched">
+                      @if (shippingAddressForm.get('city')?.invalid && shippingAddressForm.get('city')?.touched) {
                         <div class="checkout-form__error">City is required</div>
                       }
                     </div>
                     <div class="col-md-3 checkout-form__field">
                       <label for="checkout-state">State<span class="checkout-form__required">*</span></label>
-                      <select id="checkout-state" formControlName="state" [class.is-invalid]="shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched">
+                      <select id="checkout-state" formControlName="state" [class.is-invalid]="shippingAddressForm.get('state')?.invalid && shippingAddressForm.get('state')?.touched">
                         <option value="" disabled>Select...</option>
                         @for (state of states; track state.code) {
                           <option [value]="state.code">{{ state.name }}</option>
                         }
                       </select>
-                      @if (shippingAddressForm.get('state').invalid && shippingAddressForm.get('state').touched) {
+                      @if (shippingAddressForm.get('state')?.invalid && shippingAddressForm.get('state')?.touched) {
                         <div class="checkout-form__error">State is required</div>
                       }
                     </div>
                     <div class="col-md-3 checkout-form__field">
                       <label for="checkout-zip">Zip Code<span class="checkout-form__required">*</span></label>
-                      <input id="checkout-zip" type="text" formControlName="zip" placeholder="Zip Code" [class.is-invalid]="shippingAddressForm.get('zip').invalid && shippingAddressForm.get('zip').touched">
-                      @if (shippingAddressForm.get('zip').invalid && shippingAddressForm.get('zip').touched) {
+                      <input id="checkout-zip" type="text" formControlName="zip" placeholder="Zip Code" [class.is-invalid]="shippingAddressForm.get('zip')?.invalid && shippingAddressForm.get('zip')?.touched">
+                      @if (shippingAddressForm.get('zip')?.invalid && shippingAddressForm.get('zip')?.touched) {
                         <div class="checkout-form__error">Zip Code is required</div>
                       }
                     </div>
@@ -118,7 +118,7 @@
                   <div class="customer-details">
                     <span>{{ checkoutForm?.firstName + ' ' + checkoutForm.lastName}}</span>
                     <span>{{ checkoutForm.email}}</span>
-                    <span>{{checkoutForm.phone.number}}</span>
+                    <span>{{checkoutForm.phone?.number}}</span>
                   </div>
                   <a (click)="backToShipping()" (keydown.enter)="backToShipping()" (keydown.space)="backToShipping()" tabindex="0" role="button">Change</a>
                 </div>
@@ -177,7 +177,7 @@
                       <strong class="product-quantity"> × {{ cartItem?.orderQuantity }}</strong>
                     </div>
                     <div class="col-lg-4">
-                      @if (cartItem.discount > 0) {
+                      @if ((cartItem.discount ?? 0) > 0) {
                         <span class="after-discount">Coupon applied</span>
                       }
                     </div>
@@ -201,7 +201,7 @@
                 @if (isShippingAddressNeeded()) {
                   <div class="row">
                     <div class="col-lg-6">Shipping</div>
-                    @if (checkoutForm.shippingRate > 0) {
+                    @if ((checkoutForm.shippingRate ?? 0) > 0) {
                       <div class="col-lg-4"></div>
                       <div class="col-lg-2 text-end">{{ checkoutForm.shippingRate | currency }}</div>
                     } @else {
@@ -215,7 +215,7 @@
                     }
                   </div>
                 }
-                @if (checkoutForm.shippingDiscount > 0) {
+                @if ((checkoutForm.shippingDiscount ?? 0) > 0) {
                   <div class="row">
                     <div class="col-lg-6">Shipping Discount</div>
                     <div class="col-lg-4 text-end">{{ checkoutForm.shippingDiscountReason }}</div>
@@ -225,10 +225,10 @@
                 @if (isShippingAddressNeeded() && subtotal() > 0) {
                   <div class="row">
                     <div class="col-lg-6">Estimated Tax</div>
-                    @if (checkoutForm.estimatedTaxes > 0) {
+                    @if ((checkoutForm.estimatedTaxes ?? 0) > 0) {
                       <div class="col-lg-4"></div>
                       <div class="col-lg-2 text-end">{{ checkoutForm.estimatedTaxes | currency }}</div>
-                    } @else if (checkoutForm.shippingAddress.state === 'Georgia') {
+                    } @else if (checkoutForm.shippingAddress?.state === 'Georgia') {
                       <div class="col-lg-6 text-end shipping-text">
                         @if (showEstimatedTaxesSpinner) {
                           <app-spinner [loading]="true" size="sm"></app-spinner>

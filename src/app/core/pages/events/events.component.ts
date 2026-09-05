@@ -15,7 +15,7 @@ import { EffectFade, Pagination } from 'swiper/modules';
 export class EventsComponent implements AfterViewInit, OnInit  {
   @ViewChild('heroSliderContainer') heroSliderContainer!: ElementRef;
   public swiperInstance: Swiper | undefined;
-  public dms: EventModel;
+  public dms?: EventModel;
 
   eventsList: EventModel[] = [];
 
@@ -34,7 +34,10 @@ export class EventsComponent implements AfterViewInit, OnInit  {
 
       this.isSummitPosted = await this.eventService.isSummitPosted();
 
+      // An event with no end date is not listed (before strict null checks
+      // it threw here and blanked BOTH lists).
       this.eventsList = events.filter(event => {
+        if (!event.endDate) return false;
         const eventEndDate = new Date(event.endDate.toString());
         return eventEndDate >= currentDate && !event.isOnline;
       });
@@ -50,11 +53,12 @@ export class EventsComponent implements AfterViewInit, OnInit  {
       });
 
       this.onlineEventsList = events.filter(event => {
+        if (!event.endDate) return false;
         const eventStartDate = new Date(event.endDate.toString());
         return eventStartDate >= currentDate && event.isOnline;
       });
 
-      const dateSorter = (a,b) => {
+      const dateSorter = (a: EventModel, b: EventModel) => {
         return toMillis(a.startDate) - toMillis(b.startDate)
       };
 

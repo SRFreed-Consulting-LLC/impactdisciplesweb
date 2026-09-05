@@ -90,12 +90,13 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   increment(): void {
-    this.cartItem.orderQuantity = this.cartItem.orderQuantity + 1;
+    this.cartItem.orderQuantity = (this.cartItem.orderQuantity ?? 0) + 1;
   }
 
   decrement(): void {
-    if (this.cartItem.orderQuantity > 1) {
-      this.cartItem.orderQuantity = this.cartItem.orderQuantity - 1;
+    const quantity = this.cartItem.orderQuantity ?? 0;
+    if (quantity > 1) {
+      this.cartItem.orderQuantity = quantity - 1;
     }
   }
 
@@ -115,9 +116,9 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addCartProduct(): void {
-    const sizeValid = !(this.product.sizes?.length > 0) || !!this.cartItem.size;
-    const colorValid = !(this.product.colors?.length > 0) || !!this.cartItem.color;
-    const languageValid = !(this.product.languages?.length > 0) || !!this.cartItem.language;
+    const sizeValid = !((this.product.sizes?.length ?? 0) > 0) || !!this.cartItem.size;
+    const colorValid = !((this.product.colors?.length ?? 0) > 0) || !!this.cartItem.color;
+    const languageValid = !((this.product.languages?.length ?? 0) > 0) || !!this.cartItem.language;
 
     this.sizeError = !sizeValid;
     this.colorError = !colorValid;

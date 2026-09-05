@@ -80,8 +80,8 @@
                         @if (line.discountReason === 'coupon') {
                           <div class="badge-coupon">✓ Coupon applied</div>
                         }
-                        @if (lineNotes.get(line.item.id)) {
-                          <div class="badge-info">ⓘ {{ lineNotes.get(line.item.id) }}</div>
+                        @if (lineNotes.get(line.item.id!)) {
+                          <div class="badge-info">ⓘ {{ lineNotes.get(line.item.id!) }}</div>
                         }
                       </td>
                       <td class="product-price" data-title="Unit Price">

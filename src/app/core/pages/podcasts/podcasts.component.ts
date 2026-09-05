@@ -40,7 +40,7 @@ export class PodcastsComponent implements OnInit {
 
   podcasts: PodCastModel[] = [];
   filteredPodcasts: PodCastModel[] = [];
-  selectedPodcast: PodCastModel;
+  selectedPodcast: PodCastModel | null = null;
   isListView = false;
   isPlaying = false;
   public webConfig: WebConfigModel;
@@ -84,7 +84,7 @@ export class PodcastsComponent implements OnInit {
 
   private applyPage(): void {
     this.paginate = this.getPager(this.podcasts.length, Number(+this.pageNo), this.pageSize);
-    this.filteredPodcasts = this.podcasts.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+    this.filteredPodcasts = this.podcasts.slice(this.paginate.startIndex ?? 0, (this.paginate.endIndex ?? -1) + 1);
   }
 
   selectPodcast(podcast: PodCastModel) {
@@ -105,7 +105,7 @@ export class PodcastsComponent implements OnInit {
       (podcast) =>
         podcast.title?.toLowerCase().includes(termLower) ||
         podcast.description?.toLowerCase().includes(termLower) ||
-        podcast.tags?.some((tag) => tag.tag.toLowerCase().includes(termLower)) ||
+        podcast.tags?.some((tag) => tag.tag?.toLowerCase().includes(termLower)) ||
         podcast.date.toString().includes(termLower)
     );
     this.paginate = this.getPager(this.filteredPodcasts.length, Number(+this.pageNo), this.pageSize);

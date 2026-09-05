@@ -29,8 +29,20 @@
     "allowSyntheticDefaultImports": true,
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
+    // strict is the family switch, and until 2026-09-05 the two flags that
+    // carry most of it were turned back off below (noImplicitAny and
+    // strictNullChecks). CLAUDE.md used to say re-enabling them "surfaces
+    // ~900 pre-existing compile errors"; measured, it was 157 in the app
+    // and one in the specs - thirteen untyped fromFirestore hooks in the
+    // DAO, a cluster in the shipping and schedule services, and the store.
+    // Among them: getById() resolving undefined behind a Promise<T>, an
+    // event with no end date blanking BOTH event lists, and a schedule
+    // page that went blank on an event with no location. Both stay on.
+    //
+    // strictPropertyInitialization is the one still off: a different kind
+    // of work (every @Input and lifecycle-filled field), tracked separately.
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -44,7 +56,7 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "lib": [
       "ES2022",

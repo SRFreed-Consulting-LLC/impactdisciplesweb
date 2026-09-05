@@ -28,8 +28,8 @@
               @if (line.discountReason === 'coupon') {
                 <div class="cart-drawer__badge cart-drawer__badge--coupon">✓ Coupon applied</div>
               }
-              @if (lineNotes.get(line.item.id)) {
-                <div class="cart-drawer__badge cart-drawer__badge--info">ⓘ {{ lineNotes.get(line.item.id) }}</div>
+              @if (lineNotes.get(line.item.id!)) {
+                <div class="cart-drawer__badge cart-drawer__badge--info">ⓘ {{ lineNotes.get(line.item.id!) }}</div>
               }
             </div>
             <button type="button" class="cart-drawer__remove" (click)="remove(line.item)" aria-label="Remove item">

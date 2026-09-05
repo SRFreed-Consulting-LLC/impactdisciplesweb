@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="dms__button">
-      <a target="_blank" appAnimate="fadeInUpFour" [href]="'/summit/' + (dms?.startDate ? (dms.startDate.toString() | date: 'yyyy') : '')" class="impact-btn impact-btn-blue">{{ ctaTitle }}</a>
+      <a target="_blank" appAnimate="fadeInUpFour" [href]="'/summit/' + (dms?.startDate ? (dms?.startDate?.toString() | date: 'yyyy') : '')" class="impact-btn impact-btn-blue">{{ ctaTitle }}</a>
     </div>
   </div>
 </section>

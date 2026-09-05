@@ -16,18 +16,20 @@ export class LocationService extends BaseService<LocationModel>{
   // across many event cards triggers one Firestore read, not one per card
   // (P10). Locations don't change within a public visit; a failed read is
   // evicted so a transient error isn't cached permanently.
-  private byIdCache = new Map<string, Promise<LocationModel>>();
+  private byIdCache = new Map<string, Promise<LocationModel | undefined>>();
 
-  getByIdCached(id: string): Promise<LocationModel> {
+  getByIdCached(id: string): Promise<LocationModel | undefined> {
     if (!id) {
       return Promise.resolve(undefined);
     }
-    if (!this.byIdCache.has(id)) {
-      this.byIdCache.set(id, this.getById(id).catch((err) => {
+    let cached = this.byIdCache.get(id);
+    if (!cached) {
+      cached = this.getById(id).catch((err) => {
         this.byIdCache.delete(id);
         throw err;
-      }));
+      });
+      this.byIdCache.set(id, cached);
     }
-    return this.byIdCache.get(id);
+    return cached;
   }
 }

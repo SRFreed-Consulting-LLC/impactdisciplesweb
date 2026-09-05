@@ -32,7 +32,7 @@ export class EBooksComponent implements OnInit {
   public paginate: Pager = {};
   public pageNo = 1;
   public pageSize = 10;
-  public selectedFilter: FilterType = null;
+  public selectedFilter: FilterType | null = null;
   public FILTER_TYPE = FilterType;
   public filterOptions = [
     { text: 'View All', value: FilterType.viewAll },
@@ -71,14 +71,14 @@ export class EBooksComponent implements OnInit {
 
   setProducts(products: ProductModel[]): void {
     this.paginate = this.catalog.getPager(products.length, Number(+this.pageNo), this.pageSize);
-    this.filteredProductItems = products.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+    this.filteredProductItems = products.slice(this.paginate.startIndex ?? 0, (this.paginate.endIndex ?? -1) + 1);
   }
 
   searchProducts(searchTerm: string): void {
     const termLower = searchTerm.toLowerCase();
     this.setProducts(this.products.filter(product =>
       product?.title?.toLowerCase().includes(termLower) ||
-      product?.tags?.some(tag => tag.tag.toLowerCase().includes(termLower))
+      product?.tags?.some(tag => tag.tag?.toLowerCase().includes(termLower))
     ));
   }
 

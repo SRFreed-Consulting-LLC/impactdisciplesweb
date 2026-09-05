@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EventModel } from '@impact-common/shared/models/domain/event.model';
-import { CustomerModel } from 'src/app/common/models/domain/utils/customer.model';
 import { EventRegistrationService } from 'src/app/common/services/data/event-registration.service';
 import { EventRegistrationModel } from '@impact-common/shared/models/domain/event-registration.model';
 import { EventService } from 'src/app/common/services/data/event.service';
@@ -25,7 +24,9 @@ import { ToastService, ToastType } from 'src/app/shared/utils/services/toast.ser
 })
 export class ScheduleComponent implements OnInit, OnDestroy {
   event: EventModel;
-  currentUser: CustomerModel | EventRegistrationModel;
+  // Always the registration from the emailed link - the CustomerModel half
+  // of the old union was never assigned and only hid trainingSessions.
+  currentUser: EventRegistrationModel | null = null;
   activeDay: DaysModel;
   allCourses: ScheduleModel[];
   fullSchedule: ScheduleModel[];
@@ -75,12 +76,16 @@ export class ScheduleComponent implements OnInit, OnDestroy {
               this.coachesList = await this.coachService.getAll();
             }
 
-            this.roomsList = await this.locationService.getById(typeof this.event.location=='string'? this.event.location : this.event.location.id).then(location => {
-              return location.trainingrooms;
-            })
+            // An event with no location, or a location doc that is gone,
+            // means no rooms - it used to be a TypeError inside this
+            // subscribe, which left the whole schedule blank.
+            const locationId = typeof this.event.location == 'string' ? this.event.location : this.event.location?.id;
+            const location = locationId ? await this.locationService.getById(locationId) : undefined;
+            this.roomsList = location?.trainingrooms ?? [];
 
-            this.coachesMap = new Map(this.coachesList.map(coach => [coach.id, coach]));
-            this.roomsMap = new Map(this.roomsList.map(room => [room.id, room]));
+            // Loaded documents always carry their id (the DAO sets it).
+            this.coachesMap = new Map(this.coachesList.map(coach => [coach.id!, coach]));
+            this.roomsMap = new Map(this.roomsList.map(room => [room.id!, room]));
 
             this.scheduleService.monitorBreakoutCapacity(this.event);
 
@@ -111,10 +116,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     // Fetch session IDs and organize schedules
     // The freshly-reloaded registration itself carries the session list -
     // no separate by-email query (pre-prod #2: email is not a credential).
-    this.currentUser = await this.eventRegistrationService.getEventRegistrationById(this.currentUser.id);
+    const registrationId = this.currentUser?.id;
+    if (!registrationId) {
+      return;
+    }
+    this.currentUser = await this.eventRegistrationService.getEventRegistrationById(registrationId);
     this.scheduleService.sessionIds = this.currentUser?.trainingSessions ?? [];
     await this.scheduleService.refreshBreakoutCapacity(this.event);
-    this.scheduleService.organizeAgendaItems(this.event.agendaItems);
+    this.scheduleService.organizeAgendaItems(this.event.agendaItems ?? []);
 
     // Update local properties from AgendaService
     this.updateLocalSchedules();
@@ -141,6 +150,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   onNavigateToBreakouts(timeGroup: TimeGroupsModel) {
+    if (!this.currentUser) {
+      return;
+    }
     this.scheduleEventBus.dispatchShowBreakoutSessionsModal({
       allCourses: this.allCourses,
       myCourses: this.myCourses,

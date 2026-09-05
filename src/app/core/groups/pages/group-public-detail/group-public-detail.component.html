@@ -105,7 +105,7 @@
               <h4>The book they're studying</h4>
               <div class="group-detail__book">
                 @if (book?.imageUrl?.url) {
-                  <img loading="lazy" [src]="book.imageUrl.url" [alt]="book.title" />
+                  <img loading="lazy" [src]="book?.imageUrl?.url" [alt]="book?.title" />
                 }
                 <div>
                   <p class="group-detail__book-title">{{ book?.title || group.bookTitle }}</p>

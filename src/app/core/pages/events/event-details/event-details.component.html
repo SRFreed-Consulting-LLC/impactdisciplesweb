@@ -57,10 +57,10 @@
           <h2>{{ event?.eventName }}</h2>
           <span class="event-details__right-subtitle">
             @if (event?.startDate) {
-              <span class="date">{{ event.startDate.toString()| date: 'M/d' }} </span>
+              <span class="date">{{ event.startDate?.toString()| date: 'M/d' }} </span>
             }
             @if (event?.endDate) {
-              <span class="date">- {{ event.endDate.toString() | date: 'M/d' }} </span>
+              <span class="date">- {{ event.endDate?.toString() | date: 'M/d' }} </span>
             }
             <!-- venue OR location: a single-site-org event has NO location
                  child by design (the org's own address IS the venue, carried
@@ -101,28 +101,28 @@
                           <div class="attendee-accordion-item__body mb-25">
                             <div class="attendee-form__field">
                               <label [attr.for]="'attendee-firstName-' + i">First Name<span class="attendee-form__required">*</span></label>
-                              <input [id]="'attendee-firstName-' + i" type="text" formControlName="firstName" [class.is-invalid]="attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched">
-                              @if (attendeeGroup.get('firstName').invalid && attendeeGroup.get('firstName').touched) {
+                              <input [id]="'attendee-firstName-' + i" type="text" formControlName="firstName" [class.is-invalid]="attendeeGroup.get('firstName')?.invalid && attendeeGroup.get('firstName')?.touched">
+                              @if (attendeeGroup.get('firstName')?.invalid && attendeeGroup.get('firstName')?.touched) {
                                 <div class="attendee-form__error">First Name is required</div>
                               }
                             </div>
                             <div class="attendee-form__field">
                               <label [attr.for]="'attendee-lastName-' + i">Last Name<span class="attendee-form__required">*</span></label>
-                              <input [id]="'attendee-lastName-' + i" type="text" formControlName="lastName" [class.is-invalid]="attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched">
-                              @if (attendeeGroup.get('lastName').invalid && attendeeGroup.get('lastName').touched) {
+                              <input [id]="'attendee-lastName-' + i" type="text" formControlName="lastName" [class.is-invalid]="attendeeGroup.get('lastName')?.invalid && attendeeGroup.get('lastName')?.touched">
+                              @if (attendeeGroup.get('lastName')?.invalid && attendeeGroup.get('lastName')?.touched) {
                                 <div class="attendee-form__error">Last Name is required</div>
                               }
                             </div>
                             <div class="attendee-form__field">
                               <label [attr.for]="'attendee-email-' + i">Email<span class="attendee-form__required">*</span></label>
-                              <input [id]="'attendee-email-' + i" type="email" formControlName="email" [class.is-invalid]="attendeeGroup.get('email').invalid && attendeeGroup.get('email').touched">
-                              @if (attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('required')) {
+                              <input [id]="'attendee-email-' + i" type="email" formControlName="email" [class.is-invalid]="attendeeGroup.get('email')?.invalid && attendeeGroup.get('email')?.touched">
+                              @if (attendeeGroup.get('email')?.touched && attendeeGroup.get('email')?.hasError('required')) {
                                 <div class="attendee-form__error">Email Address is required</div>
                               }
-                              @if (attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('alreadyRegistered')) {
+                              @if (attendeeGroup.get('email')?.touched && attendeeGroup.get('email')?.hasError('alreadyRegistered')) {
                                 <div class="attendee-form__error">A Person with this email address has already registered!</div>
                               }
-                              @if (attendeeGroup.get('email').touched && attendeeGroup.get('email').hasError('duplicateEmail')) {
+                              @if (attendeeGroup.get('email')?.touched && attendeeGroup.get('email')?.hasError('duplicateEmail')) {
                                 <div class="attendee-form__error">Each email registered must be unique!</div>
                               }
                             </div>

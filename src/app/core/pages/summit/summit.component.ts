@@ -18,7 +18,7 @@ import { EventService } from 'src/app/common/services/data/event.service';
 })
 export class SummitComponent implements OnInit, OnDestroy {
 
-  summit: EventModel;
+  summit: EventModel | null = null;
   coaches: CoachModel[] = [];
   currentIndex = 0;
   visibleSlides = 3;

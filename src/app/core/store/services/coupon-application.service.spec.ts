@@ -67,7 +67,9 @@ describe('CouponApplicationService', () => {
     const result = await service.validateAndApply(items, 'SAVE25');
 
     expect(items[0].discount).toBe(0);
-    expect(items[0].discountPrice).toBeNull();
+    // Cleared to undefined, not null, since strict null checks (2026-09-05):
+    // the model says number | undefined and nothing reads the value back.
+    expect(items[0].discountPrice).toBeUndefined();
     expect(result.applied).toBeFalse();
     expect(result.lineResults[0].applied).toBeFalse();
     expect(result.lineResults[0].skippedReason).toBeTruthy();
@@ -190,6 +192,8 @@ describe('CouponApplicationService', () => {
     service.clear(items);
 
     expect(items[0].discount).toBe(0);
-    expect(items[0].discountPrice).toBeNull();
+    // Cleared to undefined, not null, since strict null checks (2026-09-05):
+    // the model says number | undefined and nothing reads the value back.
+    expect(items[0].discountPrice).toBeUndefined();
   });
 });

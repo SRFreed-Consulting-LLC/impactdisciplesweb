@@ -47,7 +47,7 @@ export class BlogComponent implements OnInit {
     ).subscribe((blogs) => {
       this.dmms = blogs.sort((a, b) => toMillis(b?.date) - toMillis(a?.date));
       this.paginate = this.getPager(this.dmms.length, Number(+this.pageNo), this.pageSize);
-      this.filteredDmms = this.dmms.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+      this.filteredDmms = this.dmms.slice(this.paginate.startIndex ?? 0, (this.paginate.endIndex ?? -1) + 1);
     });
   }
 

@@ -41,7 +41,7 @@ export class StoreComponent implements OnInit, OnDestroy {
   public filteredProductItems: ProductModel[] = [];
   public seriesItems: SeriesModel[] = [];
   public showSeriesInMainView = true;
-  public selectedFilter: FilterType = null;
+  public selectedFilter: FilterType | null = null;
   public FILTER_TYPE = FilterType;
   // Display text deliberately drops "View"/"View by" (e.g. "View All" ->
   // "All") - the dropdown now has its own "Sort By" label doing that job,
@@ -148,7 +148,7 @@ export class StoreComponent implements OnInit, OnDestroy {
     const termLower = searchTerm.toLowerCase();
     const results = this.products.filter(product =>
       product?.title?.toLowerCase().includes(termLower) ||
-      product?.tags?.some(tag => tag.tag.toLowerCase().includes(termLower))
+      product?.tags?.some(tag => tag.tag?.toLowerCase().includes(termLower))
     ).sort((a, b) => a.title.localeCompare(b.title));
 
     this.showSeriesInMainView = false;
@@ -165,7 +165,7 @@ export class StoreComponent implements OnInit, OnDestroy {
       case FilterType.viewBySeries:
         this.selectedFilter = FilterType.viewBySeries;
         this.seriesService.streamAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(seriesItems => {
-          this.seriesItems = seriesItems.sort((a, b) => a.order - b.order);
+          this.seriesItems = seriesItems.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
         });
         this.showSeriesInMainView = true;
         break;
@@ -183,11 +183,11 @@ export class StoreComponent implements OnInit, OnDestroy {
         break;
       case FilterType.category:
         this.selectedFilter = null;
-        this.setProducts(this.catalog.filterByCategory(this.products, filterItem.id));
+        this.setProducts(this.catalog.filterByCategory(this.products, filterItem?.id));
         break;
       case FilterType.series:
         this.selectedFilter = null;
-        this.setProducts(this.catalog.filterBySeries(this.products, filterItem.id));
+        this.setProducts(this.catalog.filterBySeries(this.products, filterItem?.id));
         break;
     }
   }

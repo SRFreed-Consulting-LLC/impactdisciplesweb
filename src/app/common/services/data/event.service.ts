@@ -15,7 +15,7 @@ export class EventService extends BaseService<EventModel>{
     this.fromFirestore = EventService.fromFirestore
   }
 
-  static readonly fromFirestore = (data): EventModel => {
+  static readonly fromFirestore = (data: EventModel): EventModel => {
     data.startDate = dateFromTimestamp(data.startDate as Timestamp);
     data.endDate = dateFromTimestamp(data.endDate as Timestamp);
 

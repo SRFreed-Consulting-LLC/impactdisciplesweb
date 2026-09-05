@@ -170,15 +170,17 @@ export class EventDetailsComponent implements OnInit {
   }
 
   increment() {
-    this.cartItem.attendees = [...this.cartItem.attendees, { firstName: '', lastName: '', email: '' }];
-    this.cartItem.orderQuantity = this.cartItem.attendees.length;
+    const attendees = [...(this.cartItem.attendees ?? []), { firstName: '', lastName: '', email: '' }];
+    this.cartItem.attendees = attendees;
+    this.cartItem.orderQuantity = attendees.length;
     this.attendeesForm.push(this.buildAttendeeGroup());
     this.calculateTotal();
   }
 
   decrement() {
-    if (this.cartItem.attendees.length > 1) {
-      this.cartItem.attendees = this.cartItem.attendees.slice(0, -1);
+    const attendees = this.cartItem.attendees ?? [];
+    if (attendees.length > 1) {
+      this.cartItem.attendees = attendees.slice(0, -1);
       this.cartItem.orderQuantity = this.cartItem.attendees.length;
       this.attendeesForm.removeAt(this.attendeesForm.length - 1);
       this.openIndexes.delete(this.attendeesForm.length);
@@ -263,7 +265,7 @@ export class EventDetailsComponent implements OnInit {
         // chain (the function does all three server-side, including the
         // confirmation email carrying the breakout link).
         return this.eventRegistrationService.registerForEvent({
-          eventId: this.event.id,
+          eventId: this.event.id!,
           firstName: value.firstName,
           lastName: value.lastName,
           email: value.email,
@@ -331,7 +333,7 @@ export class EventDetailsComponent implements OnInit {
   // under the hood) -- arrow-function class fields, same as before, so
   // `this` stays bound when passed as a bare reference into buildAttendeeGroup().
   alreadyRegisteredValidator = (control: AbstractControl): Promise<ValidationErrors | null> => {
-    if (!control.value || !this.event) {
+    if (!control.value || !this.event?.id) {
       return Promise.resolve(null);
     }
     return this.eventRegistrationService.isAlreadyRegistered(control.value, this.event.id).then(exists =>

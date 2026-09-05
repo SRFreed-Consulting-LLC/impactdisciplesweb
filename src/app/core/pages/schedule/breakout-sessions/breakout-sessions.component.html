@@ -43,8 +43,8 @@
                                       }
                                       <div class="sessions__item-details-item">
                                         <i class="fa-solid fa-users"></i>
-                                        <span>Capacity: {{viewCourseCapcaity(course.item.id)}} / {{ course.item.maxParticipants }}</span>
-                                        @if (viewCourseCapcaity(course.item.id) >= course.item.maxParticipants) {
+                                        <span>Capacity: {{viewCourseCapcaity(course.item.id!)}} / {{ course.item.maxParticipants }}</span>
+                                        @if (viewCourseCapcaity(course.item.id!) >= (course.item.maxParticipants ?? 0)) {
                                           <span style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;Full</span>
                                         }
                                       </div>
@@ -60,7 +60,7 @@
                                     <div class="col-12 alignText-start">
                                       <div class="coaches">
                                         <div class="coaches__wrapper">
-                                          @for (coach of course?.item.coaches; track coach) {
+                                          @for (coach of course?.item?.coaches; track coach) {
                                             <div class="coach">
                                               <div class="coach__img">
                                                 <img loading="lazy" class="transform" [src]="getCoachImg(coach)" [alt]="getCoachName(coach)" width="40">

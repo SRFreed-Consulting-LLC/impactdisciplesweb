@@ -19,6 +19,17 @@ interface ShippingRateResponse {
   rateResponse: { rates: ShippingRate[] };
 }
 
+// ShipEngine gets a key only when there is a value for it. Before strict
+// null checks this assigned `undefined` straight into the string fields and
+// JSON.stringify dropped the key on the wire; '' would be a DIFFERENT
+// payload (an empty phone is invalid where a missing one is optional), so
+// the absent-key behaviour is kept on purpose.
+function assignPresent<T extends object, K extends keyof T>(target: T, key: K, value: T[K] | undefined): void {
+  if (value !== undefined) {
+    target[key] = value;
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -39,11 +50,11 @@ export class ShippingService {
     let totalWeight: number;
 
     try {
-      const weightMap =  checkoutForm.cartItems.filter(item => item.isEvent == false).map(item => (item.weight? item.weight : 0) * item.orderQuantity);
+      const weightMap =  (checkoutForm.cartItems ?? []).filter(item => item.isEvent == false).map(item => (item.weight? item.weight : 0) * (item.orderQuantity ?? 0));
 
       totalWeight = (weightMap && weightMap.length > 0)? weightMap.reduce((a,b) => a + b) : 0;
     } catch(err){
-      this.logService.logMessage('SHIPPING REQUEST', checkoutForm.email, 'Error receieved calculating shipping: ', JSON.stringify(err));
+      this.logService.logMessage('SHIPPING REQUEST', checkoutForm.email ?? '', 'Error receieved calculating shipping: ', JSON.stringify(err));
 
       totalWeight = 0;
     }
@@ -76,24 +87,34 @@ export class ShippingService {
       const configs = await this.webConfigService.getAll();
 
       const toName: string = checkoutForm.firstName + ' ' + checkoutForm.lastName;
-      const toAddress: Address = checkoutForm.shippingAddress;
-      const toPhone: Phone = checkoutForm.phone;
+      const toAddress: Address | undefined = checkoutForm.shippingAddress;
+      const toPhone: Phone | undefined = checkoutForm.phone;
+      const from = configs[0];
+      // Same outcome these had before strict null checks - a TypeError on a
+      // missing address, phone or config landed in the catch below - but
+      // named, so the log says what was missing.
+      if (!toAddress || !toPhone) {
+        throw new Error('checkout form has no shipping address or phone');
+      }
+      if (!from) {
+        throw new Error('no web_config document to ship from');
+      }
 
       const shipping: ShippingModel = {...new ShippingModel()};
       shipping.shipTo.name = toName;
-      shipping.shipTo.phone = toPhone.number;
-      shipping.shipTo.addressLine1 = toAddress.address1;
-      shipping.shipTo.cityLocality = toAddress.city;
-      shipping.shipTo.stateProvince = toAddress.state;
-      shipping.shipTo.postalCode = toAddress.zip;
-      shipping.shipTo.countryCode = toAddress.country;
+      assignPresent(shipping.shipTo, 'phone', toPhone.number);
+      assignPresent(shipping.shipTo, 'addressLine1', toAddress.address1);
+      assignPresent(shipping.shipTo, 'cityLocality', toAddress.city);
+      assignPresent(shipping.shipTo, 'stateProvince', toAddress.state);
+      assignPresent(shipping.shipTo, 'postalCode', toAddress.zip);
+      assignPresent(shipping.shipTo, 'countryCode', toAddress.country);
 
       shipping.shipFrom.name = "Impact Disciples";
-      shipping.shipFrom.phone = configs[0].phone;
-      shipping.shipFrom.addressLine1 = configs[0].address.address1;
-      shipping.shipFrom.cityLocality = configs[0].address.city;
-      shipping.shipFrom.stateProvince = configs[0].address.state;
-      shipping.shipFrom.postalCode = configs[0].address.zip;
+      assignPresent(shipping.shipFrom, 'phone', from.phone);
+      assignPresent(shipping.shipFrom, 'addressLine1', from.address?.address1);
+      assignPresent(shipping.shipFrom, 'cityLocality', from.address?.city);
+      assignPresent(shipping.shipFrom, 'stateProvince', from.address?.state);
+      assignPresent(shipping.shipFrom, 'postalCode', from.address?.zip);
       shipping.shipFrom.countryCode = "US";
 
       const pkg: Package = {... new Package()};
@@ -109,7 +130,7 @@ export class ShippingService {
 
       return request;
     } catch (err) {
-      this.logService.logMessage('SHIPPING REQUEST', checkoutForm.email, 'Error receieved creating shipping request: ', JSON.stringify(err));
+      this.logService.logMessage('SHIPPING REQUEST', checkoutForm.email ?? '', 'Error receieved creating shipping request: ', String(err));
       return request;
     }
   }

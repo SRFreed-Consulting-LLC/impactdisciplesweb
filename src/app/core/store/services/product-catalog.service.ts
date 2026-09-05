@@ -115,11 +115,13 @@ export class ProductCatalogService {
     return [...products].sort((a, b) => (b.cost ?? 0) - (a.cost ?? 0));
   }
 
-  filterByCategory(products: ProductModel[], categoryId: string): ProductModel[] {
+  // Both accept an absent id (a tag or series document's id is optional in
+  // type) and simply match nothing, which is what they always did.
+  filterByCategory(products: ProductModel[], categoryId: string | undefined): ProductModel[] {
     return products.filter(p => p.category === categoryId).sort((a, b) => (a.categoryOrder ?? 0) - (b.categoryOrder ?? 0));
   }
 
-  filterBySeries(products: ProductModel[], seriesId: string): ProductModel[] {
+  filterBySeries(products: ProductModel[], seriesId: string | undefined): ProductModel[] {
     return products.filter(p => p.series === seriesId).sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
   }
 

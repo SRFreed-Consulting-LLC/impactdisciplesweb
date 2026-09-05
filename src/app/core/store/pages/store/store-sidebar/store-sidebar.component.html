@@ -33,17 +33,17 @@
                     @for (product of item?.displayProducts; track product.id) {
                       <button
                         type="button"
-                        (click)="onItemClick(product?.id)">
+                        (click)="onItemClick(product?.id ?? '')">
                         {{ product?.title }}
                       </button>
                     }
-                    @if (item?.products?.length > 10) {
+                    @if ((item?.products?.length ?? 0) > 10) {
                       <span class="product">... and more!</span>
                     }
                     <button
                       type="button"
                       class="view-all"
-                      (click)="onCategoryClick(item?.category)">
+                      (click)="item?.category && onCategoryClick(item.category)">
                       VIEW ALL
                     </button>
                   </div>

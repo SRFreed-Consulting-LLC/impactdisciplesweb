@@ -63,8 +63,11 @@ export class EventRegistrationService {
     if (!result.registration) {
       return null;
     }
-    const { registrationDateIso, ...registration } = result.registration;
-    registration.registrationDate = registrationDateIso ? new Date(registrationDateIso) : undefined;
+    // The date key is set only when there is one to set - an explicit
+    // `undefined` was never a value anything read, and the model's field is
+    // not optional.
+    const { registrationDateIso, ...rest } = result.registration;
+    const registration = registrationDateIso ? { ...rest, registrationDate: new Date(registrationDateIso) } : rest;
     return registration as EventRegistrationModel;
   }
 

@@ -2,7 +2,7 @@
   @if (paginate.pages && paginate.pages.length ) {
     <ul>
       <li [ngClass]="{ disabled: paginate.currentPage === 1 }">
-        <a (click)="pageSet(paginate.currentPage - 1)" (keydown.enter)="pageSet(paginate.currentPage - 1)" (keydown.space)="pageSet(paginate.currentPage - 1)" tabindex="0" role="button" class="cursor-pointer">
+        <a (click)="pageSet((paginate.currentPage ?? 1) - 1)" (keydown.enter)="pageSet((paginate.currentPage ?? 1) - 1)" (keydown.space)="pageSet((paginate.currentPage ?? 1) - 1)" tabindex="0" role="button" class="cursor-pointer">
           <i class="fal fa-angle-left"></i>
         </a>
       </li>
@@ -21,7 +21,7 @@
         </li>
       }
       <li [ngClass]="{ disabled: paginate.currentPage === paginate.totalPages }">
-        <a class="cursor-pointer" (click)="pageSet(paginate.currentPage + 1)" (keydown.enter)="pageSet(paginate.currentPage + 1)" (keydown.space)="pageSet(paginate.currentPage + 1)" tabindex="0" role="button">
+        <a class="cursor-pointer" (click)="pageSet((paginate.currentPage ?? 1) + 1)" (keydown.enter)="pageSet((paginate.currentPage ?? 1) + 1)" (keydown.space)="pageSet((paginate.currentPage ?? 1) + 1)" tabindex="0" role="button">
           <i class="fal fa-angle-right"></i>
         </a>
       </li>

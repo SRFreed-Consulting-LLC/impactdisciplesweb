@@ -70,7 +70,7 @@ describe('VenuePipe', () => {
       const { service } = locationServiceReturning(null);
       const pipe = new VenuePipe(service);
 
-      const result = await pipe.transform(event({ venue: { name: 'Crossroads', address: undefined } }), 'name');
+      const result = await pipe.transform(event({ venue: { name: 'Crossroads', address: undefined } as unknown as EventModel['venue'] }), 'name');
 
       expect(result).toBe('Crossroads');
     });

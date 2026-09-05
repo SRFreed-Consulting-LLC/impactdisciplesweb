@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Timestamp } from 'firebase/firestore';
 import { FirebaseDAO } from 'src/app/common/dao/firebase.dao';
 import { FormSubmissionModel } from '@impact-common/shared/models/domain/form-submission.model';
 import { dateFromTimestamp } from '@impact-common/shared/utils/date-from-timestamp';
@@ -15,8 +14,8 @@ export class FormSubmissionService extends BaseService<FormSubmissionModel> {
     this.fromFirestore = FormSubmissionService.fromFirestore;
   }
 
-  static readonly fromFirestore = (data): FormSubmissionModel => {
-    data.submittedAt = dateFromTimestamp(data.submittedAt as Timestamp);
+  static readonly fromFirestore = (data: FormSubmissionModel): FormSubmissionModel => {
+    data.submittedAt = dateFromTimestamp(data.submittedAt);
     return data;
   };
 }

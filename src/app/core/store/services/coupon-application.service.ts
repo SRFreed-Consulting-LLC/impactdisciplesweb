@@ -75,7 +75,8 @@ export class CouponApplicationService {
       // Scope - specific ids, or the all-events sentinel - is the shared
       // rule the server prices with (couponTagsCover), so what the cart
       // shows and what the card is charged cannot disagree.
-      const eligible = couponTagsCover(coupon.tags, { id: item.id, isEvent: item.isEvent === true });
+      // A cart line is a product document and always carries its id.
+      const eligible = couponTagsCover(coupon.tags, { id: item.id!, isEvent: item.isEvent === true });
 
       if (!eligible) {
         return;
@@ -92,8 +93,8 @@ export class CouponApplicationService {
       const onSale = NumberUtil.isNumber(item.salePrice) && item.salePrice > 0;
       if (onSale && !couponOverridesSale(percentOff)) {
         item.discount = 0;
-        item.discountPrice = null;
-        lineResults.push({ itemId: item.id, applied: false, skippedReason: 'Sale price already applied — coupon not additionally applied here.' });
+        item.discountPrice = undefined;
+        lineResults.push({ itemId: item.id!, applied: false, skippedReason: 'Sale price already applied — coupon not additionally applied here.' });
         return;
       }
 
@@ -101,12 +102,12 @@ export class CouponApplicationService {
       // one is in force (only reachable for a 100% coupon), else the list
       // price. The same base PricingService.effectiveUnitPrice charges, so
       // the line total lands on exactly $0.
-      const unitPrice = onSale ? item.salePrice : item.price;
+      const unitPrice = (onSale ? item.salePrice : item.price) ?? 0;
       const discount = parseFloat(((unitPrice * percentOff) / 100).toFixed(2));
       item.discount = discount;
       item.discountPrice = unitPrice - discount;
       netDiscount += discount * (item.orderQuantity ?? 1);
-      lineResults.push({ itemId: item.id, applied: true });
+      lineResults.push({ itemId: item.id!, applied: true });
     });
 
     if (!anyEligible) {
@@ -135,10 +136,13 @@ export class CouponApplicationService {
   /** Clears any discount previously applied by validateAndApply() -- call
    *  before re-applying so a cleared/invalid code doesn't leave stale
    *  discounts on cart items. */
+  // discountPrice is cleared to undefined, not null: nothing reads it back
+  // (PricingService prices off `discount`), it never reaches Firestore from
+  // this app, and the model says number | undefined.
   clear(items: CartItem[]): void {
     items.forEach(item => {
       item.discount = 0;
-      item.discountPrice = null;
+      item.discountPrice = undefined;
     });
   }
 }
