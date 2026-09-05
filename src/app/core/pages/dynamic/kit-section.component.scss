@@ -436,8 +436,9 @@
     min-height: 210px;
     height: 100%;
     object-fit: cover;
-    // Faces sit in the top half of a portrait, so a crop should keep the top.
-    object-position: center 30%;
+    // The DEFAULT crop now lives in entryFocus(), so an entry that names its
+    // own point can override it inline - a stylesheet cannot be told about
+    // one card's photograph.
     align-self: stretch;
   }
 

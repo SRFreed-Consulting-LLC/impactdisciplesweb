@@ -488,6 +488,25 @@ export class KitSectionComponent implements OnChanges, AfterViewInit, OnDestroy 
   }
 
   /**
+   * Where a CARD's own picture should be cropped from.
+   *
+   * A card crops its picture to a fixed frame - a square on a picture row,
+   * a tall panel on a quote card - so a portrait taken at arm's length
+   * loses the face to the middle of the frame. The entry can name the point
+   * to keep; absent, quote cards favour the top third, because a face sits
+   * in the top half of a portrait and that is what these cards hold.
+   * @param entry The list entry being drawn.
+   * @returns A CSS object-position value.
+   */
+  entryFocus(entry: { photoFocusPoint?: { x: number; y: number } }): string {
+    const point = entry.photoFocusPoint;
+    if (point && Number.isFinite(point.x) && Number.isFinite(point.y)) {
+      const clamp = (n: number) => Math.min(100, Math.max(0, n));
+      return `${clamp(point.x)}% ${clamp(point.y)}%`;
+    }
+    return 'center 30%';
+  }
+  /**
    * Which part of the photo the band keeps when it crops.
    *
    * TWO SHAPES, and both are live. `photoFocusPoint` is an exact point the

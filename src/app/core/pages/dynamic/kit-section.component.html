@@ -49,6 +49,7 @@
               <figure class="kit-quotecard">
                 @if (tile.image?.url) {
                   <img class="kit-quotecard__img" loading="lazy"
+                       [style.objectPosition]="entryFocus(tile)"
                        [src]="tile.image?.url" [alt]="tile.title || ''">
                 }
                 <div class="kit-quotecard__body">
@@ -64,6 +65,7 @@
                    styling - no CSS turns a vertical tile into this. -->
               <article class="kit-rowcard">
                 <img class="kit-rowcard__img" loading="lazy"
+                     [style.objectPosition]="entryFocus(tile)"
                      [src]="tile.image?.url" [alt]="tile.title || ''">
                 <div class="kit-rowcard__body">
                   <h3 class="kit-rowcard__title" [innerHTML]="tile.title"></h3>
