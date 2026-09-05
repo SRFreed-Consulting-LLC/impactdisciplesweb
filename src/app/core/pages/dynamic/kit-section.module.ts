@@ -6,6 +6,7 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormRendererModule } from 'src/app/shared/form-renderer/form-renderer.module';
 import { KitSectionComponent } from './kit-section.component';
+import { ReaderMapComponent } from './reader-map.component';
 
 /**
  * The section renderer, on its own so that MORE THAN ONE ROUTE can draw it.
@@ -20,7 +21,7 @@ import { KitSectionComponent } from './kit-section.component';
  * modules import it. It declares no routes of its own on purpose.
  */
 @NgModule({
-  declarations: [KitSectionComponent],
+  declarations: [KitSectionComponent, ReaderMapComponent],
   imports: [
     CommonModule,
     RouterModule,

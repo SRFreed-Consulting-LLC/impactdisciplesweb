@@ -608,6 +608,13 @@
       }
     }
 
+    <!-- A dot per Discipleship Library reader, live. It reads a derived
+         document holding coordinates and nothing else - never libraryUsers,
+         which is owner-or-admin only. See reader-map.component.ts. -->
+    @case ('readerMap') {
+      <app-reader-map></app-reader-map>
+    }
+
     <!-- From Web Config, which already feeds the footer. ONE piece rather
          than six, because none of it is edited on the page. -->
     @case ('siteDetails') {
